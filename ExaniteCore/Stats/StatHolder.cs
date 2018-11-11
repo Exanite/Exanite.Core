@@ -18,6 +18,7 @@ namespace Exanite.Stats
 		public readonly ReadOnlyCollection<StatModifier> StatModifiers;
 
 		#region Initialization
+		
 		public StatHolder()
 		{
 			statModifiers = new List<StatModifier>();
@@ -28,9 +29,11 @@ namespace Exanite.Stats
 		{
 			BaseValue = baseValue;
 		}
+		
 		#endregion
 
 		#region Adding/Removing Modifiers
+
 		public virtual void AddModifier(StatModifier mod)
 		{
 			isDirty = true;
@@ -99,7 +102,7 @@ namespace Exanite.Stats
 			}
 		}
 
-		protected virtual float CalculateFinalValue()
+		public virtual float CalculateFinalValue()
 		{
 			FlatValue = 0f;
 			IncValue = 1f;
@@ -125,6 +128,7 @@ namespace Exanite.Stats
 
 			return (float)Math.Round((BaseValue + FlatValue) * IncValue * MultValue, 4);
 		}
+		
 		#endregion
 
 		public virtual List<StatModifier> GetCombinedModifiers()
@@ -139,9 +143,17 @@ namespace Exanite.Stats
 
 			return mods;
 		}
+	
+		public virtual void Clear()
+		{
+			BaseValue = 0f;
+			statModifiers.Clear();
+			CalculateFinalValue();
+		}
 	}
 
 	#region StatMod
+	
 	public enum StatModifierType
 	{
 		Flat,
@@ -162,5 +174,6 @@ namespace Exanite.Stats
 			Source = source;
 		}
 	}
+	
 	#endregion
 }
