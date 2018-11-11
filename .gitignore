@@ -50,3 +50,6 @@ Thumbs.db
 
 # Automatically generated backup files
 *.blend1
+
+# Unity .meta files
+*.meta
