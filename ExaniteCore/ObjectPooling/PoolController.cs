@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Exanite.ObjectPooling;
-using RotaryHeart.Lib.SerializableDictionary; // If no RotaryHeart, delete this line
 
 namespace Exanite.ObjectPooling.Internal
 {
 	public class PoolController : MonoBehaviour 
 	{
+		public List<AutoCreatedPools> poolsToCreate;
+
 		public static PoolController Instance;
 		public bool debugMode = false;
 
-		[SerializeField]private PoolDictionary m_poolDictionary; // If no RotaryHeart, replace PoolDictionary with "Dictionary<int, Pool>"
-		[System.Serializable]public class PoolDictionary : SerializableDictionaryBase<int, Pool> {} // If no RotaryHeart, delete this line
+		protected Dictionary<int, Pool> m_poolDictionary;
+		protected bool isDirty = false;
+		protected List<GameObject> spawnedGameObjects;
 
-		private void Awake() 
+		protected virtual void Awake() 
 		{
 			if(!Instance)
 			{
@@ -24,30 +26,63 @@ namespace Exanite.ObjectPooling.Internal
 			{
 				Debug.LogError(string.Format("There is already a {0} in the scene.", GetType()));
 			}
+			
+			m_poolDictionary = new Dictionary<int, Pool>();
+			spawnedGameObjects = new List<GameObject>();
 
-			if(m_poolDictionary.Count >= 1)
+			foreach(AutoCreatedPools poolToCreate in prefabs)
 			{
-				Debug.LogWarningFormat("{0} does not support manually added object pools, please use {1} instead. Clear the dictionary to stop this error from showing", GetType(), typeof(PoolAutoCreate));
+				Pool.CreatePool(poolToCreate.prefab, poolToCreate.amount, poolToCreate.emptyBehavior, true);
 			}
-
-			m_poolDictionary = new PoolDictionary(); // If no RotaryHeart, replace PoolDictionary with "Dictionary<int, Pool>"
 		}
 
-		public void CreatePool(GameObject prefab, int poolSize = 10, PoolEmptyBehavior poolEmptyBehavior = PoolEmptyBehavior.ExpandPool)
+		protected virtual void LateUpdate() 
+		{
+			if(isDirty)
+			{
+				foreach(GameObject spawnedGameObject in spawnedGameObjects)
+				{
+					foreach(IPoolable iPoolable in spawnedGameObject.GetComponentsInChildren<IPoolable>())
+					{
+						iPoolable.OnSpawn();
+					}
+				}
+
+				isDirty = false;
+				spawnedGameObjects.Clear();
+			}
+		}
+
+		public virtual void CreatePool(GameObject prefab, int poolSize = 10, PoolEmptyBehavior poolEmptyBehavior = PoolEmptyBehavior.ExpandPool, bool overrideExisting = false)
 		{
 			int poolKey = prefab.GetInstanceID();
 
-			if(!m_poolDictionary.ContainsKey(poolKey))
+			if(!m_poolDictionary.ContainsKey(poolKey) || overrideExisting)
 			{
 				if(debugMode) Debug.LogFormat("Creating object pool for {0} with InstanceID of {1}", prefab.name, poolKey);
-				
-				m_poolDictionary.Add(poolKey, new Pool(prefab, poolEmptyBehavior));
 
-				ExpandPool(prefab, poolSize);
+				Queue<GameObject> oldQueue = new Queue<GameObject>();
+
+				if(m_poolDictionary.ContainsKey(poolKey)) 
+				{
+					oldQueue = m_poolDictionary[poolKey].queue;
+					m_poolDictionary.Remove(poolKey);
+				}
+
+				m_poolDictionary.Add(poolKey, new Pool(prefab, poolEmptyBehavior));
+				if(oldQueue.Count > 0)
+				{
+					foreach(GameObject gameObject in oldQueue)
+					{
+						m_poolDictionary[poolKey].queue.Enqueue(gameObject);
+					}
+				}
+
+				ExpandPool(prefab, poolSize - oldQueue.Count);
 			}
 		}
 
-		public void ExpandPool(GameObject prefab, int amount = 5)
+		public virtual void ExpandPool(GameObject prefab, int amount = 5)
 		{
 			int poolKey = prefab.GetInstanceID();
 
@@ -73,28 +108,24 @@ namespace Exanite.ObjectPooling.Internal
 					poolObjectID.originalPrefab = prefab;
 
 					m_poolDictionary[poolKey].queue.Enqueue(poolObject);
-					m_poolDictionary[poolKey].poolSize++;
-					m_poolDictionary[poolKey].objectsLeft++;
 				}
 			}
 		}
 
-		public GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
+		public virtual GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
 		{
 			int poolKey = prefab.GetInstanceID();
 
 			if(m_poolDictionary.ContainsKey(poolKey)) //Spawn object
 			{
-				if(m_poolDictionary[poolKey].objectsLeft <= 0)
+				if(m_poolDictionary[poolKey].queue.Count <= 0) // If empty
 				{
-					switch(m_poolDictionary[poolKey].poolEmptyBehavior)
+					switch(m_poolDictionary[poolKey].PoolEmptyBehavior)
 					{
 						case(PoolEmptyBehavior.ExpandPool):
 							ExpandPool(prefab);
 							break;
 						case(PoolEmptyBehavior.ReuseObject):
-							m_poolDictionary[poolKey].objectsLeft++;
-							m_poolDictionary[poolKey].objectsSpawned--;
 							break;
 						case(PoolEmptyBehavior.DoNothing):
 							return null;
@@ -102,20 +133,15 @@ namespace Exanite.ObjectPooling.Internal
 				}
 
 				GameObject poolObject = m_poolDictionary[poolKey].queue.Dequeue();
-				m_poolDictionary[poolKey].queue.Enqueue(poolObject);
+				if(m_poolDictionary[poolKey].PoolEmptyBehavior == PoolEmptyBehavior.ReuseObject) m_poolDictionary[poolKey].queue.Enqueue(poolObject);
 				
-				poolObject.transform.position = position;
+				poolObject.transform.position = position; // Set object transforms
 				poolObject.transform.rotation = rotation;
 				poolObject.transform.SetParent(parent);
 				poolObject.SetActive(true);
 
-				foreach(IPoolable iPoolable in poolObject.GetComponentsInChildren<IPoolable>())
-				{
-					iPoolable.OnSpawn();
-				}
-
-				m_poolDictionary[poolKey].objectsLeft--;
-				m_poolDictionary[poolKey].objectsSpawned++;
+				isDirty = true; // Add it to the list of objects that need OnSpawn called
+				spawnedGameObjects.Add(poolObject);
 
 				return poolObject;
 			}
@@ -127,7 +153,7 @@ namespace Exanite.ObjectPooling.Internal
 			}
 		}
 
-		public void Despawn(GameObject gameObjectToDespawn)
+		public virtual void Despawn(GameObject gameObjectToDespawn)
 		{
 			int poolKey = gameObjectToDespawn.GetComponent<PoolInstanceID>().instanceID;
 
@@ -141,32 +167,48 @@ namespace Exanite.ObjectPooling.Internal
 				gameObjectToDespawn.SetActive(false);
 				gameObjectToDespawn.transform.SetParent(transform);
 
-				m_poolDictionary[poolKey].objectsLeft++;
-				m_poolDictionary[poolKey].objectsSpawned--;
+				if(m_poolDictionary[poolKey].PoolEmptyBehavior != PoolEmptyBehavior.ReuseObject) m_poolDictionary[poolKey].queue.Enqueue(gameObjectToDespawn); // If we haven't added it to the pool yet
 			}
 			else
 			{
-				Debug.LogWarningFormat("{0} does not have a corresponding pool and will not be despawned.", gameObjectToDespawn.name);
+				Debug.LogWarningFormat("{0} does not have a corresponding pool and will be destroyed instead.", gameObjectToDespawn.name);
+				Destroy(gameObjectToDespawn);
 			}
 		}
 
-		[System.Serializable]
 		public class Pool
 		{
 			public GameObject prefab;
 			public Queue<GameObject> queue;
-			public PoolEmptyBehavior poolEmptyBehavior;
+            private PoolEmptyBehavior poolEmptyBehavior;
 
-			public int objectsSpawned = 0;
-			public int objectsLeft = 0;
-			public int poolSize = 0;
-
-			public Pool(GameObject _prefab, PoolEmptyBehavior behavior)
+            public Pool(GameObject _prefab, PoolEmptyBehavior behavior)
 			{
 				prefab = _prefab;
 				queue = new Queue<GameObject>();
-				poolEmptyBehavior = behavior;
+				PoolEmptyBehavior = behavior;
 			}
+
+            public PoolEmptyBehavior PoolEmptyBehavior
+            {
+                get
+                {
+                    return poolEmptyBehavior;
+                }
+
+                private set
+                {
+                    poolEmptyBehavior = value;
+                }
+            }
+        }
+
+		[System.Serializable]
+		public class AutoCreatedPools
+		{
+			public GameObject prefab;
+			public int amount;
+			public PoolEmptyBehavior emptyBehavior= PoolEmptyBehavior.ExpandPool;
 		}
 	}
 }
