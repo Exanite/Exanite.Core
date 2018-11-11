@@ -1,3 +1,3 @@
-# _Exanite_
+# _Exanite
 
 Repository containing the code for Exanite's framework
