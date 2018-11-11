@@ -17,9 +17,9 @@ namespace Exanite.ObjectPooling
 			PoolController.Instance.Despawn(gameObjectToDespawn);
 		}
 		
-		public static void CreatePool(GameObject prefab, int poolSize = 1, PoolEmptyBehavior poolEmptyBehavior = PoolEmptyBehavior.ExpandPool)
+		public static void CreatePool(GameObject prefab, int poolSize = 1, PoolEmptyBehavior poolEmptyBehavior = PoolEmptyBehavior.ExpandPool, bool overrideExisting = false)
 		{
-			PoolController.Instance.CreatePool(prefab, poolSize, poolEmptyBehavior);
+			PoolController.Instance.CreatePool(prefab, poolSize, poolEmptyBehavior, overrideExisting);
 		}
 
 		public static void ExpandPool(GameObject prefab, int amount = 1)
