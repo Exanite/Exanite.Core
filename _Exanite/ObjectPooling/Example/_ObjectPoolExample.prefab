@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1687856094075700}
+  m_IsPrefabAsset: 1
+--- !u!1 &1687856094075700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4251786605024626}
+  - component: {fileID: 114249889369167864}
+  - component: {fileID: 114517175861714220}
+  m_Layer: 0
+  m_Name: _ObjectPoolExample
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4251786605024626
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1687856094075700}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114249889369167864
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1687856094075700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ef8b31aa035214c84b4ef2691385e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_poolDictionary:
+    reorderableList:
+      canAdd: 1
+      canRemove: 1
+      draggable: 1
+      expandable: 1
+      multipleSelection: 1
+      label:
+        m_Text: Keys
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+      headerHeight: 18
+      footerHeight: 13
+      slideEasing: 0.15
+      verticalSpacing: 2
+      showDefaultBackground: 1
+      elementDisplayType: 0
+      elementNameProperty: 
+      elementNameOverride: 
+      elementIcon: {fileID: 0}
+    reqReferences: {fileID: 0}
+    _keyValues: 
+    _keys: 
+    _values: []
+--- !u!114 &114517175861714220
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1687856094075700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69ade1b665887d94f895f493510603a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabs:
+  - prefab: {fileID: 1761869782680058, guid: c712f1a2c7282c34d800e33a1968f79c, type: 2}
+    amount: 15
+    emptyBehavior: 0
+  - prefab: {fileID: 1551216866065758, guid: ce20ceb3a19114847a39f2a6c1171c19, type: 2}
+    amount: 25
+    emptyBehavior: 1
+  - prefab: {fileID: 1435424433708852, guid: da124b5a4aab2b342a719033b1b2b118, type: 2}
+    amount: 40
+    emptyBehavior: 2
+  - prefab: {fileID: 1886240106818860, guid: 5f1ff5e4830685a4c81bb57fcfeb4e0a, type: 2}
+    amount: 30
+    emptyBehavior: 0
+  - prefab: {fileID: 1365938420463460, guid: b7e0502b4f76b0e4abe479a4d619148e, type: 2}
+    amount: 20
+    emptyBehavior: 1
