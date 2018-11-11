@@ -30,9 +30,9 @@ namespace Exanite.ObjectPooling.Internal
 			m_poolDictionary = new Dictionary<int, Pool>();
 			spawnedGameObjects = new List<GameObject>();
 
-			foreach(AutoCreatedPools poolToCreate in prefabs)
+			foreach(AutoCreatedPools poolToCreate in poolsToCreate)
 			{
-				Pool.CreatePool(poolToCreate.prefab, poolToCreate.amount, poolToCreate.emptyBehavior, true);
+				ObjectPooling.Pool.CreatePool(poolToCreate.prefab, poolToCreate.amount, poolToCreate.emptyBehavior, true);
 			}
 		}
 
