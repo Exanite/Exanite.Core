@@ -18,10 +18,10 @@ namespace Exanite.BehaviorTree
 				case(BTState.Running):
 					break;
 				case(BTState.Failed):
-					nodeState = BTState.Succeeded;
+					_nodeState = BTState.Succeeded;
 					break;
 				case(BTState.Succeeded):
-					nodeState = BTState.Failed;
+					_nodeState = BTState.Failed;
 					break;
 			}
 		}

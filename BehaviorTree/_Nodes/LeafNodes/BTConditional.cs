@@ -20,10 +20,10 @@ namespace Exanite.BehaviorTree
 			switch(EvaluateExpression())
 			{
 				case(true):
-					nodeState = BTState.Succeeded;
+					_nodeState = BTState.Succeeded;
 					break;
 				case(false):
-					nodeState = BTState.Failed;
+					_nodeState = BTState.Failed;
 					break;
 			}
 		}

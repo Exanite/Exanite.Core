@@ -12,9 +12,9 @@ namespace Exanite.ObjectPooling.Internal
 		public static PoolController Instance;
 		public bool debugMode = false;
 
-		protected Dictionary<int, Pool> m_poolDictionary;
-		protected bool isDirty = false;
-		protected List<GameObject> spawnedGameObjects;
+		protected Dictionary<int, Pool> _poolDictionary;
+		protected bool _isDirty = false;
+		protected List<GameObject> _spawnedGameObjects;
 
 		protected virtual void Awake() 
 		{
@@ -27,8 +27,8 @@ namespace Exanite.ObjectPooling.Internal
 				Debug.LogError(string.Format("There is already a {0} in the scene.", GetType()));
 			}
 			
-			m_poolDictionary = new Dictionary<int, Pool>();
-			spawnedGameObjects = new List<GameObject>();
+			_poolDictionary = new Dictionary<int, Pool>();
+			_spawnedGameObjects = new List<GameObject>();
 
 			foreach(AutoCreatedPools poolToCreate in poolsToCreate)
 			{
@@ -38,9 +38,9 @@ namespace Exanite.ObjectPooling.Internal
 
 		protected virtual void LateUpdate() 
 		{
-			if(isDirty)
+			if(_isDirty)
 			{
-				foreach(GameObject spawnedGameObject in spawnedGameObjects)
+				foreach(GameObject spawnedGameObject in _spawnedGameObjects)
 				{
 					foreach(IPoolable iPoolable in spawnedGameObject.GetComponentsInChildren<IPoolable>())
 					{
@@ -48,8 +48,8 @@ namespace Exanite.ObjectPooling.Internal
 					}
 				}
 
-				isDirty = false;
-				spawnedGameObjects.Clear();
+				_isDirty = false;
+				_spawnedGameObjects.Clear();
 			}
 		}
 
@@ -57,24 +57,24 @@ namespace Exanite.ObjectPooling.Internal
 		{
 			int poolKey = prefab.GetInstanceID();
 
-			if(!m_poolDictionary.ContainsKey(poolKey) || overrideExisting)
+			if(!_poolDictionary.ContainsKey(poolKey) || overrideExisting)
 			{
 				if(debugMode) Debug.LogFormat("Creating object pool for {0} with InstanceID of {1}", prefab.name, poolKey);
 
 				Queue<GameObject> oldQueue = new Queue<GameObject>();
 
-				if(m_poolDictionary.ContainsKey(poolKey)) 
+				if(_poolDictionary.ContainsKey(poolKey)) 
 				{
-					oldQueue = m_poolDictionary[poolKey].queue;
-					m_poolDictionary.Remove(poolKey);
+					oldQueue = _poolDictionary[poolKey].queue;
+					_poolDictionary.Remove(poolKey);
 				}
 
-				m_poolDictionary.Add(poolKey, new Pool(prefab, poolEmptyBehavior));
+				_poolDictionary.Add(poolKey, new Pool(prefab, poolEmptyBehavior));
 				if(oldQueue.Count > 0)
 				{
 					foreach(GameObject gameObject in oldQueue)
 					{
-						m_poolDictionary[poolKey].queue.Enqueue(gameObject);
+						_poolDictionary[poolKey].queue.Enqueue(gameObject);
 					}
 				}
 
@@ -86,7 +86,7 @@ namespace Exanite.ObjectPooling.Internal
 		{
 			int poolKey = prefab.GetInstanceID();
 
-			if(m_poolDictionary.ContainsKey(poolKey))
+			if(_poolDictionary.ContainsKey(poolKey))
 			{
 				bool doesHaveIDComponent = false;
 				if(prefab.GetComponent<PoolInstanceID>())
@@ -107,7 +107,7 @@ namespace Exanite.ObjectPooling.Internal
 					poolObjectID.instanceID = poolKey;
 					poolObjectID.originalPrefab = prefab;
 
-					m_poolDictionary[poolKey].queue.Enqueue(poolObject);
+					_poolDictionary[poolKey].queue.Enqueue(poolObject);
 				}
 			}
 		}
@@ -116,11 +116,11 @@ namespace Exanite.ObjectPooling.Internal
 		{
 			int poolKey = prefab.GetInstanceID();
 
-			if(m_poolDictionary.ContainsKey(poolKey)) //Spawn object
+			if(_poolDictionary.ContainsKey(poolKey)) //Spawn object
 			{
-				if(m_poolDictionary[poolKey].queue.Count <= 0) // If empty
+				if(_poolDictionary[poolKey].queue.Count <= 0) // If empty
 				{
-					switch(m_poolDictionary[poolKey].PoolEmptyBehavior)
+					switch(_poolDictionary[poolKey].PoolEmptyBehavior)
 					{
 						case(PoolEmptyBehavior.ExpandPool):
 							ExpandPool(prefab);
@@ -132,16 +132,16 @@ namespace Exanite.ObjectPooling.Internal
 					}
 				}
 
-				GameObject poolObject = m_poolDictionary[poolKey].queue.Dequeue();
-				if(m_poolDictionary[poolKey].PoolEmptyBehavior == PoolEmptyBehavior.ReuseObject) m_poolDictionary[poolKey].queue.Enqueue(poolObject);
+				GameObject poolObject = _poolDictionary[poolKey].queue.Dequeue();
+				if(_poolDictionary[poolKey].PoolEmptyBehavior == PoolEmptyBehavior.ReuseObject) _poolDictionary[poolKey].queue.Enqueue(poolObject);
 				
 				poolObject.transform.position = position; // Set object transforms
 				poolObject.transform.rotation = rotation;
 				poolObject.transform.SetParent(parent);
 				poolObject.SetActive(true);
 
-				isDirty = true; // Add it to the list of objects that need OnSpawn called
-				spawnedGameObjects.Add(poolObject);
+				_isDirty = true; // Add it to the list of objects that need OnSpawn called
+				_spawnedGameObjects.Add(poolObject);
 
 				return poolObject;
 			}
@@ -157,7 +157,7 @@ namespace Exanite.ObjectPooling.Internal
 		{
 			int poolKey = gameObjectToDespawn.GetComponent<PoolInstanceID>().instanceID;
 
-			if(m_poolDictionary.ContainsKey(poolKey))
+			if(_poolDictionary.ContainsKey(poolKey))
 			{
 				foreach(IPoolable iPoolable in gameObjectToDespawn.GetComponentsInChildren<IPoolable>())
 				{
@@ -167,7 +167,7 @@ namespace Exanite.ObjectPooling.Internal
 				gameObjectToDespawn.SetActive(false);
 				gameObjectToDespawn.transform.SetParent(transform);
 
-				if(m_poolDictionary[poolKey].PoolEmptyBehavior != PoolEmptyBehavior.ReuseObject) m_poolDictionary[poolKey].queue.Enqueue(gameObjectToDespawn); // If we haven't added it to the pool yet
+				if(_poolDictionary[poolKey].PoolEmptyBehavior != PoolEmptyBehavior.ReuseObject) _poolDictionary[poolKey].queue.Enqueue(gameObjectToDespawn); // If we haven't added it to the pool yet
 			}
 			else
 			{

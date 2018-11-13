@@ -8,7 +8,7 @@ namespace Exanite.BehaviorTree
 	// Composite node - If any child succeeds stop and return succeeded
 	public class BTSelector : BTNodeComposite
 	{
-		protected BTNode currentNode;
+		protected BTNode _currentNode;
 
 		public BTSelector(params BTNode[] nodes) : base(nodes) { }
 
@@ -31,7 +31,7 @@ namespace Exanite.BehaviorTree
 
 		protected override void StartChildren()
 		{
-			if(currentNode == null || currentNode.GetState() != BTState.Running)
+			if(_currentNode == null || _currentNode.GetState() != BTState.Running)
 			{
 				// Find first node that returns succeeded or running
 				for (int i = 0; i < childQueue.Count; i++)
@@ -43,35 +43,35 @@ namespace Exanite.BehaviorTree
 					switch(tempNode.GetState())
 					{
 						case(BTState.Succeeded):
-							nodeState = BTState.Succeeded;
+							_nodeState = BTState.Succeeded;
 							return;
 						case(BTState.Running):
-							currentNode = tempNode;
-							nodeState = BTState.Running;
+							_currentNode = tempNode;
+							_nodeState = BTState.Running;
 							return;
 					}
 				}
 			}
 			else // Run current node until it is no longer running
 			{
-				StartChild(currentNode);
+				StartChild(_currentNode);
 
-				switch(currentNode.GetState())
+				switch(_currentNode.GetState())
 				{
 					case(BTState.Succeeded):
-						nodeState = BTState.Succeeded;
+						_nodeState = BTState.Succeeded;
 						return;
 					case(BTState.Running):
-						nodeState = BTState.Running;
+						_nodeState = BTState.Running;
 						return;
 				}
 			}
 
 			// If all children failed
 			// If the node fails when ran above, this will test if it is the last in the sequence
-			if(currentNode == null && childQueue.Count <= 0) 
+			if(_currentNode == null && childQueue.Count <= 0) 
 			{
-				nodeState = BTState.Failed;
+				_nodeState = BTState.Failed;
 				return;
 			}
 		}

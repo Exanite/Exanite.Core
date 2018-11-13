@@ -8,7 +8,7 @@ namespace Exanite.Stats
 	[System.Serializable]
 	public class StatRegenerating
 	{
-        private float value;
+        protected float _value;
         public StatHolder Max;
 		public StatHolder Regen;
 
@@ -16,12 +16,12 @@ namespace Exanite.Stats
         {
             get
             {
-                return value;
+                return _value;
             }
 
-            private set
+            protected set
             {
-                this.value = value;
+                this._value = value;
             }
         }
 

@@ -9,13 +9,13 @@ namespace Exanite.BehaviorTree
 	{
 		public BTTree(params BTNode[] nodes) : base(nodes)
 		{
-			blackboard = new BTBlackboard();
+			_blackboard = new BTBlackboard();
 		}
 
 		// Use this to use the internal blackboard, or use ProcessTick(Blackboard) to supply your own
 		public virtual void ProcessTick() 
 		{
-			ProcessTick(ref blackboard);
+			ProcessTick(ref _blackboard);
 		}
 
 		protected override void ChildQueueReset()
@@ -29,7 +29,7 @@ namespace Exanite.BehaviorTree
 
 			StartChildren();
 
-			nodeState = BTState.Succeeded;
+			_nodeState = BTState.Succeeded;
 		}
 
 		protected override void StartChildren()
@@ -44,9 +44,9 @@ namespace Exanite.BehaviorTree
 		
 		public override void End() 
 		{
-			if(started)
+			if(_started)
 			{
-				started = false;
+				_started = false;
 			}
 		}
 	}

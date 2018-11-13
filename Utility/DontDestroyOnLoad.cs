@@ -6,7 +6,7 @@ namespace Exanite.Utility
 {
 	public class DontDestroyOnLoad : MonoBehaviour 
 	{
-		private void Awake() 
+		protected virtual void Awake() 
 		{
 			DontDestroyOnLoad(gameObject);
 		}

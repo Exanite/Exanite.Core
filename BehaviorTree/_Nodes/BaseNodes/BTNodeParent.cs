@@ -18,7 +18,7 @@ namespace Exanite.BehaviorTree
 
 		protected virtual void StartChild(BTNode node)
 		{
-			node.ProcessTick(ref blackboard);
+			node.ProcessTick(ref _blackboard);
 		}
 
 		protected virtual void EndChild(BTNode node)
@@ -38,7 +38,7 @@ namespace Exanite.BehaviorTree
 		public override void End()
 		{
 			EndChildren();
-			started = false;
+			_started = false;
 		}
 	}
 }

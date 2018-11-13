@@ -12,17 +12,17 @@ namespace Exanite.Stats
 		public float FlatValue;
 		public float IncValue;
 		public float MultValue;
-		public float _FinalValue;
+		[SerializeField]protected float _FinalValue;
 
-		public readonly List<StatModifier> statModifiers;
-		public readonly ReadOnlyCollection<StatModifier> StatModifiers;
+		public readonly List<StatModifier> _statModifiers;
+		public readonly ReadOnlyCollection<StatModifier> _StatModifiers;
 
 		#region Initialization
 		
 		public StatHolder()
 		{
-			statModifiers = new List<StatModifier>();
-			StatModifiers = statModifiers.AsReadOnly();
+			_statModifiers = new List<StatModifier>();
+			_StatModifiers = _statModifiers.AsReadOnly();
 		}
 
 		public StatHolder(float baseValue) : this()
@@ -37,7 +37,7 @@ namespace Exanite.Stats
 		public virtual void AddModifier(StatModifier mod)
 		{
 			isDirty = true;
-			statModifiers.Add(mod);
+			_statModifiers.Add(mod);
 		}
 
 		public virtual void AddModifiers(params StatModifier[] mods)
@@ -50,7 +50,7 @@ namespace Exanite.Stats
 
 		public virtual bool RemoveModifier(StatModifier mod)
 		{
-			if(statModifiers.Remove(mod))
+			if(_statModifiers.Remove(mod))
 			{
 				isDirty = true;
 				return true;
@@ -63,13 +63,13 @@ namespace Exanite.Stats
 		{
 			bool didRemove = false;
 
-			for(int i = statModifiers.Count - 1; i >= 0; i--)
+			for(int i = _statModifiers.Count - 1; i >= 0; i--)
 			{
-				if(statModifiers[i].Source == source)
+				if(_statModifiers[i].Source == source)
 				{
 					isDirty = true;
 					didRemove = true;
-					statModifiers.RemoveAt(i);
+					_statModifiers.RemoveAt(i);
 				}
 			}
 			
@@ -79,7 +79,7 @@ namespace Exanite.Stats
 		public virtual void RemoveAllModifiers()
 		{
 			isDirty = true;
-			statModifiers.Clear();
+			_statModifiers.Clear();
 		}
 		#endregion
 
@@ -108,13 +108,13 @@ namespace Exanite.Stats
 			IncValue = 1f;
 			MultValue = 1f;
 
-			for (int i = 0; i < statModifiers.Count; i++)
+			for (int i = 0; i < _statModifiers.Count; i++)
 			{
-				StatModifier mod = statModifiers[i];
+				StatModifier mod = _statModifiers[i];
 
 				if (mod.Type == StatModifierType.Flat)
 				{
-					FlatValue += statModifiers[i].Value;
+					FlatValue += _statModifiers[i].Value;
 				}
 				else if (mod.Type ==StatModifierType.Inc)
 				{
@@ -122,7 +122,7 @@ namespace Exanite.Stats
 				}
 				else if (mod.Type == StatModifierType.Mult)
 				{
-				MultValue *= statModifiers[i].Value;
+				MultValue *= _statModifiers[i].Value;
 				}
 			}
 
@@ -147,7 +147,7 @@ namespace Exanite.Stats
 		public virtual void Clear()
 		{
 			BaseValue = 0f;
-			statModifiers.Clear();
+			_statModifiers.Clear();
 			CalculateFinalValue();
 		}
 	}

@@ -6,34 +6,34 @@ namespace Exanite.BehaviorTree
 {
 	public class BTBlackboard // Use this to save variables to the tree
 	{
-		protected Dictionary<string, object> blackboard;
+		protected Dictionary<string, object> _blackboard;
 
 		public BTBlackboard(params KeyValuePair<string, object>[] vars)
 		{
-			blackboard = new Dictionary<string, object>();
+			_blackboard = new Dictionary<string, object>();
 
 			foreach (KeyValuePair<string, object> var in vars)
 			{
-				blackboard.Add(var.Key, var.Value);
+				_blackboard.Add(var.Key, var.Value);
 			}
 		}
 
 		public object GetVariable(string key) 
 		{
 
-            if(Exists(key)) return blackboard[key];
+            if(Exists(key)) return _blackboard[key];
 			// else
-			throw new KeyNotFoundException(string.Format("The key {0} does not exist in {1}", key, blackboard));
+			throw new KeyNotFoundException(string.Format("The key {0} does not exist in {1}", key, _blackboard));
         }
 
         public void SetVariable(string key, object value) 
 		{
-            blackboard[key] = value;
+            _blackboard[key] = value;
         }
 
         public bool Exists(string key) 
 		{
-            return blackboard.ContainsKey(key);
+            return _blackboard.ContainsKey(key);
         }
 	}
 }
