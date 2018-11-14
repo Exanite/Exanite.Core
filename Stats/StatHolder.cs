@@ -40,6 +40,13 @@ namespace Exanite.Stats
 			_statModifiers.Add(mod);
 		}
 
+		public virtual StatModifier AddModifier(float value, StatModifierType type, object source)
+		{
+			StatModifier mod = new StatModifier(value, type, source);
+			AddModifier(mod);
+			return mod;
+		}
+
 		public virtual void AddModifiers(params StatModifier[] mods)
 		{
 			foreach(StatModifier mod in mods)
