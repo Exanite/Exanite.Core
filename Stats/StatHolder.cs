@@ -42,6 +42,7 @@ namespace Exanite.Stats
 
 		public virtual StatModifier AddModifier(float value, StatModifierType type, object source)
 		{
+			isDirty = true;
 			StatModifier mod = new StatModifier(value, type, source);
 			AddModifier(mod);
 			return mod;
@@ -49,6 +50,7 @@ namespace Exanite.Stats
 
 		public virtual void AddModifiers(params StatModifier[] mods)
 		{
+			isDirty = true;
 			foreach(StatModifier mod in mods)
 			{
 				AddModifier(mod);
