@@ -9,13 +9,17 @@ namespace Exanite.Stats
 	public class StatHolder
 	{
 		public float BaseValue;
-		public float FlatValue;
-		public float IncValue;
-		public float MultValue;
-		[SerializeField]protected float _FinalValue;
+        protected float _flatValue;
+        protected float _incValue;
+        protected float _multValue;
+        [SerializeField]protected float _finalValue;
 
 		public readonly List<StatModifier> _statModifiers;
 		public readonly ReadOnlyCollection<StatModifier> _StatModifiers;
+
+        public float FlatValue {get; protected set;}
+        public float IncValue {get; protected set;}
+        public float MultValue {get; protected set;}
 
 		#region Initialization
 		
@@ -104,15 +108,15 @@ namespace Exanite.Stats
 				if (isDirty || BaseValue != lastBaseValue)
 				{
 					lastBaseValue = BaseValue;
-					_FinalValue =  CalculateFinalValue();
+					_finalValue =  CalculateFinalValue();
 					isDirty = false;
 				}
-				return _FinalValue;
+				return _finalValue;
 			}
 		}
 
-		public virtual float CalculateFinalValue()
-		{
+        public virtual float CalculateFinalValue()
+		{	
 			FlatValue = 0f;
 			IncValue = 1f;
 			MultValue = 1f;
@@ -134,6 +138,8 @@ namespace Exanite.Stats
 				MultValue *= _statModifiers[i].Value;
 				}
 			}
+
+			isDirty = false;
 
 			return (float)Math.Round((BaseValue + FlatValue) * IncValue * MultValue, 4);
 		}
