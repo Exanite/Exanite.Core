@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
 namespace Exanite.BehaviorTree
 {
-	// Composite node - If any child succeeds stop and return succeeded
-	public class BTSelector : BTNodeComposite
+    // Composite node - If any child succeeds stop and return succeeded
+    public class BTSelector : BTNodeComposite
 	{
 		protected BTNode _currentNode;
 

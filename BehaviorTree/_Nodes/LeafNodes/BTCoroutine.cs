@@ -1,11 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Exanite.BehaviorTree
 {
-	// Leaf node - This runs a coroutine and returns succeeded on finish
-	public class BTCoroutine : BTNodeLeaf
+    // Leaf node - This runs a coroutine and returns succeeded on finish
+    public class BTCoroutine : BTNodeLeaf
 	{
 		protected IEnumerable _iEnumerable;
 		protected MonoBehaviour _monoBehaviour;

@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Exanite.ObjectPooling;
 
 namespace Exanite.ObjectPooling.Internal
 {
-	public class PoolController : MonoBehaviour 
+    public class PoolController : MonoBehaviour 
 	{
 		public List<AutoCreatedPools> poolsToCreate;
 

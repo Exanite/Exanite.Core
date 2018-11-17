@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace Exanite.BehaviorTree
 {
-	// Base class for all nodes that will have a child
-	public abstract class BTNodeParent : BTNode
+    // Base class for all nodes that will have a child
+    public abstract class BTNodeParent : BTNode
 	{
 		public List<BTNode> childNodes;
 

@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Exanite.ObjectPooling; // Pool namespace
+﻿using UnityEngine;
 
 namespace Exanite.ObjectPooling.Example
 {
-	public class PoolUseExample : MonoBehaviour 
+    public class PoolUseExample : MonoBehaviour 
 	{
 		public GameObject prefab;
 

@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Exanite.Stats;
+﻿using UnityEngine;
 
 namespace Exanite.Stats
 {
-	[System.Serializable]
+    [System.Serializable]
 	public class StatRegenerating
 	{
         protected float _value;

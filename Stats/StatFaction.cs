@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Exanite.Stats
+﻿namespace Exanite.Stats
 {
-	public enum StatFaction
+    public enum StatFaction
 	{
 		Unset = 0, //Default faction
 		Player = 10, //Player faction

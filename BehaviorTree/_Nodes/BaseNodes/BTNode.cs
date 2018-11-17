@@ -1,11 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Exanite.BehaviorTree
+﻿namespace Exanite.BehaviorTree
 {
-	// Base class for all Nodes
-	public abstract class BTNode 
+    // Base class for all Nodes
+    public abstract class BTNode 
 	{
 		protected bool _started = false;
 		protected BTState _nodeState = BTState.NotStarted;

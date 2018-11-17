@@ -1,11 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Exanite.BehaviorTree
+﻿namespace Exanite.BehaviorTree
 {
-	// Decorator node - Inverts result of child
-	public class BTInverter : BTNodeDecorator 
+    // Decorator node - Inverts result of child
+    public class BTInverter : BTNodeDecorator 
 	{
 		public BTInverter(BTNode node) : base(node) { }
 

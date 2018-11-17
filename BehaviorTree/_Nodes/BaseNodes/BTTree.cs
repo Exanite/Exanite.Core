@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace Exanite.BehaviorTree
 {
-	// Root of the behavior tree, define a new tree with this
-	public class BTTree : BTNodeComposite 
+    // Root of the behavior tree, define a new tree with this
+    public class BTTree : BTNodeComposite 
 	{
 		public BTTree(params BTNode[] nodes) : base(nodes)
 		{

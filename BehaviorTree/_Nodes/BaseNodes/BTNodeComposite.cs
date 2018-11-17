@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace Exanite.BehaviorTree
 {
-	// Base class for all nodes that can support more than one child
-	public abstract class BTNodeComposite : BTNodeParent 
+    // Base class for all nodes that can support more than one child
+    public abstract class BTNodeComposite : BTNodeParent 
 	{
 		protected Queue<BTNode> childQueue;
 

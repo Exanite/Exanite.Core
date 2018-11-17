@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Exanite.ObjectPooling
+﻿namespace Exanite.ObjectPooling
 {
-	public interface IPoolable
+    public interface IPoolable
 	{
 		void OnSpawn();
 

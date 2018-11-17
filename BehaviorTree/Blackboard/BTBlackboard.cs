@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace Exanite.BehaviorTree
 {
-	public class BTBlackboard // Use this to save variables to the tree
+    public class BTBlackboard // Use this to save variables to the tree
 	{
 		protected Dictionary<string, object> _blackboard;
 

@@ -17,9 +17,9 @@ namespace Exanite.Stats
 		public readonly List<StatModifier> _statModifiers;
 		public readonly ReadOnlyCollection<StatModifier> _StatModifiers;
 
-        public float FlatValue {get; protected set;}
-        public float IncValue {get; protected set;}
-        public float MultValue {get; protected set;}
+        public float FlatValue { get; protected set; }
+        public float IncValue { get; protected set; }
+        public float MultValue { get; protected set; }
 
 		#region Initialization
 		

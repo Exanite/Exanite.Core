@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Exanite.ObjectPooling.Internal;
 
 namespace Exanite.ObjectPooling
 {
-	public static class Pool
+    public static class Pool
 	{
 		public static GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
 		{

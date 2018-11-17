@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Exanite.BehaviorTree
+﻿namespace Exanite.BehaviorTree
 {
-	[System.Serializable]
+    [System.Serializable]
 	public enum BTState
 	{
 		Failed = 0,

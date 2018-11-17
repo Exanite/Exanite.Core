@@ -1,11 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Exanite.BehaviorTree
+﻿namespace Exanite.BehaviorTree
 {
-	// Base class for all nodes that are the end of a branch
-	public abstract class BTNodeLeaf : BTNode
+    // Base class for all nodes that are the end of a branch
+    public abstract class BTNodeLeaf : BTNode
 	{
 
 	}

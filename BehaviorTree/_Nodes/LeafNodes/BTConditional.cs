@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using System;
 
 namespace Exanite.BehaviorTree
 {
-	// Takes in a Func<bool> and returns succeeded(true) or failed(false)
-	public class BTConditional : BTNodeLeaf 
+    // Takes in a Func<bool> and returns succeeded(true) or failed(false)
+    public class BTConditional : BTNodeLeaf 
 	{
 		public Func<bool> Expression;
 
