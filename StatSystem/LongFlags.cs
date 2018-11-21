@@ -1,35 +1,69 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
-namespace Exanite.Stats.Internal
+namespace Exanite.StatSystem.Internal
 {
-	public class LongFlags<T> where T : struct, IConvertible
+	public class LongFlags
 	{
-		private BitArray flags;
+		protected BitArray flags;
+		protected Dictionary<Type, int> enums;
 
-		public LongFlags()
+		public LongFlags(params Type[] flaggableEnums) // can pass any type right now, but preferably only types that are enums
 		{
-			if (!typeof(T).IsEnum) throw new ArgumentException("T must be an enumerated type");
+			int bitsToAdd = 0;
 
-			flags = new BitArray(Enum.GetValues(typeof(T)).Cast<int>().Max() + 1);
+			enums = new Dictionary<Type, int>();
+
+			for (int i = 0; i < flaggableEnums.Count(); i++)
+			{
+				if (!flaggableEnums[i].IsEnum) throw new ArgumentException(string.Format("Passed parameter {0} is not an Enum", flaggableEnums[i]));
+
+				if (!enums.ContainsKey(flaggableEnums[i]))
+				{
+					int enumMax = Enum.GetValues(flaggableEnums[i]).Cast<int>().Max();
+					int enumMin = Enum.GetValues(flaggableEnums[i]).Cast<int>().Min();
+
+					if (enumMin < 0)
+						throw new ArgumentException(string.Format("{0} must not have any negative values", flaggableEnums[i]));
+
+					enums.Add(flaggableEnums[i], bitsToAdd);
+					bitsToAdd += enumMax + 1;
+				}
+				else
+				{
+					throw new ArgumentException(string.Format("{0} is passed as a parameter more than once", flaggableEnums[i]));
+				}
+			}
+
+			flags = new BitArray(bitsToAdd);
 		}
 
-		public void SetFlag(T flag, bool state)
+		public virtual void SetFlag(bool state, Enum flagToSet)
 		{
-			flags[GetFlagIndex(flag)] = state;
+			flags[GetFlagIndex(flagToSet)] = state;
 		}
 
-		public bool HasFlag(T flag)
+		public virtual void SetFlags(bool state, params Enum[] flagsToSet)
+		{
+			foreach (Enum flag in flagsToSet)
+			{
+				flags[GetFlagIndex(flag)] = state;
+			}
+		}
+
+		public virtual bool HasFlag(Enum flag)
 		{
 			if (flags[GetFlagIndex(flag)]) return true;
 
 			return false;
 		}
 
-		public bool HasFlags(params T[] flags)
+		public virtual bool HasFlags(params Enum[] flags)
 		{
-			foreach (T flag in flags)
+			foreach (Enum flag in flags)
 			{
 				if (!HasFlag(flag)) return false;
 			}
@@ -37,9 +71,11 @@ namespace Exanite.Stats.Internal
 			return true;
 		}
 
-		private int GetFlagIndex(T flag)
+		public virtual int GetFlagIndex(Enum flag)
 		{
-			return (int)(object)flag;
+			if (!enums.ContainsKey(flag.GetType())) throw new ArgumentException(string.Format("Enum Type {0} was not defined in {1}'s constructor", flag.GetType(), this));
+
+			return enums[flag.GetType()] + (Convert.ToInt32(flag));
 		}
 	}
 }
