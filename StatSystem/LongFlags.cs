@@ -10,8 +10,14 @@ namespace Exanite.StatSystem.Internal
 	/// </summary>
 	public class LongFlags
 	{
+		#region Fields
+
 		protected BitArray flags;
 		protected Dictionary<Type, int> enums;
+
+		#endregion
+
+		#region Constructor
 
 		/// <summary>
 		/// Creates a LongFlags with the provided Enum Types
@@ -50,6 +56,10 @@ namespace Exanite.StatSystem.Internal
 
 			flags = new BitArray(bitsToAdd);
 		}
+
+		#endregion
+
+		#region Flag logic
 
 		/// <summary>
 		/// Sets a flag to a provided state
@@ -129,6 +139,10 @@ namespace Exanite.StatSystem.Internal
 			return false;
 		}
 
+		#endregion
+
+		#region Internal
+
 		/// <summary>
 		/// Returns a flag's index in the internal BitArray
 		/// </summary>
@@ -140,5 +154,7 @@ namespace Exanite.StatSystem.Internal
 
 			return enums[flag.GetType()] + (Convert.ToInt32(flag));
 		}
+
+		#endregion
 	}
 }
