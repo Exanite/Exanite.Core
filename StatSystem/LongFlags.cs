@@ -48,10 +48,6 @@ namespace Exanite.StatSystem.Internal
 					enums.Add(enumToAdd, bitsToAdd);
 					bitsToAdd += enumMax + 1;
 				}
-				else
-				{
-					throw new ArgumentException(string.Format("{0} is passed as a parameter more than once", enumToAdd));
-				}
 			}
 
 			flags = new BitArray(bitsToAdd);
