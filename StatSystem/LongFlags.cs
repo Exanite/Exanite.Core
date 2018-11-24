@@ -10,30 +10,36 @@ namespace Exanite.StatSystem.Internal
 	/// </summary>
 	public class LongFlags
 	{
-		#region Fields
+		#region Fields and Properties
 
 		protected BitArray flags;
 		protected Dictionary<Type, int> enums;
+
+		public int Count
+		{
+			get
+			{
+				return flags.Count;
+			}
+		}
 
 		#endregion
 
 		#region Constructor
 
 		/// <summary>
-		/// Creates a LongFlags with the provided Enum Types
+		/// Creates a LongFlags with the provided Enum Types, requires at least one type
 		/// </summary>
-		/// <param name="flaggableEnum">Enum Type with no negative values (use typeof())</param>
 		/// <param name="flaggableEnums">Enum Types with no negative values (use typeof())</param>
-		public LongFlags(Type flaggableEnum, params Type[] flaggableEnums) // can pass any type right now, but preferably only types that are enums
+		public LongFlags(params Type[] flaggableEnums) // can pass any type right now, but preferably only types that are enums
 		{
-			List<Type> _flaggableEnums = new List<Type>() { flaggableEnum };
-			_flaggableEnums.AddRange(flaggableEnums);
+			if (flaggableEnums == null) throw new ArgumentException("No arguments were passed");
 
 			int bitsToAdd = 0;
 
 			enums = new Dictionary<Type, int>();
 
-			foreach (Type enumToAdd in _flaggableEnums)
+			foreach (Type enumToAdd in flaggableEnums)
 			{
 				if (!enumToAdd.IsEnum) throw new ArgumentException(string.Format("Passed parameter {0} is not an Enum", enumToAdd));
 
@@ -68,24 +74,22 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		/// <summary>
-		/// Sets a a number of flags to a provided state
+		/// Sets a a number of flags to a provided state, requires at least one flag
 		/// </summary>
 		/// <param name="state">True or false</param>
-		/// <param name="flagToSet">Enum Value of type provided in this LongFlags's constructor</param>
 		/// <param name="flagsToSet">Enum Values of type provided in this LongFlags's constructor</param>
-		public virtual void SetFlags(bool state, Enum flagToSet, params Enum[] flagsToSet)
+		public virtual void SetFlags(bool state, params Enum[] flagsToSet)
 		{
-			List<Enum> _flagsToSet = new List<Enum>() { flagToSet };
-			_flagsToSet.AddRange(flagsToSet);
+			if (flagsToSet == null) throw new ArgumentException("No arguments were passed");
 
-			foreach (Enum flag in _flagsToSet)
+			foreach (Enum flag in flagsToSet)
 			{
 				SetFlag(state, flag);
 			}
 		}
 
 		/// <summary>
-		/// Returns true if this LongFlags has the provided flag, false if not
+		/// Returns true if this LongFlags has the provided flag, false if not, requires at least one flag
 		/// </summary>
 		/// <param name="flag">Enum Value of type provided in this LongFlags's constructor</param>
 		/// <returns>True or false</returns>
@@ -97,17 +101,15 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		/// <summary>
-		/// Returns true if this LongFlags has ALL of the provided flags, false if not
+		/// Returns true if this LongFlags has ALL of the provided flags, false if not, requires at least one flag
 		/// </summary>
-		/// <param name="flag">Enum Value of type provided in this LongFlags's constructor</param>
 		/// <param name="flags">Enum Values of type provided in this LongFlags's constructor</param>
 		/// <returns>True or false</returns>
-		public virtual bool HasFlagsAND(Enum flag, params Enum[] flags)
+		public virtual bool HasFlagsAND(params Enum[] flags)
 		{
-			List<Enum> _flags = new List<Enum> { flag };
-			_flags.AddRange(flags);
+			if (flags == null) throw new ArgumentException("No arguments were passed");
 
-			foreach (Enum _flag in _flags)
+			foreach (Enum _flag in flags)
 			{
 				if (!HasFlag(_flag)) return false;
 			}
@@ -116,23 +118,25 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		/// <summary>
-		/// Returns true if this LongFlags has ANY of the provided flags, false if not
+		/// Returns true if this LongFlags has ANY of the provided flags, false if not, requires at least one flag
 		/// </summary>
-		/// <param name="flag">Enum Value of type provided in this LongFlags's constructor</param>
 		/// <param name="flags">Enum Values of type provided in this LongFlags's constructor</param>
 		/// <returns>True or false</returns>
-		public virtual bool HasFlagsOR(Enum flag, params Enum[] flags)
+		public virtual bool HasFlagsOR(params Enum[] flags)
 		{
-			List<Enum> _flags = new List<Enum>();
-			_flags.Add(flag);
-			_flags.AddRange(flags);
+			if (flags == null) throw new ArgumentException("No arguments were passed");
 
-			foreach (Enum _flag in _flags)
+			foreach (Enum _flag in flags)
 			{
 				if (HasFlag(_flag)) return true;
 			}
 
 			return false;
+		}
+
+		public virtual List<Enum> GetAllTrueFlags()
+		{
+			return GetAllFlagsOfIndex(GetAllTrueIndexes().ToArray());
 		}
 
 		#endregion
@@ -144,11 +148,80 @@ namespace Exanite.StatSystem.Internal
 		/// </summary>
 		/// <param name="flag">Enum Value of type provided in this LongFlags's constructor</param>
 		/// <returns>Index of provided flag in BitArray</returns>
-		public virtual int GetFlagIndex(Enum flag)
+		protected virtual int GetFlagIndex(Enum flag)
 		{
 			if (!enums.ContainsKey(flag.GetType())) throw new ArgumentException(string.Format("Enum Type {0} was not defined in {1}'s constructor", flag.GetType(), this));
 
 			return enums[flag.GetType()] + (Convert.ToInt32(flag));
+		}
+
+		/// <summary>
+		/// Returns a flag based on the flag's index in the internal BitArray
+		/// </summary>
+		/// <param name="index">Index of the flag to retrieve</param>
+		/// <returns>Retrieved flag</returns>
+		protected virtual Enum GetFlagFromIndex(int index)
+		{
+			Type type = GetTypeFromIndex(index);
+			int value = (index - enums[type]);
+
+			return (Enum)Enum.Parse(type, value.ToString());
+		}
+
+		/// <summary>
+		/// Returns the type of flag based on the flag's index
+		/// </summary>
+		/// <param name="index">Index of the flag to retrieve from</param>
+		/// <returns>Retrieved type from flag</returns>
+		protected virtual Type GetTypeFromIndex(int index)
+		{
+			List<KeyValuePair<Type, int>> pairs = new List<KeyValuePair<Type, int>>();
+
+			foreach (KeyValuePair<Type, int> entry in enums)
+			{
+				if (entry.Value <= index)
+				{
+					pairs.Add(entry);
+				}
+			}
+
+			return pairs.OrderByDescending(entry => entry.Value).First().Key;
+		}
+
+		/// <summary>
+		/// Returns a List of the indexes of all true values in the internal BitArray
+		/// </summary>
+		/// <returns>List of the indexes with true values in the internal BitArray</returns>
+		protected virtual List<int> GetAllTrueIndexes()
+		{
+			List<int> indexes = new List<int>();
+
+			for (int i = 0; i < flags.Count; i++)
+			{
+				if (flags[i] == true)
+				{
+					indexes.Add(i);
+				}
+			}
+
+			return indexes;
+		}
+
+		/// <summary>
+		/// Returns a list of flags based on the passed array of flag indexes
+		/// </summary>
+		/// <param name="indexes">Indexes of the flags to retrieve</param>
+		/// <returns>Retrieved list of flags</returns>
+		protected virtual List<Enum> GetAllFlagsOfIndex(params int[] indexes)
+		{
+			List<Enum> returnEnums = new List<Enum>();
+			
+			foreach(int index in indexes)
+			{
+				returnEnums.Add(GetFlagFromIndex(index));
+			}
+
+			return returnEnums;
 		}
 
 		#endregion
