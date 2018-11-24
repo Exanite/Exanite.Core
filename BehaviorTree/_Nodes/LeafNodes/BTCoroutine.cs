@@ -38,7 +38,7 @@ namespace Exanite.BehaviorTree
 			_currentCoroutine = null;
 		}
 
-		IEnumerator CoroutineWrapper(IEnumerable iEnumerable)
+		protected virtual IEnumerator CoroutineWrapper(IEnumerable iEnumerable)
 		{
 			_running = true;
 			yield return _currentCoroutine = _monoBehaviour.StartCoroutine(iEnumerable.GetEnumerator());
