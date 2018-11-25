@@ -1,5 +1,8 @@
 ﻿namespace Exanite.StatSystem
 {
+	/// <summary>
+	/// Flags used in the StatSystem to differentiate between different types of mods
+	/// </summary>
 	public enum StatModFlag
 	{
 		Damage,
