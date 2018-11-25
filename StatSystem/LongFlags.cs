@@ -66,7 +66,10 @@ namespace Exanite.StatSystem.Internal
 		/// <param name="flaggableEnums">Enum Types with no negative values (use typeof())</param>
 		public LongFlags(params Type[] flaggableEnums) // can pass any type right now, but preferably only types that are enums
 		{
-			if (flaggableEnums == null) throw new ArgumentException("No arguments were passed");
+			if (flaggableEnums == null)
+			{
+				throw new ArgumentNullException(nameof(flaggableEnums));
+			}
 
 			int bitsToAdd = 0;
 
@@ -96,6 +99,8 @@ namespace Exanite.StatSystem.Internal
 
 		#region Flag logic
 
+		#region Setting Flags
+
 		/// <summary>
 		/// Sets a flag to a provided state
 		/// </summary>
@@ -103,7 +108,11 @@ namespace Exanite.StatSystem.Internal
 		/// <param name="flagToSet">Enum Value of type provided in this LongFlags's constructor</param>
 		public virtual void SetFlag(bool state, Enum flagToSet)
 		{
-			Flags[GetFlagIndex(flagToSet)] = state;
+			int index = GetFlagIndex(flagToSet);
+
+			if (index == -1) throw new ArgumentException(string.Format("{0} does not exist in {1}", flagToSet, this));
+
+			Flags[index] = state;
 		}
 
 		/// <summary>
@@ -121,6 +130,10 @@ namespace Exanite.StatSystem.Internal
 			}
 		}
 
+		#endregion
+
+		#region AND
+
 		/// <summary>
 		/// Returns true if this LongFlags has the provided flag, false if not, requires at least one flag
 		/// </summary>
@@ -128,7 +141,10 @@ namespace Exanite.StatSystem.Internal
 		/// <returns>True or false</returns>
 		public virtual bool HasFlag(Enum flag)
 		{
-			if (Flags[GetFlagIndex(flag)]) return true;
+			int index = GetFlagIndex(flag);
+
+			if (index == -1) return false;
+			if (Flags[index]) return true;
 
 			return false;
 		}
@@ -140,7 +156,10 @@ namespace Exanite.StatSystem.Internal
 		/// <returns>True or false</returns>
 		public virtual bool HasFlagsAND(params Enum[] flags)
 		{
-			if (flags == null) throw new ArgumentException("No arguments were passed");
+			if (flags == null)
+			{
+				throw new ArgumentNullException(nameof(flags));
+			}
 
 			foreach (Enum _flag in flags)
 			{
@@ -151,13 +170,30 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		/// <summary>
+		/// Returns true if this LongFlags has ALL of the flags in the provided LongFlags, false if not
+		/// </summary>
+		/// <param name="longFlags">LongFlags to compare</param>
+		/// <returns>True or false</returns>
+		public virtual bool HasFlagsAND(LongFlags longFlags)
+		{
+			return HasFlagsAND(longFlags.GetAllTrueFlags().ToArray());
+		}
+
+		#endregion
+
+		#region OR
+
+		/// <summary>
 		/// Returns true if this LongFlags has ANY of the provided flags, false if not, requires at least one flag
 		/// </summary>
 		/// <param name="flags">Enum Values of type provided in this LongFlags's constructor</param>
 		/// <returns>True or false</returns>
 		public virtual bool HasFlagsOR(params Enum[] flags)
 		{
-			if (flags == null) throw new ArgumentException("No arguments were passed");
+			if (flags == null)
+			{
+				throw new ArgumentNullException(nameof(flags));
+			}
 
 			foreach (Enum _flag in flags)
 			{
@@ -168,13 +204,30 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		/// <summary>
+		/// Returns true if this LongFlags has ANY of the flags in the provided LongFlags, false if not
+		/// </summary>
+		/// <param name="longFlags">LongFlags to compare</param>
+		/// <returns>True or false</returns>
+		public virtual bool HasFlagsOR(LongFlags longFlags)
+		{
+			return HasFlagsOR(longFlags.GetAllTrueFlags().ToArray());
+		}
+
+		#endregion
+
+		#region EQUALS
+
+		/// <summary>
 		/// Returns true if this LongFlags has only the flags provided, requires at least one flag
 		/// </summary>
 		/// <param name="flags">Enum Values of type provided in this LongFlags's constructor</param>
 		/// <returns>True or false</returns>
 		public virtual bool HasFlagsEquals(params Enum[] flags)
 		{
-			if (flags == null) throw new ArgumentException("No arguments were passed");
+			if (flags == null)
+			{
+				throw new ArgumentNullException(nameof(flags));
+			}
 
 			BitArray passedFlags = new BitArray(Count);
 
@@ -189,7 +242,7 @@ namespace Exanite.StatSystem.Internal
 		/// <summary>
 		/// Returns true if this LongFlags has only the flags provided
 		/// </summary>
-		/// <param name="longFlags"></param>
+		/// <param name="longFlags">LongFlags to compare</param>
 		/// <returns>True or false</returns>
 		public virtual bool HasFlagsEquals(LongFlags longFlags)
 		{
@@ -226,6 +279,10 @@ namespace Exanite.StatSystem.Internal
 			return HasFlagsEquals(longFlags.flags);
 		}
 
+		#endregion
+
+		#region OTHER
+
 		/// <summary>
 		/// Returns a list of all flags with the value, true
 		/// </summary>
@@ -237,16 +294,20 @@ namespace Exanite.StatSystem.Internal
 
 		#endregion
 
+		#endregion
+
 		#region Internal
+
+		#region Index logic
 
 		/// <summary>
 		/// Returns a flag's index in the internal BitArray
 		/// </summary>
 		/// <param name="flag">Enum Value of type provided in this LongFlags's constructor</param>
-		/// <returns>Index of provided flag in BitArray</returns>
+		/// <returns>Index of provided flag in BitArray, -1 if it does not exist</returns>
 		protected virtual int GetFlagIndex(Enum flag)
 		{
-			if (!Enums.ContainsKey(flag.GetType())) throw new ArgumentException(string.Format("Enum Type {0} was not defined in {1}'s constructor", flag.GetType(), this));
+			if (!Enums.ContainsKey(flag.GetType())) return -1;
 
 			return Enums[flag.GetType()] + (Convert.ToInt32(flag));
 		}
@@ -320,6 +381,10 @@ namespace Exanite.StatSystem.Internal
 			return returnEnums;
 		}
 
+		#endregion
+
+		#region EQUALS
+
 		/// <summary>
 		/// Returns true if this LongFlags has only the flags provided
 		/// </summary>
@@ -341,22 +406,28 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		#endregion
-	}
 
-	internal class EnumComparer : IComparer<Enum>
-	{
-		public int Compare(Enum a, Enum b)
+		#region IComparer
+
+		internal class EnumComparer : IComparer<Enum>
 		{
-			int typeCompare = a.GetType().Name.CompareTo(b.GetType().Name);
+			public int Compare(Enum a, Enum b)
+			{
+				int typeCompare = a.GetType().Name.CompareTo(b.GetType().Name);
 
-			if (typeCompare == 0)
-			{
-				return a.CompareTo(b);
-			}
-			else
-			{
-				return typeCompare;
+				if (typeCompare == 0)
+				{
+					return a.CompareTo(b);
+				}
+				else
+				{
+					return typeCompare;
+				}
 			}
 		}
+
+		#endregion
+
+		#endregion
 	}
 }
