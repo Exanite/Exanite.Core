@@ -8,11 +8,20 @@ namespace Exanite.StatSystem
 	{
 		#region Fields and Properties
 
+		/// <summary>
+		/// Value of the mod
+		/// </summary>
 		public float Value;
+		/// <summary>
+		/// How the modifier is applied to existing stats
+		/// </summary>
 		public StatModType Type;
 		protected object source;
 		protected LongFlags flags;
 
+		/// <summary>
+		/// Where the mod came from
+		/// </summary>
 		public object Source
 		{
 			get
@@ -25,6 +34,9 @@ namespace Exanite.StatSystem
 				source = value;
 			}
 		}
+		/// <summary>
+		/// What flags the modifier has
+		/// </summary>
 		public LongFlags Flags
 		{
 			get
@@ -42,6 +54,13 @@ namespace Exanite.StatSystem
 
 		#region Constructor
 
+		/// <summary>
+		/// Creates a new StatMod
+		/// </summary>
+		/// <param name="value">Value of the mod</param>
+		/// <param name="type">How the modifier is applied to existing stats</param>
+		/// <param name="source">Where the mod came from, usually "this"</param>
+		/// <param name="flags">What flags the modifier has</param>
 		public StatMod(float value, StatModType type, object source, params Enum[] flags)
 		{
 			Value = value;
