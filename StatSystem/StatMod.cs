@@ -53,6 +53,7 @@ namespace Exanite.StatSystem
 			if (flags == null) throw new ArgumentException("No arguments were passed");
 
 			List<Type> enumFlagTypes = new List<Type>();
+
 			foreach (Enum flag in flags)
 			{
 				if (!enumFlagTypes.Contains(flag.GetType()))
