@@ -15,11 +15,44 @@ namespace Exanite.StatSystem.Internal
 		protected BitArray flags;
 		protected Dictionary<Type, int> enums;
 
+		/// <summary>
+		/// BitArray with all the stored flags
+		/// </summary>
+		public BitArray Flags
+		{
+			get
+			{
+				return flags;
+			}
+
+			protected set
+			{
+				flags = value;
+			}
+		}
+		/// <summary>
+		/// How many flags are stored
+		/// </summary>
 		public int Count
 		{
 			get
 			{
-				return flags.Count;
+				return Flags.Count;
+			}
+		}
+		/// <summary>
+		/// Dictionary of all the Enum Types and their starting indexes
+		/// </summary>
+		public Dictionary<Type, int> Enums
+		{
+			get
+			{
+				return enums;
+			}
+
+			protected set
+			{
+				enums = value;
 			}
 		}
 
@@ -37,13 +70,13 @@ namespace Exanite.StatSystem.Internal
 
 			int bitsToAdd = 0;
 
-			enums = new Dictionary<Type, int>();
+			Enums = new Dictionary<Type, int>();
 
 			foreach (Type enumToAdd in flaggableEnums)
 			{
 				if (!enumToAdd.IsEnum) throw new ArgumentException(string.Format("Passed parameter {0} is not an Enum", enumToAdd));
 
-				if (!enums.ContainsKey(enumToAdd))
+				if (!Enums.ContainsKey(enumToAdd))
 				{
 					int enumMax = Enum.GetValues(enumToAdd).Cast<int>().Max();
 					int enumMin = Enum.GetValues(enumToAdd).Cast<int>().Min();
@@ -51,12 +84,12 @@ namespace Exanite.StatSystem.Internal
 					if (enumMin < 0)
 						throw new ArgumentException(string.Format("{0} must not have any negative values", enumToAdd));
 
-					enums.Add(enumToAdd, bitsToAdd);
+					Enums.Add(enumToAdd, bitsToAdd);
 					bitsToAdd += enumMax + 1;
 				}
 			}
 
-			flags = new BitArray(bitsToAdd);
+			Flags = new BitArray(bitsToAdd);
 		}
 
 		#endregion
@@ -70,7 +103,7 @@ namespace Exanite.StatSystem.Internal
 		/// <param name="flagToSet">Enum Value of type provided in this LongFlags's constructor</param>
 		public virtual void SetFlag(bool state, Enum flagToSet)
 		{
-			flags[GetFlagIndex(flagToSet)] = state;
+			Flags[GetFlagIndex(flagToSet)] = state;
 		}
 
 		/// <summary>
@@ -95,7 +128,7 @@ namespace Exanite.StatSystem.Internal
 		/// <returns>True or false</returns>
 		public virtual bool HasFlag(Enum flag)
 		{
-			if (flags[GetFlagIndex(flag)]) return true;
+			if (Flags[GetFlagIndex(flag)]) return true;
 
 			return false;
 		}
@@ -134,6 +167,69 @@ namespace Exanite.StatSystem.Internal
 			return false;
 		}
 
+		/// <summary>
+		/// Returns true if this LongFlags has only the flags provided, requires at least one flag
+		/// </summary>
+		/// <param name="flags">Enum Values of type provided in this LongFlags's constructor</param>
+		/// <returns>True or false</returns>
+		public virtual bool HasFlagsEquals(params Enum[] flags)
+		{
+			if (flags == null) throw new ArgumentException("No arguments were passed");
+
+			BitArray passedFlags = new BitArray(Count);
+
+			foreach(Enum _flag in flags)
+			{
+				GetFlagIndex(_flag);
+			}
+
+			return HasFlagsEquals(passedFlags);
+		}
+
+		/// <summary>
+		/// Returns true if this LongFlags has only the flags provided
+		/// </summary>
+		/// <param name="longFlags"></param>
+		/// <returns>True or false</returns>
+		public virtual bool HasFlagsEquals(LongFlags longFlags)
+		{
+			Type[] arrayA = longFlags.enums.Keys.ToArray();
+			Type[] arrayB = enums.Keys.ToArray();
+			bool firstCheckFailed = false;
+
+			for (int i = 0; i < arrayA.Count(); i++)
+			{
+				if(!(arrayA[i] == arrayB[i]))
+				{
+					firstCheckFailed = true;
+					break;
+				}
+			}
+
+			if(firstCheckFailed)
+			{
+				List<Enum> arrayC = GetAllTrueFlags();
+				List<Enum> arrayD = longFlags.GetAllTrueFlags();
+				arrayC.Sort(new EnumComparer());
+				arrayD.Sort(new EnumComparer());
+
+				if (arrayC.Count() != arrayD.Count()) return false;
+
+				for (int i = 0; i < arrayC.Count(); i++)
+				{
+					if ((int)(object)arrayC[i] != (int)(object)arrayD[i]) return false;
+				}
+
+				return true;
+			}
+
+			return HasFlagsEquals(longFlags.flags);
+		}
+
+		/// <summary>
+		/// Returns a list of all flags with the value, true
+		/// </summary>
+		/// <returns>List of all flags with the value, true</returns>
 		public virtual List<Enum> GetAllTrueFlags()
 		{
 			return GetAllFlagsOfIndex(GetAllTrueIndexes().ToArray());
@@ -150,9 +246,9 @@ namespace Exanite.StatSystem.Internal
 		/// <returns>Index of provided flag in BitArray</returns>
 		protected virtual int GetFlagIndex(Enum flag)
 		{
-			if (!enums.ContainsKey(flag.GetType())) throw new ArgumentException(string.Format("Enum Type {0} was not defined in {1}'s constructor", flag.GetType(), this));
+			if (!Enums.ContainsKey(flag.GetType())) throw new ArgumentException(string.Format("Enum Type {0} was not defined in {1}'s constructor", flag.GetType(), this));
 
-			return enums[flag.GetType()] + (Convert.ToInt32(flag));
+			return Enums[flag.GetType()] + (Convert.ToInt32(flag));
 		}
 
 		/// <summary>
@@ -163,7 +259,7 @@ namespace Exanite.StatSystem.Internal
 		protected virtual Enum GetFlagFromIndex(int index)
 		{
 			Type type = GetTypeFromIndex(index);
-			int value = (index - enums[type]);
+			int value = (index - Enums[type]);
 
 			return (Enum)Enum.Parse(type, value.ToString());
 		}
@@ -177,7 +273,7 @@ namespace Exanite.StatSystem.Internal
 		{
 			List<KeyValuePair<Type, int>> pairs = new List<KeyValuePair<Type, int>>();
 
-			foreach (KeyValuePair<Type, int> entry in enums)
+			foreach (KeyValuePair<Type, int> entry in Enums)
 			{
 				if (entry.Value <= index)
 				{
@@ -196,9 +292,9 @@ namespace Exanite.StatSystem.Internal
 		{
 			List<int> indexes = new List<int>();
 
-			for (int i = 0; i < flags.Count; i++)
+			for (int i = 0; i < Flags.Count; i++)
 			{
-				if (flags[i] == true)
+				if (Flags[i] == true)
 				{
 					indexes.Add(i);
 				}
@@ -224,6 +320,43 @@ namespace Exanite.StatSystem.Internal
 			return returnEnums;
 		}
 
+		/// <summary>
+		/// Returns true if this LongFlags has only the flags provided
+		/// </summary>
+		/// <param name="bitArray">BitArray of same length as this LongFlags flags BitArray</param>
+		/// <returns>True or false</returns>
+		protected virtual bool HasFlagsEquals(BitArray bitArray)
+		{
+			if (!(flags.Count == bitArray.Count)) return false;
+
+			for (int i = 0; i < flags.Count; i++)
+			{
+				if(!(flags[i] == bitArray[i]))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		#endregion
+	}
+
+	internal class EnumComparer : IComparer<Enum>
+	{
+		public int Compare(Enum a, Enum b)
+		{
+			int typeCompare = a.GetType().Name.CompareTo(b.GetType().Name);
+
+			if (typeCompare == 0)
+			{
+				return a.CompareTo(b);
+			}
+			else
+			{
+				return typeCompare;
+			}
+		}
 	}
 }
