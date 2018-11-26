@@ -5,6 +5,8 @@
 	/// </summary>
 	public enum StatModFlag
 	{
+		Base,
+
 		Damage,
 
 		Attack,
