@@ -17,7 +17,7 @@ namespace Exanite.StatSystem
 		/// </summary>
 		public StatModType Type;
 		protected object source;
-		protected LongFlags flags;
+		protected LongFlag flags;
 
 		/// <summary>
 		/// Where the mod came from
@@ -37,7 +37,7 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// What flags the modifier has
 		/// </summary>
-		public LongFlags Flags
+		public LongFlag Flags
 		{
 			get
 			{
@@ -63,27 +63,15 @@ namespace Exanite.StatSystem
 		/// <param name="flags">What flags the modifier has</param>
 		public StatMod(float value, StatModType type, object source, params Enum[] flags)
 		{
+			if (flags == null)
+			{
+				throw new ArgumentNullException(nameof(flags));
+			}
+
 			Value = value;
 			Type = type;
 			Source = source;
-
-			#region Initiate LongFlags
-
-			if (flags == null) throw new ArgumentException("No arguments were passed");
-
-			List<Type> enumFlagTypes = new List<Type>();
-
-			foreach (Enum flag in flags)
-			{
-				if (!enumFlagTypes.Contains(flag.GetType()))
-				{
-					enumFlagTypes.Add(flag.GetType());
-				}
-			}
-
-			Flags = new LongFlags(enumFlagTypes.ToArray());
-
-			#endregion
+			Flags = new LongFlag(flags);
 		}
 
 		#endregion
