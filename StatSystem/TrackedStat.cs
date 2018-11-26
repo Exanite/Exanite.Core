@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Exanite.StatSystem.Internal;
+using System;
 using System.Collections.Generic;
 
 namespace Exanite.StatSystem
@@ -7,24 +8,13 @@ namespace Exanite.StatSystem
 	{
 		#region Fields and Properties
 
-		protected float baseValue;
 		protected float flatValue;
 		protected float incValue;
 		protected float multValue;
 		protected float finalValue;
+		protected LongFlag flags;
+		protected List<TrackedStat> trackedStats;
 
-		public float BaseValue
-		{
-			get
-			{
-				return baseValue;
-			}
-
-			protected set
-			{
-				baseValue = value;
-			}
-		}
 		public float FlatValue
 		{
 			get
@@ -72,6 +62,49 @@ namespace Exanite.StatSystem
 			{
 				finalValue = value;
 			}
+		}
+		public LongFlag Flags
+		{
+			get
+			{
+				return flags;
+			}
+
+			protected set
+			{
+				flags = value;
+			}
+		}
+		public List<TrackedStat> TrackedStats
+		{
+			get
+			{
+				return trackedStats;
+			}
+
+			protected set
+			{
+				trackedStats = value;
+			}
+		}
+
+		#endregion
+
+		#region Constructor
+
+		public TrackedStat(params Enum[] flags)
+		{
+			if (flags == null)
+			{
+				throw new ArgumentNullException(nameof(flags));
+			}
+
+
+		}
+
+		public TrackedStat(TrackedStat trackedStat, params Enum[] flags)
+		{
+
 		}
 
 		#endregion
