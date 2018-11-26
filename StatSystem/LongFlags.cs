@@ -8,7 +8,7 @@ namespace Exanite.StatSystem.Internal
 	/// <summary>
 	/// Combines Enums into a flag system that supports more than 32/64 flags
 	/// </summary>
-	public class LongFlags
+	public class LongFlag
 	{
 		#region Fields and Properties
 
@@ -37,6 +37,8 @@ namespace Exanite.StatSystem.Internal
 		{
 			get
 			{
+				if (Flags == null) return 0;
+
 				return Flags.Count;
 			}
 		}
@@ -61,38 +63,86 @@ namespace Exanite.StatSystem.Internal
 		#region Constructor
 
 		/// <summary>
-		/// Creates a LongFlags with the provided Enum Types, requires at least one type
+		/// Creates an empty LongFlags with the provided Enum Types, requires at least one type
 		/// </summary>
 		/// <param name="flaggableEnums">Enum Types with no negative values (use typeof())</param>
-		public LongFlags(params Type[] flaggableEnums) // can pass any type right now, but preferably only types that are enums
+		public LongFlag(params Type[] flaggableEnums) // can pass any type right now, but preferably only types that are enums
 		{
 			if (flaggableEnums == null)
 			{
 				throw new ArgumentNullException(nameof(flaggableEnums));
 			}
 
-			int bitsToAdd = 0;
+			AddEnumTypes(flaggableEnums);
+		}
 
-			Enums = new Dictionary<Type, int>();
-
-			foreach (Type enumToAdd in flaggableEnums)
+		/// <summary>
+		/// Creates a LongFlags with the provided flags, automatically adding the required Enum Types <para />
+		/// Requires at least one flag. Enum Types cannot be changed after initialization
+		/// </summary>
+		/// <param name="flags">Flags to add after creation</param>
+		public LongFlag(params Enum[] flags)
+		{
+			if (flags == null)
 			{
-				if (!enumToAdd.IsEnum) throw new ArgumentException(string.Format("Passed parameter {0} is not an Enum", enumToAdd));
+				throw new ArgumentNullException(nameof(flags));
+			}
 
-				if (!Enums.ContainsKey(enumToAdd))
+			List<Type> enumFlagTypes = new List<Type>();
+
+			foreach (Enum flag in flags)
+			{
+				if (!enumFlagTypes.Contains(flag.GetType()))
 				{
-					int enumMax = Enum.GetValues(enumToAdd).Cast<int>().Max();
-					int enumMin = Enum.GetValues(enumToAdd).Cast<int>().Min();
-
-					if (enumMin < 0)
-						throw new ArgumentException(string.Format("{0} must not have any negative values", enumToAdd));
-
-					Enums.Add(enumToAdd, bitsToAdd);
-					bitsToAdd += enumMax + 1;
+					enumFlagTypes.Add(flag.GetType());
 				}
 			}
 
-			Flags = new BitArray(bitsToAdd);
+			AddEnumTypes(enumFlagTypes.ToArray());
+
+			SetFlags(true, flags);
+		}
+
+		/// <summary>
+		/// Adds new Enum Types to LongFlags allowing it to set new flags
+		/// </summary>
+		/// <param name="types">Enum Types to add</param>
+		public virtual void AddEnumTypes(params Type[] types)
+		{
+			if (types == null)
+			{
+				throw new ArgumentNullException(nameof(types));
+			}
+
+			foreach(Type type in types)
+			{
+				AddEnumType(type);
+			}
+		}
+
+		/// <summary>
+		/// Adds a new Enum Type to LongFlags allowing it to set new flags
+		/// </summary>
+		/// <param name="type">Enum Type to add</param>
+		public virtual void AddEnumType(Type type)
+		{
+			if (!type.IsEnum) throw new ArgumentException(string.Format("Passed parameter {0} is not an Enum Type", type));
+			if (Enums == null) Enums = new Dictionary<Type, int>();
+
+			if (!Enums.ContainsKey(type))
+			{
+				int enumMax = Enum.GetValues(type).Cast<int>().Max();
+				int enumMin = Enum.GetValues(type).Cast<int>().Min();
+
+				if (enumMin < 0)
+					throw new ArgumentException(string.Format("{0} must not have any negative values", type));
+
+				Enums.Add(type, Count);
+
+				Byte[] bits = new Byte[Count + enumMax + 1];
+				if (Flags != null) Flags.CopyTo(bits, 0);
+				Flags = new BitArray(bits);
+			}
 		}
 
 		#endregion
@@ -174,7 +224,7 @@ namespace Exanite.StatSystem.Internal
 		/// </summary>
 		/// <param name="longFlags">LongFlags to compare</param>
 		/// <returns>True or false</returns>
-		public virtual bool HasFlagsAND(LongFlags longFlags)
+		public virtual bool HasFlagsAND(LongFlag longFlags)
 		{
 			return HasFlagsAND(longFlags.GetAllTrueFlags().ToArray());
 		}
@@ -208,7 +258,7 @@ namespace Exanite.StatSystem.Internal
 		/// </summary>
 		/// <param name="longFlags">LongFlags to compare</param>
 		/// <returns>True or false</returns>
-		public virtual bool HasFlagsOR(LongFlags longFlags)
+		public virtual bool HasFlagsOR(LongFlag longFlags)
 		{
 			return HasFlagsOR(longFlags.GetAllTrueFlags().ToArray());
 		}
@@ -244,7 +294,7 @@ namespace Exanite.StatSystem.Internal
 		/// </summary>
 		/// <param name="longFlags">LongFlags to compare</param>
 		/// <returns>True or false</returns>
-		public virtual bool HasFlagsEquals(LongFlags longFlags)
+		public virtual bool HasFlagsEquals(LongFlag longFlags)
 		{
 			Type[] arrayA = longFlags.enums.Keys.ToArray();
 			Type[] arrayB = enums.Keys.ToArray();
@@ -290,6 +340,14 @@ namespace Exanite.StatSystem.Internal
 		public virtual List<Enum> GetAllTrueFlags()
 		{
 			return GetAllFlagsOfIndex(GetAllTrueIndexes().ToArray());
+		}
+
+		/// <summary>
+		/// Clears the internal BitArray of all flags
+		/// </summary>
+		public virtual void ClearBitArray()
+		{
+			flags.SetAll(false);
 		}
 
 		#endregion
