@@ -60,10 +60,10 @@ namespace Exanite.StatSystem.Internal
 
 		#endregion
 
-		#region Constructor
+		#region Constructors
 
 		/// <summary>
-		/// Creates an empty LongFlags with the provided Enum Types, requires at least one type
+		/// Creates an empty LongFlag with the provided Enum Types, requires at least one type
 		/// </summary>
 		/// <param name="flaggableEnums">Enum Types with no negative values (use typeof())</param>
 		public LongFlag(params Type[] flaggableEnums) // can pass any type right now, but preferably only types that are enums
@@ -77,7 +77,7 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		/// <summary>
-		/// Creates a LongFlags with the provided flags, automatically adding the required Enum Types <para />
+		/// Creates a LongFlag with the provided flags, automatically adding the required Enum Types <para />
 		/// Requires at least one flag. Enum Types cannot be changed after initialization
 		/// </summary>
 		/// <param name="flags">Flags to add after creation</param>
@@ -104,7 +104,7 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		/// <summary>
-		/// Adds new Enum Types to LongFlags allowing it to set new flags
+		/// Adds new Enum Types to LongFlag allowing it to set new flags
 		/// </summary>
 		/// <param name="types">Enum Types to add</param>
 		public virtual void AddEnumTypes(params Type[] types)
@@ -121,7 +121,7 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		/// <summary>
-		/// Adds a new Enum Type to LongFlags allowing it to set new flags
+		/// Adds a new Enum Type to LongFlag allowing it to set new flags
 		/// </summary>
 		/// <param name="type">Enum Type to add</param>
 		public virtual void AddEnumType(Type type)
@@ -155,7 +155,7 @@ namespace Exanite.StatSystem.Internal
 		/// Sets a flag to a provided state
 		/// </summary>
 		/// <param name="state">True or false</param>
-		/// <param name="flagToSet">Enum Value of type provided in this LongFlags's constructor</param>
+		/// <param name="flagToSet">Enum Value of type provided in this LongFlag's constructor</param>
 		public virtual void SetFlag(bool state, Enum flagToSet)
 		{
 			int index = GetFlagIndex(flagToSet);
@@ -169,7 +169,7 @@ namespace Exanite.StatSystem.Internal
 		/// Sets a a number of flags to a provided state, requires at least one flag
 		/// </summary>
 		/// <param name="state">True or false</param>
-		/// <param name="flagsToSet">Enum Values of type provided in this LongFlags's constructor</param>
+		/// <param name="flagsToSet">Enum Values of type provided in this LongFlag's constructor</param>
 		public virtual void SetFlags(bool state, params Enum[] flagsToSet)
 		{
 			if (flagsToSet == null) throw new ArgumentException("No arguments were passed");
@@ -182,12 +182,12 @@ namespace Exanite.StatSystem.Internal
 
 		#endregion
 
-		#region AND
+		#region And
 
 		/// <summary>
-		/// Returns true if this LongFlags has the provided flag, false if not, requires at least one flag
+		/// Returns true if this LongFlag has the provided flag, false if not, requires at least one flag
 		/// </summary>
-		/// <param name="flag">Enum Value of type provided in this LongFlags's constructor</param>
+		/// <param name="flag">Enum Value of type provided in this LongFlag's constructor</param>
 		/// <returns>True or false</returns>
 		public virtual bool HasFlag(Enum flag)
 		{
@@ -200,11 +200,11 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		/// <summary>
-		/// Returns true if this LongFlags has ALL of the provided flags, false if not, requires at least one flag
+		/// Returns true if this LongFlag has ALL of the provided flags, false if not, requires at least one flag
 		/// </summary>
-		/// <param name="flags">Enum Values of type provided in this LongFlags's constructor</param>
+		/// <param name="flags">Enum Values of type provided in this LongFlag's constructor</param>
 		/// <returns>True or false</returns>
-		public virtual bool HasFlagsAND(params Enum[] flags)
+		public virtual bool HasFlagsAnd(params Enum[] flags)
 		{
 			if (flags == null)
 			{
@@ -220,25 +220,25 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		/// <summary>
-		/// Returns true if this LongFlags has ALL of the flags in the provided LongFlags, false if not
+		/// Returns true if this LongFlag has ALL of the flags in the provided LongFlag, false if not
 		/// </summary>
-		/// <param name="longFlags">LongFlags to compare</param>
+		/// <param name="longFlag">LongFlag to compare</param>
 		/// <returns>True or false</returns>
-		public virtual bool HasFlagsAND(LongFlag longFlags)
+		public virtual bool HasFlagsAnd(LongFlag longFlag)
 		{
-			return HasFlagsAND(longFlags.GetAllTrueFlags().ToArray());
+			return HasFlagsAnd(longFlag.GetAllTrueFlags().ToArray());
 		}
 
 		#endregion
 
-		#region OR
+		#region Or
 
 		/// <summary>
-		/// Returns true if this LongFlags has ANY of the provided flags, false if not, requires at least one flag
+		/// Returns true if this LongFlag has ANY of the provided flags, false if not, requires at least one flag
 		/// </summary>
-		/// <param name="flags">Enum Values of type provided in this LongFlags's constructor</param>
+		/// <param name="flags">Enum Values of type provided in this LongFlag's constructor</param>
 		/// <returns>True or false</returns>
-		public virtual bool HasFlagsOR(params Enum[] flags)
+		public virtual bool HasFlagsOr(params Enum[] flags)
 		{
 			if (flags == null)
 			{
@@ -254,23 +254,23 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		/// <summary>
-		/// Returns true if this LongFlags has ANY of the flags in the provided LongFlags, false if not
+		/// Returns true if this LongFlag has ANY of the flags in the provided LongFlag, false if not
 		/// </summary>
-		/// <param name="longFlags">LongFlags to compare</param>
+		/// <param name="longFlag">LongFlag to compare</param>
 		/// <returns>True or false</returns>
-		public virtual bool HasFlagsOR(LongFlag longFlags)
+		public virtual bool HasFlagsOr(LongFlag longFlag)
 		{
-			return HasFlagsOR(longFlags.GetAllTrueFlags().ToArray());
+			return HasFlagsOr(longFlag.GetAllTrueFlags().ToArray());
 		}
 
 		#endregion
 
-		#region EQUALS
+		#region Equals
 
 		/// <summary>
-		/// Returns true if this LongFlags has only the flags provided, requires at least one flag
+		/// Returns true if this LongFlag has only the flags provided, requires at least one flag
 		/// </summary>
-		/// <param name="flags">Enum Values of type provided in this LongFlags's constructor</param>
+		/// <param name="flags">Enum Values of type provided in this LongFlag's constructor</param>
 		/// <returns>True or false</returns>
 		public virtual bool HasFlagsEquals(params Enum[] flags)
 		{
@@ -290,13 +290,13 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		/// <summary>
-		/// Returns true if this LongFlags has only the flags provided
+		/// Returns true if this LongFlag has only the flags provided
 		/// </summary>
-		/// <param name="longFlags">LongFlags to compare</param>
+		/// <param name="longFlag">LongFlag to compare</param>
 		/// <returns>True or false</returns>
-		public virtual bool HasFlagsEquals(LongFlag longFlags)
+		public virtual bool HasFlagsEquals(LongFlag longFlag)
 		{
-			Type[] arrayA = longFlags.enums.Keys.ToArray();
+			Type[] arrayA = longFlag.enums.Keys.ToArray();
 			Type[] arrayB = enums.Keys.ToArray();
 			bool firstCheckFailed = false;
 
@@ -312,7 +312,7 @@ namespace Exanite.StatSystem.Internal
 			if(firstCheckFailed)
 			{
 				List<Enum> arrayC = GetAllTrueFlags();
-				List<Enum> arrayD = longFlags.GetAllTrueFlags();
+				List<Enum> arrayD = longFlag.GetAllTrueFlags();
 				arrayC.Sort(new EnumComparer());
 				arrayD.Sort(new EnumComparer());
 
@@ -326,15 +326,15 @@ namespace Exanite.StatSystem.Internal
 				return true;
 			}
 
-			return HasFlagsEquals(longFlags.flags);
+			return HasFlagsEquals(longFlag.flags);
 		}
 
 		#endregion
 
-		#region OTHER
+		#region Other
 
 		/// <summary>
-		/// Returns a list of all flags with the value, true
+		/// Returns a list of all flags with the value 'true'
 		/// </summary>
 		/// <returns>List of all flags with the value, true</returns>
 		public virtual List<Enum> GetAllTrueFlags()
@@ -350,6 +350,38 @@ namespace Exanite.StatSystem.Internal
 			flags.SetAll(false);
 		}
 
+		/// <summary>
+		/// Returns true if this LongFlag matches the flags in the provided LongFlag with the provided match type
+		/// </summary>
+		/// <param name="matchType">How to match the flags</param>
+		/// <param name="flags">Flags to compare</param>
+		/// <returns>True or false</returns>
+		public virtual bool HasFlags(FlagMatchType matchType, params Enum[] flags)
+		{
+			switch (matchType)
+			{
+				case (FlagMatchType.And):
+					return HasFlagsAnd(flags);
+				case (FlagMatchType.Or):
+					return HasFlagsOr(flags);
+				case (FlagMatchType.Equals):
+					return HasFlagsEquals(flags);
+				default:
+					throw new ArgumentOutOfRangeException($"{matchType} does not have a code path");
+			}
+		}
+
+		/// <summary>
+		/// Returns true if this LongFlag matches the flags provided with the provided match type
+		/// </summary>
+		/// <param name="matchType">How to match the flags</param>
+		/// <param name="longFlag">LongFlag to compare</param>
+		/// <returns>True or false</returns>
+		public virtual bool HasFlags(FlagMatchType matchType, LongFlag longFlag)
+		{
+			return HasFlags(matchType, longFlag.GetAllTrueFlags().ToArray());
+		}
+
 		#endregion
 
 		#endregion
@@ -361,7 +393,7 @@ namespace Exanite.StatSystem.Internal
 		/// <summary>
 		/// Returns a flag's index in the internal BitArray
 		/// </summary>
-		/// <param name="flag">Enum Value of type provided in this LongFlags's constructor</param>
+		/// <param name="flag">Enum Value of type provided in this LongFlag's constructor</param>
 		/// <returns>Index of provided flag in BitArray, -1 if it does not exist</returns>
 		protected virtual int GetFlagIndex(Enum flag)
 		{
@@ -441,12 +473,12 @@ namespace Exanite.StatSystem.Internal
 
 		#endregion
 
-		#region EQUALS
+		#region Equals
 
 		/// <summary>
-		/// Returns true if this LongFlags has only the flags provided
+		/// Returns true if this LongFlag has only the flags provided
 		/// </summary>
-		/// <param name="bitArray">BitArray of same length as this LongFlags flags BitArray</param>
+		/// <param name="bitArray">BitArray of same length as this LongFlag flags BitArray</param>
 		/// <returns>True or false</returns>
 		protected virtual bool HasFlagsEquals(BitArray bitArray)
 		{
