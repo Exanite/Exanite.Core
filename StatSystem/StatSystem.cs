@@ -4,6 +4,9 @@ using Exanite.StatSystem.Internal;
 
 namespace Exanite.StatSystem
 {
+	/// <summary>
+	/// Handles everything you need for a stat system in a game
+	/// </summary>
 	public class StatSystem
 	{
 		#region Fields, Properties, and Events
@@ -42,8 +45,18 @@ namespace Exanite.StatSystem
 			}
 		}
 
+		/// <summary>
+		/// Delegate used for mod events
+		/// </summary>
+		/// <param name="mod"></param>
 		public delegate void ModEvent(StatMod mod);
+		/// <summary>
+		/// Called when a mod is added
+		/// </summary>
 		public ModEvent ModAdded;
+		/// <summary>
+		/// Called when a mod is removed
+		/// </summary>
 		public ModEvent ModRemoved;
 
 		#endregion
@@ -63,16 +76,16 @@ namespace Exanite.StatSystem
 
 		#region Retrieving Mods
 
-		#region AND
+		#region And
 
 		/// <summary>
-		/// Returns all modifiers with all of the flags in the provided LongFlags
+		/// Returns all modifiers with all of the flags in the provided LongFlag
 		/// </summary>
-		/// <param name="longFlags">LongFlags to compare</param>
+		/// <param name="longFlag">LongFlag to compare</param>
 		/// <returns>List of all modifiers with all of the provided flags</returns>
-		public virtual List<StatMod> GetAllModsWithFlagsAND(LongFlag longFlags)
+		public virtual List<StatMod> GetAllModsWithFlagsAnd(LongFlag longFlag)
 		{
-			return GetAllModsWithFlagsAND(longFlags.GetAllTrueFlags().ToArray());
+			return GetAllModsWithFlagsAnd(longFlag.GetAllTrueFlags().ToArray());
 		}
 
 		/// <summary>
@@ -80,7 +93,7 @@ namespace Exanite.StatSystem
 		/// </summary>
 		/// <param name="flags">Flags to compare</param>
 		/// <returns>List of all modifiers with all of the provided flags</returns>
-		public virtual List<StatMod> GetAllModsWithFlagsAND(params Enum[] flags)
+		public virtual List<StatMod> GetAllModsWithFlagsAnd(params Enum[] flags)
 		{
 			if (flags == null)
 			{
@@ -91,7 +104,7 @@ namespace Exanite.StatSystem
 
 			foreach (StatMod mod in Modifiers)
 			{
-				if (mod.Flags.HasFlagsAND(flags))
+				if (mod.Flags.HasFlagsAnd(flags))
 				{
 					mods.Add(mod);
 				}
@@ -102,16 +115,16 @@ namespace Exanite.StatSystem
 
 		#endregion
 
-		#region OR
+		#region Or
 
 		/// <summary>
-		/// Returns all modifiers with any of the flags in the provided LongFlags
+		/// Returns all modifiers with any of the flags in the provided LongFlag
 		/// </summary>
-		/// <param name="longFlags">LongFlags to compare</param>
+		/// <param name="longFlag">LongFlag to compare</param>
 		/// <returns>List of all modifiers with any of the provided flags</returns>
-		public virtual List<StatMod> GetAllModsWithFlagsOR(LongFlag longFlags)
+		public virtual List<StatMod> GetAllModsWithFlagsOr(LongFlag longFlag)
 		{
-			return GetAllModsWithFlagsOR(longFlags.GetAllTrueFlags().ToArray());
+			return GetAllModsWithFlagsOr(longFlag.GetAllTrueFlags().ToArray());
 		}
 
 		/// <summary>
@@ -119,7 +132,7 @@ namespace Exanite.StatSystem
 		/// </summary>
 		/// <param name="flags">Flags to compare</param>
 		/// <returns>List of all modifiers with any of the provided flags</returns>
-		public virtual List<StatMod> GetAllModsWithFlagsOR(params Enum[] flags)
+		public virtual List<StatMod> GetAllModsWithFlagsOr(params Enum[] flags)
 		{
 			if (flags == null)
 			{
@@ -130,7 +143,7 @@ namespace Exanite.StatSystem
 
 			foreach (StatMod mod in Modifiers)
 			{
-				if (mod.Flags.HasFlagsOR(flags))
+				if (mod.Flags.HasFlagsOr(flags))
 				{
 					mods.Add(mod);
 				}
@@ -141,16 +154,16 @@ namespace Exanite.StatSystem
 
 		#endregion
 
-		#region EQUALS
+		#region Equals
 
 		/// <summary>
-		/// Returns all modifiers with only the flags in the provided LongFlags
+		/// Returns all modifiers with only the flags in the provided LongFlag
 		/// </summary>
-		/// <param name="longFlags">LongFlags to compare</param>
+		/// <param name="longFlag">LongFlag to compare</param>
 		/// <returns>List of all modifiers with only of the provided flags</returns>
-		public virtual List<StatMod> GetAllModsWithFlagsEQUALS(LongFlag longFlags)
+		public virtual List<StatMod> GetAllModsWithFlagsEquals(LongFlag longFlag)
 		{
-			return GetAllModsWithFlagsEQUALS(longFlags.GetAllTrueFlags().ToArray());
+			return GetAllModsWithFlagsEquals(longFlag.GetAllTrueFlags().ToArray());
 		}
 
 		/// <summary>
@@ -158,7 +171,7 @@ namespace Exanite.StatSystem
 		/// </summary>
 		/// <param name="flags">Flags to compare</param>
 		/// <returns>List of all modifiers with only the provided flags</returns>
-		public virtual List<StatMod> GetAllModsWithFlagsEQUALS(params Enum[] flags)
+		public virtual List<StatMod> GetAllModsWithFlagsEquals(params Enum[] flags)
 		{
 			if (flags == null)
 			{
@@ -176,6 +189,42 @@ namespace Exanite.StatSystem
 			}
 
 			return mods;
+		}
+
+		#endregion
+
+		#region Other
+
+		/// <summary>
+		/// Returns all modifiers that match the flags in the provided LongFlag with the provided match type
+		/// </summary>
+		/// <param name="matchType">How to match the flags</param>
+		/// <param name="longFlag">LongFlag to compare</param>
+		/// <returns>List of matched modifiers</returns>
+		public virtual List<StatMod> GetAllModsWithFlags(FlagMatchType matchType, LongFlag longFlag)
+		{
+			return GetAllModsWithFlags(matchType, longFlag.GetAllTrueFlags().ToArray());
+		}
+
+		/// <summary>
+		/// Returns all modifiers that match the flags provided with the provided match type
+		/// </summary>
+		/// <param name="matchType">How to match the flags</param>
+		/// <param name="flags">Flags to compare</param>
+		/// <returns>List of matched modifiers</returns>
+		public virtual List<StatMod> GetAllModsWithFlags(FlagMatchType matchType, params Enum[] flags)
+		{
+			switch (matchType)
+			{
+				case (FlagMatchType.And):
+					return GetAllModsWithFlagsAnd(flags);
+				case (FlagMatchType.Or):
+					return GetAllModsWithFlagsOr(flags);
+				case (FlagMatchType.Equals):
+					return GetAllModsWithFlagsEquals(flags);
+				default:
+					throw new ArgumentOutOfRangeException($"{matchType} does not have a code path");
+			}
 		}
 
 		#endregion
@@ -326,6 +375,108 @@ namespace Exanite.StatSystem
 			for (int i = modifiers.Count - 1; i >= 0; i--)
 			{
 				RemoveModifier(modifiers[i]);
+			}
+		}
+
+		#endregion
+
+		#endregion
+
+		#region Tracked Stats
+
+		#region Adding
+
+		/// <summary>
+		/// Creates a new TrackedStat that listens to new modifiers in the StatSystem
+		/// </summary>
+		/// <param name="name">Name of this TrackedStat</param>
+		/// <param name="flags">Flags of this TrackedStat</param>
+		/// <param name="matchType">How flags are matched</param>
+		public virtual void AddTrackedStat(string name, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
+		{
+			if(!trackedStats.ContainsKey(name))
+			{
+				throw new ArgumentException($"TrackedStat of {name} already exists in the StatSystem");
+			}
+			else
+			{
+				trackedStats.Add(name, new TrackedStat(this, flags, matchType));
+			}
+		}
+
+		/// <summary>
+		/// Creates a new TrackedStat in the StatSystem that adds two+ other TrackedStats together and listens to new modifiers in the StatSystem
+		/// </summary>
+		/// <param name="name">Name of the TrackedStat</param>
+		/// <param name="trackedStats">Other TrackedStats to track</param>
+		/// <param name="flags">Flags of this TrackedStat</param>
+		/// <param name="matchType">How flags are matched</param>
+		public virtual void AddTrackedStat(string name, TrackedStat[] trackedStats, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
+		{
+			if (!this.trackedStats.ContainsKey(name))
+			{
+				throw new ArgumentException($"TrackedStat of {name} already exists in the StatSystem");
+			}
+			else
+			{
+				this.trackedStats.Add(name, new TrackedStat(this, trackedStats, flags, matchType));
+			}
+		}
+
+		/// <summary>
+		/// Creates a new TrackedStat in the StatSystem that adds two+ other TrackedStats together and listens to new modifiers in the StatSystem
+		/// </summary>
+		/// <param name="name">Name of the TrackedStat</param>
+		/// <param name="trackedStat">Other TrackedStat to track</param>
+		/// <param name="flags">Flags of this TrackedStat</param>
+		/// <param name="matchType">How flags are matched</param>
+		public virtual void AddTrackedStat(string name, TrackedStat trackedStat, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
+		{
+			if (!trackedStats.ContainsKey(name))
+			{
+				throw new ArgumentException($"TrackedStat of {name} already exists in the StatSystem");
+			}
+			else
+			{
+				trackedStats.Add(name, new TrackedStat(this, trackedStat, flags, matchType));
+			}
+		}
+
+		/// <summary>
+		/// Creates a new TrackedStat in the statSystem that adds two+ other TrackedStats together
+		/// </summary>
+		/// <param name="name">Name of the TrackedStat</param>
+		/// <param name="trackedStats">Other TrackedStats to track</param>
+		public virtual void AddTrackedStat(string name, params TrackedStat[] trackedStats)
+		{
+			if (!this.trackedStats.ContainsKey(name))
+			{
+				throw new ArgumentException($"TrackedStat of {name} already exists in the StatSystem");
+			}
+			else
+			{
+				this.trackedStats.Add(name, new TrackedStat(trackedStats));
+			}
+		}
+
+		#endregion
+
+		#region Retrieving
+
+		/// <summary>
+		/// Retrieves a TrackedStat by name from the StatSystem
+		/// </summary>
+		/// <param name="name">Name of the TrackedStat</param>
+		/// <returns>Retrieved TrackedStat</returns>
+		public virtual TrackedStat GetTrackedStat(string name)
+		{
+			if(trackedStats.ContainsKey(name))
+			{
+				return trackedStats[name];
+			}
+			else
+			{
+				throw new ArgumentException($"TrackedStat of {name} does not exist in the StatSystem");
 			}
 		}
 
