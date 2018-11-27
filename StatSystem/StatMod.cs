@@ -1,9 +1,11 @@
 ﻿using Exanite.StatSystem.Internal;
 using System;
-using System.Collections.Generic;
 
 namespace Exanite.StatSystem
 {
+	/// <summary>
+	/// Class used in the StatSystem to modify existing stats
+	/// </summary>
 	public class StatMod
 	{
 		#region Fields and Properties
