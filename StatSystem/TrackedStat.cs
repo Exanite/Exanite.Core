@@ -11,6 +11,7 @@ namespace Exanite.StatSystem
 	{
 		#region Fields and Properties
 
+		protected string name = "Unnamed Stat";
 		protected float flatValue = 0f;
 		protected float incValue = 1f;
 		protected float multValue = 1f;
@@ -20,6 +21,21 @@ namespace Exanite.StatSystem
 		protected StatSystem statSystem;
 		protected List<TrackedStat> trackedStats;
 
+		/// <summary>
+		/// Name of the stat
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+				return name;
+			}
+
+			protected set
+			{
+				name = value;
+			}
+		}
 		/// <summary>
 		/// Flat value of the stat
 		/// </summary>
@@ -52,6 +68,8 @@ namespace Exanite.StatSystem
 					{
 						trackedStatsBonus += stat.IncValue;
 					}
+
+					trackedStatsBonus -= 1;
 				}
 				return incValue + trackedStatsBonus;
 			}
@@ -281,6 +299,15 @@ namespace Exanite.StatSystem
 		protected virtual bool CheckModMatch(StatMod mod)
 		{
 			return mod.Flags.HasFlags(matchType, Flags);
+		}
+
+		#endregion
+
+		#region Other
+
+		public virtual void SetName(string name)
+		{
+			Name = name;
 		}
 
 		#endregion
