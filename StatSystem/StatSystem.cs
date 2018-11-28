@@ -392,15 +392,17 @@ namespace Exanite.StatSystem
 		/// <param name="name">Name of this TrackedStat</param>
 		/// <param name="flags">Flags of this TrackedStat</param>
 		/// <param name="matchType">How flags are matched</param>
-		public virtual void AddTrackedStat(string name, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
+		public virtual TrackedStat AddTrackedStat(string name, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
 		{
-			if(!trackedStats.ContainsKey(name))
+			if(trackedStats.ContainsKey(name))
 			{
 				throw new ArgumentException($"TrackedStat of {name} already exists in the StatSystem");
 			}
 			else
 			{
 				trackedStats.Add(name, new TrackedStat(this, flags, matchType));
+				trackedStats[name].SetName(name);
+				return trackedStats[name];
 			}
 		}
 
@@ -411,15 +413,17 @@ namespace Exanite.StatSystem
 		/// <param name="trackedStats">Other TrackedStats to track</param>
 		/// <param name="flags">Flags of this TrackedStat</param>
 		/// <param name="matchType">How flags are matched</param>
-		public virtual void AddTrackedStat(string name, TrackedStat[] trackedStats, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
+		public virtual TrackedStat AddTrackedStat(string name, TrackedStat[] trackedStats, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
 		{
-			if (!this.trackedStats.ContainsKey(name))
+			if (this.trackedStats.ContainsKey(name))
 			{
 				throw new ArgumentException($"TrackedStat of {name} already exists in the StatSystem");
 			}
 			else
 			{
 				this.trackedStats.Add(name, new TrackedStat(this, trackedStats, flags, matchType));
+				this.trackedStats[name].SetName(name);
+				return this.trackedStats[name];
 			}
 		}
 
@@ -430,15 +434,17 @@ namespace Exanite.StatSystem
 		/// <param name="trackedStat">Other TrackedStat to track</param>
 		/// <param name="flags">Flags of this TrackedStat</param>
 		/// <param name="matchType">How flags are matched</param>
-		public virtual void AddTrackedStat(string name, TrackedStat trackedStat, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
+		public virtual TrackedStat AddTrackedStat(string name, TrackedStat trackedStat, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
 		{
-			if (!trackedStats.ContainsKey(name))
+			if (trackedStats.ContainsKey(name))
 			{
 				throw new ArgumentException($"TrackedStat of {name} already exists in the StatSystem");
 			}
 			else
 			{
 				trackedStats.Add(name, new TrackedStat(this, trackedStat, flags, matchType));
+				trackedStats[name].SetName(name);
+				return trackedStats[name];
 			}
 		}
 
@@ -447,15 +453,17 @@ namespace Exanite.StatSystem
 		/// </summary>
 		/// <param name="name">Name of the TrackedStat</param>
 		/// <param name="trackedStats">Other TrackedStats to track</param>
-		public virtual void AddTrackedStat(string name, params TrackedStat[] trackedStats)
+		public virtual TrackedStat AddTrackedStat(string name, params TrackedStat[] trackedStats)
 		{
-			if (!this.trackedStats.ContainsKey(name))
+			if (this.trackedStats.ContainsKey(name))
 			{
 				throw new ArgumentException($"TrackedStat of {name} already exists in the StatSystem");
 			}
 			else
 			{
 				this.trackedStats.Add(name, new TrackedStat(trackedStats));
+				this.trackedStats[name].SetName(name);
+				return this.trackedStats[name];
 			}
 		}
 
