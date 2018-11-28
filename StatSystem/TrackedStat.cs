@@ -1,25 +1,29 @@
 ﻿using Exanite.StatSystem.Internal;
 using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using UnityEngine;
+using Sirenix.Serialization;
 
 namespace Exanite.StatSystem
 {
 	/// <summary>
 	/// Tracks modifiers and other tracked stats to produce a FinalValue
 	/// </summary>
+	[Serializable]
 	public class TrackedStat
 	{
 		#region Fields and Properties
 
-		protected string name = "Unnamed Stat";
-		protected float flatValue = 0f;
-		protected float incValue = 1f;
-		protected float multValue = 1f;
-		protected LongFlag flags;
-		protected FlagMatchType matchType;
+		[HideInInspector] [OdinSerialize] protected string name = "Unnamed Stat";
+		[HideInInspector] [OdinSerialize] protected float flatValue = 0f;
+		[HideInInspector] [OdinSerialize] protected float incValue = 1f;
+		[HideInInspector] [OdinSerialize] protected float multValue = 1f;
+		[HideInInspector] [OdinSerialize] protected LongFlag flags;
+		[HideInInspector] [OdinSerialize] protected FlagMatchType matchType;
 
-		protected StatSystem statSystem;
-		protected List<TrackedStat> trackedStats;
+		[HideInInspector] [OdinSerialize] protected StatSystem statSystem;
+		[HideInInspector] [OdinSerialize] protected List<TrackedStat> trackedStats;
 
 		/// <summary>
 		/// Name of the stat
@@ -95,6 +99,7 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Final value of the stat (Flat * Inc * Mult)
 		/// </summary>
+		[ShowInInspector]
 		public float FinalValue
 		{
 			get
