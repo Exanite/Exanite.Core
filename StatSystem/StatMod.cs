@@ -1,5 +1,8 @@
 ﻿using Exanite.StatSystem.Internal;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using System;
+using UnityEngine;
 
 namespace Exanite.StatSystem
 {
@@ -10,17 +13,36 @@ namespace Exanite.StatSystem
 	{
 		#region Fields and Properties
 
-		/// <summary>
-		/// Value of the mod
-		/// </summary>
-		public float Value;
-		/// <summary>
-		/// How the modifier is applied to existing stats
-		/// </summary>
-		public StatModType Type;
-		protected object source;
-		protected LongFlag flags;
+		[HideInInspector] [OdinSerialize] protected string name;
+		[HideInInspector] [OdinSerialize] protected float value;
+		[HideInInspector] [OdinSerialize] protected StatModType type;
+		[HideInInspector] [OdinSerialize] protected object source;
+		[HideInInspector] [OdinSerialize] protected LongFlag flags;
 
+		/// <summary>
+		/// Automatically generated name for this modifier
+		/// </summary>
+		[ShowInInspector]
+		public string Name
+		{
+			get
+			{
+				if(string.IsNullOrEmpty(name))
+				{
+					foreach(Enum flag in Flags.GetAllTrueFlags())
+					{
+						name += $"{flag} ";
+						name.Trim();
+					}
+				}
+				return name;
+			}
+
+			protected set
+			{
+				name = value;
+			}
+		}
 		/// <summary>
 		/// Where the mod came from
 		/// </summary>
@@ -51,6 +73,38 @@ namespace Exanite.StatSystem
 				flags = value;
 			}
 		}
+		/// <summary>
+		/// Value of the mod
+		/// </summary>
+		[ShowInInspector]
+		public float Value
+		{
+			get
+			{
+				return value;
+			}
+
+			protected set
+			{
+				this.value = value;
+			}
+		}
+		/// <summary>
+		/// How the modifier is applied to existing stats
+		/// </summary>
+		[ShowInInspector]
+		public StatModType Type
+		{
+			get
+			{
+				return type;
+			}
+
+			protected set
+			{
+				type = value;
+			}
+		}
 
 		#endregion
 
@@ -74,6 +128,11 @@ namespace Exanite.StatSystem
 			Type = type;
 			Source = source;
 			Flags = new LongFlag(flags);
+		}
+
+		public StatMod(string name, float value, StatModType type, object source, params Enum[] flags) : this(value, type, source, flags)
+		{
+			this.name = name;
 		}
 
 		#endregion
