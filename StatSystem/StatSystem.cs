@@ -1,63 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using Exanite.StatSystem.Internal;
+using Sirenix.Serialization;
+using Sirenix.OdinInspector;
+using UnityEngine;
+using System.Linq;
 
 namespace Exanite.StatSystem
 {
 	/// <summary>
 	/// Handles everything you need for a stat system in a game
 	/// </summary>
+	[Serializable]
 	public class StatSystem
 	{
 		#region Fields, Properties, and Events
 
-		protected List<StatMod> modifiers;
-		protected Dictionary<string, TrackedStat> trackedStats;
-
-		/// <summary>
-		/// List of all the modifiers
-		/// </summary>
-		public List<StatMod> Modifiers
-		{
-			get
-			{
-				return modifiers;
-			}
-
-			protected set
-			{
-				modifiers = value;
-			}
-		}
-		/// <summary>
-		/// Dictionary with all of the Tracked Stats
-		/// </summary>
-		public Dictionary<string, TrackedStat> TrackedStats
-		{
-			get
-			{
-				return trackedStats;
-			}
-
-			protected set
-			{
-				trackedStats = value;
-			}
-		}
+		[OdinSerialize] [ReadOnly] protected List<StatMod> modifiers;
+		[OdinSerialize] [ReadOnly] protected Dictionary<string, TrackedStat> trackedStats;
 
 		/// <summary>
 		/// Delegate used for mod events
 		/// </summary>
-		/// <param name="mod"></param>
+		/// <param name="mod">Mod involved in the event</param>
 		public delegate void ModEvent(StatMod mod);
 		/// <summary>
 		/// Called when a mod is added
 		/// </summary>
-		public ModEvent ModAdded;
+		[HideInInspector] public ModEvent ModAdded;
 		/// <summary>
 		/// Called when a mod is removed
 		/// </summary>
-		public ModEvent ModRemoved;
+		[HideInInspector] public ModEvent ModRemoved;
 
 		#endregion
 
@@ -68,132 +42,13 @@ namespace Exanite.StatSystem
 		/// </summary>
 		public StatSystem()
 		{
-			Modifiers = new List<StatMod>();
-			TrackedStats = new Dictionary<string, TrackedStat>();
+			modifiers = new List<StatMod>();
+			trackedStats = new Dictionary<string, TrackedStat>();
 		}
 
 		#endregion
 
 		#region Retrieving Mods
-
-		#region And
-
-		/// <summary>
-		/// Returns all modifiers with all of the flags in the provided LongFlag
-		/// </summary>
-		/// <param name="longFlag">LongFlag to compare</param>
-		/// <returns>List of all modifiers with all of the provided flags</returns>
-		public virtual List<StatMod> GetAllModsWithFlagsAnd(LongFlag longFlag)
-		{
-			return GetAllModsWithFlagsAnd(longFlag.GetAllTrueFlags().ToArray());
-		}
-
-		/// <summary>
-		/// Returns all modifiers with all of the flags provided
-		/// </summary>
-		/// <param name="flags">Flags to compare</param>
-		/// <returns>List of all modifiers with all of the provided flags</returns>
-		public virtual List<StatMod> GetAllModsWithFlagsAnd(params Enum[] flags)
-		{
-			if (flags == null)
-			{
-				throw new ArgumentNullException(nameof(flags));
-			}
-
-			List<StatMod> mods = new List<StatMod>();
-
-			foreach (StatMod mod in Modifiers)
-			{
-				if (mod.Flags.HasFlagsAnd(flags))
-				{
-					mods.Add(mod);
-				}
-			}
-
-			return mods;
-		}
-
-		#endregion
-
-		#region Or
-
-		/// <summary>
-		/// Returns all modifiers with any of the flags in the provided LongFlag
-		/// </summary>
-		/// <param name="longFlag">LongFlag to compare</param>
-		/// <returns>List of all modifiers with any of the provided flags</returns>
-		public virtual List<StatMod> GetAllModsWithFlagsOr(LongFlag longFlag)
-		{
-			return GetAllModsWithFlagsOr(longFlag.GetAllTrueFlags().ToArray());
-		}
-
-		/// <summary>
-		/// Returns all modifiers with all of the flags provided
-		/// </summary>
-		/// <param name="flags">Flags to compare</param>
-		/// <returns>List of all modifiers with any of the provided flags</returns>
-		public virtual List<StatMod> GetAllModsWithFlagsOr(params Enum[] flags)
-		{
-			if (flags == null)
-			{
-				throw new ArgumentNullException(nameof(flags));
-			}
-
-			List<StatMod> mods = new List<StatMod>();
-
-			foreach (StatMod mod in Modifiers)
-			{
-				if (mod.Flags.HasFlagsOr(flags))
-				{
-					mods.Add(mod);
-				}
-			}
-
-			return mods;
-		}
-
-		#endregion
-
-		#region Equals
-
-		/// <summary>
-		/// Returns all modifiers with only the flags in the provided LongFlag
-		/// </summary>
-		/// <param name="longFlag">LongFlag to compare</param>
-		/// <returns>List of all modifiers with only of the provided flags</returns>
-		public virtual List<StatMod> GetAllModsWithFlagsEquals(LongFlag longFlag)
-		{
-			return GetAllModsWithFlagsEquals(longFlag.GetAllTrueFlags().ToArray());
-		}
-
-		/// <summary>
-		/// Returns all modifiers with only the flags provided
-		/// </summary>
-		/// <param name="flags">Flags to compare</param>
-		/// <returns>List of all modifiers with only the provided flags</returns>
-		public virtual List<StatMod> GetAllModsWithFlagsEquals(params Enum[] flags)
-		{
-			if (flags == null)
-			{
-				throw new ArgumentNullException(nameof(flags));
-			}
-
-			List<StatMod> mods = new List<StatMod>();
-
-			foreach(StatMod mod in Modifiers)
-			{
-				if (mod.Flags.HasFlagsEquals(flags))
-				{
-					mods.Add(mod);
-				}
-			}
-
-			return mods;
-		}
-
-		#endregion
-
-		#region Other
 
 		/// <summary>
 		/// Returns all modifiers that match the flags in the provided LongFlag with the provided match type
@@ -214,20 +69,23 @@ namespace Exanite.StatSystem
 		/// <returns>List of matched modifiers</returns>
 		public virtual List<StatMod> GetAllModsWithFlags(FlagMatchType matchType, params Enum[] flags)
 		{
-			switch (matchType)
+			if (flags == null)
 			{
-				case (FlagMatchType.And):
-					return GetAllModsWithFlagsAnd(flags);
-				case (FlagMatchType.Or):
-					return GetAllModsWithFlagsOr(flags);
-				case (FlagMatchType.Equals):
-					return GetAllModsWithFlagsEquals(flags);
-				default:
-					throw new ArgumentOutOfRangeException($"{matchType} does not have a code path");
+				throw new ArgumentNullException(nameof(flags));
 			}
-		}
 
-		#endregion
+			List<StatMod> mods = new List<StatMod>();
+
+			foreach (StatMod mod in modifiers)
+			{
+				if (mod.Flags.HasFlags(matchType, flags))
+				{
+					mods.Add(mod);
+				}
+			}
+
+			return mods;
+		}
 
 		#endregion
 
