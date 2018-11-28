@@ -3,6 +3,7 @@
 	/// <summary>
 	/// Flags used in the StatSystem to differentiate between different types of mods
 	/// </summary>
+	[System.Serializable]
 	public enum StatModFlag
 	{
 		Base,
