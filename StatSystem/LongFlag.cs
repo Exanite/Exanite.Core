@@ -283,7 +283,7 @@ namespace Exanite.StatSystem.Internal
 
 			foreach(Enum _flag in flags)
 			{
-				GetFlagIndex(_flag);
+				passedFlags[GetFlagIndex(_flag)] = true;
 			}
 
 			return HasFlagsEquals(passedFlags);
