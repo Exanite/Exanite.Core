@@ -25,6 +25,9 @@ namespace Exanite.StatSystem
 		[HideInInspector] [OdinSerialize] protected StatSystem statSystem;
 		[HideInInspector] [OdinSerialize] protected List<TrackedStat> trackedStats;
 
+		[HideInInspector] public delegate void StatValueChange(float before, float after);
+		[HideInInspector] public StatValueChange FinalValueChanged;
+
 		/// <summary>
 		/// Name of the stat
 		/// </summary>
