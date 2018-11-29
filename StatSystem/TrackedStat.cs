@@ -107,110 +107,40 @@ namespace Exanite.StatSystem
 				return FlatValue * IncValue * MultValue;
 			}
 		}
-		/// <summary>
-		/// The LongFlags of this TrackedStat
-		/// </summary>
-		public LongFlag Flags
-		{
-			get
-			{
-				return flags;
-			}
-
-			protected set
-			{
-				flags = value;
-			}
-		}
-		/// <summary>
-		/// Stats tracked by this TrackedStat
-		/// </summary>
-		public List<TrackedStat> TrackedStats
-		{
-			get
-			{
-				return trackedStats;
-			}
-
-			protected set
-			{
-				trackedStats = value;
-			}
-		}
 
 		#endregion
 
 		#region Constructors
 
-		/// <summary>
-		/// Creates a new TrackedStat that listens to new modifiers in the StatSystem
-		/// </summary>
-		/// <param name="statSystem">StatSystem this TrackedStat is listening to</param>
-		/// <param name="flags">Flags of this TrackedStat</param>
-		/// <param name="matchType">How flags are matched</param>
-		public TrackedStat(StatSystem statSystem, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
+		public TrackedStat(StatSystem statSystem = null, TrackedStat[] trackedStats = null, Enum[] flags = null, FlagMatchType matchType = FlagMatchType.Equals, string name = "Unnamed Stat")
 		{
-			if (flags == null)
+			if (trackedStats == null && flags == null)
 			{
-				throw new ArgumentNullException(nameof(flags));
+				throw new ArgumentNullException($"{nameof(trackedStats)} and {nameof(flags)} cannot be both null");
 			}
 
-			UseStatSystem(statSystem, flags, matchType);
-		}
-
-		/// <summary>
-		/// Creates a new TrackedStat that adds two+ other TrackedStats together and listens to new modifiers in the StatSystem
-		/// </summary>
-		/// <param name="statSystem">StatSystem this TrackedStat is listening to</param>
-		/// <param name="trackedStats">Other TrackedStats to track</param>
-		/// <param name="flags">Flags of this TrackedStat</param>
-		/// <param name="matchType">How flags are matched</param>
-		public TrackedStat(StatSystem statSystem, TrackedStat[] trackedStats, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
-		{
-			if (flags == null)
+			if (flags != null)
 			{
-				throw new ArgumentNullException(nameof(flags));
+				if (statSystem != null)
+				{
+					UseStatSystem(statSystem, flags, matchType);
+				}
+				else
+				{
+					throw new ArgumentException($"There must be a {nameof(statSystem)} if {nameof(flags)} is not null");
+				}
+			}
+			if (trackedStats != null)
+			{
+				if (flags == null && trackedStats.Length < 2)
+				{
+					throw new ArgumentException($"There must be more than 2 {nameof(trackedStats)} if {nameof(flags)} is null");
+				}
+
+				UseTrackedStats(trackedStats);
 			}
 
-			UseStatSystem(statSystem, flags, matchType);
-			UseTrackedStats(trackedStats);
-		}
-
-		/// <summary>
-		/// Creates a new TrackedStat that adds two+ other TrackedStats together and listens to new modifiers in the StatSystem
-		/// </summary>
-		/// <param name="statSystem">StatSystem this TrackedStat is listening to</param>
-		/// <param name="trackedStat">Other TrackedStat to track</param>
-		/// <param name="flags">Flags of this TrackedStat</param>
-		/// <param name="matchType">How flags are matched</param>
-		public TrackedStat(StatSystem statSystem, TrackedStat trackedStat, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
-		{
-			if (flags == null)
-			{
-				throw new ArgumentNullException(nameof(flags));
-			}
-
-			UseStatSystem(statSystem, flags, matchType);
-			UseTrackedStats(trackedStat);
-		}
-
-		/// <summary>
-		/// Creates a new TrackedStat that adds two+ other TrackedStats together
-		/// </summary>
-		/// <param name="trackedStats">Other TrackedStats to track</param>
-		public TrackedStat(params TrackedStat[] trackedStats)
-		{
-			if (trackedStats == null)
-			{
-				throw new ArgumentNullException(nameof(trackedStats));
-			}
-
-			if (trackedStats.Length < 2)
-			{
-				throw new ArgumentException("There must be more than 2 TrackedStats");
-			}
-
-			UseTrackedStats(trackedStats);
+			SetName(name);
 		}
 
 		#region Internal
@@ -303,13 +233,32 @@ namespace Exanite.StatSystem
 		/// <returns></returns>
 		protected virtual bool CheckModMatch(StatMod mod)
 		{
-			return mod.Flags.HasFlags(matchType, Flags);
+			bool matchSuccess;
+			bool hasBaseFlag = mod.Flags.HasFlag(StatModFlag.Base);
+
+			if(hasBaseFlag)
+			{
+				mod.Flags.SetFlag(false, StatModFlag.Base);
+			}
+
+			matchSuccess = mod.Flags.HasFlags(matchType, flags);
+
+			if (hasBaseFlag)
+			{
+				mod.Flags.SetFlag(true, StatModFlag.Base);
+			}
+
+			return matchSuccess;
 		}
 
 		#endregion
 
 		#region Other
 
+		/// <summary>
+		/// Sets the name of the TrackedStat
+		/// </summary>
+		/// <param name="name"></param>
 		public virtual void SetName(string name)
 		{
 			Name = name;
