@@ -4,7 +4,6 @@ using Exanite.StatSystem.Internal;
 using Sirenix.Serialization;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using System.Linq;
 
 namespace Exanite.StatSystem
 {
@@ -78,9 +77,21 @@ namespace Exanite.StatSystem
 
 			foreach (StatMod mod in modifiers)
 			{
+				bool hasBaseFlag = mod.Flags.HasFlag(StatModFlag.Base);
+
+				if (hasBaseFlag)
+				{
+					mod.Flags.SetFlag(false, StatModFlag.Base);
+				}
+
 				if (mod.Flags.HasFlags(matchType, flags))
 				{
 					mods.Add(mod);
+				}
+
+				if (hasBaseFlag)
+				{
+					mod.Flags.SetFlag(true, StatModFlag.Base);
 				}
 			}
 
@@ -245,33 +256,13 @@ namespace Exanite.StatSystem
 		#region Adding
 
 		/// <summary>
-		/// Creates a new TrackedStat that listens to new modifiers in the StatSystem
-		/// </summary>
-		/// <param name="name">Name of this TrackedStat</param>
-		/// <param name="flags">Flags of this TrackedStat</param>
-		/// <param name="matchType">How flags are matched</param>
-		public virtual TrackedStat AddTrackedStat(string name, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
-		{
-			if(trackedStats.ContainsKey(name))
-			{
-				throw new ArgumentException($"TrackedStat of {name} already exists in the StatSystem");
-			}
-			else
-			{
-				trackedStats.Add(name, new TrackedStat(this, flags, matchType));
-				trackedStats[name].SetName(name);
-				return trackedStats[name];
-			}
-		}
-
-		/// <summary>
 		/// Creates a new TrackedStat in the StatSystem that adds two+ other TrackedStats together and listens to new modifiers in the StatSystem
 		/// </summary>
 		/// <param name="name">Name of the TrackedStat</param>
 		/// <param name="trackedStats">Other TrackedStats to track</param>
 		/// <param name="flags">Flags of this TrackedStat</param>
 		/// <param name="matchType">How flags are matched</param>
-		public virtual TrackedStat AddTrackedStat(string name, TrackedStat[] trackedStats, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
+		public virtual TrackedStat AddTrackedStat(string name, TrackedStat[] trackedStats = null, Enum[] flags = null, FlagMatchType matchType = FlagMatchType.Equals)
 		{
 			if (this.trackedStats.ContainsKey(name))
 			{
@@ -279,48 +270,7 @@ namespace Exanite.StatSystem
 			}
 			else
 			{
-				this.trackedStats.Add(name, new TrackedStat(this, trackedStats, flags, matchType));
-				this.trackedStats[name].SetName(name);
-				return this.trackedStats[name];
-			}
-		}
-
-		/// <summary>
-		/// Creates a new TrackedStat in the StatSystem that adds two+ other TrackedStats together and listens to new modifiers in the StatSystem
-		/// </summary>
-		/// <param name="name">Name of the TrackedStat</param>
-		/// <param name="trackedStat">Other TrackedStat to track</param>
-		/// <param name="flags">Flags of this TrackedStat</param>
-		/// <param name="matchType">How flags are matched</param>
-		public virtual TrackedStat AddTrackedStat(string name, TrackedStat trackedStat, Enum[] flags, FlagMatchType matchType = FlagMatchType.Equals)
-		{
-			if (trackedStats.ContainsKey(name))
-			{
-				throw new ArgumentException($"TrackedStat of {name} already exists in the StatSystem");
-			}
-			else
-			{
-				trackedStats.Add(name, new TrackedStat(this, trackedStat, flags, matchType));
-				trackedStats[name].SetName(name);
-				return trackedStats[name];
-			}
-		}
-
-		/// <summary>
-		/// Creates a new TrackedStat in the statSystem that adds two+ other TrackedStats together
-		/// </summary>
-		/// <param name="name">Name of the TrackedStat</param>
-		/// <param name="trackedStats">Other TrackedStats to track</param>
-		public virtual TrackedStat AddTrackedStat(string name, params TrackedStat[] trackedStats)
-		{
-			if (this.trackedStats.ContainsKey(name))
-			{
-				throw new ArgumentException($"TrackedStat of {name} already exists in the StatSystem");
-			}
-			else
-			{
-				this.trackedStats.Add(name, new TrackedStat(trackedStats));
-				this.trackedStats[name].SetName(name);
+				this.trackedStats.Add(name, new TrackedStat(this, trackedStats, flags, matchType, name));
 				return this.trackedStats[name];
 			}
 		}
