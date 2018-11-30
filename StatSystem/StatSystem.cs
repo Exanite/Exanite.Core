@@ -15,8 +15,13 @@ namespace Exanite.StatSystem
 	{
 		#region Fields, Properties, and Events
 
-		[OdinSerialize] [ReadOnly] protected List<StatMod> modifiers;
-		[OdinSerialize] [ReadOnly] protected Dictionary<string, TrackedStat> trackedStats;
+		[OdinSerialize]
+		[ReadOnly]
+		protected List<StatMod> modifiers;
+		[OdinSerialize]
+		[ReadOnly]
+		[DictionaryDrawerSettings(DisplayMode = DictionaryDisplayOptions.ExpandedFoldout)]
+		protected Dictionary<string, TrackedStat> trackedStats;
 
 		/// <summary>
 		/// Delegate used for mod events
@@ -49,53 +54,9 @@ namespace Exanite.StatSystem
 
 		#region Retrieving Mods
 
-		/// <summary>
-		/// Returns all modifiers that match the flags in the provided LongFlag with the provided match type
-		/// </summary>
-		/// <param name="matchType">How to match the flags</param>
-		/// <param name="longFlag">LongFlag to compare</param>
-		/// <returns>List of matched modifiers</returns>
-		public virtual List<StatMod> GetAllModsWithFlags(FlagMatchType matchType, LongFlag longFlag)
+		public virtual List<StatMod> GetAllModifiers()
 		{
-			return GetAllModsWithFlags(matchType, longFlag.GetAllTrueFlags().ToArray());
-		}
-
-		/// <summary>
-		/// Returns all modifiers that match the flags provided with the provided match type
-		/// </summary>
-		/// <param name="matchType">How to match the flags</param>
-		/// <param name="flags">Flags to compare</param>
-		/// <returns>List of matched modifiers</returns>
-		public virtual List<StatMod> GetAllModsWithFlags(FlagMatchType matchType, params Enum[] flags)
-		{
-			if (flags == null)
-			{
-				throw new ArgumentNullException(nameof(flags));
-			}
-
-			List<StatMod> mods = new List<StatMod>();
-
-			foreach (StatMod mod in modifiers)
-			{
-				bool hasBaseFlag = mod.Flags.HasFlag(StatModFlag.Base);
-
-				if (hasBaseFlag)
-				{
-					mod.Flags.SetFlag(false, StatModFlag.Base);
-				}
-
-				if (mod.Flags.HasFlags(matchType, flags))
-				{
-					mods.Add(mod);
-				}
-
-				if (hasBaseFlag)
-				{
-					mod.Flags.SetFlag(true, StatModFlag.Base);
-				}
-			}
-
-			return mods;
+			return modifiers;
 		}
 
 		#endregion
@@ -262,7 +223,7 @@ namespace Exanite.StatSystem
 		/// <param name="trackedStats">Other TrackedStats to track</param>
 		/// <param name="flags">Flags of this TrackedStat</param>
 		/// <param name="matchType">How flags are matched</param>
-		public virtual TrackedStat AddTrackedStat(string name, TrackedStat[] trackedStats = null, Enum[] flags = null, FlagMatchType matchType = FlagMatchType.Equals)
+		public virtual TrackedStat AddTrackedStat(string name, TrackedStat[] trackedStats = null, Enum[] flags = null)
 		{
 			if (this.trackedStats.ContainsKey(name))
 			{
@@ -270,7 +231,7 @@ namespace Exanite.StatSystem
 			}
 			else
 			{
-				this.trackedStats.Add(name, new TrackedStat(this, trackedStats, flags, matchType, name));
+				this.trackedStats.Add(name, new TrackedStat(this, trackedStats, flags, name));
 				return this.trackedStats[name];
 			}
 		}
@@ -292,7 +253,7 @@ namespace Exanite.StatSystem
 			}
 			else
 			{
-				throw new ArgumentException($"TrackedStat of {name} does not exist in the StatSystem");
+				throw new ArgumentException($"TrackedStat of name '{name}' does not exist in the StatSystem");
 			}
 		}
 
