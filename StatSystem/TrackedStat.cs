@@ -20,7 +20,6 @@ namespace Exanite.StatSystem
 		[HideInInspector] [OdinSerialize] protected float incValue = 1f;
 		[HideInInspector] [OdinSerialize] protected float multValue = 1f;
 		[HideInInspector] [OdinSerialize] protected LongFlag flags;
-		[HideInInspector] [OdinSerialize] protected FlagMatchType matchType;
 
 		[HideInInspector] [OdinSerialize] protected StatSystem statSystem;
 		[HideInInspector] [OdinSerialize] protected List<TrackedStat> trackedStats;
@@ -71,9 +70,9 @@ namespace Exanite.StatSystem
 					foreach (TrackedStat stat in trackedStats)
 					{
 						trackedStatsBonus += stat.IncValue;
-					}
 
-					trackedStatsBonus -= 1;
+						trackedStatsBonus -= 1;
+					}
 				}
 				return incValue + trackedStatsBonus;
 			}
@@ -112,7 +111,7 @@ namespace Exanite.StatSystem
 
 		#region Constructors
 
-		public TrackedStat(StatSystem statSystem = null, TrackedStat[] trackedStats = null, Enum[] flags = null, FlagMatchType matchType = FlagMatchType.Equals, string name = "Unnamed Stat")
+		public TrackedStat(StatSystem statSystem = null, TrackedStat[] trackedStats = null, Enum[] flags = null, string name = "Unnamed Stat")
 		{
 			if (trackedStats == null && flags == null)
 			{
@@ -123,7 +122,7 @@ namespace Exanite.StatSystem
 			{
 				if (statSystem != null)
 				{
-					UseStatSystem(statSystem, flags, matchType);
+					UseStatSystem(statSystem, flags);
 				}
 				else
 				{
@@ -143,6 +142,22 @@ namespace Exanite.StatSystem
 			SetName(name);
 		}
 
+		#region Destructor
+
+		/// <summary>
+		/// Unsubscibes to the statSystem's events when destroyed
+		/// </summary>
+		~TrackedStat()
+		{
+			if(statSystem != null)
+			{
+				statSystem.ModAdded -= ModAdded;
+				statSystem.ModRemoved -= ModRemoved;
+			}
+		}
+
+		#endregion
+
 		#region Internal
 
 		/// <summary>
@@ -151,7 +166,7 @@ namespace Exanite.StatSystem
 		/// <param name="statSystem">StatSystem this TrackedStat is listening to</param>
 		/// <param name="flags">Flags of this TrackedStat</param>
 		/// <param name="matchType">How flags are matched</param>
-		protected virtual void UseStatSystem(StatSystem statSystem, Enum[] flags, FlagMatchType matchType)
+		protected virtual void UseStatSystem(StatSystem statSystem, Enum[] flags)
 		{
 			this.statSystem = statSystem;
 
@@ -159,11 +174,13 @@ namespace Exanite.StatSystem
 			statSystem.ModRemoved += ModRemoved;
 
 			this.flags = new LongFlag(flags);
-			this.matchType = matchType;
 
-			foreach (StatMod mod in statSystem.GetAllModsWithFlags(matchType, flags))
+			foreach (StatMod mod in statSystem.GetAllModifiers())
 			{
-				ModAdded(mod);
+				if (CheckModMatch(mod))
+				{
+					ModAdded(mod);
+				}
 			}
 		}
 
@@ -241,7 +258,7 @@ namespace Exanite.StatSystem
 				mod.Flags.SetFlag(false, StatModFlag.Base);
 			}
 
-			matchSuccess = mod.Flags.HasFlags(matchType, flags);
+			matchSuccess = flags.HasFlags(FlagMatchType.And, mod.Flags);
 
 			if (hasBaseFlag)
 			{
@@ -262,6 +279,15 @@ namespace Exanite.StatSystem
 		public virtual void SetName(string name)
 		{
 			Name = name;
+		}
+
+		/// <summary>
+		/// Adds another TrackedStat to track
+		/// </summary>
+		/// <param name="trackedStat">TrackedStat to track</param>
+		public virtual void AddTrackedStat(TrackedStat trackedStat)
+		{
+			trackedStats.Add(trackedStat);
 		}
 
 		#endregion
