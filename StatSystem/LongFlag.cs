@@ -18,6 +18,8 @@ namespace Exanite.StatSystem.Internal
 		[HideInInspector] [OdinSerialize] protected BitArray flags;
 		[HideInInspector] [OdinSerialize] protected Type enumType;
 
+		protected static Dictionary<Type, IEnumerable<int>> enumValues;
+
 		/// <summary>
 		/// BitArray with all the stored flags
 		/// </summary>
@@ -46,7 +48,7 @@ namespace Exanite.StatSystem.Internal
 			}
 		}
 		/// <summary>
-		/// Type this LongFlag supports
+		/// Enum Type this LongFlag supports
 		/// </summary>
 		public Type EnumType
 		{
@@ -113,9 +115,18 @@ namespace Exanite.StatSystem.Internal
 		protected virtual void AddEnumType(Type type)
 		{
 			if (!type.IsEnum) throw new ArgumentException(string.Format("Passed parameter {0} is not an Enum Type", type));
+			if(enumValues == null)
+			{
+				enumValues = new Dictionary<Type, IEnumerable<int>>();
+			}
 
-			int enumMax = Enum.GetValues(type).Cast<int>().Max();
-			int enumMin = Enum.GetValues(type).Cast<int>().Min();
+			if(!enumValues.ContainsKey(type))
+			{
+				enumValues.Add(type, Enum.GetValues(type).Cast<int>());
+			}
+
+			int enumMax = enumValues[type].Max();
+			int enumMin = enumValues[type].Min();
 
 			if (enumMin < 0)
 				throw new ArgumentException(string.Format("{0} must not have any negative values", type));
@@ -204,7 +215,17 @@ namespace Exanite.StatSystem.Internal
 		/// <returns>True or false</returns>
 		public virtual bool HasFlags(FlagMatchType matchType, LongFlag longFlag)
 		{
-			return HasFlags(matchType, longFlag.GetAllTrueFlags().ToArray());
+			switch (matchType)
+			{
+				case (FlagMatchType.And):
+					return HasFlagsAnd(longFlag);
+				case (FlagMatchType.Or):
+					return HasFlagsOr(longFlag);
+				case (FlagMatchType.Equals):
+					return HasFlagsEquals(longFlag);
+				default:
+					throw new ArgumentOutOfRangeException($"{matchType} does not have a code path");
+			}
 		}
 
 		#endregion
@@ -228,9 +249,23 @@ namespace Exanite.StatSystem.Internal
 			flags.SetAll(false);
 		}
 
+		/// <summary>
+		/// Returns true if both LongFlags have the same EnumType
+		/// </summary>
+		/// <param name="flag">LongFlag to compare</param>
+		/// <returns>True or false</returns>
+		public virtual bool IsSameType(LongFlag flag)
+		{
+			return flag.EnumType == EnumType;
+		}
+
+		#endregion
+
 		#endregion
 
 		#region Internal
+
+		#region Flag Logic
 
 		/// <summary>
 		/// Returns true if this LongFlag has ALL of the provided flags <para/>
@@ -246,16 +281,6 @@ namespace Exanite.StatSystem.Internal
 			}
 
 			return true;
-		}
-
-		/// <summary>
-		/// Returns true if this LongFlag has ALL of the flags in the provided LongFlag, false if not
-		/// </summary>
-		/// <param name="longFlag">LongFlag to compare</param>
-		/// <returns>True or false</returns>
-		protected virtual bool HasFlagsAnd(LongFlag longFlag)
-		{
-			return HasFlagsAnd(longFlag.GetAllTrueFlags().ToArray());
 		}
 
 		/// <summary>
@@ -296,11 +321,101 @@ namespace Exanite.StatSystem.Internal
 			return HasFlagsEquals(passedFlags);
 		}
 
-		#endregion
+		/// <summary>
+		/// Returns true if this LongFlag has ALL of the flags in the provided LongFlag, false if not
+		/// </summary>
+		/// <param name="longFlag">LongFlag to compare</param>
+		/// <returns>True or false</returns>
+		protected virtual bool HasFlagsAnd(LongFlag longFlag)
+		{
+			return HasFlagsAnd(longFlag.Flags);
+		}
+
+		/// <summary>
+		/// Returns true if this LongFlag has ALL of the flags in the provided LongFlag, false if not
+		/// </summary>
+		/// <param name="longFlag">LongFlag to compare</param>
+		/// <returns>True or false</returns>
+		protected virtual bool HasFlagsOr(LongFlag longFlag)
+		{
+			return HasFlagsOr(longFlag.Flags);
+		}
+
+		/// <summary>
+		/// Returns true if this LongFlag has ALL of the flags in the provided LongFlag, false if not
+		/// </summary>
+		/// <param name="longFlag">LongFlag to compare</param>
+		/// <returns>True or false</returns>
+		protected virtual bool HasFlagsEquals(LongFlag longFlag)
+		{
+			return HasFlagsEquals(longFlag.Flags);
+		}
+
+		/// <summary>
+		/// Returns true if this LongFlag has all of the flags provided
+		/// </summary>
+		/// <param name="bitArray">BitArray of same length as this LongFlag flags BitArray</param>
+		/// <returns>True or false</returns>
+		protected virtual bool HasFlagsAnd(BitArray bitArray)
+		{
+			if (!(flags.Count == bitArray.Count)) return false;
+
+			for (int i = 0; i < flags.Count; i++)
+			{
+				if (!bitArray[i]) continue;
+
+				if (!flags[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		/// Returns true if this LongFlag has any of the flags provided
+		/// </summary>
+		/// <param name="bitArray">BitArray of same length as this LongFlag flags BitArray</param>
+		/// <returns>True or false</returns>
+		protected virtual bool HasFlagsOr(BitArray bitArray)
+		{
+			if (!(flags.Count == bitArray.Count)) return false;
+
+			for (int i = 0; i < flags.Count; i++)
+			{
+				if (!bitArray[i]) continue;
+
+				if (flags[i])
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Returns true if this LongFlag has only the flags provided
+		/// </summary>
+		/// <param name="bitArray">BitArray of same length as this LongFlag flags BitArray</param>
+		/// <returns>True or false</returns>
+		protected virtual bool HasFlagsEquals(BitArray bitArray)
+		{
+			if (!(flags.Count == bitArray.Count)) return false;
+
+			for (int i = 0; i < flags.Count; i++)
+			{
+				if (!(flags[i] == bitArray[i]))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
 
 		#endregion
-
-		#region Internal
 
 		#region Index logic
 
@@ -326,7 +441,8 @@ namespace Exanite.StatSystem.Internal
 		/// <returns>Retrieved flag</returns>
 		protected virtual Enum GetFlagFromIndex(int index)
 		{
-			return (Enum)Enum.Parse(EnumType, index.ToString());
+			//return (Enum)Enum.Parse(EnumType, index.ToString()); // Slower because of garbage alloc
+			return (Enum)Enum.ToObject(EnumType, index);
 		}
 
 		/// <summary>
@@ -363,30 +479,6 @@ namespace Exanite.StatSystem.Internal
 			}
 
 			return returnEnums;
-		}
-
-		#endregion
-
-		#region Equals
-
-		/// <summary>
-		/// Returns true if this LongFlag has only the flags provided
-		/// </summary>
-		/// <param name="bitArray">BitArray of same length as this LongFlag flags BitArray</param>
-		/// <returns>True or false</returns>
-		protected virtual bool HasFlagsEquals(BitArray bitArray)
-		{
-			if (!(flags.Count == bitArray.Count)) return false;
-
-			for (int i = 0; i < flags.Count; i++)
-			{
-				if(!(flags[i] == bitArray[i]))
-				{
-					return false;
-				}
-			}
-
-			return true;
 		}
 
 		#endregion
