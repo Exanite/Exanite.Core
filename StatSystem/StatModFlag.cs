@@ -7,13 +7,11 @@
 	public enum StatModFlag
 	{
 		Base,
-
+		
 		Damage,
 
 		Attack,
 		Spell,
-		Hit,
-		DamageOverTime,
 
 		Unarmed,
 		Dagger,
@@ -22,25 +20,24 @@
 		Mace,
 		Spear,
 		Bow,
-		Crossbow,
 		Staff,
 		Wand,
 
 		Physical,
+		Slashing,
+		Piercing,
+		Crushing,
+
+		Elemental,
 		Lightning,
 		Ice,
 		Fire,
-		Chaos,
-		Elemental,
 
 		Melee,
 		Ranged,
 		OneHand,
 		TwoHand,
 		DualWield,
-
-		Projectile,
-		AreaOfEffect,
 
 		Health,
 		Mana,
