@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Exanite.StatSystem.Internal;
 using Sirenix.Serialization;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -17,9 +16,12 @@ namespace Exanite.StatSystem
 
 		[OdinSerialize]
 		[ReadOnly]
+		[TabGroup("Modifiers")]
 		protected List<StatMod> modifiers;
+
 		[OdinSerialize]
 		[ReadOnly]
+		[TabGroup("Tracked Stats")]
 		[DictionaryDrawerSettings(DisplayMode = DictionaryDisplayOptions.ExpandedFoldout)]
 		protected Dictionary<string, TrackedStat> trackedStats;
 
@@ -92,6 +94,13 @@ namespace Exanite.StatSystem
 			}
 		}
 
+		[Button]
+		[TabGroup("Utility")]
+		private StatMod _AddModifier(float value, StatModType type, string source, params StatModFlag[] flags)
+		{
+			return AddModifier(value, type, source, flags);
+		}
+
 		/// <summary>
 		/// Creates a new mod, adds the mod to the StatSystem, and then returns the created mod
 		/// </summary>
@@ -100,7 +109,7 @@ namespace Exanite.StatSystem
 		/// <param name="source">Where the mod came from, usually "this"</param>
 		/// <param name="flags">What flags the modifier has</param>
 		/// <returns>The created StatMod</returns>
-		public virtual StatMod AddModifier(float value, StatModType type, object source, params Enum[] flags)
+		public virtual StatMod AddModifier(float value, StatModType type, object source, params StatModFlag[] flags)
 		{
 			if (flags == null)
 			{
@@ -161,6 +170,8 @@ namespace Exanite.StatSystem
 		/// </summary>
 		/// <param name="source">Where the mod came from, usually "this"</param>
 		/// <returns>Did a mod get removed</returns>
+		[Button]
+		[TabGroup("Utility")]
 		public virtual bool RemoveAllModifiersFromSource(object source)
 		{
 			bool didRemove = false;
@@ -181,16 +192,13 @@ namespace Exanite.StatSystem
 		/// Removes all modifiers without flag "Base", has an optional parameter to choose the exclusion flag instead
 		/// </summary>
 		/// <param name="flag">Modifiers with this flag will be kept</param>
-		public virtual void RemoveAllNonBaseModifiers(Enum flag = null)
+		[Button]
+		[TabGroup("Utility")]
+		public virtual void RemoveAllNonBaseModifiers()
 		{
-			if (flag == null)
-			{
-				flag = StatModFlag.Base;
-			}
-
 			for (int i = modifiers.Count - 1; i >= 0; i--)
 			{
-				if (!modifiers[i].Flags.HasFlag(flag))
+				if (!modifiers[i].Flags.HasFlag(StatModFlag.Base))
 				{
 					RemoveModifier(modifiers[i]);
 				}
@@ -200,6 +208,8 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Removes all modifiers from the StatSystem
 		/// </summary>
+		[Button]
+		[TabGroup("Utility")]
 		public virtual void RemoveAllModifiers()
 		{
 			for (int i = modifiers.Count - 1; i >= 0; i--)
@@ -223,7 +233,7 @@ namespace Exanite.StatSystem
 		/// <param name="trackedStats">Other TrackedStats to track</param>
 		/// <param name="flags">Flags of this TrackedStat</param>
 		/// <param name="matchType">How flags are matched</param>
-		public virtual TrackedStat AddTrackedStat(string name, TrackedStat[] trackedStats = null, Enum[] flags = null)
+		public virtual TrackedStat AddTrackedStat(string name, TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
 			if (this.trackedStats.ContainsKey(name))
 			{
@@ -231,9 +241,27 @@ namespace Exanite.StatSystem
 			}
 			else
 			{
-				this.trackedStats.Add(name, new TrackedStat(this, trackedStats, flags, name));
+				this.trackedStats.Add(name, new TrackedStat(this, trackedStats, flags));
 				return this.trackedStats[name];
 			}
+		}
+
+		[Button]
+		[TabGroup("Utility")]
+		private TrackedStat AddTrackedStat(string name, StatModFlag[] flags)
+		{
+			return AddTrackedStat(name, null, flags);
+		}
+
+		#endregion
+
+		#region Removing
+
+		[Button]
+		[TabGroup("Utility")]
+		public virtual bool RemovedTrackedStat(string name)
+		{;
+			return trackedStats.Remove(name);
 		}
 
 		#endregion
