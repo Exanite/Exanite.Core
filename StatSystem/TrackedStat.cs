@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Sirenix.Serialization;
+using System.Collections;
 
 namespace Exanite.StatSystem
 {
@@ -19,7 +20,7 @@ namespace Exanite.StatSystem
 		[HideInInspector] [OdinSerialize] protected float flatValue = 0f;
 		[HideInInspector] [OdinSerialize] protected float incValue = 1f;
 		[HideInInspector] [OdinSerialize] protected float multValue = 1f;
-		[HideInInspector] [OdinSerialize] protected LongFlag flags;
+		[HideInInspector] [OdinSerialize] protected LongFlag<StatModFlag> flags;
 
 		[HideInInspector] [OdinSerialize] protected StatSystem statSystem;
 		[HideInInspector] [OdinSerialize] protected List<TrackedStat> trackedStats;
@@ -31,12 +32,15 @@ namespace Exanite.StatSystem
 		{
 			get
 			{
+				if (string.IsNullOrEmpty(name))
+				{
+					foreach (Enum flag in flags.GetAllTrueFlags())
+					{
+						name += $"{flag} ";
+						name.Trim();
+					}
+				}
 				return name;
-			}
-
-			protected set
-			{
-				name = value;
 			}
 		}
 		/// <summary>
@@ -111,7 +115,7 @@ namespace Exanite.StatSystem
 
 		#region Constructors
 
-		public TrackedStat(StatSystem statSystem = null, TrackedStat[] trackedStats = null, Enum[] flags = null, string name = "Unnamed Stat")
+		public TrackedStat(StatSystem statSystem = null, TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
 			if (trackedStats == null && flags == null)
 			{
@@ -138,8 +142,35 @@ namespace Exanite.StatSystem
 
 				UseTrackedStats(trackedStats);
 			}
+		}
 
-			SetName(name);
+		public TrackedStat(StatSystem statSystem = null, TrackedStat[] trackedStats = null, BitArray bitArray = null)
+		{
+			if (trackedStats == null && bitArray == null)
+			{
+				throw new ArgumentNullException($"{nameof(trackedStats)} and {nameof(flags)} cannot be both null");
+			}
+
+			if (bitArray != null)
+			{
+				if (statSystem != null)
+				{
+					UseStatSystem(statSystem, bitArray);
+				}
+				else
+				{
+					throw new ArgumentException($"There must be a {nameof(statSystem)} if {nameof(bitArray)} is not null");
+				}
+			}
+			if (trackedStats != null)
+			{
+				if (bitArray == null && trackedStats.Length < 2)
+				{
+					throw new ArgumentException($"There must be more than 2 {nameof(trackedStats)} if {nameof(bitArray)} is null");
+				}
+
+				UseTrackedStats(trackedStats);
+			}
 		}
 
 		#region Destructor
@@ -166,14 +197,38 @@ namespace Exanite.StatSystem
 		/// <param name="statSystem">StatSystem this TrackedStat is listening to</param>
 		/// <param name="flags">Flags of this TrackedStat</param>
 		/// <param name="matchType">How flags are matched</param>
-		protected virtual void UseStatSystem(StatSystem statSystem, Enum[] flags)
+		protected virtual void UseStatSystem(StatSystem statSystem, StatModFlag[] flags)
 		{
 			this.statSystem = statSystem;
 
 			statSystem.ModAdded += ModAdded;
 			statSystem.ModRemoved += ModRemoved;
 
-			this.flags = new LongFlag(flags);
+			this.flags = new LongFlag<StatModFlag>(flags);
+
+			foreach (StatMod mod in statSystem.GetAllModifiers())
+			{
+				if (CheckModMatch(mod))
+				{
+					ModAdded(mod);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Internal method used to initialize the TrackedStat
+		/// </summary>
+		/// <param name="statSystem">StatSystem this TrackedStat is listening to</param>
+		/// <param name="flags">Flags of this TrackedStat</param>
+		/// <param name="matchType">How flags are matched</param>
+		protected virtual void UseStatSystem(StatSystem statSystem, BitArray bitArray)
+		{
+			this.statSystem = statSystem;
+
+			statSystem.ModAdded += ModAdded;
+			statSystem.ModRemoved += ModRemoved;
+
+			flags = new LongFlag<StatModFlag>(bitArray);
 
 			foreach (StatMod mod in statSystem.GetAllModifiers())
 			{
@@ -247,39 +302,15 @@ namespace Exanite.StatSystem
 		/// Checks if the mod being added/removed matches the flags of this TrackedStat
 		/// </summary>
 		/// <param name="mod">Modifier to check</param>
-		/// <returns></returns>
+		/// <returns>True or false</returns>
 		protected virtual bool CheckModMatch(StatMod mod)
 		{
-			bool matchSuccess;
-			bool hasBaseFlag = mod.Flags.HasFlag(StatModFlag.Base);
-
-			if(hasBaseFlag)
-			{
-				mod.Flags.SetFlag(false, StatModFlag.Base);
-			}
-
-			matchSuccess = flags.HasFlags(FlagMatchType.And, mod.Flags);
-
-			if (hasBaseFlag)
-			{
-				mod.Flags.SetFlag(true, StatModFlag.Base);
-			}
-
-			return matchSuccess;
+			return mod.IsMatch(flags);
 		}
 
 		#endregion
 
 		#region Other
-
-		/// <summary>
-		/// Sets the name of the TrackedStat
-		/// </summary>
-		/// <param name="name"></param>
-		public virtual void SetName(string name)
-		{
-			Name = name;
-		}
 
 		/// <summary>
 		/// Adds another TrackedStat to track
