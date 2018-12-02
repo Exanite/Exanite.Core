@@ -34,7 +34,7 @@
 		Fire,
 
 		Melee,
-		Ranged,
+		Ranged, 
 		OneHand,
 		TwoHand,
 		DualWield,
