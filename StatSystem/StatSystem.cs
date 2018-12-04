@@ -17,6 +17,7 @@ namespace Exanite.StatSystem
 		[OdinSerialize]
 		[ReadOnly]
 		[TabGroup("Modifiers")]
+		[ListDrawerSettings(NumberOfItemsPerPage = 10)]
 		protected List<StatMod> modifiers;
 
 		[OdinSerialize]
@@ -260,8 +261,15 @@ namespace Exanite.StatSystem
 		[Button]
 		[TabGroup("Utility")]
 		public virtual bool RemovedTrackedStat(string name)
-		{;
+		{
 			return trackedStats.Remove(name);
+		}
+
+		[Button]
+		[TabGroup("Utility")]
+		public virtual void RemovedAllTrackedStats()
+		{
+			trackedStats.Clear();
 		}
 
 		#endregion
