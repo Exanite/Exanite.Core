@@ -39,6 +39,8 @@
 		TwoHand,
 		DualWield,
 
+		Projectile,
+
 		Health,
 		Mana,
 		Shield,
