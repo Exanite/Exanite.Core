@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Serialization;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 namespace Exanite.StatSystem.Internal
 {
@@ -19,7 +20,7 @@ namespace Exanite.StatSystem.Internal
 		[OdinSerialize]
 		protected BitArray flags;
 
-		protected static EnumData<T> enumData;
+		protected static EnumData<T> flagData;
 
 		/// <summary>
 		/// BitArray with all the stored flags
@@ -44,6 +45,19 @@ namespace Exanite.StatSystem.Internal
 			get
 			{
 				return Flags.Count;
+			}
+		}
+		protected static EnumData<T> FlagData
+		{
+			get
+			{
+				if (flagData == null) flagData = new EnumData<T>();
+				return flagData;
+			}
+
+			set
+			{
+				flagData = value;
 			}
 		}
 
@@ -96,15 +110,10 @@ namespace Exanite.StatSystem.Internal
 		{
 			if (!typeof(T).IsEnum) throw new ArgumentException(string.Format("{0} is not an Enum Type", typeof(T)));
 
-			if (enumData == null)
-			{
-				enumData = new EnumData<T>();
-			}
-
-			if (enumData.min < 0)
+			if (FlagData.min < 0)
 				throw new ArgumentException(string.Format("{0} must not have any negative values", typeof(T)));
 
-			Flags = new BitArray(enumData.max + 1);
+			Flags = new BitArray(FlagData.max + 1);
 		}
 
 		#endregion
@@ -462,7 +471,7 @@ namespace Exanite.StatSystem.Internal
 			/// <summary>
 			/// Used for serialization
 			/// </summary>
-			public string lastEnumValueData;
+			public List<string> lastEnumValueData;
 
 			#endregion
 
@@ -480,25 +489,16 @@ namespace Exanite.StatSystem.Internal
 				max = enumerable.Max();
 				min = enumerable.Min();
 
-				lastEnumValueData = GetEnumValueData();
+				SetEnumValueData();
 			}
 
-			/// <summary>
-			/// Gets the enum value data used for the serialization of LongFlag
-			/// </summary>
-			/// <returns></returns>
-			protected string GetEnumValueData()
+			protected void SetEnumValueData()
 			{
-				string result = "";
-
-				Array array = Enum.GetValues(typeof(T));
-
-				for (int i = 0; i < array.Length; i++)
+				lastEnumValueData = new List<string>();
+				foreach (Enum enumValue in array)
 				{
-					result += $"{array.GetValue(i)}|";
+					lastEnumValueData.Add(enumValue.ToString());
 				}
-
-				return result;
 			}
 
 			#endregion
@@ -508,11 +508,19 @@ namespace Exanite.StatSystem.Internal
 
 		#region Serialization
 
+		#region CallBacks
+
 		//[HideInInspector]
 		[SerializeField]
+		[ReadOnly]
 		protected string bitArrayData;
 		[SerializeField]
-		protected string lastEnumValueData;
+		[HideInInspector]
+		protected List<string> lastEnumValueData;
+		[SerializeField]
+		[ShowIf("MissingEnumsIsNotEmptyOrNull")]
+		[ReadOnly]
+		protected List<string> missingEnums;
 
 		/// <summary>
 		/// Prepares the class for serialization
@@ -534,12 +542,14 @@ namespace Exanite.StatSystem.Internal
 
 			#region Enum Values
 
-			if(enumData == null)
+			if(FlagData == null)
 			{
-				enumData = new EnumData<T>();
+				FlagData = new EnumData<T>();
 			}
 
-			lastEnumValueData = enumData.lastEnumValueData;
+			lastEnumValueData = FlagData.lastEnumValueData;
+
+			if (missingEnums == null) missingEnums = new List<string>();
 
 			#endregion
 		}
@@ -562,12 +572,12 @@ namespace Exanite.StatSystem.Internal
 
 			#region Enum Values
 
-			if (enumData == null)
+			if (FlagData == null)
 			{
-				enumData = new EnumData<T>();
+				FlagData = new EnumData<T>();
 			}
 
-			if (lastEnumValueData != enumData.lastEnumValueData)
+			if(!lastEnumValueData.SequenceEqual(FlagData.lastEnumValueData))
 			{
 				RepairBitArray();
 			}
@@ -575,70 +585,59 @@ namespace Exanite.StatSystem.Internal
 			#endregion
 		}
 
+		#endregion
+
+		#region Repair BitArray
+
 		/// <summary>
 		/// Repairs the BitArray when the Enum changes after serialization
 		/// </summary>
-		protected void RepairBitArray()
+		protected virtual void RepairBitArray()
 		{
-			#region Parse string data
-
-			List<string> oldValues = new List<string>();
-			List<string> newValues = new List<string>();
-
-			string cache = "";
-
-			for (int i = 0; i < lastEnumValueData.Length; i++)
-			{
-				if(lastEnumValueData[i] != '|')
-				{
-					cache += lastEnumValueData[i];
-				}
-				else
-				{
-					oldValues.Add(cache);
-					cache = "";
-				}
-			}
-
-			string newEnumValueData = enumData.lastEnumValueData;
-
-			for (int i = 0; i < newEnumValueData.Length; i++)
-			{
-				if (newEnumValueData[i] != '|')
-				{
-					cache += newEnumValueData[i];
-				}
-				else
-				{
-					newValues.Add(cache);
-					cache = "";
-				}
-			}
-
-			#endregion
-
-			#region Compare new and old data
-
+			List<string> oldValues = lastEnumValueData;
+			List<string> newValues = FlagData.lastEnumValueData;
 			List<int> oldIndexes = GetAllTrueIndexes();
 
-			if(enumData == null)
-			{
-				enumData = new EnumData<T>();
-			}
-
-			flags = new BitArray(enumData.max + 1);
+			flags = new BitArray(FlagData.max + 1);
 
 			foreach (int oldIndex in oldIndexes)
 			{
-				if(newValues.Contains(oldValues[oldIndex]))
+				int newIndex = newValues.IndexOf(oldValues[oldIndex]);
+				if (newIndex > -1)
 				{
-					int newIndex = newValues.IndexOf(oldValues[oldIndex]);
 					flags[newIndex] = true;
+				}
+				else
+				{
+					missingEnums.Add($"{oldValues[oldIndex]}");
 				}
 			}
 
-			#endregion
+			for (int i = missingEnums.Count; i-- > 0;)
+			{
+				int index = newValues.IndexOf(missingEnums[i]);
+				if (index > -1)
+				{
+					flags[index] = true;
+					missingEnums.RemoveAt(i);
+				}
+			}
 		}
+
+		#endregion
+
+		#region Odin Inspector
+
+		protected bool MissingEnumsIsNotEmptyOrNull()
+		{
+			if(missingEnums == null)
+			{
+				return false;
+			}
+			return missingEnums.Count > 0;
+		}
+
+		#endregion
 
 		#endregion
 	}
