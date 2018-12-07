@@ -235,9 +235,10 @@ namespace Exanite.StatSystem
 		/// <param name="flags">Flags of this TrackedStat</param>
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
+		[PropertySpace(15)]
 		public virtual TrackedStat AddTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
-			string name = TrackedStatFlagToString(trackedStats, flags);
+			string name = PrepareFlagCache(trackedStats, flags);
 
 			if (this.trackedStats.ContainsKey(name))
 			{
@@ -245,17 +246,28 @@ namespace Exanite.StatSystem
 			}
 			else
 			{
-				flagCache.ClearFlags();
-				flagCache.SetFlags(true, flags);
-
-				BeforeTrackedStatAdded();
-
 				this.trackedStats.Add(name, new TrackedStat(this, trackedStats, flagCache.Flags));
 				return this.trackedStats[name];
 			}
 		}
 
 		#region Internal
+
+		/// <summary>
+		/// Used to prepare the FlagCache before doing actions related to TrackedStat
+		/// </summary>
+		/// <param name="trackedStats">TrackStats to use</param>
+		/// <param name="flags">Flags to use</param>
+		/// <returns>Name of the TrackedStat</returns>
+		protected virtual string PrepareFlagCache(TrackedStat[] trackedStats, StatModFlag[] flags)
+		{
+			flagCache.ClearFlags();
+			flagCache.SetFlags(true, flags);
+
+			BeforeTrackedStatAdded();
+
+			return TrackedStatFlagToString(trackedStats, flagCache.GetAllTrueFlags().ToArray());
+		}
 
 		/// <summary>
 		/// Called before the TrackedStat is added to the StatSystem <para/>
@@ -302,9 +314,29 @@ namespace Exanite.StatSystem
 		[TabGroup("Utility")]
 		public virtual bool RemovedTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
-			string name = TrackedStatFlagToString(trackedStats, flags);
+			string name = PrepareFlagCache(trackedStats, flags);
 
-			return this.trackedStats.Remove(name);
+			if(this.trackedStats.ContainsKey(name))
+			{
+				this.trackedStats[name].UnsubscribeFromStatSystem();
+				this.trackedStats.Remove(name);
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Removes all TrackedStats from the StatSystem
+		/// </summary>
+		public virtual void RemoveAllTrackedStats()
+		{
+			foreach (var item in trackedStats)
+			{
+				item.Value.UnsubscribeFromStatSystem();
+			}
+
+			trackedStats.Clear();
 		}
 
 		#endregion
@@ -319,7 +351,7 @@ namespace Exanite.StatSystem
 		/// <returns>Retrieved TrackedStat</returns>
 		public virtual TrackedStat GetTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
-			string name = TrackedStatFlagToString(trackedStats, flags);
+			string name = PrepareFlagCache(trackedStats, flags);
 
 			if (this.trackedStats.ContainsKey(name))
 			{
@@ -345,22 +377,29 @@ namespace Exanite.StatSystem
 		{
 			string result = "";
 
-			Array.Sort(trackedStats);
-			Array.Sort(flags);
-
 			if(flags != null)
 			{
-				for (int i = 0; i < flags.Length; i++)
+				Array.Sort(flags);
+
+				if (flags != null)
 				{
-					result += $"{flags[i]} ";
+					for (int i = 0; i < flags.Length; i++)
+					{
+						result += $"{flags[i]} ";
+					}
 				}
 			}
-
-			if (trackedStats != null)
+			
+			if(trackedStats != null)
 			{
-				for (int i = 0; i < trackedStats.Length; i++)
+				Array.Sort(trackedStats);
+
+				if (trackedStats != null)
 				{
-					result += $"({trackedStats[i].Name})";
+					for (int i = 0; i < trackedStats.Length; i++)
+					{
+						result += $"({trackedStats[i].Name})";
+					}
 				}
 			}
 
