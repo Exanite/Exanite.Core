@@ -17,7 +17,7 @@ namespace Exanite.StatSystem
 	{
 		#region Fields and Properties
 
-		protected string name = "Unnamed Stat";
+		protected string name;
 		[HideInInspector] [OdinSerialize] protected float flatValue = 0f;
 		[HideInInspector] [OdinSerialize] protected float incValue = 1f;
 		[HideInInspector] [OdinSerialize] protected float multValue = 1f;
@@ -150,7 +150,7 @@ namespace Exanite.StatSystem
 			{
 				UseStatSystem(statSystem, bitArray);
 			}
-			if (trackedStats.IsNullOrEmpty())
+			if (!trackedStats.IsNullOrEmpty())
 			{
 				if (bitArray == null && trackedStats.Length < 2)
 				{
@@ -168,11 +168,7 @@ namespace Exanite.StatSystem
 		/// </summary>
 		~TrackedStat()
 		{
-			if(statSystem != null)
-			{
-				statSystem.ModAdded -= ModAdded;
-				statSystem.ModRemoved -= ModRemoved;
-			}
+			UnsubscribeFromStatSystem();
 		}
 
 		#endregion
@@ -241,6 +237,19 @@ namespace Exanite.StatSystem
 		#endregion
 
 		#region StatSystem Listening
+
+		/// <summary>
+		/// Unsubscribes from the StatSystem <para/>
+		/// Do not use unless you know what you are doing
+		/// </summary>
+		public virtual void UnsubscribeFromStatSystem()
+		{
+			if (statSystem != null)
+			{
+				statSystem.ModAdded -= ModAdded;
+				statSystem.ModRemoved -= ModRemoved;
+			}
+		}
 
 		/// <summary>
 		/// Method that listens to new modifiers being added to the StatSystem
