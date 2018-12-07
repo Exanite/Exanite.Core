@@ -1,4 +1,5 @@
-﻿using Exanite.StatSystem.Internal;
+﻿using Exanite.Extensions;
+using Exanite.StatSystem.Internal;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
@@ -122,7 +123,7 @@ namespace Exanite.StatSystem
 		/// <param name="flags">What flags the modifier has</param>
 		public StatMod(float value, StatModType type, object source, params StatModFlag[] flags)
 		{
-			if (flags == null)
+			if (flags.IsNullOrEmpty())
 			{
 				throw new ArgumentNullException(nameof(flags));
 			}
