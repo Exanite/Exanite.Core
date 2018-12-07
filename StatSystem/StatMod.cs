@@ -19,7 +19,7 @@ namespace Exanite.StatSystem
 		[HideInInspector] [OdinSerialize] protected float value;
 		[HideInInspector] [OdinSerialize] protected StatModType type;
 		[HideInInspector] [OdinSerialize] protected object source;
-		[OdinSerialize] protected LongFlag<StatModFlag> flags;
+		[HideInInspector] [OdinSerialize] protected LongFlag<StatModFlag> flags;
 
 		/// <summary>
 		/// Automatically generated name for this modifier
