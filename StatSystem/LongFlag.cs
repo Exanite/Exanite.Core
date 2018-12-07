@@ -108,8 +108,6 @@ namespace Exanite.StatSystem.Internal
 		/// <param name="type">Enum Type used to create the LongFlag</param>
 		protected virtual void InitiateLongFlag()
 		{
-			if (!typeof(T).IsEnum) throw new ArgumentException(string.Format("{0} is not an Enum Type", typeof(T)));
-
 			if (FlagData.min < 0)
 				throw new ArgumentException(string.Format("{0} must not have any negative values", typeof(T)));
 
@@ -510,9 +508,8 @@ namespace Exanite.StatSystem.Internal
 
 		#region CallBacks
 
-		//[HideInInspector]
+		[HideInInspector]
 		[SerializeField]
-		[ReadOnly]
 		protected string bitArrayData;
 		[SerializeField]
 		[HideInInspector]
@@ -542,11 +539,6 @@ namespace Exanite.StatSystem.Internal
 
 			#region Enum Values
 
-			if(FlagData == null)
-			{
-				FlagData = new EnumData<T>();
-			}
-
 			lastEnumValueData = FlagData.lastEnumValueData;
 
 			if (missingEnums == null) missingEnums = new List<string>();
@@ -571,11 +563,6 @@ namespace Exanite.StatSystem.Internal
 			#endregion
 
 			#region Enum Values
-
-			if (FlagData == null)
-			{
-				FlagData = new EnumData<T>();
-			}
 
 			if(!lastEnumValueData.SequenceEqual(FlagData.lastEnumValueData))
 			{
