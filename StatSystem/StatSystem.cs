@@ -99,6 +99,7 @@ namespace Exanite.StatSystem
 
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
+		[PropertyOrder(0)]
 		private StatMod _AddModifier(float value, StatModType type, string source, params StatModFlag[] flags)
 		{
 			return AddModifier(value, type, source, flags);
@@ -175,6 +176,7 @@ namespace Exanite.StatSystem
 		/// <returns>Did a mod get removed</returns>
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
+		[PropertyOrder(1)]
 		public virtual bool RemoveAllModifiersFromSource(object source)
 		{
 			bool didRemove = false;
@@ -197,6 +199,7 @@ namespace Exanite.StatSystem
 		/// <param name="flag">Modifiers with this flag will be kept</param>
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
+		[PropertyOrder(2)]
 		public virtual void RemoveAllNonBaseModifiers()
 		{
 			for (int i = modifiers.Count - 1; i >= 0; i--)
@@ -213,6 +216,7 @@ namespace Exanite.StatSystem
 		/// </summary>
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
+		[PropertyOrder(3)]
 		public virtual void RemoveAllModifiers()
 		{
 			for (int i = modifiers.Count - 1; i >= 0; i--)
@@ -236,6 +240,7 @@ namespace Exanite.StatSystem
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		[PropertySpace(15)]
+		[PropertyOrder(4)]
 		public virtual TrackedStat AddTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
 			string name = PrepareFlagCache(trackedStats, flags);
@@ -312,6 +317,7 @@ namespace Exanite.StatSystem
 		/// <returns>Did the TrackedStat get removed</returns>
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
+		[PropertyOrder(5)]
 		public virtual bool RemovedTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
 			string name = PrepareFlagCache(trackedStats, flags);
@@ -329,6 +335,9 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Removes all TrackedStats from the StatSystem
 		/// </summary>
+		[Button(ButtonHeight = 25, Expanded = true)]
+		[TabGroup("Utility")]
+		[PropertyOrder(7)]
 		public virtual void RemoveAllTrackedStats()
 		{
 			foreach (var item in trackedStats)
@@ -349,6 +358,9 @@ namespace Exanite.StatSystem
 		/// <param name="trackedStats">TrackedStats tracked by the target TrackedStat</param>
 		/// <param name="flags">Flags of the target TrackedStat</param>
 		/// <returns>Retrieved TrackedStat</returns>
+		[Button(ButtonHeight = 25, Expanded = true)]
+		[TabGroup("Utility")]
+		[PropertyOrder(6)]
 		public virtual TrackedStat GetTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
 			string name = PrepareFlagCache(trackedStats, flags);
