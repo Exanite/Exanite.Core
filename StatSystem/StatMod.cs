@@ -9,15 +9,16 @@ namespace Exanite.StatSystem
 	/// <summary>
 	/// Class used in the StatSystem to modify existing stats
 	/// </summary>
-	public class StatMod : ISerializationCallbackReceiver
+	public class StatMod
 	{
 		#region Fields and Properties
 
-		[HideInInspector] [OdinSerialize] protected string name;
+		protected string name;
+
 		[HideInInspector] [OdinSerialize] protected float value;
 		[HideInInspector] [OdinSerialize] protected StatModType type;
 		[HideInInspector] [OdinSerialize] protected object source;
-		[HideInInspector] [OdinSerialize] protected LongFlag<StatModFlag> flags;
+		[OdinSerialize] protected LongFlag<StatModFlag> flags;
 
 		/// <summary>
 		/// Automatically generated name for this modifier
@@ -132,19 +133,6 @@ namespace Exanite.StatSystem
 			Flags = new LongFlag<StatModFlag>(flags);
 		}
 
-		/// <summary>
-		/// Creates a new StatMod with the passed name
-		/// </summary>
-		/// <param name="name">Name of the mod</param>
-		/// <param name="value">Value of the mod</param>
-		/// <param name="type">How the modifier is applied to existing stats</param>
-		/// <param name="source">Where the mod came from, usually "this"</param>
-		/// <param name="flags">What flags the modifier has</param>
-		public StatMod(string name, float value, StatModType type, object source, params StatModFlag[] flags) : this(value, type, source, flags)
-		{
-			this.name = name;
-		}
-
 		#endregion
 
 		#region Matching
@@ -171,28 +159,6 @@ namespace Exanite.StatSystem
 			}
 
 			return matchSuccess;
-		}
-
-		#endregion
-
-		#region Serialization
-
-		/// <summary>
-		/// Prepares the class for Serialization
-		/// </summary>
-		public virtual void OnBeforeSerialize() { }
-
-		/// <summary>
-		/// Recalculates the field 'name' after deserialization
-		/// </summary>
-		public void OnAfterDeserialize()
-		{
-			name = "";
-			foreach (Enum flag in Flags.GetAllTrueFlags())
-			{
-				name += $"{flag} ";
-				name.Trim();
-			}
 		}
 
 		#endregion
