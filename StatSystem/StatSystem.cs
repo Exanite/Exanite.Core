@@ -97,14 +97,6 @@ namespace Exanite.StatSystem
 			}
 		}
 
-		[Button(ButtonHeight = 25, Expanded = true)]
-		[TabGroup("Utility")]
-		[PropertyOrder(0)]
-		private StatMod _AddModifier(float value, StatModType type, string source, params StatModFlag[] flags)
-		{
-			return AddModifier(value, type, source, flags);
-		}
-
 		/// <summary>
 		/// Creates a new mod, adds the mod to the StatSystem, and then returns the created mod
 		/// </summary>
@@ -113,6 +105,9 @@ namespace Exanite.StatSystem
 		/// <param name="source">Where the mod came from, usually "this"</param>
 		/// <param name="flags">What flags the modifier has</param>
 		/// <returns>The created StatMod</returns>
+		[Button(ButtonHeight = 25, Expanded = true)]
+		[TabGroup("Utility")]
+		[PropertyOrder(0)]
 		public virtual StatMod AddModifier(float value, StatModType type, object source, params StatModFlag[] flags)
 		{
 			if (flags == null)
@@ -177,7 +172,7 @@ namespace Exanite.StatSystem
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		[PropertyOrder(1)]
-		public virtual bool RemoveAllModifiersFromSource(object source)
+		public virtual bool RemoveAllModifiersBySource(object source)
 		{
 			bool didRemove = false;
 
