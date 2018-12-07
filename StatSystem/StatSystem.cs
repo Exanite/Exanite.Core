@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Sirenix.Serialization;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Exanite.StatSystem.Internal;
 
 namespace Exanite.StatSystem
 {
@@ -17,7 +18,6 @@ namespace Exanite.StatSystem
 		[OdinSerialize]
 		[ReadOnly]
 		[TabGroup("Modifiers")]
-		[ListDrawerSettings(NumberOfItemsPerPage = 10)]
 		protected List<StatMod> modifiers;
 
 		[OdinSerialize]
@@ -25,6 +25,8 @@ namespace Exanite.StatSystem
 		[TabGroup("Tracked Stats")]
 		[DictionaryDrawerSettings(DisplayMode = DictionaryDisplayOptions.ExpandedFoldout)]
 		protected Dictionary<string, TrackedStat> trackedStats;
+
+		protected static LongFlag<StatModFlag> flagCache = new LongFlag<StatModFlag>();
 
 		/// <summary>
 		/// Delegate used for mod events
@@ -95,7 +97,7 @@ namespace Exanite.StatSystem
 			}
 		}
 
-		[Button]
+		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		private StatMod _AddModifier(float value, StatModType type, string source, params StatModFlag[] flags)
 		{
@@ -171,7 +173,7 @@ namespace Exanite.StatSystem
 		/// </summary>
 		/// <param name="source">Where the mod came from, usually "this"</param>
 		/// <returns>Did a mod get removed</returns>
-		[Button]
+		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		public virtual bool RemoveAllModifiersFromSource(object source)
 		{
@@ -193,7 +195,7 @@ namespace Exanite.StatSystem
 		/// Removes all modifiers without flag "Base", has an optional parameter to choose the exclusion flag instead
 		/// </summary>
 		/// <param name="flag">Modifiers with this flag will be kept</param>
-		[Button]
+		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		public virtual void RemoveAllNonBaseModifiers()
 		{
@@ -209,7 +211,7 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Removes all modifiers from the StatSystem
 		/// </summary>
-		[Button]
+		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		public virtual void RemoveAllModifiers()
 		{
@@ -228,48 +230,81 @@ namespace Exanite.StatSystem
 		#region Adding
 
 		/// <summary>
-		/// Creates a new TrackedStat in the StatSystem that adds two+ other TrackedStats together and listens to new modifiers in the StatSystem
-		/// </summary>
-		/// <param name="name">Name of the TrackedStat</param>
-		/// <param name="trackedStats">Other TrackedStats to track</param>
+		/// Creates and adds a new TrackedStat in the StatSystem
+		/// <param name="trackedStats">TrackedStats to track</param>
 		/// <param name="flags">Flags of this TrackedStat</param>
-		/// <param name="matchType">How flags are matched</param>
-		public virtual TrackedStat AddTrackedStat(string name, TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
+		[Button(ButtonHeight = 25, Expanded = true)]
+		[TabGroup("Utility")]
+		public virtual TrackedStat AddTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
+			string name = TrackedStatFlagToString(trackedStats, flags);
+
 			if (this.trackedStats.ContainsKey(name))
 			{
 				throw new ArgumentException($"TrackedStat of {name} already exists in the StatSystem");
 			}
 			else
 			{
-				this.trackedStats.Add(name, new TrackedStat(this, trackedStats, flags));
+				flagCache.ClearFlags();
+				flagCache.SetFlags(true, flags);
+
+				BeforeTrackedStatAdded();
+
+				this.trackedStats.Add(name, new TrackedStat(this, trackedStats, flagCache.Flags));
 				return this.trackedStats[name];
 			}
 		}
 
-		[Button]
-		[TabGroup("Utility")]
-		private TrackedStat AddTrackedStat(string name, StatModFlag[] flags)
+		#region Internal
+
+		/// <summary>
+		/// Called before the TrackedStat is added to the StatSystem <para/>
+		/// Example: Use this for setting mods with TrackedStatAddFlagCheck()
+		/// </summary>
+		protected virtual void BeforeTrackedStatAdded() { }
+
+		/// <summary>
+		/// Checks if the TrackedStat being added matches the parameters given, if true, add flagToAdd
+		/// </summary>
+		/// <param name="flagToAdd">Flag to add to the TrackedStat if parameters are matched</param>
+		/// <param name="matchType">How to match the flags</param>
+		/// <param name="flags">Flags to match with</param>
+		protected virtual void TrackedStatAddFlagCheck(StatModFlag flagToAdd, FlagMatchType matchType, params StatModFlag[] flags)
 		{
-			return AddTrackedStat(name, null, flags);
+			if (flags == null)
+			{
+				throw new ArgumentNullException(nameof(flags));
+			}
+
+			for (int i = 0; i < flags.Length; i++)
+			{
+				if(flagCache.HasFlag(flags[i]))
+				{
+					flagCache.SetFlag(true, flagToAdd);
+					break;
+				}
+			}
 		}
+
+		#endregion
 
 		#endregion
 
 		#region Removing
 
-		[Button]
+		/// <summary>
+		/// Removes a TrackedStat from the StatSystem
+		/// </summary>
+		/// <param name="trackedStats">TrackedStats tracked by the target TrackedStat</param>
+		/// <param name="flags">Flags of the target TrackedStat</param>
+		/// <returns>Did the TrackedStat get removed</returns>
+		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
-		public virtual bool RemovedTrackedStat(string name)
+		public virtual bool RemovedTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
-			return trackedStats.Remove(name);
-		}
+			string name = TrackedStatFlagToString(trackedStats, flags);
 
-		[Button]
-		[TabGroup("Utility")]
-		public virtual void RemovedAllTrackedStats()
-		{
-			trackedStats.Clear();
+			return this.trackedStats.Remove(name);
 		}
 
 		#endregion
@@ -277,20 +312,59 @@ namespace Exanite.StatSystem
 		#region Retrieving
 
 		/// <summary>
-		/// Retrieves a TrackedStat by name from the StatSystem
+		/// Retrieves a TrackedStat from the StatSystem
 		/// </summary>
-		/// <param name="name">Name of the TrackedStat</param>
+		/// <param name="trackedStats">TrackedStats tracked by the target TrackedStat</param>
+		/// <param name="flags">Flags of the target TrackedStat</param>
 		/// <returns>Retrieved TrackedStat</returns>
-		public virtual TrackedStat GetTrackedStat(string name)
+		public virtual TrackedStat GetTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
-			if(trackedStats.ContainsKey(name))
+			string name = TrackedStatFlagToString(trackedStats, flags);
+
+			if (this.trackedStats.ContainsKey(name))
 			{
-				return trackedStats[name];
+				return this.trackedStats[name];
 			}
 			else
 			{
 				throw new ArgumentException($"TrackedStat of name '{name}' does not exist in the StatSystem");
 			}
+		}
+
+		#endregion
+
+		#region Internal
+
+		/// <summary>
+		/// Converts an array of TrackedStats and StatModFlags into a string
+		/// </summary>
+		/// <param name="trackedStats">TrackedStats to convert</param>
+		/// <param name="flags">Flags to convert</param>
+		/// <returns>Converted string</returns>
+		protected virtual string TrackedStatFlagToString(TrackedStat[] trackedStats, StatModFlag[] flags)
+		{
+			string result = "";
+
+			Array.Sort(trackedStats);
+			Array.Sort(flags);
+
+			if(flags != null)
+			{
+				for (int i = 0; i < flags.Length; i++)
+				{
+					result += $"{flags[i]} ";
+				}
+			}
+
+			if (trackedStats != null)
+			{
+				for (int i = 0; i < trackedStats.Length; i++)
+				{
+					result += $"({trackedStats[i].Name})";
+				}
+			}
+
+			return result;
 		}
 
 		#endregion
