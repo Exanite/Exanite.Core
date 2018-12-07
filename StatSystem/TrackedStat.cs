@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Sirenix.Serialization;
 using System.Collections;
+using Exanite.Extensions;
 
 namespace Exanite.StatSystem
 {
@@ -16,7 +17,7 @@ namespace Exanite.StatSystem
 	{
 		#region Fields and Properties
 
-		[HideInInspector] [OdinSerialize] protected string name = "Unnamed Stat";
+		protected string name = "Unnamed Stat";
 		[HideInInspector] [OdinSerialize] protected float flatValue = 0f;
 		[HideInInspector] [OdinSerialize] protected float incValue = 1f;
 		[HideInInspector] [OdinSerialize] protected float multValue = 1f;
@@ -28,6 +29,7 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Name of the stat
 		/// </summary>
+		[ShowInInspector]
 		public string Name
 		{
 			get
@@ -115,27 +117,20 @@ namespace Exanite.StatSystem
 
 		#region Constructors
 
-		public TrackedStat(StatSystem statSystem = null, TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
+		public TrackedStat(StatSystem statSystem, TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
-			if (trackedStats == null && flags == null)
+			if (trackedStats.IsNullOrEmpty() && flags.IsNullOrEmpty())
 			{
 				throw new ArgumentNullException($"{nameof(trackedStats)} and {nameof(flags)} cannot be both null");
 			}
 
-			if (flags != null)
+			if (!flags.IsNullOrEmpty())
 			{
-				if (statSystem != null)
-				{
-					UseStatSystem(statSystem, flags);
-				}
-				else
-				{
-					throw new ArgumentException($"There must be a {nameof(statSystem)} if {nameof(flags)} is not null");
-				}
+				UseStatSystem(statSystem, flags);
 			}
-			if (trackedStats != null)
+			if (!trackedStats.IsNullOrEmpty())
 			{
-				if (flags == null && trackedStats.Length < 2)
+				if (flags.IsNullOrEmpty() && trackedStats.Length < 2)
 				{
 					throw new ArgumentException($"There must be more than 2 {nameof(trackedStats)} if {nameof(flags)} is null");
 				}
@@ -144,25 +139,18 @@ namespace Exanite.StatSystem
 			}
 		}
 
-		public TrackedStat(StatSystem statSystem = null, TrackedStat[] trackedStats = null, BitArray bitArray = null)
+		public TrackedStat(StatSystem statSystem, TrackedStat[] trackedStats = null, BitArray bitArray = null)
 		{
-			if (trackedStats == null && bitArray == null)
+			if (trackedStats.IsNullOrEmpty() && bitArray == null)
 			{
 				throw new ArgumentNullException($"{nameof(trackedStats)} and {nameof(flags)} cannot be both null");
 			}
 
 			if (bitArray != null)
 			{
-				if (statSystem != null)
-				{
-					UseStatSystem(statSystem, bitArray);
-				}
-				else
-				{
-					throw new ArgumentException($"There must be a {nameof(statSystem)} if {nameof(bitArray)} is not null");
-				}
+				UseStatSystem(statSystem, bitArray);
 			}
-			if (trackedStats != null)
+			if (trackedStats.IsNullOrEmpty())
 			{
 				if (bitArray == null && trackedStats.Length < 2)
 				{
