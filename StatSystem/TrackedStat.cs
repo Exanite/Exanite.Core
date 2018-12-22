@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 using Sirenix.Serialization;
 using Exanite.Flags;
 using Exanite.Extensions;
@@ -29,7 +31,9 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Name of the stat
 		/// </summary>
+		#if ODIN_INSPECTOR
 		[ShowInInspector]
+		#endif
 		public string Name
 		{
 			get
@@ -104,7 +108,9 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Final value of the stat (Flat * Inc * Mult)
 		/// </summary>
+		#if ODIN_INSPECTOR
 		[ShowInInspector]
+		#endif
 		public float FinalValue
 		{
 			get

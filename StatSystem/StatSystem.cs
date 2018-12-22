@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.Serialization;
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 using Exanite.Flags;
 
 namespace Exanite.StatSystem
@@ -16,14 +18,18 @@ namespace Exanite.StatSystem
 		#region Fields, Properties, and Events
 
 		[OdinSerialize]
+		#if ODIN_INSPECTOR
 		[ReadOnly]
 		[TabGroup("Modifiers")]
+		#endif
 		protected List<StatMod> modifiers;
 
 		[OdinSerialize]
+		#if ODIN_INSPECTOR
 		[ReadOnly]
 		[TabGroup("Tracked Stats")]
 		[DictionaryDrawerSettings(DisplayMode = DictionaryDisplayOptions.ExpandedFoldout)]
+		#endif
 		protected Dictionary<string, TrackedStat> trackedStats;
 
 		protected static LongFlag<StatModFlag> flagCache = new LongFlag<StatModFlag>();
@@ -105,9 +111,11 @@ namespace Exanite.StatSystem
 		/// <param name="source">Where the mod came from, usually "this"</param>
 		/// <param name="flags">What flags the modifier has</param>
 		/// <returns>The created StatMod</returns>
+		#if ODIN_INSPECTOR
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		[PropertyOrder(0)]
+		#endif
 		public virtual StatMod AddModifier(float value, StatModType type, object source, params StatModFlag[] flags)
 		{
 			if (flags == null)
@@ -169,9 +177,11 @@ namespace Exanite.StatSystem
 		/// </summary>
 		/// <param name="source">Where the mod came from, usually "this"</param>
 		/// <returns>Did a mod get removed</returns>
+		#if ODIN_INSPECTOR
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		[PropertyOrder(1)]
+		#endif
 		public virtual bool RemoveAllModifiersBySource(object source)
 		{
 			bool didRemove = false;
@@ -192,9 +202,11 @@ namespace Exanite.StatSystem
 		/// Removes all modifiers without flag "Base", has an optional parameter to choose the exclusion flag instead
 		/// </summary>
 		/// <param name="flag">Modifiers with this flag will be kept</param>
+		#if ODIN_INSPECTOR
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		[PropertyOrder(2)]
+		#endif
 		public virtual void RemoveAllNonBaseModifiers()
 		{
 			for (int i = modifiers.Count - 1; i >= 0; i--)
@@ -209,9 +221,11 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Removes all modifiers from the StatSystem
 		/// </summary>
+		#if ODIN_INSPECTOR
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		[PropertyOrder(3)]
+		#endif
 		public virtual void RemoveAllModifiers()
 		{
 			for (int i = modifiers.Count - 1; i >= 0; i--)
@@ -232,10 +246,12 @@ namespace Exanite.StatSystem
 		/// Creates and adds a new TrackedStat in the StatSystem
 		/// <param name="trackedStats">TrackedStats to track</param>
 		/// <param name="flags">Flags of this TrackedStat</param>
+		#if ODIN_INSPECTOR
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		[PropertySpace(15)]
 		[PropertyOrder(4)]
+		#endif
 		public virtual TrackedStat AddTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
 			string name = PrepareFlagCache(trackedStats, flags);
@@ -310,9 +326,11 @@ namespace Exanite.StatSystem
 		/// <param name="trackedStats">TrackedStats tracked by the target TrackedStat</param>
 		/// <param name="flags">Flags of the target TrackedStat</param>
 		/// <returns>Did the TrackedStat get removed</returns>
+		#if ODIN_INSPECTOR
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		[PropertyOrder(5)]
+		#endif
 		public virtual bool RemovedTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
 			string name = PrepareFlagCache(trackedStats, flags);
@@ -330,9 +348,11 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Removes all TrackedStats from the StatSystem
 		/// </summary>
+		#if ODIN_INSPECTOR
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		[PropertyOrder(7)]
+		#endif
 		public virtual void RemoveAllTrackedStats()
 		{
 			foreach (var item in trackedStats)
@@ -353,9 +373,11 @@ namespace Exanite.StatSystem
 		/// <param name="trackedStats">TrackedStats tracked by the target TrackedStat</param>
 		/// <param name="flags">Flags of the target TrackedStat</param>
 		/// <returns>Retrieved TrackedStat</returns>
+		#if ODIN_INSPECTOR
 		[Button(ButtonHeight = 25, Expanded = true)]
 		[TabGroup("Utility")]
 		[PropertyOrder(6)]
+		#endif
 		public virtual TrackedStat GetTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
 		{
 			string name = PrepareFlagCache(trackedStats, flags);
