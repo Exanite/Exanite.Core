@@ -1,4 +1,4 @@
-﻿namespace Exanite.StatSystem
+﻿namespace Exanite.Flags
 {
 	/// <summary>
 	/// Enum used to state how to match the flags
