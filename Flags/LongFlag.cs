@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Serialization;
 using UnityEngine;
-#if Odin_Inspector
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
 #endif
 
@@ -521,7 +521,7 @@ namespace Exanite.Flags
 		protected List<string> lastEnumValueData;
 
 		[SerializeField]
-		#if Odin_Inspector
+		#if ODIN_INSPECTOR
 		[ShowIf("MissingEnumsIsNotEmptyOrNull")]
 		[ReadOnly]
 		#endif
@@ -630,7 +630,7 @@ namespace Exanite.Flags
 	
 		#region Odin Inspector
 
-		#if Odin_Inspector
+		#if ODIN_INSPECTOR
 		protected bool MissingEnumsIsNotEmptyOrNull()
 		{
 			if(missingEnums == null)
