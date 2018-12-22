@@ -13,16 +13,16 @@ namespace Exanite.StatSystem
 	/// Handles everything you need for a stat system in a game
 	/// </summary>
 	[Serializable]
-	public class StatSystem
+	public class StatSystem<T> where T : struct, IComparable, IConvertible, IFormattable
 	{
-		#region Fields, Properties, and Events
+		#region Fields and Events
 
 		[OdinSerialize]
 		#if ODIN_INSPECTOR
 		[ReadOnly]
 		[TabGroup("Modifiers")]
 		#endif
-		protected List<StatMod> modifiers;
+		protected List<StatMod<T>> modifiers;
 
 		[OdinSerialize]
 		#if ODIN_INSPECTOR
@@ -30,15 +30,15 @@ namespace Exanite.StatSystem
 		[TabGroup("Tracked Stats")]
 		[DictionaryDrawerSettings(DisplayMode = DictionaryDisplayOptions.ExpandedFoldout)]
 		#endif
-		protected Dictionary<string, TrackedStat> trackedStats;
+		protected Dictionary<string, TrackedStat<T>> trackedStats;
 
-		protected static LongFlag<StatModFlag> flagCache = new LongFlag<StatModFlag>();
+		protected static LongFlag<T> flagCache = new LongFlag<T>();
 
 		/// <summary>
 		/// Delegate used for mod events
 		/// </summary>
 		/// <param name="mod">Mod involved in the event</param>
-		public delegate void ModEvent(StatMod mod);
+		public delegate void ModEvent(StatMod<T> mod);
 		/// <summary>
 		/// Called when a mod is added
 		/// </summary>
@@ -47,6 +47,8 @@ namespace Exanite.StatSystem
 		/// Called when a mod is removed
 		/// </summary>
 		[HideInInspector] public ModEvent ModRemoved;
+
+		protected bool? isEnum = null;
 
 		#endregion
 
@@ -57,15 +59,30 @@ namespace Exanite.StatSystem
 		/// </summary>
 		public StatSystem()
 		{
-			modifiers = new List<StatMod>();
-			trackedStats = new Dictionary<string, TrackedStat>();
+			switch (isEnum)
+			{
+				case (null):
+					isEnum = typeof(T).IsEnum;
+					if (isEnum == false)
+					{
+						throw new ArgumentException(string.Format("{0} is not an Enum Type", typeof(T)));
+					}
+					break;
+				case (true):
+					break;
+				case (false):
+					throw new ArgumentException(string.Format("{0} is not an Enum Type", typeof(T)));
+			}
+
+			modifiers = new List<StatMod<T>>();
+			trackedStats = new Dictionary<string, TrackedStat<T>>();
 		}
 
 		#endregion
 
 		#region Retrieving Mods
 
-		public virtual List<StatMod> GetAllModifiers()
+		public virtual List<StatMod<T>> GetAllModifiers()
 		{
 			return modifiers;
 		}
@@ -80,7 +97,7 @@ namespace Exanite.StatSystem
 		/// Adds the provided modifier to the StatSystem
 		/// </summary>
 		/// <param name="mod">Mod to add</param>
-		public virtual void AddModifier(StatMod mod)
+		public virtual void AddModifier(StatMod<T> mod)
 		{
 			modifiers.Add(mod);
 			ModAdded?.Invoke(mod);
@@ -90,14 +107,14 @@ namespace Exanite.StatSystem
 		/// Adds the provided modifiers to the StatSystem
 		/// </summary>
 		/// <param name="mods">Mods to add</param>
-		public virtual void AddModifiers(params StatMod[] mods)
+		public virtual void AddModifiers(params StatMod<T>[] mods)
 		{
 			if (mods == null)
 			{
 				throw new ArgumentNullException(nameof(mods));
 			}
 
-			foreach(StatMod mod in mods)
+			foreach(StatMod<T> mod in mods)
 			{
 				AddModifier(mod);
 			}
@@ -116,14 +133,14 @@ namespace Exanite.StatSystem
 		[TabGroup("Utility")]
 		[PropertyOrder(0)]
 		#endif
-		public virtual StatMod AddModifier(float value, StatModType type, object source, params StatModFlag[] flags)
+		public virtual StatMod<T> AddModifier(float value, StatModType type, object source, params T[] flags)
 		{
 			if (flags == null)
 			{
 				throw new ArgumentNullException(nameof(flags));
 			}
 
-			StatMod mod = new StatMod(value, type, source, flags);
+			StatMod<T> mod = new StatMod<T>(value, type, source, flags);
 
 			AddModifier(mod);
 
@@ -139,7 +156,7 @@ namespace Exanite.StatSystem
 		/// </summary>
 		/// <param name="mod">Mod to remove</param>
 		/// <returns>Did the mod get removed</returns>
-		public virtual bool RemoveModifier(StatMod mod)
+		public virtual bool RemoveModifier(StatMod<T> mod)
 		{
 			if(modifiers.Remove(mod))
 			{
@@ -155,7 +172,7 @@ namespace Exanite.StatSystem
 		/// </summary>
 		/// <param name="mods">Mods to remove</param>
 		/// <returns>Did all the mods get removed</returns>
-		public virtual bool RemoveModifiers(params StatMod[] mods)
+		public virtual bool RemoveModifiers(params StatMod<T>[] mods)
 		{
 			if (mods == null)
 			{
@@ -164,7 +181,7 @@ namespace Exanite.StatSystem
 
 			bool removedAll = true;
 
-			foreach(StatMod mod in mods)
+			foreach(StatMod<T> mod in mods)
 			{
 				if (!RemoveModifier(mod)) removedAll = false;
 			}
@@ -211,7 +228,7 @@ namespace Exanite.StatSystem
 		{
 			for (int i = modifiers.Count - 1; i >= 0; i--)
 			{
-				if (!modifiers[i].Flags.HasFlag(StatModFlag.Base))
+				if (!modifiers[i].Flags.HasFlag(default(T)))
 				{
 					RemoveModifier(modifiers[i]);
 				}
@@ -252,7 +269,7 @@ namespace Exanite.StatSystem
 		[PropertySpace(15)]
 		[PropertyOrder(4)]
 		#endif
-		public virtual TrackedStat AddTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
+		public virtual TrackedStat<T> AddTrackedStat(TrackedStat<T>[] trackedStats = null, T[] flags = null)
 		{
 			string name = PrepareFlagCache(trackedStats, flags);
 
@@ -262,7 +279,7 @@ namespace Exanite.StatSystem
 			}
 			else
 			{
-				this.trackedStats.Add(name, new TrackedStat(this, trackedStats, flagCache.Flags));
+				this.trackedStats.Add(name, new TrackedStat<T>(this, trackedStats, flagCache.Flags));
 				return this.trackedStats[name];
 			}
 		}
@@ -275,7 +292,7 @@ namespace Exanite.StatSystem
 		/// <param name="trackedStats">TrackStats to use</param>
 		/// <param name="flags">Flags to use</param>
 		/// <returns>Name of the TrackedStat</returns>
-		protected virtual string PrepareFlagCache(TrackedStat[] trackedStats, StatModFlag[] flags)
+		protected virtual string PrepareFlagCache(TrackedStat<T>[] trackedStats, T[] flags)
 		{
 			flagCache.ClearFlags();
 			flagCache.SetFlags(true, flags);
@@ -297,7 +314,7 @@ namespace Exanite.StatSystem
 		/// <param name="flagToAdd">Flag to add to the TrackedStat if parameters are matched</param>
 		/// <param name="matchType">How to match the flags</param>
 		/// <param name="flags">Flags to match with</param>
-		protected virtual void TrackedStatAddFlagCheck(StatModFlag flagToAdd, FlagMatchType matchType, params StatModFlag[] flags)
+		protected virtual void TrackedStatAddFlagCheck(T flagToAdd, FlagMatchType matchType, params T[] flags)
 		{
 			if (flags == null)
 			{
@@ -331,7 +348,7 @@ namespace Exanite.StatSystem
 		[TabGroup("Utility")]
 		[PropertyOrder(5)]
 		#endif
-		public virtual bool RemovedTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
+		public virtual bool RemovedTrackedStat(TrackedStat<T>[] trackedStats = null, T[] flags = null)
 		{
 			string name = PrepareFlagCache(trackedStats, flags);
 
@@ -378,7 +395,7 @@ namespace Exanite.StatSystem
 		[TabGroup("Utility")]
 		[PropertyOrder(6)]
 		#endif
-		public virtual TrackedStat GetTrackedStat(TrackedStat[] trackedStats = null, StatModFlag[] flags = null)
+		public virtual TrackedStat<T> GetTrackedStat(TrackedStat<T>[] trackedStats = null, T[] flags = null)
 		{
 			string name = PrepareFlagCache(trackedStats, flags);
 
@@ -397,12 +414,12 @@ namespace Exanite.StatSystem
 		#region Internal
 
 		/// <summary>
-		/// Converts an array of TrackedStats and StatModFlags into a string
+		/// Converts an array of TrackedStats and Ts into a string
 		/// </summary>
 		/// <param name="trackedStats">TrackedStats to convert</param>
 		/// <param name="flags">Flags to convert</param>
 		/// <returns>Converted string</returns>
-		protected virtual string TrackedStatFlagToString(TrackedStat[] trackedStats, StatModFlag[] flags)
+		protected virtual string TrackedStatFlagToString(TrackedStat<T>[] trackedStats, T[] flags)
 		{
 			string result = "";
 

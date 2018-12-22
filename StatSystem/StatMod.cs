@@ -12,7 +12,7 @@ namespace Exanite.StatSystem
 	/// <summary>
 	/// Class used in the StatSystem to modify existing stats
 	/// </summary>
-	public class StatMod
+	public class StatMod<T> where T : struct, IComparable, IConvertible, IFormattable
 	{
 		#region Fields and Properties
 
@@ -21,7 +21,9 @@ namespace Exanite.StatSystem
 		[HideInInspector] [OdinSerialize] protected float value;
 		[HideInInspector] [OdinSerialize] protected StatModType type;
 		[HideInInspector] [OdinSerialize] protected object source;
-		[HideInInspector] [OdinSerialize] protected LongFlag<StatModFlag> flags;
+		[HideInInspector] [OdinSerialize] protected LongFlag<T> flags;
+
+		protected bool? isEnum = null;
 
 		/// <summary>
 		/// Automatically generated name for this modifier
@@ -35,7 +37,7 @@ namespace Exanite.StatSystem
 			{
 				if(string.IsNullOrEmpty(name))
 				{
-					foreach(Enum flag in Flags.GetAllTrueFlags())
+					foreach(T flag in Flags.GetAllTrueFlags())
 					{
 						name += $"{flag} ";
 						name.Trim();
@@ -53,7 +55,7 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// What flags the modifier has
 		/// </summary>
-		public LongFlag<StatModFlag> Flags
+		public LongFlag<T> Flags
 		{
 			get
 			{
@@ -131,17 +133,32 @@ namespace Exanite.StatSystem
 		/// <param name="type">How the modifier is applied to existing stats</param>
 		/// <param name="source">Where the mod came from, usually "this"</param>
 		/// <param name="flags">What flags the modifier has</param>
-		public StatMod(float value, StatModType type, object source, params StatModFlag[] flags)
+		public StatMod(float value, StatModType type, object source, params T[] flags)
 		{
 			if (flags.IsNullOrEmpty())
 			{
 				throw new ArgumentNullException(nameof(flags));
 			}
 
+			switch(isEnum)
+			{
+				case (null):
+					isEnum = typeof(T).IsEnum;
+					if(isEnum == false)
+					{
+						throw new ArgumentException(string.Format("{0} is not an Enum Type", typeof(T)));
+					}
+					break;
+				case (true):
+					break;
+				case (false):
+					throw new ArgumentException(string.Format("{0} is not an Enum Type", typeof(T)));
+			}
+
 			Value = value;
 			Type = type;
 			Source = source;
-			Flags = new LongFlag<StatModFlag>(flags);
+			Flags = new LongFlag<T>(flags);
 		}
 
 		#endregion
@@ -153,20 +170,20 @@ namespace Exanite.StatSystem
 		/// </summary>
 		/// <param name="mod">LongFlag to compare</param>
 		/// <returns>True or false</returns>
-		public virtual bool IsMatch(LongFlag<StatModFlag> flags)
+		public virtual bool IsMatch(LongFlag<T> flags)
 		{
-			bool hasBaseFlag = Flags.HasFlag(StatModFlag.Base);
+			bool hasBaseFlag = Flags.HasFlag(default(T));
 
 			if (hasBaseFlag)
 			{
-				Flags.SetFlag(false, StatModFlag.Base);
+				Flags.SetFlag(false, default(T));
 			}
 
 			bool matchSuccess = flags.HasFlags(FlagMatchType.And, Flags);
 
 			if (hasBaseFlag)
 			{
-				Flags.SetFlag(true, StatModFlag.Base);
+				Flags.SetFlag(true, default(T));
 			}
 
 			return matchSuccess;
