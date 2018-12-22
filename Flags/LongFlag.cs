@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Serialization;
 using UnityEngine;
+#if Odin_Inspector
 using Sirenix.OdinInspector;
+#endif
 
-namespace Exanite.StatSystem.Internal
+namespace Exanite.Flags
 {
 	/// <summary>
 	/// Combines Enums into a flag system that supports more than 32/64 flags
@@ -508,16 +510,24 @@ namespace Exanite.StatSystem.Internal
 
 		#region CallBacks
 
+		#region Fields
+
 		[HideInInspector]
 		[SerializeField]
 		protected string bitArrayData;
+
 		[SerializeField]
 		[HideInInspector]
 		protected List<string> lastEnumValueData;
+
 		[SerializeField]
+		#if Odin_Inspector
 		[ShowIf("MissingEnumsIsNotEmptyOrNull")]
 		[ReadOnly]
+		#endif
 		protected List<string> missingEnums;
+
+		#endregion
 
 		/// <summary>
 		/// Prepares the class for serialization
@@ -583,23 +593,28 @@ namespace Exanite.StatSystem.Internal
 		{
 			List<string> oldValues = lastEnumValueData;
 			List<string> newValues = FlagData.lastEnumValueData;
+			// Gets all the true values in the old BitArray
 			List<int> oldIndexes = GetAllTrueIndexes();
 
 			flags = new BitArray(FlagData.max + 1);
 
 			foreach (int oldIndex in oldIndexes)
 			{
-				int newIndex = newValues.IndexOf(oldValues[oldIndex]);
+				// Checks if the value in the old BitArray has a corresponding bit in the new BitArray
+				int newIndex = newValues.IndexOf(oldValues[oldIndex]); 
 				if (newIndex > -1)
 				{
+					// If the BitArray has the corresponding bit, set it to true
 					flags[newIndex] = true;
 				}
 				else
 				{
+					// Else store it in a separate list so that it can be readded once the Enum has readded it
 					missingEnums.Add($"{oldValues[oldIndex]}");
 				}
 			}
 
+			// Check if missing bits can be readded
 			for (int i = missingEnums.Count; i-- > 0;)
 			{
 				int index = newValues.IndexOf(missingEnums[i]);
@@ -612,9 +627,10 @@ namespace Exanite.StatSystem.Internal
 		}
 
 		#endregion
-
+	
 		#region Odin Inspector
 
+		#if Odin_Inspector
 		protected bool MissingEnumsIsNotEmptyOrNull()
 		{
 			if(missingEnums == null)
@@ -623,9 +639,10 @@ namespace Exanite.StatSystem.Internal
 			}
 			return missingEnums.Count > 0;
 		}
+		#endif
 
 		#endregion
-
+		
 		#endregion
 	}
 }
