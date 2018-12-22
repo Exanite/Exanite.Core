@@ -1,9 +1,9 @@
-﻿using Exanite.Extensions;
-using Exanite.StatSystem.Internal;
+﻿using System;
+using UnityEngine;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using System;
-using UnityEngine;
+using Exanite.Extensions;
+using Exanite.Flags;
 
 namespace Exanite.StatSystem
 {

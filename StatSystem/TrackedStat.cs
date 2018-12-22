@@ -1,10 +1,10 @@
-﻿using Exanite.StatSystem.Internal;
-using System;
-using System.Collections.Generic;
-using Sirenix.OdinInspector;
-using UnityEngine;
-using Sirenix.Serialization;
+﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
+using Exanite.Flags;
 using Exanite.Extensions;
 
 namespace Exanite.StatSystem
