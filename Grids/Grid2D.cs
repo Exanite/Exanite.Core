@@ -54,10 +54,16 @@ namespace ExaniteCore.Grids
 
 		#region Constructor
 
+		/// <summary>
+		/// Creates a new Grid2D
+		/// </summary>
+		/// <param name="xLength">Length of the grid along the X-Axis</param>
+		/// <param name="yLength">Length of the grid along the Y-Axis</param>
+		/// <param name="allowWrap">Does the grid allow wrapping when the passed coordinates are out of range?</param>
 		public Grid2D(int xLength, int yLength, bool allowWrap)
 		{
 			Dimensions = new Vector2Int(xLength, yLength);
-			this.AllowWrap = allowWrap;
+			AllowWrap = allowWrap;
 
 			grid = new T[xLength, yLength];
 		}
@@ -66,11 +72,22 @@ namespace ExaniteCore.Grids
 
 		#region Setting Values
 
+		/// <summary>
+		/// Sets (x, y) in the grid to be the passed value
+		/// </summary>
+		/// <param name="value">Value to set</param>
+		/// <param name="x">X coordinate</param>
+		/// <param name="y">Y coordinate</param>
 		public virtual void SetValueAt(T value, int x, int y)
 		{
 			SetValueAt(value, new Vector2Int(x, y));
 		}
 
+		/// <summary>
+		/// Sets (x, y) in the grid to be the passed value
+		/// </summary>
+		/// <param name="value">Value to set</param>
+		/// <param name="coords">Vector2Int representation of (x, y)</param>
 		public virtual void SetValueAt(T value, Vector2Int coords)
 		{
 			coords = Wrap(coords);
@@ -81,11 +98,22 @@ namespace ExaniteCore.Grids
 
 		#region Getting Values
 
+		/// <summary>
+		/// Gets the value at (x, y) in the grid
+		/// </summary>
+		/// <param name="x">X coordinate</param>
+		/// <param name="y">Y coordinate</param>
+		/// <returns>Value at (x, y)</returns>
 		public virtual T GetValueAt(int x, int y)
 		{
 			return GetValueAt(new Vector2Int(x, y));
 		}
 
+		/// <summary>
+		/// Gets the value at (x, y) in the grid
+		/// </summary>
+		/// <param name="coords">Vector2Int representation of (x, y)</param>
+		/// <returns>Value at (x, y)</returns>
 		public virtual T GetValueAt(Vector2Int coords)
 		{
 			coords = Wrap(coords);
