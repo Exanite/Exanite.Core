@@ -150,7 +150,15 @@ namespace Exanite.Numbers
 			{
 				case (NumDisplayFormat.Scientific):
 				{
-					return $"{rounded} E{Multiplier * 3}";
+					int extraDigits = 0;
+					while(rounded > 10) // Limit to one leading digit
+					{
+						rounded /= 10;
+						extraDigits += 1;
+					}
+					rounded = Math.Round(rounded, PlacesToRound); // Round the result again because the decimal place shifted in the while loop
+
+					return $"{rounded} E{(Multiplier * 3) + extraDigits}";
 				}
 				case (NumDisplayFormat.Short):
 				{
