@@ -1,22 +1,38 @@
 ﻿using System;
 using UnityEngine;
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#endif
 
-namespace ExaniteCore.Grids
+namespace Exanite.Grids
 {
+	[Serializable]
 	public class Grid2D<T>
 	{
 		#region Fields and Properties
 
+		[SerializeField]
+		[HideInInspector]
 		protected T[,] grid;
 		/// <summary>
 		/// The size of the grid
 		/// </summary>
+#if ODIN_INSPECTOR
+		[ReadOnly]
+#endif
 		public readonly Vector2Int Dimensions;
 		/// <summary>
 		/// Does this grid allow wrapping?
 		/// </summary>
+#if ODIN_INSPECTOR
+		[ReadOnly]
+#endif
 		public readonly bool AllowWrap;
 
+#if ODIN_INSPECTOR
+		[PropertyOrder(-1)]
+		[ShowInInspector]
+#endif
 		public T[,] Grid
 		{
 			get
@@ -62,6 +78,15 @@ namespace ExaniteCore.Grids
 		/// <param name="allowWrap">Does the grid allow wrapping when the passed coordinates are out of range?</param>
 		public Grid2D(int xLength, int yLength, bool allowWrap)
 		{
+			if (xLength <= 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(xLength));
+			}
+			if (yLength <= 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(yLength));
+			}
+
 			Dimensions = new Vector2Int(xLength, yLength);
 			AllowWrap = allowWrap;
 
@@ -78,6 +103,9 @@ namespace ExaniteCore.Grids
 		/// <param name="value">Value to set</param>
 		/// <param name="x">X coordinate</param>
 		/// <param name="y">Y coordinate</param>
+#if ODIN_INSPECTOR
+		[Button(ButtonHeight = 25)]
+#endif
 		public virtual void SetValueAt(T value, int x, int y)
 		{
 			SetValueAt(value, new Vector2Int(x, y));
@@ -131,59 +159,20 @@ namespace ExaniteCore.Grids
 
 		protected virtual Vector2Int Wrap(Vector2Int coords)
 		{
-			#region Wrap X
-
-			if (coords.x >= XLength)
+			if(AllowWrap)
 			{
-				if(AllowWrap)
+				coords.x = coords.x % XLength;
+				coords.y = coords.y % YLength;
+
+				if(coords.x < 0)
 				{
-					coords.x -= XLength;
+					coords.x = XLength + coords.x;
 				}
-				else
+				if(coords.y < 0)
 				{
-					throw new ArgumentOutOfRangeException(nameof(coords.x));
+					coords.y = YLength + coords.y;
 				}
 			}
-			else if(coords.x < 0)
-			{
-				if (AllowWrap)
-				{
-					coords.x += XLength;
-				}
-				else
-				{
-					throw new ArgumentOutOfRangeException(nameof(coords.x));
-				}
-			}
-
-			#endregion
-
-			#region Wrap Y
-
-			if (coords.y >= YLength)
-			{
-				if (AllowWrap)
-				{
-					coords.y -= YLength;
-				}
-				else
-				{
-					throw new ArgumentOutOfRangeException(nameof(coords.y));
-				}
-			}
-			else if (coords.y < 0)
-			{
-				if (AllowWrap)
-				{
-					coords.y += YLength;
-				}
-				else
-				{
-					throw new ArgumentOutOfRangeException(nameof(coords.y));
-				}
-			}
-
-			#endregion
 
 			return coords;
 		}
