@@ -11,25 +11,20 @@ namespace Exanite.Grids
 	{
 		#region Fields and Properties
 
+#if ODIN_INSPECTOR
+		[PropertyOrder(-2)]
+		[ShowInInspector]
+		private bool showGrid = false;
+#endif
+
 		[SerializeField]
 		[HideInInspector]
 		protected T[,] grid;
-		/// <summary>
-		/// The size of the grid
-		/// </summary>
-#if ODIN_INSPECTOR
-		[ReadOnly]
-#endif
-		public readonly Vector2Int Dimensions;
-		/// <summary>
-		/// Does this grid allow wrapping?
-		/// </summary>
-#if ODIN_INSPECTOR
-		[ReadOnly]
-#endif
-		public readonly bool AllowWrap;
+
+		public bool AllowWrap;
 
 #if ODIN_INSPECTOR
+		[ShowIf("showGrid")]
 		[PropertyOrder(-1)]
 		[ShowInInspector]
 #endif
@@ -40,8 +35,12 @@ namespace Exanite.Grids
 				return grid;
 			}
 
-			protected set
+			set
 			{
+				if(value == null)
+				{
+					throw new ArgumentNullException($"Passed setter value for Property 'Grid' is null");
+				}
 				grid = value;
 			}
 		}
@@ -52,7 +51,7 @@ namespace Exanite.Grids
 		{
 			get
 			{
-				return Dimensions.x;
+				return grid.GetLength(0);
 			}
 		}
 		/// <summary>
@@ -62,7 +61,7 @@ namespace Exanite.Grids
 		{
 			get
 			{
-				return Dimensions.y;
+				return grid.GetLength(1);
 			}
 		}
 
@@ -86,10 +85,8 @@ namespace Exanite.Grids
 			{
 				throw new ArgumentOutOfRangeException(nameof(yLength));
 			}
-
-			Dimensions = new Vector2Int(xLength, yLength);
+			
 			AllowWrap = allowWrap;
-
 			grid = new T[xLength, yLength];
 		}
 
@@ -104,7 +101,8 @@ namespace Exanite.Grids
 		/// <param name="x">X coordinate</param>
 		/// <param name="y">Y coordinate</param>
 #if ODIN_INSPECTOR
-		[Button(ButtonHeight = 25)]
+		[FoldoutGroup("Buttons")]
+		[Button(ButtonHeight = 25, Expanded = true)]
 #endif
 		public virtual void SetValueAt(T value, int x, int y)
 		{
@@ -146,6 +144,116 @@ namespace Exanite.Grids
 		{
 			coords = Wrap(coords);
 			return grid[coords.x, coords.y];
+		}
+
+		#endregion
+
+		#region Transformations
+
+#if ODIN_INSPECTOR
+		[HorizontalGroup("Buttons/A")]
+		[Button(Name = "Rotate Clockwise")]
+		private void RotateClockwiseOdin()
+		{
+			RotateClockwise();
+		}
+#endif
+
+#if ODIN_INSPECTOR
+		[HorizontalGroup("Buttons/B")]
+		[Button(Name = "Rotate Counter-Clockwise")]
+		private void RotateCounterClockwiseOdin()
+		{
+			RotateCounterClockwise();
+		}
+#endif
+
+		/// <summary>
+		/// Rotates the grid clockwise the specified amount of times
+		/// </summary>
+		/// <param name="timesToRotate">Times to rotate the grid</param>
+		public void RotateClockwise(int timesToRotate = 1)
+		{
+			for (int i = 0; i < timesToRotate; i++)
+			{
+				T[,] newArray = new T[YLength, XLength];
+
+				for (int x = 0; x < XLength; x++)
+				{
+					for (int y = 0; y < YLength; y++)
+					{
+						newArray[(YLength - 1) - y, x] = grid[x, y];
+					}
+				}
+
+				grid = newArray;
+			}
+		}
+
+		/// <summary>
+		/// Rotates the grid counter-clockwise the specified amount of times
+		/// </summary>
+		/// <param name="timesToRotate">Times to rotate the grid</param>
+		public void RotateCounterClockwise(int timesToRotate = 1)
+		{
+			for (int i = 0; i < timesToRotate; i++)
+			{
+				T[,] newArray = new T[YLength, XLength];
+
+				for (int x = 0; x < XLength; x++)
+				{
+					for (int y = 0; y < YLength; y++)
+					{
+						newArray[y, (XLength - 1) - x] = grid[x, y];
+					}
+				}
+
+				grid = newArray;
+			}
+		}
+
+		/// <summary>
+		/// Mirrors the grid over the Y-Axis
+		/// </summary>
+#if ODIN_INSPECTOR
+		[Button]
+		[HorizontalGroup("Buttons/A")]
+#endif
+		public void MirrorOverY()
+		{
+			T[,] newArray = new T[XLength, YLength];
+
+			for (int x = 0; x < XLength; x++)
+			{
+				for (int y = 0; y < YLength; y++)
+				{
+					newArray[x, y] = grid[(XLength - 1) - x, y];
+				}
+			}
+
+			grid = newArray;
+		}
+
+		/// <summary>
+		/// Mirrors the grid over the X-Axis
+		/// </summary>
+#if ODIN_INSPECTOR
+		[Button]
+		[HorizontalGroup("Buttons/B")]
+#endif
+		public void MirrorOverX()
+		{
+			T[,] newArray = new T[XLength, YLength];
+
+			for (int x = 0; x < XLength; x++)
+			{
+				for (int y = 0; y < YLength; y++)
+				{
+					newArray[x, y] = grid[x, (YLength - 1) - y];
+				}
+			}
+
+			grid = newArray;
 		}
 
 		#endregion
