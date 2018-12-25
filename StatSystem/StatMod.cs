@@ -28,9 +28,9 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Automatically generated name for this modifier
 		/// </summary>
-		#if ODIN_INSPECTOR
+#if ODIN_INSPECTOR
 		[ShowInInspector]
-		#endif
+#endif
 		public string Name
 		{
 			get
@@ -70,9 +70,9 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Value of the mod
 		/// </summary>
-		#if ODIN_INSPECTOR
+#if ODIN_INSPECTOR
 		[ShowInInspector]
-		#endif
+#endif
 		public float Value
 		{
 			get
@@ -88,9 +88,9 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// How the modifier is applied to existing stats
 		/// </summary>
-		#if ODIN_INSPECTOR
+#if ODIN_INSPECTOR
 		[ShowInInspector]
-		#endif
+#endif
 		public StatModType Type
 		{
 			get
@@ -106,9 +106,9 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Where the mod came from
 		/// </summary>
-		#if ODIN_INSPECTOR
+#if ODIN_INSPECTOR
 		[ShowInInspector]
-		#endif
+#endif
 		public object Source
 		{
 			get

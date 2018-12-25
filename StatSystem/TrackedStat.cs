@@ -33,9 +33,9 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Name of the stat
 		/// </summary>
-		#if ODIN_INSPECTOR
+#if ODIN_INSPECTOR
 		[ShowInInspector]
-		#endif
+#endif
 		public string Name
 		{
 			get
@@ -110,9 +110,9 @@ namespace Exanite.StatSystem
 		/// <summary>
 		/// Final value of the stat (Flat * Inc * Mult)
 		/// </summary>
-		#if ODIN_INSPECTOR
+#if ODIN_INSPECTOR
 		[ShowInInspector]
-		#endif
+#endif
 		public float FinalValue
 		{
 			get
