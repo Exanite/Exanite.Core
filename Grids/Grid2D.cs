@@ -28,7 +28,6 @@ namespace Exanite.Grids
 		[PropertyOrder(-1)]
 #endif
 		[SerializeField]
-		[HideInInspector]
 		public T[,] Grid { get; protected set; }
 		public bool AllowWrap;
 
