@@ -23,6 +23,7 @@ namespace Exanite.Numbers
 		[SerializeField]
 		private int multiplier;
 		[SerializeField]
+		[Range(0, 15)]
 		private int placesToRound;
 
 		private static EnumData<NumScalesShort> shortEnumData;
@@ -74,7 +75,7 @@ namespace Exanite.Numbers
 
 			set
 			{
-				placesToRound = value;
+				placesToRound = Mathf.Clamp(value, 0, 15);
 			}
 		}
 
