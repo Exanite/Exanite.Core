@@ -7,7 +7,7 @@ using Sirenix.OdinInspector;
 #endif
 using Sirenix.Serialization;
 using Exanite.Flags;
-using Exanite.Extensions;
+using Exanite.Utility;
 
 namespace Exanite.StatSystem
 {
