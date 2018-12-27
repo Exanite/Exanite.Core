@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Exanite.Extensions
+namespace Exanite.Utility
 {
 	public static class Extensions
 	{
