@@ -6,6 +6,10 @@ using Sirenix.OdinInspector;
 
 namespace Exanite.Grids
 {
+	/// <summary>
+	/// 2D grid that can store any type of value
+	/// </summary>
+	/// <typeparam name="T">Type of value to store</typeparam>
 	[Serializable]
 	public class Grid2D<T>
 	{
@@ -13,37 +17,21 @@ namespace Exanite.Grids
 
 #if ODIN_INSPECTOR
 		[PropertyOrder(-2)]
-		[ShowInInspector]
-		private bool showGrid = false;
-#endif
-
 		[SerializeField]
-		[HideInInspector]
-		protected T[,] grid;
-
-		public bool AllowWrap;
+#pragma warning disable 0414
+		private bool showGrid = false;
+#pragma warning restore 0414
+#endif
 
 #if ODIN_INSPECTOR
 		[ShowIf("showGrid")]
 		[PropertyOrder(-1)]
-		[ShowInInspector]
 #endif
-		public T[,] Grid
-		{
-			get
-			{
-				return grid;
-			}
+		[SerializeField]
+		[HideInInspector]
+		public T[,] Grid { get; protected set; }
+		public bool AllowWrap;
 
-			set
-			{
-				if(value == null)
-				{
-					throw new ArgumentNullException($"Passed setter value for Property 'Grid' is null");
-				}
-				grid = value;
-			}
-		}
 		/// <summary>
 		/// X length of the grid
 		/// </summary>
@@ -51,7 +39,7 @@ namespace Exanite.Grids
 		{
 			get
 			{
-				return grid.GetLength(0);
+				return Grid.GetLength(0);
 			}
 		}
 		/// <summary>
@@ -61,7 +49,7 @@ namespace Exanite.Grids
 		{
 			get
 			{
-				return grid.GetLength(1);
+				return Grid.GetLength(1);
 			}
 		}
 
@@ -87,7 +75,7 @@ namespace Exanite.Grids
 			}
 			
 			AllowWrap = allowWrap;
-			grid = new T[xLength, yLength];
+			Grid = new T[xLength, yLength];
 		}
 
 		#endregion
@@ -116,8 +104,8 @@ namespace Exanite.Grids
 		/// <param name="coords">Vector2Int representation of (x, y)</param>
 		public virtual void SetValueAt(T value, Vector2Int coords)
 		{
-			coords = Wrap(coords);
-			grid[coords.x, coords.y] = value;
+			if(AllowWrap) coords = Wrap(coords);
+			Grid[coords.x, coords.y] = value;
 		}
 
 		#endregion
@@ -142,13 +130,15 @@ namespace Exanite.Grids
 		/// <returns>Value at (x, y)</returns>
 		public virtual T GetValueAt(Vector2Int coords)
 		{
-			coords = Wrap(coords);
-			return grid[coords.x, coords.y];
+			if(AllowWrap) coords = Wrap(coords);
+			return Grid[coords.x, coords.y];
 		}
 
 		#endregion
 
 		#region Transformations
+
+		#region Odin Inspector
 
 #if ODIN_INSPECTOR
 		[HorizontalGroup("Buttons/A")]
@@ -157,9 +147,7 @@ namespace Exanite.Grids
 		{
 			RotateClockwise();
 		}
-#endif
 
-#if ODIN_INSPECTOR
 		[HorizontalGroup("Buttons/B")]
 		[Button(Name = "Rotate Counter-Clockwise")]
 		private void RotateCounterClockwiseOdin()
@@ -168,11 +156,13 @@ namespace Exanite.Grids
 		}
 #endif
 
+		#endregion
+
 		/// <summary>
 		/// Rotates the grid clockwise the specified amount of times
 		/// </summary>
 		/// <param name="timesToRotate">Times to rotate the grid</param>
-		public void RotateClockwise(int timesToRotate = 1)
+		public virtual void RotateClockwise(int timesToRotate = 1)
 		{
 			for (int i = 0; i < timesToRotate; i++)
 			{
@@ -182,11 +172,11 @@ namespace Exanite.Grids
 				{
 					for (int y = 0; y < YLength; y++)
 					{
-						newArray[(YLength - 1) - y, x] = grid[x, y];
+						newArray[(YLength - 1) - y, x] = Grid[x, y];
 					}
 				}
 
-				grid = newArray;
+				Grid = newArray;
 			}
 		}
 
@@ -194,7 +184,7 @@ namespace Exanite.Grids
 		/// Rotates the grid counter-clockwise the specified amount of times
 		/// </summary>
 		/// <param name="timesToRotate">Times to rotate the grid</param>
-		public void RotateCounterClockwise(int timesToRotate = 1)
+		public virtual void RotateCounterClockwise(int timesToRotate = 1)
 		{
 			for (int i = 0; i < timesToRotate; i++)
 			{
@@ -204,11 +194,11 @@ namespace Exanite.Grids
 				{
 					for (int y = 0; y < YLength; y++)
 					{
-						newArray[y, (XLength - 1) - x] = grid[x, y];
+						newArray[y, (XLength - 1) - x] = Grid[x, y];
 					}
 				}
 
-				grid = newArray;
+				Grid = newArray;
 			}
 		}
 
@@ -219,7 +209,7 @@ namespace Exanite.Grids
 		[Button]
 		[HorizontalGroup("Buttons/A")]
 #endif
-		public void MirrorOverY()
+		public virtual void MirrorOverY()
 		{
 			T[,] newArray = new T[XLength, YLength];
 
@@ -227,11 +217,11 @@ namespace Exanite.Grids
 			{
 				for (int y = 0; y < YLength; y++)
 				{
-					newArray[x, y] = grid[(XLength - 1) - x, y];
+					newArray[x, y] = Grid[(XLength - 1) - x, y];
 				}
 			}
 
-			grid = newArray;
+			Grid = newArray;
 		}
 
 		/// <summary>
@@ -241,7 +231,7 @@ namespace Exanite.Grids
 		[Button]
 		[HorizontalGroup("Buttons/B")]
 #endif
-		public void MirrorOverX()
+		public virtual void MirrorOverX()
 		{
 			T[,] newArray = new T[XLength, YLength];
 
@@ -249,41 +239,80 @@ namespace Exanite.Grids
 			{
 				for (int y = 0; y < YLength; y++)
 				{
-					newArray[x, y] = grid[x, (YLength - 1) - y];
+					newArray[x, y] = Grid[x, (YLength - 1) - y];
 				}
 			}
 
-			grid = newArray;
+			Grid = newArray;
 		}
 
 		#endregion
 
-		#region Internal
+		#region Utility
 
-		protected virtual Vector2Int Wrap(int x, int y)
+		#region Wrap
+
+		/// <summary>
+		/// Wraps the provided (x, y) coordinate to be within range of this Grid2D
+		/// </summary>
+		/// <param name="x">X-Coordinate</param>
+		/// <param name="y">Y-Coordinate</param>
+		/// <returns>Wrapped (x, y) coordinate</returns>
+		public virtual Vector2Int Wrap(int x, int y)
 		{
 			return Wrap(new Vector2Int(x, y));
 		}
 
-		protected virtual Vector2Int Wrap(Vector2Int coords)
+		/// <summary>
+		/// Wraps the provided (x, y) coordinate to be within range of this Grid2D
+		/// </summary>
+		/// <param name="coords">(x, y) coordinates</param>
+		/// <returns>Wrapped (x, y) coordinate</returns>
+		public virtual Vector2Int Wrap(Vector2Int coords)
 		{
-			if(AllowWrap)
-			{
-				coords.x = coords.x % XLength;
-				coords.y = coords.y % YLength;
+			coords.x = coords.x % XLength;
+			coords.y = coords.y % YLength;
 
-				if(coords.x < 0)
-				{
-					coords.x = XLength + coords.x;
-				}
-				if(coords.y < 0)
-				{
-					coords.y = YLength + coords.y;
-				}
+			if(coords.x < 0)
+			{
+				coords.x = XLength + coords.x;
+			}
+			if(coords.y < 0)
+			{
+				coords.y = YLength + coords.y;
 			}
 
 			return coords;
 		}
+
+		#endregion
+
+		#region IsInRange
+
+		/// <summary>
+		/// Checks if the provided (x, y) coordinate is in range of the grid
+		/// </summary>
+		/// <param name="x">X-Coordinate</param>
+		/// <param name="y">Y-Coordinate</param>
+		/// <returns>Is the provided (x, y) coordinate in range?</returns>
+		public virtual bool IsInRange(int x, int y)
+		{
+			return IsInRange(new Vector2Int(x, y));
+		}
+
+		/// <summary>
+		/// Checks if the provided (x, y) coordinate is in range of the grid
+		/// </summary>
+		/// <param name="coords">(x, y) coordinates</param>
+		/// <returns>Is the provided (x, y) coordinate in range?</returns>
+		public virtual bool IsInRange(Vector2Int coords)
+		{
+			bool result = !(coords.x < 0 || coords.x >= XLength || coords.y < 0 || coords.y >= YLength);
+			Debug.Log(result);
+			return result;
+		}
+
+		#endregion
 
 		#endregion
 	}
