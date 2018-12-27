@@ -5,19 +5,25 @@ using UnityEngine;
 namespace Exanite.Grids
 {
 	/// <summary>
-	/// Holds data for <see cref="Grid2D{T}"/> collision tests
+	/// Holds data for Grid2DMask match tests
 	/// </summary>
 	[Serializable]
 	public class Grid2DMaskData
 	{
+		/// <summary>
+		/// List of matched coordinates
+		/// </summary>
 		public readonly List<Vector2Int> coordinates;
+		/// <summary>
+		/// 
+		/// </summary>
 		public readonly Grid2DSpaceAvailability availability;
 
 		/// <summary>
 		/// Creates a new <see cref="Grid2DMaskData"/>
 		/// </summary>
 		/// <param name="coordinates">List of coordinates</param>
-		/// <param name="isOutOfRange">Was a coordinate out of range?</param>
+		/// <param name="availability">Targeted coordinates' availability</param>
 		public Grid2DMaskData(List<Vector2Int> coordinates, Grid2DSpaceAvailability availability)
 		{
 			this.coordinates = coordinates;
