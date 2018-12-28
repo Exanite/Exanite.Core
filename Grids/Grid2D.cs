@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Sirenix.Serialization;
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
 #endif
@@ -16,21 +17,39 @@ namespace Exanite.Grids
 		#region Fields and Properties
 
 #if ODIN_INSPECTOR
+		/// <summary>
+		/// Used with OdinInspector to hide/show the Grid property
+		/// </summary>
 		[PropertyOrder(-2)]
 		[SerializeField]
 #pragma warning disable 0414
-		private bool showGrid = false;
+		public bool ShowGrid = false;
 #pragma warning restore 0414
 #endif
 
-#if ODIN_INSPECTOR
-		[ShowIf("showGrid")]
-		[PropertyOrder(-1)]
-#endif
-		[SerializeField]
-		public T[,] Grid { get; protected set; }
+		[OdinSerialize]
+		[HideInInspector]
+		private T[,] _grid;
 		public bool AllowWrap;
 
+		/// <summary>
+		/// 2D array used for storing values
+		/// </summary>
+#if ODIN_INSPECTOR
+		[ShowIf("ShowGrid")]
+		[PropertyOrder(-1)]
+#endif
+		public virtual T[,] Grid
+		{
+			get
+			{
+				return _grid;
+			}
+			protected set
+			{
+				_grid = value;
+			}
+		}
 		/// <summary>
 		/// X length of the grid
 		/// </summary>
@@ -72,7 +91,7 @@ namespace Exanite.Grids
 			{
 				throw new ArgumentOutOfRangeException(nameof(yLength));
 			}
-			
+
 			AllowWrap = allowWrap;
 			Grid = new T[xLength, yLength];
 		}
@@ -103,7 +122,7 @@ namespace Exanite.Grids
 		/// <param name="coords">Vector2Int representation of (x, y)</param>
 		public virtual void SetValueAt(T value, Vector2Int coords)
 		{
-			if(AllowWrap) coords = Wrap(coords);
+			if (AllowWrap) coords = Wrap(coords);
 			Grid[coords.x, coords.y] = value;
 		}
 
@@ -129,7 +148,7 @@ namespace Exanite.Grids
 		/// <returns>Value at (x, y)</returns>
 		public virtual T GetValueAt(Vector2Int coords)
 		{
-			if(AllowWrap) coords = Wrap(coords);
+			if (AllowWrap) coords = Wrap(coords);
 			return Grid[coords.x, coords.y];
 		}
 
@@ -272,11 +291,11 @@ namespace Exanite.Grids
 			coords.x = coords.x % XLength;
 			coords.y = coords.y % YLength;
 
-			if(coords.x < 0)
+			if (coords.x < 0)
 			{
 				coords.x = XLength + coords.x;
 			}
-			if(coords.y < 0)
+			if (coords.y < 0)
 			{
 				coords.y = YLength + coords.y;
 			}
