@@ -1,12 +1,61 @@
-﻿using System;
+﻿using Sirenix.OdinInspector;
+using Sirenix.Utilities;
+using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Exanite.Grids
 {
+	/// <summary>
+	/// <see cref="Grid2D{T}"/> used to apply a value to predefined locations
+	/// </summary>
 	[Serializable]
 	public class Grid2DMask : Grid2D<bool>
 	{
+		#region Properties
+
+#if ODIN_INSPECTOR
+
+		#region OdinInspector
+
+		[ShowIf("ShowGrid")]
+		[PropertyOrder(-1)]
+		[ShowInInspector]
+		[TableMatrix(DrawElementMethod = "DrawBoolElement")]
+		public override bool[,] Grid
+		{
+			get
+			{
+				return base.Grid;
+			}
+
+			protected set
+			{
+				base.Grid = value;
+			}
+		}
+
+		private static bool DrawBoolElement(Rect rect, bool value)
+		{
+			if(Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
+			{
+				value = !value;
+				GUI.changed = true;
+				Event.current.Use();
+			}
+
+			EditorGUI.DrawRect(rect.Padding(1), value ? new Color(0.3f, 0.3f, 0.3f) : new Color(0f, 0f, 0f, 0f));
+
+			return value;
+		}
+
+		#endregion
+
+#endif
+
+		#endregion
+
 		#region Constructor
 
 		/// <summary>
@@ -87,10 +136,10 @@ namespace Exanite.Grids
 		#region ApplyMaskToGrid
 
 		/// <summary>
-		/// Applies a value according to the true values of this Grid2DMask at the provided (x, y) coordinates
+		/// Applies a value according to the true values of this <see cref="Grid2DMask"/> at the provided (x, y) coordinates
 		/// </summary>
-		/// <typeparam name="T">Type of Grid2D to apply to</typeparam>
-		/// <param name="grid">Grid2D to apply to</param>
+		/// <typeparam name="T">Type of <see cref="Grid2D{T}"/> to apply to</typeparam>
+		/// <param name="grid"><see cref="Grid2D{T}"/> to apply to</param>
 		/// <param name="value">Value to apply</param>
 		/// <param name="x">X-Coordinate representing where to apply this mask</param>
 		/// <param name="y">Y-Coordinate representing where to apply this mask</param>
@@ -102,10 +151,10 @@ namespace Exanite.Grids
 		}
 
 		/// <summary>
-		/// Applies a value according to the true values of this Grid2DMask at the provided (x, y) coordinates
+		/// Applies a value according to the true values of this <see cref="Grid2DMask"/> at the provided (x, y) coordinates
 		/// </summary>
-		/// <typeparam name="T">Type of Grid2D to apply to</typeparam>
-		/// <param name="grid">Grid2D to apply to</param>
+		/// <typeparam name="T">Type of <see cref="Grid2D{T}"/> to apply to</typeparam>
+		/// <param name="grid"><see cref="Grid2D{T}"/> to apply to</param>
 		/// <param name="value">Value to apply</param>
 		/// <param name="coords">(x, y) coordinates representing where to apply this mask</param>
 		/// <param name="requiredAvailability">Highest availability allowed, if higher this method aborts and returns false</param>
