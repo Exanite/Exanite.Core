@@ -36,6 +36,7 @@ namespace Exanite.Grids
 			}
 		}
 
+		// Code is from https://sirenix.net/odininspector > Create feature-rich editors > Custom tables
 		private static bool DrawBoolElement(Rect rect, bool value)
 		{
 			if(Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
@@ -45,7 +46,7 @@ namespace Exanite.Grids
 				Event.current.Use();
 			}
 
-			EditorGUI.DrawRect(rect.Padding(1), value ? new Color(0.3f, 0.3f, 0.3f) : new Color(0f, 0f, 0f, 0f));
+			EditorGUI.DrawRect(rect.Padding(1), value ? new Color(0.15f, 0.9f, 0.15f) : new Color(0f, 0f, 0f, 0f));
 
 			return value;
 		}
