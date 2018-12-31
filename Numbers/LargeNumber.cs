@@ -5,7 +5,7 @@ using Exanite.Utility;
 namespace Exanite.Numbers
 {
 	/// <summary>
-	/// Used to store very large numbers <para/>
+	/// Used to store very large numbers (up to 999.999999x10^2^63) <para/>
 	/// Actual value = <see cref="Value"/> * (10 ^ (<see cref="Multiplier"/> * 3))
 	/// </summary>
 	public struct LargeNumber
@@ -21,7 +21,7 @@ namespace Exanite.Numbers
 		[SerializeField]
 		private double value;
 		[SerializeField]
-		private int multiplier;
+		private long multiplier;
 		[SerializeField]
 		[Range(0, 15)]
 		private int placesToRound;
@@ -50,7 +50,7 @@ namespace Exanite.Numbers
 		/// <summary>
 		/// Multiplier of this <see cref="LargeNumber"/>
 		/// </summary>
-		public int Multiplier
+		public long Multiplier
 		{
 			get
 			{
@@ -119,7 +119,7 @@ namespace Exanite.Numbers
 		/// </param>
 		/// <param name="placesToRound">Places to round to when <see cref="ToString"/> is called</param>
 		/// <param name="displayFormat">How to format the string when <see cref="ToString"/> is called</param>
-		public LargeNumber(double value = 0, int multiplier = 0, int placesToRound = 2, NumDisplayFormat displayFormat = NumDisplayFormat.Scientific)
+		public LargeNumber(double value = 0, long multiplier = 0, int placesToRound = 2, NumDisplayFormat displayFormat = NumDisplayFormat.Scientific)
 		{
 			this.value = value;
 			this.multiplier = multiplier;
@@ -212,7 +212,7 @@ namespace Exanite.Numbers
 		public static LargeNumber operator +(LargeNumber A, LargeNumber B)
 		{
 			bool AMultIsLarger = (A.Multiplier > B.Multiplier);
-			int difference = Math.Abs(A.Multiplier - B.Multiplier);
+			long difference = Math.Abs(A.Multiplier - B.Multiplier);
 
 			if (AMultIsLarger)
 			{
@@ -237,7 +237,7 @@ namespace Exanite.Numbers
 		public static LargeNumber operator -(LargeNumber A, LargeNumber B)
 		{
 			bool AMultIsLarger = (A.Multiplier > B.Multiplier);
-			int difference = Math.Abs(A.Multiplier - B.Multiplier);
+			long difference = Math.Abs(A.Multiplier - B.Multiplier);
 
 			if (AMultIsLarger)
 			{
