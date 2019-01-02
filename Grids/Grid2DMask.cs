@@ -15,7 +15,7 @@ namespace Exanite.Grids
 	{
 		#region Properties
 
-#if ODIN_INSPECTOR
+#if ODIN_INSPECTOR && UNITY_EDITOR
 
 		#region OdinInspector
 
