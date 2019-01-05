@@ -3,18 +3,18 @@
 namespace Exanite.ObjectPooling.Example
 {
     public class PoolUseExample : MonoBehaviour
-	{
-		public GameObject prefab;
+    {
+        public GameObject prefab;
 
-		private void Start() 
-		{
-			Pool.CreatePool(prefab, 23); // Not needed, create pool manually with 23 pooled objects
+        private void Start() 
+        {
+            Pool.CreatePool(prefab, 23); // Not needed, create pool manually with 23 pooled objects
 
-			Pool.ExpandPool(prefab, 15); // Manually expand previous pool by 15
+            Pool.ExpandPool(prefab, 15); // Manually expand previous pool by 15
 
-			GameObject example = Pool.Spawn(prefab, transform.position, transform.rotation, transform); // Spawning a prefab from the pool
+            GameObject example = Pool.Spawn(prefab, transform.position, transform.rotation, transform); // Spawning a prefab from the pool
 
-			Pool.Despawn(example); // Despawning the previously spawned GameObject
-		}
-	}
+            Pool.Despawn(example); // Despawning the previously spawned GameObject
+        }
+    }
 }
