@@ -216,7 +216,7 @@ namespace Exanite.ObjectPooling.Internal
 
 				gameObjectToDespawn.SetActive(false);
 				gameObjectToDespawn.transform.SetParent(transform);
-
+				_poolDictionary[poolKey].queue.Enqueue(gameObjectToDespawn);
 			}
 			else
 			{
