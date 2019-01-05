@@ -3,11 +3,11 @@
 namespace Exanite.Stats
 {
     [System.Serializable]
-	public class StatRegenerating
-	{
+    public class StatRegenerating
+    {
         protected float _value;
         public StatHolder Max;
-		public StatHolder Regen;
+        public StatHolder Regen;
 
         public float Value
         {
@@ -23,26 +23,26 @@ namespace Exanite.Stats
         }
 
         public StatRegenerating(float max, float regen)
-		{
-			Value = max;
-			Max = new StatHolder(max);
-			Regen = new StatHolder(regen);
-		}
+        {
+            Value = max;
+            Max = new StatHolder(max);
+            Regen = new StatHolder(regen);
+        }
 
-		public virtual void Regenerate()
-		{
-			Value = Mathf.Clamp(Value + (Regen.FinalValue * Time.deltaTime), -1f, Max.FinalValue);
-		}
+        public virtual void Regenerate()
+        {
+            Value = Mathf.Clamp(Value + (Regen.FinalValue * Time.deltaTime), -1f, Max.FinalValue);
+        }
 
-		public virtual void SetMax()
-		{
-			Value = Max.FinalValue;
-		}
+        public virtual void SetMax()
+        {
+            Value = Max.FinalValue;
+        }
 
-		// Negative values increase
-		public virtual void Decrease(float value) 
-		{
-			Value = Mathf.Clamp(Value - value, -1f, Max.FinalValue);
-		}
-	}
+        // Negative values increase
+        public virtual void Decrease(float value) 
+        {
+            Value = Mathf.Clamp(Value - value, -1f, Max.FinalValue);
+        }
+    }
 }
