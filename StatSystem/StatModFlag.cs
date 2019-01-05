@@ -1,51 +1,51 @@
 ﻿namespace Exanite.StatSystem
 {
-	/// <summary>
-	/// Flags used in the StatSystem to differentiate between different types of mods
-	/// </summary>
-	[System.Serializable]
-	public enum StatModFlag
-	{
-		Base,
-		
-		Damage,
+    /// <summary>
+    /// Flags used in the StatSystem to differentiate between different types of mods
+    /// </summary>
+    [System.Serializable]
+    public enum StatModFlag
+    {
+        Base,
+        
+        Damage,
 
-		Attack,
-		Spell,
+        Attack,
+        Spell,
 
-		Unarmed,
-		Dagger,
-		Axe,
-		Sword,
-		Mace,
-		Spear,
-		Bow,
-		Staff,
-		Wand,
+        Unarmed,
+        Dagger,
+        Axe,
+        Sword,
+        Mace,
+        Spear,
+        Bow,
+        Staff,
+        Wand,
 
-		Physical,
-		Slashing,
-		Piercing,
-		Crushing,
+        Physical,
+        Slashing,
+        Piercing,
+        Crushing,
 
-		Elemental,
-		Lightning,
-		Ice,
-		Fire,
+        Elemental,
+        Lightning,
+        Ice,
+        Fire,
 
-		Melee,
-		Ranged, 
-		OneHand,
-		TwoHand,
-		DualWield,
+        Melee,
+        Ranged, 
+        OneHand,
+        TwoHand,
+        DualWield,
 
-		Projectile,
+        Projectile,
 
-		Health,
-		Mana,
-		Shield,
+        Health,
+        Mana,
+        Shield,
 
-		Max,
-		Regen,
-	}
+        Max,
+        Regen,
+    }
 }
