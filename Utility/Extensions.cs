@@ -14,5 +14,10 @@ namespace Exanite.Utility
         {
             return gameObject.GetComponent<T>() ?? gameObject.AddComponent<T>();
         }
+
+        public static T GetOrAddComponent<T>(this Collider collider) where T : Component
+        {
+            return collider.GetComponent<T>() ?? collider.gameObject.AddComponent<T>();
+        }
     }
 }
