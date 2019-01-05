@@ -100,12 +100,15 @@ namespace Exanite.ObjectPooling.Internal
             {
                 if(debugMode) Debug.Log($"Creating object pool for {prefab.name} with InstanceID of {poolKey}");
 
-                Queue <GameObject> oldQueue = new Queue<GameObject>();
-
+                Queue<GameObject> oldQueue;
                 if(_poolDictionary.ContainsKey(poolKey)) 
                 {
                     oldQueue = _poolDictionary[poolKey].queue;
                     _poolDictionary.Remove(poolKey);
+                }
+                else
+                {
+                    oldQueue = new Queue<GameObject>();
                 }
 
                 _poolDictionary.Add(poolKey, new Pool(prefab));
