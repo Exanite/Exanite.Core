@@ -6,7 +6,7 @@ namespace Exanite.ObjectPooling.Internal
     /// <summary>
     /// Main class for object pooling
     /// </summary>
-    public class PoolController : MonoBehaviour 
+    public class PoolController : MonoBehaviour
     {
         /// <summary>
         /// Pools to create on <see cref="Awake"/>
@@ -40,7 +40,7 @@ namespace Exanite.ObjectPooling.Internal
         {
             get
             {
-                if(!instance)
+                if (!instance)
                 {
                     new GameObject("_ObjectPool").AddComponent<PoolController>();
                 }
@@ -48,34 +48,34 @@ namespace Exanite.ObjectPooling.Internal
             }
         }
 
-        protected virtual void Awake() 
+        protected virtual void Awake()
         {
-            if(!instance)
+            if (!instance)
             {
                 instance = this;
             }
             else
             {
-                Debug.LogWarning($"There is already a {GetType()} in the scene.");
+                if (debugMode) Debug.LogWarning($"There is already a {GetType()} in the scene.");
                 Destroy(this);
             }
-            
+
             _poolDictionary = new Dictionary<int, Pool>();
             _spawnedGameObjects = new List<GameObject>();
 
-            foreach(AutoCreatedPools poolToCreate in poolsToCreate)
+            foreach (AutoCreatedPools poolToCreate in poolsToCreate)
             {
                 CreatePool(poolToCreate.prefab, poolToCreate.amount, true);
             }
         }
 
-        protected virtual void LateUpdate() 
+        protected virtual void LateUpdate()
         {
-            if(_isDirty)
+            if (_isDirty)
             {
-                foreach(GameObject spawnedGameObject in _spawnedGameObjects)
+                foreach (GameObject spawnedGameObject in _spawnedGameObjects)
                 {
-                    foreach(IPoolable iPoolable in spawnedGameObject.GetComponentsInChildren<IPoolable>())
+                    foreach (IPoolable iPoolable in spawnedGameObject.GetComponentsInChildren<IPoolable>())
                     {
                         iPoolable.OnSpawn();
                     }
@@ -96,12 +96,12 @@ namespace Exanite.ObjectPooling.Internal
         {
             int poolKey = prefab.GetInstanceID();
 
-            if(!_poolDictionary.ContainsKey(poolKey) || overrideExisting)
+            if (!_poolDictionary.ContainsKey(poolKey) || overrideExisting)
             {
-                if(debugMode) Debug.Log($"Creating object pool for {prefab.name} with InstanceID of {poolKey}");
+                if (debugMode) Debug.Log($"Creating object pool for {prefab.name} with InstanceID of {poolKey}");
 
                 Queue<GameObject> oldQueue;
-                if(_poolDictionary.ContainsKey(poolKey)) 
+                if (_poolDictionary.ContainsKey(poolKey))
                 {
                     oldQueue = _poolDictionary[poolKey].queue;
                     _poolDictionary.Remove(poolKey);
@@ -112,9 +112,9 @@ namespace Exanite.ObjectPooling.Internal
                 }
 
                 _poolDictionary.Add(poolKey, new Pool(prefab));
-                if(oldQueue.Count > 0)
+                if (oldQueue.Count > 0)
                 {
-                    foreach(GameObject gameObject in oldQueue)
+                    foreach (GameObject gameObject in oldQueue)
                     {
                         _poolDictionary[poolKey].queue.Enqueue(gameObject);
                     }
@@ -133,10 +133,10 @@ namespace Exanite.ObjectPooling.Internal
         {
             int poolKey = prefab.GetInstanceID();
 
-            if(_poolDictionary.ContainsKey(poolKey))
+            if (_poolDictionary.ContainsKey(poolKey))
             {
                 bool doesHaveIDComponent = false;
-                if(prefab.GetComponent<PoolInstanceID>())
+                if (prefab.GetComponent<PoolInstanceID>())
                 {
                     doesHaveIDComponent = true;
                 }
@@ -146,7 +146,7 @@ namespace Exanite.ObjectPooling.Internal
                     GameObject poolObject = Instantiate(prefab) as GameObject;
                     poolObject.SetActive(false);
                     poolObject.transform.SetParent(transform);
-                    if(!doesHaveIDComponent)
+                    if (!doesHaveIDComponent)
                     {
                         poolObject.AddComponent<PoolInstanceID>();
                     }
@@ -175,15 +175,15 @@ namespace Exanite.ObjectPooling.Internal
         {
             int poolKey = prefab.GetInstanceID();
 
-            if(_poolDictionary.ContainsKey(poolKey)) //Spawn object
+            if (_poolDictionary.ContainsKey(poolKey)) //Spawn object
             {
-                if(_poolDictionary[poolKey].queue.Count <= 0) // If empty
+                if (_poolDictionary[poolKey].queue.Count <= 0) // If empty
                 {
                     ExpandPool(prefab);
                 }
 
                 GameObject poolObject = _poolDictionary[poolKey].queue.Dequeue();
-                
+
                 poolObject.transform.position = position; // Set object transforms
                 poolObject.transform.rotation = rotation;
                 poolObject.transform.SetParent(parent, true);
@@ -196,7 +196,7 @@ namespace Exanite.ObjectPooling.Internal
             }
             else //Create pool and retry
             {
-                if(debugMode) Debug.Log($"Prefab {prefab.name} does not have a pool yet, creating now.");
+                if (debugMode) Debug.Log($"Prefab {prefab.name} does not have a pool yet, creating now.");
                 CreatePool(prefab);
                 return Spawn(prefab, position, rotation, parent);
             }
@@ -210,9 +210,9 @@ namespace Exanite.ObjectPooling.Internal
         {
             int poolKey = gameObjectToDespawn.GetComponent<PoolInstanceID>().instanceID;
 
-            if(_poolDictionary.ContainsKey(poolKey))
+            if (_poolDictionary.ContainsKey(poolKey))
             {
-                foreach(IPoolable iPoolable in gameObjectToDespawn.GetComponentsInChildren<IPoolable>())
+                foreach (IPoolable iPoolable in gameObjectToDespawn.GetComponentsInChildren<IPoolable>())
                 {
                     iPoolable.OnDespawn();
                 }
@@ -223,7 +223,7 @@ namespace Exanite.ObjectPooling.Internal
             }
             else
             {
-                if(debugMode) Debug.LogWarning($"{gameObjectToDespawn.name} does not have a corresponding pool and will be destroyed instead.");
+                if (debugMode) Debug.LogWarning($"{gameObjectToDespawn.name} does not have a corresponding pool and will be destroyed instead.");
                 Destroy(gameObjectToDespawn);
             }
         }
