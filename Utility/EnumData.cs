@@ -54,6 +54,18 @@ namespace Exanite.Utility
             }
         }
 
+        public static List<string> EnumToStringList<T2>()
+        {
+            List<string> result = new List<string>();
+
+            foreach (var item in Enum.GetValues(typeof(T2)))
+            {
+                result.Add(item.ToString());
+            }
+
+            return result;
+        }
+
         #endregion
     }
 }
