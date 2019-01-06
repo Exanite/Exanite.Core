@@ -8,6 +8,7 @@ namespace Exanite.Numbers
     /// Used to store very large numbers (up to 999.999999x(10^(3*2^63))) <para/>
     /// Actual value = <see cref="Value"/> * (10 ^ (<see cref="Multiplier"/> * 3))
     /// </summary>
+    [Serializable]
     public struct LargeNumber
     {
         #region Fields and Properties
