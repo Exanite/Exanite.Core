@@ -42,7 +42,7 @@ namespace Exanite.ObjectPooling.Internal
             {
                 if (!instance)
                 {
-                    new GameObject("_ObjectPool").AddComponent<PoolController>();
+                    new GameObject("_ObjectPool", typeof(PoolController));
                 }
                 return instance;
             }
