@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Exanite.Utility
@@ -8,6 +9,11 @@ namespace Exanite.Utility
         public static bool IsNullOrEmpty(this Array array)
         {
             return (array == null || array.Length == 0);
+        }
+
+        public static bool IsNullOrEmpty(this IList list)
+        {
+            return (list == null || list.Count == 0);
         }
 
         public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
