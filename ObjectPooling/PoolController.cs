@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Exanite.ObjectPooling.Internal
@@ -69,10 +70,12 @@ namespace Exanite.ObjectPooling.Internal
             }
         }
 
-        protected virtual void LateUpdate()
+        protected virtual void Update()
         {
             if (_isDirty)
             {
+                _isDirty = false;
+
                 foreach (GameObject spawnedGameObject in _spawnedGameObjects)
                 {
                     foreach (IPoolable iPoolable in spawnedGameObject.GetComponentsInChildren<IPoolable>())
@@ -81,7 +84,6 @@ namespace Exanite.ObjectPooling.Internal
                     }
                 }
 
-                _isDirty = false;
                 _spawnedGameObjects.Clear();
             }
         }
