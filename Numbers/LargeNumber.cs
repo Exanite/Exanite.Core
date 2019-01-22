@@ -5,7 +5,7 @@ using Exanite.Utility;
 namespace Exanite.Numbers
 {
     /// <summary>
-    /// Used to store very large numbers (up to 999.999999x(10^(3*2^63))) <para/>
+    /// Used to store very large numbers (up to 999.999999x(10^(2^63))) <para/>
     /// Actual value = <see cref="Value"/> * (10 ^ (<see cref="Multiplier"/> * 3))
     /// </summary>
     [Serializable]
@@ -84,7 +84,7 @@ namespace Exanite.Numbers
         {
             get
             {
-                if(shortEnumData == null)
+                if (shortEnumData == null)
                 {
                     shortEnumData = new EnumData<NumScalesShort>();
                 }
@@ -143,7 +143,7 @@ namespace Exanite.Numbers
         {
             double rounded = Math.Round(Value, PlacesToRound);
 
-            if(Multiplier == 0)
+            if (Multiplier == 0)
             {
                 return rounded.ToString();
             }
@@ -153,12 +153,24 @@ namespace Exanite.Numbers
                 case (NumDisplayFormat.Scientific):
                 {
                     int extraDigits = 0;
-                    while(rounded > 10) // Limit to one leading digit
+                    while (rounded > 10) // Limit to one leading digit
                     {
                         rounded /= 10;
                         extraDigits += 1;
                     }
                     rounded = Math.Round(rounded, PlacesToRound); // Round the result again because the decimal place shifted in the while loop
+
+                    if(Multiplier > long.MaxValue / 3)
+                    {
+                        bool isNegative = false;
+
+                        if(Multiplier < 0)
+                        {
+                            isNegative = true;
+                        }
+
+                        return $"{rounded} E{(isNegative ? "-" : string.Empty)}Infinity";
+                    }
 
                     return $"{rounded} E{(Multiplier * 3) + extraDigits}";
                 }
@@ -172,7 +184,7 @@ namespace Exanite.Numbers
                 }
                 case (NumDisplayFormat.Long):
                 {
-                    if(Math.Abs(Multiplier) > LongEnumData.max || Math.Abs(Multiplier) < LongEnumData.min)
+                    if (Math.Abs(Multiplier) > LongEnumData.max || Math.Abs(Multiplier) < LongEnumData.min)
                     {
                         return ToString(NumDisplayFormat.Short);
                     }
@@ -286,7 +298,7 @@ namespace Exanite.Numbers
 
         public static bool operator >(LargeNumber A, LargeNumber B)
         {
-            if(A.Multiplier == B.multiplier)
+            if (A.Multiplier == B.multiplier)
             {
                 return A.Value > B.Value;
             }
@@ -350,7 +362,7 @@ namespace Exanite.Numbers
                 value *= 1000;
                 multiplier--;
             }
-            if(value == 0)
+            if (value == 0)
             {
                 multiplier = 0;
             }
