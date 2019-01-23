@@ -30,7 +30,6 @@ namespace Exanite.Grids
         [OdinSerialize]
         [HideInInspector]
         private T[,] _grid;
-        public bool AllowWrap;
 
         /// <summary>
         /// 2D array used for storing values
@@ -71,6 +70,55 @@ namespace Exanite.Grids
             }
         }
 
+        /// <summary>
+        /// Property used to access the grid
+        /// </summary>
+        /// <param name="x">X-Coordinate</param>
+        /// <param name="y">Y-Coordinate</param>
+        /// <param name="wrap">Should the coordinates be wrapped?</param>
+        /// <returns>Value at (x, y)</returns>
+        public virtual T this[int x, int y, bool wrap = false]
+        {
+            get
+            {
+                return this[new Vector2Int(x, y), wrap];
+            }
+
+            set
+            {
+                this[new Vector2Int(x, y), wrap] = value;
+            }
+        }
+
+        /// <summary>
+        /// Property used to access the grid
+        /// </summary>
+        /// <param name="coords">(x, y) coordinates</param>
+        /// <param name="wrap">Should the coordinates be wrapped?</param>
+        /// <returns>Value at (x, y)</returns>
+        public virtual T this[Vector2Int coords, bool wrap = false]
+        {
+            get
+            {
+                if (wrap)
+                {
+                    coords = Wrap(coords);
+                }
+
+                return Grid[coords.x, coords.y];
+            }
+
+            set
+            {
+                if (wrap)
+                {
+                    coords = Wrap(coords);
+                }
+
+                Grid[coords.x, coords.y] = value;
+            }
+        }
+
         #endregion
 
         #region Constructor
@@ -80,8 +128,7 @@ namespace Exanite.Grids
         /// </summary>
         /// <param name="xLength">Length of the grid along the X-Axis</param>
         /// <param name="yLength">Length of the grid along the Y-Axis</param>
-        /// <param name="allowWrap">Does the grid allow wrapping when the passed coordinates are out of range?</param>
-        public Grid2D(int xLength, int yLength, bool allowWrap)
+        public Grid2D(int xLength, int yLength)
         {
             if (xLength <= 0)
             {
@@ -92,64 +139,7 @@ namespace Exanite.Grids
                 throw new ArgumentOutOfRangeException(nameof(yLength));
             }
 
-            AllowWrap = allowWrap;
             Grid = new T[xLength, yLength];
-        }
-
-        #endregion
-
-        #region Setting Values
-
-        /// <summary>
-        /// Sets (x, y) in the grid to be the passed value
-        /// </summary>
-        /// <param name="value">Value to set</param>
-        /// <param name="x">X coordinate</param>
-        /// <param name="y">Y coordinate</param>
-#if ODIN_INSPECTOR
-        [FoldoutGroup("Buttons")]
-        [Button(ButtonHeight = 25, Expanded = true)]
-#endif
-        public virtual void SetValueAt(T value, int x, int y)
-        {
-            SetValueAt(value, new Vector2Int(x, y));
-        }
-
-        /// <summary>
-        /// Sets (x, y) in the grid to be the passed value
-        /// </summary>
-        /// <param name="value">Value to set</param>
-        /// <param name="coords">Vector2Int representation of (x, y)</param>
-        public virtual void SetValueAt(T value, Vector2Int coords)
-        {
-            if (AllowWrap) coords = Wrap(coords);
-            Grid[coords.x, coords.y] = value;
-        }
-
-        #endregion
-
-        #region Getting Values
-
-        /// <summary>
-        /// Gets the value at (x, y) in the grid
-        /// </summary>
-        /// <param name="x">X coordinate</param>
-        /// <param name="y">Y coordinate</param>
-        /// <returns>Value at (x, y)</returns>
-        public virtual T GetValueAt(int x, int y)
-        {
-            return GetValueAt(new Vector2Int(x, y));
-        }
-
-        /// <summary>
-        /// Gets the value at (x, y) in the grid
-        /// </summary>
-        /// <param name="coords">Vector2Int representation of (x, y)</param>
-        /// <returns>Value at (x, y)</returns>
-        public virtual T GetValueAt(Vector2Int coords)
-        {
-            if (AllowWrap) coords = Wrap(coords);
-            return Grid[coords.x, coords.y];
         }
 
         #endregion
