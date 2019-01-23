@@ -15,7 +15,7 @@ namespace Exanite.Grids
         /// <summary>
         /// Some of the targeted coordinates(s) hold non-<see langword="default"/> values (<see langword="null"/>/0/etc)
         /// </summary>
-        Taken = 1,
+        Occupied = 1,
         /// <summary>
         /// Some of the targeted coordinate(s) are out of range
         /// </summary>
