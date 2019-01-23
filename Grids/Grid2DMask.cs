@@ -15,9 +15,9 @@ namespace Exanite.Grids
     {
         #region Properties
 
-#if ODIN_INSPECTOR && UNITY_EDITOR
-
         #region OdinInspector
+
+#if ODIN_INSPECTOR && UNITY_EDITOR
 
         [ShowIf("ShowGrid")]
         [PropertyOrder(-1)]
@@ -51,9 +51,9 @@ namespace Exanite.Grids
             return value;
         }
 
-        #endregion
-
 #endif
+
+        #endregion
 
         #endregion
 
@@ -64,13 +64,12 @@ namespace Exanite.Grids
         /// </summary>
         /// <param name="xLength">Length of the grid along the X-Axis</param>
         /// <param name="yLength">Length of the grid along the Y-Axis</param>
-        /// <param name="allowWrap">Does the grid allow wrapping when the passed coordinates are out of range?</param>
-        public Grid2DMask(int xLength, int yLength, bool allowWrap = false) : base(xLength, yLength, allowWrap) { }
+        public Grid2DMask(int xLength, int yLength) : base(xLength, yLength) { }
 
         #endregion
 
         #region GetMaskDataFromGrid
-
+        
         /// <summary>
         /// Returns a <see cref="Grid2DMaskData"/> with coordinates matching the <see langword="true"/> values of this <see cref="Grid2DMask"/> and the availability of the targeted area
         /// </summary>
@@ -78,10 +77,11 @@ namespace Exanite.Grids
         /// <param name="grid"><see cref="Grid2D{T}"/> to check</param>
         /// <param name="x">X-Coordinate representing where to check</param>
         /// <param name="y">Y-Coordinate representing where to check</param>
+        /// <param name="wrap">Should the coordinates be wrapped?</param>
         /// <returns><see cref="Grid2DMask"/> with coordinates matching the <see langword="true"/> values of this <see cref="Grid2DMask"/> and the availability of the targeted area</returns>
-        public virtual Grid2DMaskData GetMaskDataFromGrid<T>(Grid2D<T> grid, int x, int y)
+        public virtual Grid2DMaskData GetMaskDataFromGrid<T>(Grid2D<T> grid, int x, int y, bool wrap = false)
         {
-            return GetMaskDataFromGrid<T>(grid, new Vector2Int(x, y));
+            return GetMaskDataFromGrid<T>(grid, new Vector2Int(x, y), wrap);
         }
 
         /// <summary>
@@ -90,8 +90,9 @@ namespace Exanite.Grids
         /// <typeparam name="T"><see cref="Type"/> of <see cref="Grid2D{T}"/></typeparam>
         /// <param name="grid"><see cref="Grid2D{T}"/> to check</param>
         /// <param name="coords">(x, y) coordinates representing where to check</param>
+        /// <param name="wrap">Should the coordinates be wrapped?</param>
         /// <returns><see cref="Grid2DMask"/> with coordinates matching the <see langword="true"/> values of this <see cref="Grid2DMask"/> and the availability of the targeted area</returns>
-        public virtual Grid2DMaskData GetMaskDataFromGrid<T>(Grid2D<T> grid, Vector2Int coords)
+        public virtual Grid2DMaskData GetMaskDataFromGrid<T>(Grid2D<T> grid, Vector2Int coords, bool wrap = false)
         {
             List<Vector2Int> colliders = new List<Vector2Int>();
             Grid2DSpaceAvailability availability = Grid2DSpaceAvailability.Empty;
@@ -104,20 +105,20 @@ namespace Exanite.Grids
                     {
                         Vector2Int coords2 = new Vector2Int(coords.x + x, coords.y + y);
 
-                        if(grid.AllowWrap)
+                        if(wrap)
                         {
                             grid.Wrap(coords2);
                         }
 
                         if(grid.IsInRange(coords2))
                         {
-                            if (!(EqualityComparer<T>.Default.Equals(grid.GetValueAt(coords.x + x, coords.y + y), default(T))))
+                            if (!(EqualityComparer<T>.Default.Equals(grid[coords.x + x, coords.y + y], default(T))))
                             {
                                 colliders.Add(new Vector2Int(coords.x + x, coords.y + y));
 
                                 if(availability == Grid2DSpaceAvailability.Empty) // This is so that it will not overwrite Grid2DSpaceAvailability.OutOfRange
                                 {
-                                    availability = Grid2DSpaceAvailability.Taken;
+                                    availability = Grid2DSpaceAvailability.Occupied;
                                 }
                             }
                         }
@@ -168,7 +169,7 @@ namespace Exanite.Grids
             {
                 for (int i = 0; i < data.coordinates.Count; i++)
                 {
-                    grid.SetValueAt(value, data.coordinates[i]);
+                    grid[data.coordinates[i], true] = value;
                 }
 
                 return true;
