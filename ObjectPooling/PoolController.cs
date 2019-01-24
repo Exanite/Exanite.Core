@@ -210,7 +210,7 @@ namespace Exanite.ObjectPooling.Internal
         /// <param name="gameObjectToDespawn"></param>
         public virtual void Despawn(GameObject gameObjectToDespawn)
         {
-            int poolKey = gameObjectToDespawn.GetComponent<PoolInstanceID>().instanceID;
+            int poolKey = (int)gameObjectToDespawn.GetComponent<PoolInstanceID>()?.instanceID;
 
             if (_poolDictionary.ContainsKey(poolKey))
             {
