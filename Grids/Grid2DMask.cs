@@ -146,10 +146,11 @@ namespace Exanite.Grids
         /// <param name="x">X-Coordinate representing where to apply this mask</param>
         /// <param name="y">Y-Coordinate representing where to apply this mask</param>
         /// <param name="requiredAvailability">Highest availability allowed, if higher this method aborts and returns false</param>
+        /// <param name="wrap">Should the coordinates be wrapped?</param>
         /// <returns>Did the method succeed?</returns>
-        public virtual bool ApplyMaskToGrid<T>(Grid2D<T> grid, T value, int x, int y, Grid2DSpaceAvailability requiredAvailability = Grid2DSpaceAvailability.Empty)
+        public virtual bool ApplyMaskToGrid<T>(Grid2D<T> grid, T value, int x, int y, Grid2DSpaceAvailability requiredAvailability = Grid2DSpaceAvailability.Empty, bool wrap = false)
         {
-            return ApplyMaskToGrid(grid, value, new Vector2Int(x, y), requiredAvailability);
+            return ApplyMaskToGrid(grid, value, new Vector2Int(x, y), requiredAvailability, wrap);
         }
 
         /// <summary>
@@ -160,10 +161,11 @@ namespace Exanite.Grids
         /// <param name="value">Value to apply</param>
         /// <param name="coords">(x, y) coordinates representing where to apply this mask</param>
         /// <param name="requiredAvailability">Highest availability allowed, if higher this method aborts and returns false</param>
+        /// <param name="wrap">Should the coordinates be wrapped?</param>
         /// <returns>Did the method succeed?</returns>
-        public virtual bool ApplyMaskToGrid<T>(Grid2D<T> grid, T value, Vector2Int coords, Grid2DSpaceAvailability requiredAvailability = Grid2DSpaceAvailability.Empty)
+        public virtual bool ApplyMaskToGrid<T>(Grid2D<T> grid, T value, Vector2Int coords, Grid2DSpaceAvailability requiredAvailability = Grid2DSpaceAvailability.Empty, bool wrap = false)
         {
-            Grid2DMaskData data = GetMaskDataFromGrid(grid, coords);
+            Grid2DMaskData data = GetMaskDataFromGrid(grid, coords, wrap);
 
             if(data.availability <= requiredAvailability)
             {
