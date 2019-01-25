@@ -19,10 +19,15 @@ namespace Exanite.ObjectPooling.Utility
             _originalRigidbody = _instanceID.originalPrefab.GetComponent<Rigidbody>();
         }
 
-        public void OnSpawn() { }
+        public void OnSpawn()
+        {
+            _rigidbody.WakeUp();
+        }
 
         public void OnDespawn()
         {
+            _rigidbody.Sleep();
+
             _rigidbody.mass             = _originalRigidbody.mass;
 
             _rigidbody.angularDrag      = _originalRigidbody.angularDrag;
