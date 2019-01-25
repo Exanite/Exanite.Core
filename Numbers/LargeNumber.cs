@@ -174,16 +174,16 @@ namespace Exanite.Numbers
                     }
                     rounded = Math.Round(rounded, PlacesToRound); // Round the result again because the decimal place shifted in the while loop
 
-                    if(Math.Abs(Multiplier) > long.MaxValue / 3)
+                    if (Math.Abs(Multiplier) > long.MaxValue / 3)
                     {
                         bool isNegative = false;
 
-                        if(Multiplier < 0)
+                        if (Multiplier < 0)
                         {
                             return "0";
                         }
 
-                        if(Value < 0)
+                        if (Value < 0)
                         {
                             isNegative = true;
                         }
