@@ -153,23 +153,28 @@ namespace Exanite.Numbers
                 case (NumDisplayFormat.Scientific):
                 {
                     int extraDigits = 0;
-                    while (rounded > 10) // Limit to one leading digit
+                    while (rounded >= 10) // Limit to one leading digit
                     {
                         rounded /= 10;
                         extraDigits += 1;
                     }
                     rounded = Math.Round(rounded, PlacesToRound); // Round the result again because the decimal place shifted in the while loop
 
-                    if(Multiplier > long.MaxValue / 3)
+                    if(Math.Abs(Multiplier) > long.MaxValue / 3)
                     {
                         bool isNegative = false;
 
                         if(Multiplier < 0)
                         {
+                            return "0";
+                        }
+
+                        if(Value < 0)
+                        {
                             isNegative = true;
                         }
 
-                        return $"{rounded} E{(isNegative ? "-" : string.Empty)}Infinity";
+                        return $"{(isNegative ? "-" : string.Empty)}Infinity";
                     }
 
                     return $"{rounded} E{(Multiplier * 3) + extraDigits}";
