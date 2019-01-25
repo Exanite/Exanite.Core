@@ -1,4 +1,7 @@
-﻿using System;
+﻿#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#endif
+using System;
 using UnityEngine;
 using Exanite.Utility;
 
@@ -77,6 +80,17 @@ namespace Exanite.Numbers
             set
             {
                 placesToRound = Mathf.Clamp(value, 0, 15);
+            }
+        }
+#if ODIN_INSPECTOR
+        [ShowInInspector]
+#endif
+        public string String
+        {
+            get
+            {
+                AutoShift();
+                return ToString();
             }
         }
 
