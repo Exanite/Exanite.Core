@@ -167,10 +167,16 @@ namespace Exanite.Numbers
                 case (NumDisplayFormat.Scientific):
                 {
                     int extraDigits = 0;
+
                     while (rounded >= 10) // Limit to one leading digit
                     {
+                        extraDigits++;
                         rounded /= 10;
-                        extraDigits += 1;
+                    }
+                    while (rounded <= -10) // Limit to one leading digit
+                    {
+                        extraDigits--;
+                        rounded /= 10;
                     }
                     rounded = Math.Round(rounded, PlacesToRound); // Round the result again because the decimal place shifted in the while loop
 
