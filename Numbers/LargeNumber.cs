@@ -216,7 +216,7 @@ namespace Exanite.Numbers
                         return $"{(isNegative ? "-" : string.Empty)}Infinity";
                     }
 
-                    return $"{rounded} E{(Multiplier * 3) + extraDigits}";
+                    return $"{rounded.ToString($"N{placesToRound}")} E{(Multiplier * 3) + extraDigits}";
                 }
                 case (NumDisplayFormat.Short):
                 {
@@ -224,7 +224,7 @@ namespace Exanite.Numbers
                     {
                         return ToString(NumDisplayFormat.Scientific);
                     }
-                    return $"{rounded} {(NumScalesShort)Multiplier}";
+                    return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesShort)Multiplier}";
                 }
                 case (NumDisplayFormat.Long):
                 {
@@ -232,7 +232,7 @@ namespace Exanite.Numbers
                     {
                         return ToString(NumDisplayFormat.Short);
                     }
-                    return (Multiplier < 0) ? $"{rounded} {(NumScalesLong)Math.Abs(Multiplier)}th" : $"{rounded} {(NumScalesLong)Math.Abs(Multiplier)}";
+                    return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesLong)Math.Abs(Multiplier)}{((Multiplier < 0) ? "th" : string.Empty)}";
                 }
                 default:
                 {
