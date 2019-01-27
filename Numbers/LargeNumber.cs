@@ -122,7 +122,7 @@ namespace Exanite.Numbers
         #region Constructor
 
         /// <summary>
-        /// Creates a new <see cref="LargeNumber"/> with the provided parameters
+        /// Creates a new <see cref="LargeNumber"/>
         /// </summary>
         /// <param name="value">
         /// Value of the <see cref="LargeNumber"/><para/>
@@ -148,14 +148,33 @@ namespace Exanite.Numbers
 
         #region ToString
 
+        /// <summary>
+        /// Converts this LargeNumber into a string
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            return ToString(DisplayFormat);
+            return ToString(DisplayFormat, PlacesToRound);
         }
 
-        public string ToString(NumDisplayFormat displayFormat)
+        /// <summary>
+        /// Converts this LargeNumber into a string
+        /// </summary>
+        /// <param name="displayFormat">How to display this LargeNumber</param>
+        /// <param name="placesToRound">Places to round this LargeNumber</param>
+        /// <returns>Formatted string</returns>
+        public string ToString(NumDisplayFormat displayFormat, int placesToRound = -1)
         {
-            double rounded = Math.Round(Value, PlacesToRound);
+            if(placesToRound < 0)
+            {
+                placesToRound = PlacesToRound;
+            }
+            else if(placesToRound > 15)
+            {
+                placesToRound = 15;
+            }
+
+            double rounded = Math.Round(Value, placesToRound);
 
             if (Multiplier == 0)
             {
@@ -178,7 +197,7 @@ namespace Exanite.Numbers
                         extraDigits--;
                         rounded /= 10;
                     }
-                    rounded = Math.Round(rounded, PlacesToRound); // Round the result again because the decimal place shifted in the while loop
+                    rounded = Math.Round(rounded, placesToRound); // Round the result again because the decimal place shifted in the while loop
 
                     if (Math.Abs(Multiplier) > long.MaxValue / 3)
                     {
@@ -375,6 +394,9 @@ namespace Exanite.Numbers
 
         #region Internal
 
+        /// <summary>
+        /// Automatically shifts the value and multiplier of this <see cref="LargeNumber"/>
+        /// </summary>
         private void AutoShift()
         {
             while (Math.Abs(value) >= 1000) // More than 1000
