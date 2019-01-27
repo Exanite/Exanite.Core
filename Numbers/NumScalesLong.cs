@@ -81,7 +81,7 @@
         Quinquagintillion           = 51,
         Unquinquagintillion         = 52,
         Duoquinquagintillion        = 53,
-        Tresquinquagintillion       = 55,
+        Tresquinquagintillion       = 54,
         Quattuorquinquagintillion   = 55,
         Quinquaquinquagintillion    = 56,
         Sesquinquagintillion        = 57,
