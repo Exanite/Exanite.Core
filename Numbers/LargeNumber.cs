@@ -79,7 +79,7 @@ namespace Exanite.Numbers
 
             set
             {
-                placesToRound = Mathf.Clamp(value, 0, 15);
+                placesToRound = MathE.Clamp(value, 0, 15);
             }
         }
 #if ODIN_INSPECTOR
