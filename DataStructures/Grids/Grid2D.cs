@@ -22,9 +22,7 @@ namespace Exanite.DataStructures.Grids
         /// </summary>
         [PropertyOrder(-2)]
         [SerializeField]
-#pragma warning disable 0414
         public bool ShowGrid = false;
-#pragma warning restore 0414
 #endif
 
         [OdinSerialize]
@@ -35,7 +33,8 @@ namespace Exanite.DataStructures.Grids
         /// 2D array used for storing values
         /// </summary>
 #if ODIN_INSPECTOR
-        [ShowIf("ShowGrid")]
+        [ShowIf(nameof(ShowGrid))]
+        [ShowInInspector]
         [PropertyOrder(-1)]
 #endif
         public virtual T[,] Grid
@@ -149,6 +148,7 @@ namespace Exanite.DataStructures.Grids
         #region Odin Inspector
 
 #if ODIN_INSPECTOR
+        [VerticalGroup("Buttons")]
         [HorizontalGroup("Buttons/A")]
         [Button(Name = "Rotate Clockwise")]
         private void RotateClockwiseOdin()
