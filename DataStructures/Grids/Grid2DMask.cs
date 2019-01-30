@@ -19,10 +19,13 @@ namespace Exanite.DataStructures.Grids
 
 #if ODIN_INSPECTOR && UNITY_EDITOR
 
-        [ShowIf("ShowGrid")]
+        private readonly static Color OnColor = new Color(0.15f, 0.9f, 0.15f);
+        private readonly static Color OffColor = new Color(0f, 0f, 0f, 0f);
+
+        [ShowIf(nameof(ShowGrid))]
         [PropertyOrder(-1)]
         [ShowInInspector]
-        [TableMatrix(DrawElementMethod = "DrawBoolElement")]
+        [TableMatrix(DrawElementMethod = nameof(DrawBoolElement))]
         public override bool[,] Grid
         {
             get
@@ -46,7 +49,7 @@ namespace Exanite.DataStructures.Grids
                 Event.current.Use();
             }
 
-            EditorGUI.DrawRect(rect.Padding(1), value ? new Color(0.15f, 0.9f, 0.15f) : new Color(0f, 0f, 0f, 0f));
+            EditorGUI.DrawRect(rect.Padding(1), value ? OnColor : OffColor);
 
             return value;
         }
