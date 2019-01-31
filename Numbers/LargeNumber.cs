@@ -236,7 +236,7 @@ namespace Exanite.Numbers
                 }
                 default:
                 {
-                    throw new ArgumentOutOfRangeException($"DisplayFormat {DisplayFormat} is not an implemented display format");
+                    throw new NotImplementedException($"DisplayFormat: '{DisplayFormat}' is not an implemented display format");
                 }
             }
         }
