@@ -21,9 +21,7 @@ namespace Exanite.Flags
 
         [HideInInspector]
         [OdinSerialize]
-        protected BitArray flags;
-
-        protected static EnumData<T> flagData;
+        private BitArray flags;
 
         /// <summary>
         /// BitArray with all the stored flags
@@ -50,17 +48,11 @@ namespace Exanite.Flags
                 return Flags.Count;
             }
         }
-        protected static EnumData<T> FlagData
+        protected static EnumData<T> EnumData
         {
             get
             {
-                if (flagData == null) flagData = new EnumData<T>();
-                return flagData;
-            }
-
-            set
-            {
-                flagData = value;
+                return EnumData<T>.Instance;
             }
         }
 
@@ -111,10 +103,10 @@ namespace Exanite.Flags
         /// <param name="type">Enum Type used to create the LongFlag</param>
         protected virtual void InitiateLongFlag()
         {
-            if (FlagData.min < 0)
+            if (EnumData.Min < 0)
                 throw new ArgumentException(string.Format("{0} must not have any negative values", typeof(T)));
 
-            Flags = new BitArray(FlagData.max + 1);
+            Flags = new BitArray(EnumData.Max + 1);
         }
 
         #endregion
@@ -178,13 +170,21 @@ namespace Exanite.Flags
             switch (matchType)
             {
                 case (FlagMatchType.And):
+                {
                     return HasFlagsAnd(flags);
+                }
                 case (FlagMatchType.Or):
+                {
                     return HasFlagsOr(flags);
+                }
                 case (FlagMatchType.Equals):
+                {
                     return HasFlagsEquals(flags);
+                }
                 default:
+                {
                     throw new ArgumentOutOfRangeException($"{matchType} does not have a code path");
+                }
             }
         }
 
@@ -199,13 +199,21 @@ namespace Exanite.Flags
             switch (matchType)
             {
                 case (FlagMatchType.And):
+                {
                     return HasFlagsAnd(longFlag);
+                }
                 case (FlagMatchType.Or):
+                {
                     return HasFlagsOr(longFlag);
+                }
                 case (FlagMatchType.Equals):
+                {
                     return HasFlagsEquals(longFlag);
+                }
                 default:
+                {
                     throw new ArgumentOutOfRangeException($"{matchType} does not have a code path");
+                }
             }
         }
 
@@ -458,18 +466,18 @@ namespace Exanite.Flags
 
         [HideInInspector]
         [SerializeField]
-        protected string bitArrayData;
+        private string bitArrayData;
 
         [SerializeField]
         [HideInInspector]
-        protected List<string> lastEnumValueData;
+        private List<string> lastEnumValueData;
 
         [SerializeField]
-        #if ODIN_INSPECTOR
+#if ODIN_INSPECTOR
         [ShowIf("MissingEnumsIsNotEmptyOrNull")]
         [ReadOnly]
-        #endif
-        protected List<string> missingEnums;
+#endif
+        private List<string> missingEnums;
 
         #endregion
 
@@ -493,7 +501,7 @@ namespace Exanite.Flags
 
             #region Enum Values
 
-            lastEnumValueData = FlagData.lastEnumValueData;
+            lastEnumValueData = EnumData.LastEnumValueData;
 
             if (missingEnums == null) missingEnums = new List<string>();
 
@@ -518,7 +526,7 @@ namespace Exanite.Flags
 
             #region Enum Values
 
-            if(!lastEnumValueData.SequenceEqual(FlagData.lastEnumValueData))
+            if (!lastEnumValueData.SequenceEqual(EnumData.LastEnumValueData))
             {
                 RepairBitArray();
             }
@@ -533,19 +541,19 @@ namespace Exanite.Flags
         /// <summary>
         /// Repairs the BitArray when the Enum changes after serialization
         /// </summary>
-        protected virtual void RepairBitArray()
+        private void RepairBitArray()
         {
             List<string> oldValues = lastEnumValueData;
-            List<string> newValues = FlagData.lastEnumValueData;
+            List<string> newValues = EnumData.LastEnumValueData;
             // Gets all the true values in the old BitArray
             List<int> oldIndexes = GetAllTrueIndexes();
 
-            flags = new BitArray(FlagData.max + 1);
+            flags = new BitArray(EnumData.Max + 1);
 
             foreach (int oldIndex in oldIndexes)
             {
                 // Checks if the value in the old BitArray has a corresponding bit in the new BitArray
-                int newIndex = newValues.IndexOf(oldValues[oldIndex]); 
+                int newIndex = newValues.IndexOf(oldValues[oldIndex]);
                 if (newIndex > -1)
                 {
                     // If the BitArray has the corresponding bit, set it to true
@@ -571,22 +579,22 @@ namespace Exanite.Flags
         }
 
         #endregion
-    
+
         #region Odin Inspector
 
-        #if ODIN_INSPECTOR
-        protected bool MissingEnumsIsNotEmptyOrNull()
+#if ODIN_INSPECTOR
+        private bool MissingEnumsIsNotEmptyOrNull()
         {
-            if(missingEnums == null)
+            if (missingEnums == null)
             {
                 return false;
             }
             return missingEnums.Count > 0;
         }
-        #endif
+#endif
 
         #endregion
-        
+
         #endregion
     }
 }
