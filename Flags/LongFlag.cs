@@ -5,9 +5,7 @@ using System.Linq;
 using Sirenix.Serialization;
 using UnityEngine;
 using Exanite.Utility;
-#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
-#endif
 
 namespace Exanite.Flags
 {
@@ -24,7 +22,7 @@ namespace Exanite.Flags
         private BitArray flags;
 
         /// <summary>
-        /// BitArray with all the stored flags
+        /// <see cref="BitArray"/> with all the stored flags
         /// </summary>
         public BitArray Flags
         {
@@ -61,22 +59,7 @@ namespace Exanite.Flags
         #region Constructors
 
         /// <summary>
-        /// Creates a LongFlag with the provided BitArray <para/>
-        /// NOTE: Don't use unless you know what you are doing
-        /// </summary>
-        /// <param name="bitArray">BitArray of same length as the Enum Type</param>
-        public LongFlag(BitArray bitArray)
-        {
-            InitiateLongFlag();
-
-            for (int i = 0; i < Count; i++)
-            {
-                flags[i] = bitArray[i];
-            }
-        }
-
-        /// <summary>
-        /// Creates an empty LongFlag
+        /// Creates an <see langword="new"/> <see cref="LongFlag{T}"/>
         /// </summary>
         public LongFlag()
         {
@@ -84,7 +67,7 @@ namespace Exanite.Flags
         }
 
         /// <summary>
-        /// Creates a LongFlag with the provided flags
+        /// Creates a <see langword="new"/> <see cref="LongFlag{T}"/> with the provided flags
         /// </summary>
         /// <param name="flags">Flags to add</param>
         public LongFlag(params T[] flags)
@@ -98,9 +81,20 @@ namespace Exanite.Flags
         }
 
         /// <summary>
-        /// Internally used to create a new LongFlag
+        /// Creates a new <see cref="LongFlag{T}"/> with the provided <see cref="BitArray"/> <para/>
+        /// NOTE: Don't use unless you know what you are doing
         /// </summary>
-        /// <param name="type">Enum Type used to create the LongFlag</param>
+        /// <param name="bitArray"><see cref="BitArray"/> of same length as the <see cref="Enum"/></param>
+        public LongFlag(BitArray bitArray)
+        {
+            InitiateLongFlag();
+
+            for (int i = 0; i < Count; i++)
+            {
+                flags[i] = bitArray[i];
+            }
+        }
+
         protected virtual void InitiateLongFlag()
         {
             if (EnumData.Min < 0)
@@ -119,7 +113,7 @@ namespace Exanite.Flags
         /// Sets a flag to a provided state
         /// </summary>
         /// <param name="state">True or false</param>
-        /// <param name="flagToSet">Enum Value of type provided in this LongFlag's constructor</param>
+        /// <param name="flagToSet">Flag to set</param>
         public virtual void SetFlag(bool state, T flagToSet)
         {
             int index = GetFlagIndex(flagToSet);
@@ -131,7 +125,7 @@ namespace Exanite.Flags
         /// Sets a a number of flags to a provided state, requires at least one flag
         /// </summary>
         /// <param name="state">True or false</param>
-        /// <param name="flagsToSet">Enum Values of type provided in this LongFlag's constructor</param>
+        /// <param name="flagsToSet">Flags to set</param>
         public virtual void SetFlags(bool state, params T[] flagsToSet)
         {
             if (flagsToSet == null)
@@ -150,9 +144,9 @@ namespace Exanite.Flags
         #region Has Flags
 
         /// <summary>
-        /// Returns true if this LongFlag has the provided flag
+        /// Returns true if this <see cref="LongFlag{T}"/> has the provided flag
         /// </summary>
-        /// <param name="flag">Enum Value of type provided in this LongFlag's constructor</param>
+        /// <param name="flag">Flag to check</param>
         /// <returns>True or false</returns>
         public virtual bool HasFlag(T flag)
         {
@@ -160,10 +154,10 @@ namespace Exanite.Flags
         }
 
         /// <summary>
-        /// Returns true if this LongFlag matches the flags in the provided LongFlag with the provided match type
+        /// Returns true if this <see cref="LongFlag{T}"/> matches the provided flags
         /// </summary>
         /// <param name="matchType">How to match the flags</param>
-        /// <param name="flags">Flags to compare</param>
+        /// <param name="flags">Flags to check</param>
         /// <returns>True or false</returns>
         public virtual bool HasFlags(FlagMatchType matchType, params T[] flags)
         {
@@ -183,16 +177,16 @@ namespace Exanite.Flags
                 }
                 default:
                 {
-                    throw new ArgumentOutOfRangeException($"{matchType} does not have a code path");
+                    throw new NotImplementedException($"{matchType} is not an implemented {typeof(FlagMatchType)}");
                 }
             }
         }
 
         /// <summary>
-        /// Returns true if this LongFlag matches the flags provided with the provided match type
+        /// Returns true if this <see cref="LongFlag{T}"/> matches the provided flags
         /// </summary>
         /// <param name="matchType">How to match the flags</param>
-        /// <param name="longFlag">LongFlag to compare</param>
+        /// <param name="longFlag">LongFlag to check</param>
         /// <returns>True or false</returns>
         public virtual bool HasFlags(FlagMatchType matchType, LongFlag<T> longFlag)
         {
@@ -212,7 +206,7 @@ namespace Exanite.Flags
                 }
                 default:
                 {
-                    throw new ArgumentOutOfRangeException($"{matchType} does not have a code path");
+                    throw new NotImplementedException($"{matchType} is not an implemented {typeof(FlagMatchType)}");
                 }
             }
         }
@@ -222,16 +216,16 @@ namespace Exanite.Flags
         #region Other
 
         /// <summary>
-        /// Returns a list of all flags with the value 'true'
+        /// Returns a list of all true flags
         /// </summary>
-        /// <returns>List of all flags with the value, true</returns>
+        /// <returns>List of all true flags</returns>
         public virtual List<T> GetAllTrueFlags()
         {
             return GetAllFlagsOfIndex(GetAllTrueIndexes().ToArray());
         }
 
         /// <summary>
-        /// Clears the internal BitArray of all flags
+        /// Clears the internal <see cref="BitArray"/> of all flags
         /// </summary>
         public virtual void ClearFlags()
         {
@@ -246,12 +240,6 @@ namespace Exanite.Flags
 
         #region Flag Logic
 
-        /// <summary>
-        /// Returns true if this LongFlag has ALL of the provided flags <para/>
-        /// Requires at least one flag
-        /// </summary>
-        /// <param name="flags">Enum Values of type provided in this LongFlag's constructor</param>
-        /// <returns>True or false</returns>
         protected virtual bool HasFlagsAnd(params T[] flags)
         {
             foreach (T _flag in flags)
@@ -262,11 +250,6 @@ namespace Exanite.Flags
             return true;
         }
 
-        /// <summary>
-        /// Returns true if this LongFlag has ANY of the provided flags, false if not, requires at least one flag
-        /// </summary>
-        /// <param name="flags">Enum Values of type provided in this LongFlag's constructor</param>
-        /// <returns>True or false</returns>
         protected virtual bool HasFlagsOr(params T[] flags)
         {
             foreach (T _flag in flags)
@@ -277,12 +260,6 @@ namespace Exanite.Flags
             return false;
         }
 
-        /// <summary>
-        /// Returns true if this LongFlag has only the flags provided <para/>
-        /// Requires at least one flag
-        /// </summary>
-        /// <param name="flags">Enum Values of type provided in this LongFlag's constructor</param>
-        /// <returns>True or false</returns>
         protected virtual bool HasFlagsEquals(params T[] flags)
         {
             if (flags == null)
@@ -300,41 +277,21 @@ namespace Exanite.Flags
             return HasFlagsEquals(passedFlags);
         }
 
-        /// <summary>
-        /// Returns true if this LongFlag has ALL of the flags in the provided LongFlag, false if not
-        /// </summary>
-        /// <param name="longFlag">LongFlag to compare</param>
-        /// <returns>True or false</returns>
         protected virtual bool HasFlagsAnd(LongFlag<T> longFlag)
         {
             return HasFlagsAnd(longFlag.Flags);
         }
 
-        /// <summary>
-        /// Returns true if this LongFlag has ALL of the flags in the provided LongFlag, false if not
-        /// </summary>
-        /// <param name="longFlag">LongFlag to compare</param>
-        /// <returns>True or false</returns>
         protected virtual bool HasFlagsOr(LongFlag<T> longFlag)
         {
             return HasFlagsOr(longFlag.Flags);
         }
 
-        /// <summary>
-        /// Returns true if this LongFlag has ALL of the flags in the provided LongFlag, false if not
-        /// </summary>
-        /// <param name="longFlag">LongFlag to compare</param>
-        /// <returns>True or false</returns>
         protected virtual bool HasFlagsEquals(LongFlag<T> longFlag)
         {
             return HasFlagsEquals(longFlag.Flags);
         }
 
-        /// <summary>
-        /// Returns true if this LongFlag has all of the flags provided
-        /// </summary>
-        /// <param name="bitArray">BitArray of same length as this LongFlag flags BitArray</param>
-        /// <returns>True or false</returns>
         protected virtual bool HasFlagsAnd(BitArray bitArray)
         {
             if (!(flags.Count == bitArray.Count)) return false;
@@ -352,11 +309,6 @@ namespace Exanite.Flags
             return true;
         }
 
-        /// <summary>
-        /// Returns true if this LongFlag has any of the flags provided
-        /// </summary>
-        /// <param name="bitArray">BitArray of same length as this LongFlag flags BitArray</param>
-        /// <returns>True or false</returns>
         protected virtual bool HasFlagsOr(BitArray bitArray)
         {
             if (!(flags.Count == bitArray.Count)) return false;
@@ -374,11 +326,6 @@ namespace Exanite.Flags
             return false;
         }
 
-        /// <summary>
-        /// Returns true if this LongFlag has only the flags provided
-        /// </summary>
-        /// <param name="bitArray">BitArray of same length as this LongFlag flags BitArray</param>
-        /// <returns>True or false</returns>
         protected virtual bool HasFlagsEquals(BitArray bitArray)
         {
             if (!(flags.Count == bitArray.Count)) return false;
@@ -398,30 +345,16 @@ namespace Exanite.Flags
 
         #region Index logic
 
-        /// <summary>
-        /// Returns a flag's index in the internal BitArray
-        /// </summary>
-        /// <param name="flag">Enum Value of type provided in this LongFlag's constructor</param>
-        /// <returns>Index of provided flag in BitArray</returns>
         protected virtual int GetFlagIndex(T flag)
         {
             return (int)(object)flag;
         }
 
-        /// <summary>
-        /// Returns a flag based on the flag's index in the internal BitArray
-        /// </summary>
-        /// <param name="index">Index of the flag to retrieve</param>
-        /// <returns>Retrieved flag</returns>
         protected virtual T GetFlagFromIndex(int index)
         {
             return (T)(object)index;
         }
 
-        /// <summary>
-        /// Returns a List of the indexes of all true values in the internal BitArray
-        /// </summary>
-        /// <returns>List of the indexes with true values in the internal BitArray</returns>
         protected virtual List<int> GetAllTrueIndexes()
         {
             List<int> indexes = new List<int>();
@@ -437,11 +370,6 @@ namespace Exanite.Flags
             return indexes;
         }
 
-        /// <summary>
-        /// Returns a list of flags based on the passed array of flag indexes
-        /// </summary>
-        /// <param name="indexes">Indexes of the flags to retrieve</param>
-        /// <returns>Retrieved list of flags</returns>
         protected virtual List<T> GetAllFlagsOfIndex(params int[] indexes)
         {
             List<T> returnEnums = new List<T>();
@@ -538,9 +466,7 @@ namespace Exanite.Flags
 
         #region Repair BitArray
 
-        /// <summary>
-        /// Repairs the BitArray when the Enum changes after serialization
-        /// </summary>
+        //Repairs the BitArray when the Enum changes after serialization
         private void RepairBitArray()
         {
             List<string> oldValues = lastEnumValueData;
@@ -582,7 +508,6 @@ namespace Exanite.Flags
 
         #region Odin Inspector
 
-#if ODIN_INSPECTOR
         private bool MissingEnumsIsNotEmptyOrNull()
         {
             if (missingEnums == null)
@@ -591,7 +516,6 @@ namespace Exanite.Flags
             }
             return missingEnums.Count > 0;
         }
-#endif
 
         #endregion
 
