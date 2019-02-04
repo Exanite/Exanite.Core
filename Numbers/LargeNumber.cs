@@ -1,6 +1,4 @@
-﻿#if ODIN_INSPECTOR
-using Sirenix.OdinInspector;
-#endif
+﻿using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
 using Exanite.Utility;
@@ -82,9 +80,7 @@ namespace Exanite.Numbers
                 placesToRound = MathE.Clamp(value, 0, 15);
             }
         }
-#if ODIN_INSPECTOR
         [ShowInInspector]
-#endif
         public string String
         {
             get
@@ -98,22 +94,14 @@ namespace Exanite.Numbers
         {
             get
             {
-                if (shortEnumData == null)
-                {
-                    shortEnumData = new EnumData<NumScalesShort>();
-                }
-                return shortEnumData;
+                return EnumData<NumScalesShort>.Instance;
             }
         }
         private static EnumData<NumScalesLong> LongEnumData
         {
             get
             {
-                if (longEnumData == null)
-                {
-                    longEnumData = new EnumData<NumScalesLong>();
-                }
-                return longEnumData;
+                return EnumData<NumScalesLong>.Instance;
             }
         }
 
@@ -220,7 +208,7 @@ namespace Exanite.Numbers
                 }
                 case (NumDisplayFormat.Short):
                 {
-                    if (Multiplier > ShortEnumData.max || Multiplier < ShortEnumData.min)
+                    if (Multiplier > ShortEnumData.Max || Multiplier < ShortEnumData.Min)
                     {
                         return ToString(NumDisplayFormat.Scientific);
                     }
@@ -228,7 +216,7 @@ namespace Exanite.Numbers
                 }
                 case (NumDisplayFormat.Long):
                 {
-                    if (Math.Abs(Multiplier) > LongEnumData.max || Math.Abs(Multiplier) < LongEnumData.min)
+                    if (Math.Abs(Multiplier) > LongEnumData.Max || Math.Abs(Multiplier) < LongEnumData.Min)
                     {
                         return ToString(NumDisplayFormat.Short);
                     }
