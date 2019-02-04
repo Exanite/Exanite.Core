@@ -4,53 +4,58 @@ using System.Linq;
 
 namespace Exanite.Utility
 {
-    [Serializable]
     public class EnumData<T> where T : struct, IComparable, IConvertible, IFormattable
     {
-        #region Fields
-
         /// <summary>
-        /// Array returned by Enum.GetValue(typeof(T2))
+        /// Array returned by Enum.GetValue(typeof(T))
         /// </summary>
-        public Array array;
+        public readonly Array Values;
         /// <summary>
-        /// Max value in T2
+        /// Max value in <typeparamref name="T"/>
         /// </summary>
-        public int max;
+        public readonly int Max;
         /// <summary>
-        /// Min value in T2
+        /// Min value in T
         /// </summary>
-        public int min;
+        public readonly int Min;
         /// <summary>
         /// Used for serialization
         /// </summary>
-        public List<string> lastEnumValueData;
+        public readonly List<string> LastEnumValueData;
 
-        #endregion
-
-        #region Constructor
-
+        private static EnumData<T> instance;
         /// <summary>
-        /// Creates a new EnumData<T2>
+        /// Singleton instance
         /// </summary>
-        public EnumData()
+        public static EnumData<T> Instance
         {
-            if (!typeof(T).IsEnum) throw new ArgumentException(string.Format("{0} is not an Enum Type", typeof(T)));
+            get
+            {
+                if(instance == null)
+                {
+                    instance = new EnumData<T>();
+                }
 
-            array = Enum.GetValues(typeof(T));
-            IEnumerable<int> enumerable = array.Cast<int>();
-            max = enumerable.Max();
-            min = enumerable.Min();
-
-            SetEnumValueData();
+                return instance;
+            }
         }
 
-        protected void SetEnumValueData()
+        /// <summary>
+        /// Creates a new <see cref="EnumData{T}"/>
+        /// </summary>
+        private EnumData()
         {
-            lastEnumValueData = new List<string>();
-            foreach (Enum enumValue in array)
+            if (!typeof(T).IsEnum) throw new ArgumentException($"{typeof(T)} is not an Enum");
+
+            Values = Enum.GetValues(typeof(T));
+            IEnumerable<int> enumerable = Values.Cast<int>();
+            Max = enumerable.Max();
+            Min = enumerable.Min();
+
+            LastEnumValueData = new List<string>();
+            foreach (var item in Values)
             {
-                lastEnumValueData.Add(enumValue.ToString());
+                LastEnumValueData.Add(item.ToString());
             }
         }
 
@@ -65,7 +70,5 @@ namespace Exanite.Utility
 
             return result;
         }
-
-        #endregion
     }
 }
