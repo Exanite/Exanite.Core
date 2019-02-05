@@ -186,7 +186,7 @@ namespace Exanite.Flags
         /// Returns true if this <see cref="LongFlag{T}"/> matches the provided flags
         /// </summary>
         /// <param name="matchType">How to match the flags</param>
-        /// <param name="longFlag">LongFlag to check</param>
+        /// <param name="longFlag"><see cref="LongFlag{T}"/> to check</param>
         /// <returns>True or false</returns>
         public virtual bool HasFlags(FlagMatchType matchType, LongFlag<T> longFlag)
         {
@@ -209,6 +209,17 @@ namespace Exanite.Flags
                     throw new NotImplementedException($"{matchType} is not an implemented {typeof(FlagMatchType)}");
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns true if the other <see cref="LongFlag{T}"/> has the flags of this <see cref="LongFlag{T}"/>
+        /// </summary>
+        /// <param name="matchType">How to match the flags</param>
+        /// <param name="longFlag">Other <see cref="LongFlag{T}"/></param>
+        /// <returns>True or false</returns>
+        public virtual bool HasFlagsReverse(FlagMatchType matchType, LongFlag<T> longFlag)
+        {
+            return longFlag.HasFlags(matchType, this);
         }
 
         #endregion
