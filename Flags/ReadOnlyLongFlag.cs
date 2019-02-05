@@ -38,6 +38,14 @@ namespace Exanite.Flags
         }
 
         /// <summary>
+        /// Returns the internal <see cref="LongFlag{T}"/>
+        /// </summary>
+        public static explicit operator LongFlag<T>(ReadOnlyLongFlag<T> readOnlyLongFlag)
+        {
+            return readOnlyLongFlag.longFlag;
+        }
+
+        /// <summary>
         /// Returns true if this <see cref="ReadOnlyLongFlag{T}"/> has the provided flag
         /// </summary>
         /// <param name="flag">Flag to check</param>
