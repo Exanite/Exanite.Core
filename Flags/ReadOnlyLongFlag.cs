@@ -7,6 +7,7 @@ namespace Exanite.Flags
     /// <see cref="LongFlag"/> that is <see langword="readonly"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Serializable]
     public class ReadOnlyLongFlag<T> where T : struct, IComparable, IConvertible, IFormattable
     {
         private LongFlag<T> longFlag;
@@ -61,11 +62,22 @@ namespace Exanite.Flags
         /// Returns true if this <see cref="ReadOnlyLongFlag{T}"/> matches the provided flags
         /// </summary>
         /// <param name="matchType">How to match the flags</param>
-        /// <param name="longFlag">LongFlag to check</param>
+        /// <param name="longFlag"><see cref="LongFlag{T}"/> to check</param>
         /// <returns>True or false</returns>
         public bool HasFlags(FlagMatchType matchType, LongFlag<T> longFlag)
         {
             return this.longFlag.HasFlags(matchType, longFlag);
+        }
+
+        /// <summary>
+        /// Returns true if the other <see cref="LongFlag{T}"/> has the flags of this <see cref="LongFlag{T}"/>
+        /// </summary>
+        /// <param name="matchType">How to match the flags</param>
+        /// <param name="longFlag">Other <see cref="LongFlag{T}"/></param>
+        /// <returns>True or false</returns>
+        public virtual bool HasFlagsReverse(FlagMatchType matchType, LongFlag<T> longFlag)
+        {
+            return this.longFlag.HasFlagsReverse(matchType, longFlag);
         }
 
         /// <summary>
