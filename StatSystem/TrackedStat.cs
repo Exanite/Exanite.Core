@@ -1,4 +1,5 @@
 ﻿using Exanite.Utility;
+using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
 using UnityEngine;
@@ -6,12 +7,13 @@ using UnityEngine;
 namespace Exanite.StatSystem
 {
     /// <summary>
-    /// Tracks modifiers and other tracked stats to produce a FinalValue
+    /// Base class of all TrackedStats
     /// </summary>
     [Serializable]
     public abstract class TrackedStat<T> where T : struct, IComparable, IConvertible, IFormattable
     {
-        [HideInInspector] [OdinSerialize] protected StatSystem<T> statSystem;
+        [HideInInspector, OdinSerialize] private string name;
+        [HideInInspector, OdinSerialize] private StatSystem<T> statSystem;
 
         protected static EnumData<T> enumData;
 
@@ -19,6 +21,39 @@ namespace Exanite.StatSystem
         /// Final value of this <see cref="TrackedStat{T}"/>
         /// </summary>
         public abstract float Value { get; }
+
+        /// <summary>
+        /// Name given when this <see cref="TrackedStat{T}"/> was added to a <see cref="StatSystem{T}"/>
+        /// </summary>
+        [ShowInInspector, ReadOnly]
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+
+            protected set
+            {
+                name = value;
+            }
+        }
+
+        /// <summary>
+        /// <see cref="StatSystem{T}"/> this <see cref="TrackedStat{T}"/> is linked to
+        /// </summary>
+        public StatSystem<T> StatSystem
+        {
+            get
+            {
+                return statSystem;
+            }
+
+            protected set
+            {
+                statSystem = value;
+            }
+        }
 
         protected TrackedStat()
         {
@@ -43,11 +78,12 @@ namespace Exanite.StatSystem
         /// </summary>
         /// <param name="statSystem"></param>
         [Obsolete("Internal method, please do not call OnStatSystemAdded unless you know what you are doing")]
-        public virtual void OnStatSystemAdded(StatSystem<T> statSystem)
+        public virtual void OnStatSystemAdded(StatSystem<T> statSystem, string name)
         {
-            if (statSystem == null)
+            if (this.statSystem == null)
             {
-                this.statSystem = statSystem;
+                Name = name;
+                StatSystem = statSystem;
                 statSystem.ModAdded += ModAdded;
                 statSystem.ModRemoved += ModRemoved;
 
@@ -69,13 +105,14 @@ namespace Exanite.StatSystem
         [Obsolete("Internal method, please do not call OnStatSystemRemoved unless you know what you are doing")]
         public virtual void OnStatSystemRemoved()
         {
-            if (statSystem != null)
+            if (StatSystem != null)
             {
-                statSystem = null;
-                statSystem.ModAdded -= ModAdded;
-                statSystem.ModRemoved -= ModRemoved;
+                Name = null;
+                StatSystem = null;
+                StatSystem.ModAdded -= ModAdded;
+                StatSystem.ModRemoved -= ModRemoved;
 
-                foreach (var item in statSystem.Modifiers)
+                foreach (var item in StatSystem.Modifiers)
                 {
                     ModRemoved(item);
                 }
