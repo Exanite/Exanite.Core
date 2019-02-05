@@ -82,7 +82,9 @@ namespace Exanite.StatSystem
             }
         }
 
-
+        /// <summary>
+        /// <see cref="Exception"/> thrown when attempting to add an already linked <see cref="TrackedStat{T}"/> to a second <see cref="StatSystem{T}"/>
+        /// </summary>
         [Serializable]
         public class AlreadyLinkedException : Exception
         {
