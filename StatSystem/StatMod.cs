@@ -14,6 +14,8 @@ namespace Exanite.StatSystem
     {
         #region Fields and Properties
 
+        private string name;
+
         [HideInInspector] [OdinSerialize] private float value;
         [HideInInspector] [OdinSerialize] private StatModType type;
         [HideInInspector] [OdinSerialize] private object source;
@@ -25,6 +27,30 @@ namespace Exanite.StatSystem
         /// True = is an enum, False = not an enum, Null = Needs to check
         /// </summary>
         private static EnumData<T> enumData;
+
+        /// <summary>
+        /// Flags of the StatMod as a string, used in the inspector
+        /// </summary>
+        [ShowInInspector]
+        public string Name
+        {
+            get
+            {
+                if(name == null)
+                {
+                    name = string.Empty;
+
+                    foreach (var item in flags.GetAllTrueFlags())
+                    {
+                        name += $"{item} ";
+                    }
+
+                    name.Trim();
+                }
+
+                return name;
+            }
+        }
 
         /// <summary>
         /// What flags the modifier has
