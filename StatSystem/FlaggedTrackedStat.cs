@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Exanite.StatSystem
 {
     /// <summary>
-    /// Tracks modifiers and other tracked stats to produce a FinalValue
+    /// Tracks modifiers in a <see cref="StatSystem{T}"/> to produce a Value
     /// </summary>
     [Serializable]
     public class FlaggedTrackedStat<T> : TrackedStat<T> where T : struct, IComparable, IConvertible, IFormattable
