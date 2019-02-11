@@ -7,6 +7,7 @@ namespace Exanite.ObjectPooling.Internal
     /// <summary>
     /// Main class for object pooling
     /// </summary>
+    [DefaultExecutionOrder(-1000)]
     public class PoolController : MonoBehaviour
     {
         /// <summary>
