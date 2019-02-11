@@ -17,6 +17,8 @@ namespace Exanite.StatSystem
 
         protected static EnumData<T> enumData;
 
+        public event Action<float> ValueChanged;
+
         /// <summary>
         /// Final value of this <see cref="TrackedStat{T}"/>
         /// </summary>
@@ -66,11 +68,23 @@ namespace Exanite.StatSystem
         /// <param name="mod">Added mod</param>
         protected abstract void ModAdded(StatMod<T> mod);
 
+        private void ModAddedInternal(StatMod<T> mod)
+        {
+            ModAdded(mod);
+            ValueChanged?.Invoke(Value);
+        }
+
         /// <summary>
         /// Method that listens to modifiers being removed to the StatSystem
         /// </summary>
         /// <param name="mod">Removed mod</param>
         protected abstract void ModRemoved(StatMod<T> mod);
+
+        private void ModRemovedInternal(StatMod<T> mod)
+        {
+            ModRemoved(mod);
+            ValueChanged?.Invoke(Value);
+        }
 
         /// <summary>
         /// Called internally by the <see cref="StatSystem{T}"/> to link the <see cref="StatSystem{T}"/> with this <see cref="TrackedStat{T}"/> <para/>
@@ -84,8 +98,8 @@ namespace Exanite.StatSystem
             {
                 Name = name;
                 StatSystem = statSystem;
-                statSystem.ModAdded += ModAdded;
-                statSystem.ModRemoved += ModRemoved;
+                statSystem.ModAdded += ModAddedInternal;
+                statSystem.ModRemoved += ModRemovedInternal;
 
                 foreach (var item in statSystem.Modifiers)
                 {
@@ -109,8 +123,8 @@ namespace Exanite.StatSystem
             {
                 Name = null;
                 StatSystem = null;
-                StatSystem.ModAdded -= ModAdded;
-                StatSystem.ModRemoved -= ModRemoved;
+                StatSystem.ModAdded -= ModAddedInternal;
+                StatSystem.ModRemoved -= ModRemovedInternal;
 
                 foreach (var item in StatSystem.Modifiers)
                 {
