@@ -4,46 +4,47 @@ using System.Linq;
 
 namespace Exanite.Utility
 {
-    public class EnumData<T> where T : struct, IComparable, IConvertible, IFormattable
+    /// <summary>
+    /// Static class used to hold different types of data about an <see cref="Enum"/>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public static class EnumData<T> where T : struct, IComparable, IConvertible, IFormattable
     {
+        private static List<string> valuesAsStringList;
+
         /// <summary>
         /// Array returned by Enum.GetValue(typeof(T))
         /// </summary>
-        public readonly Array Values;
+        public static readonly Array Values;
         /// <summary>
         /// Max value in <typeparamref name="T"/>
         /// </summary>
-        public readonly int Max;
+        public static readonly int Max;
         /// <summary>
-        /// Min value in T
+        /// Min value in <typeparamref name="T"/>
         /// </summary>
-        public readonly int Min;
+        public static readonly int Min;
         /// <summary>
-        /// Used for serialization
+        /// <see cref="Values"/> as a <see cref="List"/> of <see langword="string"/>s
         /// </summary>
-        public readonly List<string> LastEnumValueData;
-
-        private static EnumData<T> instance;
-        /// <summary>
-        /// Singleton instance
-        /// </summary>
-        public static EnumData<T> Instance
+        public static List<string> ValuesAsStringList
         {
             get
             {
-                if(instance == null)
+                if (ValuesAsStringList == null)
                 {
-                    instance = new EnumData<T>();
+                    valuesAsStringList = new List<string>();
+                    foreach (var item in Values)
+                    {
+                        ValuesAsStringList.Add(item.ToString());
+                    }
                 }
 
-                return instance;
+                return valuesAsStringList;
             }
         }
 
-        /// <summary>
-        /// Creates a new <see cref="EnumData{T}"/>
-        /// </summary>
-        private EnumData()
+        static EnumData()
         {
             if (!typeof(T).IsEnum) throw new ArgumentException($"{typeof(T)} is not an Enum");
 
@@ -51,19 +52,13 @@ namespace Exanite.Utility
             IEnumerable<int> enumerable = Values.Cast<int>();
             Max = enumerable.Max();
             Min = enumerable.Min();
-
-            LastEnumValueData = new List<string>();
-            foreach (var item in Values)
-            {
-                LastEnumValueData.Add(item.ToString());
-            }
         }
 
-        public static List<string> EnumToStringList<T2>()
+        public static List<string> EnumToStringList()
         {
             List<string> result = new List<string>();
 
-            foreach (var item in Enum.GetValues(typeof(T2)))
+            foreach (var item in Values)
             {
                 result.Add(item.ToString());
             }

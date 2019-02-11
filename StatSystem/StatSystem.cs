@@ -42,19 +42,20 @@ namespace Exanite.StatSystem
         /// </summary>
         [HideInInspector] public Action<StatMod<T>> ModRemoved;
 
-        protected static EnumData<T> enumData;
-
         #endregion
 
         #region Constructor
+
+        static StatSystem()
+        {
+            int init = EnumData<T>.Max; // only used to initialize the EnumData class
+        }
 
         /// <summary>
         /// Creates a <see langword="new"/> <see cref="StatSystem{T}"/>
         /// </summary>
         public StatSystem()
         {
-            if (enumData == null) enumData = EnumData<T>.Instance;
-
             Modifiers = new List<StatMod<T>>();
             trackedStats = new Dictionary<string, TrackedStat<T>>();
         }

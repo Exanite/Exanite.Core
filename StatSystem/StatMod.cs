@@ -26,7 +26,6 @@ namespace Exanite.StatSystem
         /// Bool used for caching if the provided type is an enum <para/>
         /// True = is an enum, False = not an enum, Null = Needs to check
         /// </summary>
-        private static EnumData<T> enumData;
 
         /// <summary>
         /// Flags of the StatMod as a string, used in the inspector
@@ -118,6 +117,11 @@ namespace Exanite.StatSystem
 
         #region Constructor
 
+        static StatMod()
+        {
+            int init = EnumData<T>.Max; // only used to initialize the EnumData class
+        }
+
         /// <summary>
         /// Creates a new StatMod
         /// </summary>
@@ -131,8 +135,6 @@ namespace Exanite.StatSystem
             {
                 throw new ArgumentNullException(nameof(flags));
             }
-
-            if (enumData == null) enumData = EnumData<T>.Instance;
 
             Value = value;
             Type = type;

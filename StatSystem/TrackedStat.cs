@@ -15,8 +15,6 @@ namespace Exanite.StatSystem
         [HideInInspector, OdinSerialize] private string name;
         [HideInInspector, OdinSerialize] private StatSystem<T> statSystem;
 
-        protected static EnumData<T> enumData;
-
         public event Action<float> ValueChanged;
 
         /// <summary>
@@ -57,9 +55,9 @@ namespace Exanite.StatSystem
             }
         }
 
-        protected TrackedStat()
+        static TrackedStat()
         {
-            if (enumData == null) enumData = EnumData<T>.Instance;
+            int init = EnumData<T>.Max; // only used to initialize the EnumData class
         }
 
         /// <summary>

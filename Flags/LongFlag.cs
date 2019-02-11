@@ -46,13 +46,6 @@ namespace Exanite.Flags
                 return Flags.Count;
             }
         }
-        protected static EnumData<T> EnumData
-        {
-            get
-            {
-                return EnumData<T>.Instance;
-            }
-        }
 
         #endregion
 
@@ -97,10 +90,10 @@ namespace Exanite.Flags
 
         protected virtual void InitiateLongFlag()
         {
-            if (EnumData.Min < 0)
+            if (EnumData<T>.Min < 0)
                 throw new ArgumentException(string.Format("{0} must not have any negative values", typeof(T)));
 
-            Flags = new BitArray(EnumData.Max + 1);
+            Flags = new BitArray(EnumData<T>.Max + 1);
         }
 
         #endregion
@@ -440,7 +433,7 @@ namespace Exanite.Flags
 
             #region Enum Values
 
-            lastEnumValueData = EnumData.LastEnumValueData;
+            lastEnumValueData = EnumData<T>.ValuesAsStringList;
 
             if (missingEnums == null) missingEnums = new List<string>();
 
@@ -465,7 +458,7 @@ namespace Exanite.Flags
 
             #region Enum Values
 
-            if (!lastEnumValueData.SequenceEqual(EnumData.LastEnumValueData))
+            if (!lastEnumValueData.SequenceEqual(EnumData<T>.ValuesAsStringList))
             {
                 RepairBitArray();
             }
@@ -481,11 +474,11 @@ namespace Exanite.Flags
         private void RepairBitArray()
         {
             List<string> oldValues = lastEnumValueData;
-            List<string> newValues = EnumData.LastEnumValueData;
+            List<string> newValues = EnumData<T>.ValuesAsStringList;
             // Gets all the true values in the old BitArray
             List<int> oldIndexes = GetAllTrueIndexes();
 
-            flags = new BitArray(EnumData.Max + 1);
+            flags = new BitArray(EnumData<T>.Max + 1);
 
             foreach (int oldIndex in oldIndexes)
             {

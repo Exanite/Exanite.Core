@@ -28,9 +28,6 @@ namespace Exanite.Numbers
         [Range(0, 15)]
         private int placesToRound;
 
-        private static EnumData<NumScalesShort> shortEnumData;
-        private static EnumData<NumScalesLong> longEnumData;
-
         /// <summary>
         /// Readonly value of this <see cref="LargeNumber"/>
         /// Formatted as xxx.yyyyyy where x = significant digits and y = trailing digits
@@ -87,21 +84,6 @@ namespace Exanite.Numbers
             {
                 AutoShift();
                 return ToString();
-            }
-        }
-
-        private static EnumData<NumScalesShort> ShortEnumData
-        {
-            get
-            {
-                return EnumData<NumScalesShort>.Instance;
-            }
-        }
-        private static EnumData<NumScalesLong> LongEnumData
-        {
-            get
-            {
-                return EnumData<NumScalesLong>.Instance;
             }
         }
 
@@ -208,7 +190,7 @@ namespace Exanite.Numbers
                 }
                 case (NumDisplayFormat.Short):
                 {
-                    if (Multiplier > ShortEnumData.Max || Multiplier < ShortEnumData.Min)
+                    if (Multiplier > EnumData<NumScalesShort>.Max || Multiplier < EnumData<NumScalesShort>.Min)
                     {
                         return ToString(NumDisplayFormat.Scientific);
                     }
@@ -216,7 +198,7 @@ namespace Exanite.Numbers
                 }
                 case (NumDisplayFormat.Long):
                 {
-                    if (Math.Abs(Multiplier) > LongEnumData.Max || Math.Abs(Multiplier) < LongEnumData.Min)
+                    if (Math.Abs(Multiplier) > EnumData<NumScalesLong>.Max || Math.Abs(Multiplier) < EnumData<NumScalesLong>.Min)
                     {
                         return ToString(NumDisplayFormat.Short);
                     }
