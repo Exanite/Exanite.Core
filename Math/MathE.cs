@@ -100,5 +100,32 @@
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets the nearest multiple to a value <para/> 
+        /// Example: GetNearestMultiple(45, 11) would return 44;
+        /// </summary>
+        public static int GetNearestMultiple(int value, int multiple)
+        {
+            int remainder = value % multiple;
+            int result = value - remainder;
+
+            if (remainder > (multiple / 2))
+            {
+                result += multiple;
+            }
+
+            return result;
+        }
+
+        public static bool IsEven(this int num)
+        {
+            return num % 2 == 0;
+        }
+
+        public static bool IsOdd(this int num)
+        {
+            return !num.IsEven();
+        }
     }
 }
