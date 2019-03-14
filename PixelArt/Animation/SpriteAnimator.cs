@@ -28,8 +28,12 @@ public class SpriteAnimator : MonoBehaviour
 
         set
         {
-            animation = value;
-            currentFrame = 0;
+            if (value != animation)
+            {
+                animation = value;
+                CurrentFrame = 0;
+                timeElapsed = 0;
+            }
         }
     }
 
@@ -76,7 +80,7 @@ public class SpriteAnimator : MonoBehaviour
         }
     }
 
-    private SpriteRenderer SpriteRenderer
+    public SpriteRenderer SpriteRenderer
     {
         get
         {
@@ -89,11 +93,11 @@ public class SpriteAnimator : MonoBehaviour
         }
     }
 
-    private PixelArtPositioner PixelArtPositioner
+    public PixelArtPositioner PixelArtPositioner
     {
         get
         {
-            if(_pixelArtPositioner == null)
+            if (_pixelArtPositioner == null)
             {
                 _pixelArtPositioner = GetComponent<PixelArtPositioner>();
             }
