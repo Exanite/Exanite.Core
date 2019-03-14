@@ -91,7 +91,5 @@ public class AnimationData : ScriptableObject
                 rootMotion = value;
             }
         }
-
-
     }
 }
