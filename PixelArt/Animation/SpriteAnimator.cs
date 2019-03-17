@@ -13,6 +13,8 @@ public class SpriteAnimator : MonoBehaviour
     private float animationSpeed = 1;
     [SerializeField, HideInInspector]
     private int currentFrame;
+    [SerializeField, HideInInspector]
+    private bool useRootMotion = false;
     private float timeElapsed = 0;
 
     private SpriteRenderer _spriteRenderer;
@@ -75,8 +77,25 @@ public class SpriteAnimator : MonoBehaviour
                 }
 
                 SpriteRenderer.sprite = Animation[currentFrame].Sprite;
-                PixelArtPositioner.PixelOffset += Animation[currentFrame].RootMotion;
+                if (UseRootMotion)
+                {
+                    PixelArtPositioner.PixelOffset += Animation[currentFrame].RootMotion;
+                }
             }
+        }
+    }
+
+    [ShowInInspector]
+    public bool UseRootMotion
+    {
+        get
+        {
+            return useRootMotion;
+        }
+
+        set
+        {
+            useRootMotion = value;
         }
     }
 
