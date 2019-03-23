@@ -66,6 +66,8 @@ public class SpriteAnimator : MonoBehaviour
             if (Animation == null || Animation.frames.IsNullOrEmpty())
             {
                 currentFrame = 0;
+
+                SpriteRenderer.sprite = null;
             }
             else
             {
