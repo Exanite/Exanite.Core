@@ -3,93 +3,96 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "AnimationData", menuName = "Project/AnimationData", order = 0)]
-public class AnimationData : ScriptableObject
+namespace Exanite.PixelArt.Animation
 {
-    public List<Frame> frames = new List<Frame>();
-
-    public int Count
+    [CreateAssetMenu(fileName = "AnimationData", menuName = "Exanite/AnimationData", order = 0)]
+    public class AnimationData : ScriptableObject
     {
-        get
-        {
-            return frames.Count;
-        }
-    }
+        public List<Frame> frames = new List<Frame>();
 
-    public Frame this[int index]
-    {
-        get
-        {
-            return frames[index];
-        }
-    }
-
-    [Serializable]
-    public class Frame
-    {
-        [SerializeField, HideInInspector]
-        private Sprite sprite;
-        [SerializeField, HideInInspector]
-        private int duration = 100;
-        [SerializeField, HideInInspector]
-        private Vector2 rootMotion = Vector2.zero;
-
-        [ShowInInspector, PreviewField(Height = 100, Alignment = ObjectFieldAlignment.Right)]
-        public Sprite Sprite
+        public int Count
         {
             get
             {
-                return sprite;
-            }
-
-            set
-            {
-                sprite = value;
+                return frames.Count;
             }
         }
 
-        [ShowInInspector, HideLabel]
-        public string Name
+        public Frame this[int index]
         {
             get
             {
-                if (Sprite != null)
+                return frames[index];
+            }
+        }
+
+        [Serializable]
+        public class Frame
+        {
+            [SerializeField, HideInInspector]
+            private Sprite sprite;
+            [SerializeField, HideInInspector]
+            private int duration = 100;
+            [SerializeField, HideInInspector]
+            private Vector2 rootMotion = Vector2.zero;
+
+            [ShowInInspector, PreviewField(Height = 100, Alignment = ObjectFieldAlignment.Right)]
+            public Sprite Sprite
+            {
+                get
                 {
-                    return Sprite.name;
+                    return sprite;
                 }
-                else
+
+                set
                 {
-                    return null;
+                    sprite = value;
                 }
             }
+
+            [ShowInInspector, HideLabel]
+            public string Name
+            {
+                get
+                {
+                    if (Sprite != null)
+                    {
+                        return Sprite.name;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+
+            [ShowInInspector, HorizontalGroup, PropertyTooltip("Duration in milliseconds")]
+            public int Duration
+            {
+                get
+                {
+                    return duration;
+                }
+
+                set
+                {
+                    duration = value;
+                }
+            }
+
+            [ShowInInspector, HorizontalGroup]
+            public Vector2 RootMotion
+            {
+                get
+                {
+                    return rootMotion;
+                }
+
+                set
+                {
+                    rootMotion = value;
+                }
+            }
         }
-
-        [ShowInInspector, HorizontalGroup, PropertyTooltip("Duration in milliseconds")]
-        public int Duration
-        {
-            get
-            {
-                return duration;
-            }
-
-            set
-            {
-                duration = value;
-            }
-        }
-
-        [ShowInInspector, HorizontalGroup]
-        public Vector2 RootMotion
-        {
-            get
-            {
-                return rootMotion;
-            }
-
-            set
-            {
-                rootMotion = value;
-            }
-        }
-    }
+    } 
 }
