@@ -1,145 +1,147 @@
-﻿using Exanite.PixelArt;
-using Exanite.Utility;
+﻿using Exanite.Utility;
 using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer), typeof(PixelArtPositioner))]
-public class SpriteAnimator : MonoBehaviour
+namespace Exanite.PixelArt.Animation
 {
-    [SerializeField, HideInInspector]
-    private new AnimationData animation;
-    [SerializeField, HideInInspector]
-    private float animationSpeed = 1;
-    [SerializeField, HideInInspector]
-    private int currentFrame;
-    [SerializeField, HideInInspector]
-    private bool useRootMotion = false;
-    private float timeElapsed = 0;
-
-    private SpriteRenderer _spriteRenderer;
-    private PixelArtPositioner _pixelArtPositioner;
-
-    [ShowInInspector]
-    public AnimationData Animation
+    [RequireComponent(typeof(SpriteRenderer), typeof(PixelArtPositioner))]
+    public class SpriteAnimator : MonoBehaviour
     {
-        get
-        {
-            return animation;
-        }
+        [SerializeField, HideInInspector]
+        private new AnimationData animation;
+        [SerializeField, HideInInspector]
+        private float animationSpeed = 1;
+        [SerializeField, HideInInspector]
+        private int currentFrame;
+        [SerializeField, HideInInspector]
+        private bool useRootMotion = false;
+        private float timeElapsed = 0;
 
-        set
+        private SpriteRenderer _spriteRenderer;
+        private PixelArtPositioner _pixelArtPositioner;
+
+        [ShowInInspector]
+        public AnimationData Animation
         {
-            if (value != animation)
+            get
             {
-                animation = value;
-                CurrentFrame = 0;
-                timeElapsed = 0;
+                return animation;
+            }
+
+            set
+            {
+                if (value != animation)
+                {
+                    animation = value;
+                    CurrentFrame = 0;
+                    timeElapsed = 0;
+                }
             }
         }
-    }
 
-    [ShowInInspector]
-    public float AnimationSpeed
-    {
-        get
+        [ShowInInspector]
+        public float AnimationSpeed
         {
-            return animationSpeed;
+            get
+            {
+                return animationSpeed;
+            }
+
+            set
+            {
+                animationSpeed = value;
+            }
         }
 
-        set
+        [ShowInInspector]
+        public int CurrentFrame
         {
-            animationSpeed = value;
-        }
-    }
+            get
+            {
+                return currentFrame;
+            }
 
-    [ShowInInspector]
-    public int CurrentFrame
-    {
-        get
+            set
+            {
+                if (Animation == null || Animation.frames.IsNullOrEmpty())
+                {
+                    currentFrame = 0;
+
+                    SpriteRenderer.sprite = null;
+                }
+                else
+                {
+                    currentFrame = value % Animation.Count;
+
+                    if (currentFrame < 0)
+                    {
+                        currentFrame += Animation.Count;
+                    }
+
+                    SpriteRenderer.sprite = Animation[currentFrame].Sprite;
+                    if (UseRootMotion)
+                    {
+                        PixelArtPositioner.PixelOffset += Animation[currentFrame].RootMotion;
+                    }
+                }
+            }
+        }
+
+        [ShowInInspector]
+        public bool UseRootMotion
         {
-            return currentFrame;
+            get
+            {
+                return useRootMotion;
+            }
+
+            set
+            {
+                useRootMotion = value;
+            }
         }
 
-        set
+        public SpriteRenderer SpriteRenderer
+        {
+            get
+            {
+                if (_spriteRenderer == null)
+                {
+                    _spriteRenderer = GetComponent<SpriteRenderer>();
+                }
+
+                return _spriteRenderer;
+            }
+        }
+
+        public PixelArtPositioner PixelArtPositioner
+        {
+            get
+            {
+                if (_pixelArtPositioner == null)
+                {
+                    _pixelArtPositioner = GetComponent<PixelArtPositioner>();
+                }
+
+                return _pixelArtPositioner;
+            }
+        }
+
+        private void Update()
         {
             if (Animation == null || Animation.frames.IsNullOrEmpty())
             {
-                currentFrame = 0;
-
-                SpriteRenderer.sprite = null;
+                return;
             }
-            else
+
+            timeElapsed += Time.deltaTime * AnimationSpeed;
+
+            if (Math.Abs(timeElapsed) > Animation[CurrentFrame].Duration / 1000f)
             {
-                currentFrame = value % Animation.Count;
-
-                if (currentFrame < 0)
-                {
-                    currentFrame += Animation.Count;
-                }
-
-                SpriteRenderer.sprite = Animation[currentFrame].Sprite;
-                if (UseRootMotion)
-                {
-                    PixelArtPositioner.PixelOffset += Animation[currentFrame].RootMotion;
-                }
+                CurrentFrame += (AnimationSpeed > 0) ? 1 : -1;
+                timeElapsed = 0;
             }
         }
-    }
-
-    [ShowInInspector]
-    public bool UseRootMotion
-    {
-        get
-        {
-            return useRootMotion;
-        }
-
-        set
-        {
-            useRootMotion = value;
-        }
-    }
-
-    public SpriteRenderer SpriteRenderer
-    {
-        get
-        {
-            if (_spriteRenderer == null)
-            {
-                _spriteRenderer = GetComponent<SpriteRenderer>();
-            }
-
-            return _spriteRenderer;
-        }
-    }
-
-    public PixelArtPositioner PixelArtPositioner
-    {
-        get
-        {
-            if (_pixelArtPositioner == null)
-            {
-                _pixelArtPositioner = GetComponent<PixelArtPositioner>();
-            }
-
-            return _pixelArtPositioner;
-        }
-    }
-
-    private void Update()
-    {
-        if (Animation == null || Animation.frames.IsNullOrEmpty())
-        {
-            return;
-        }
-
-        timeElapsed += Time.deltaTime * AnimationSpeed;
-
-        if (Math.Abs(timeElapsed) > Animation[CurrentFrame].Duration / 1000f)
-        {
-            CurrentFrame += (AnimationSpeed > 0) ? 1 : -1;
-            timeElapsed = 0;
-        }
-    }
+    } 
 }
