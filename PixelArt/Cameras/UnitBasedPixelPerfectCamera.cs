@@ -30,14 +30,19 @@ namespace Exanite.PixelArt.Cameras
 
         public override void CalculateCameraSize()
         {
-            int unitSize = MathE.GetNearestMultiple(Screen.height / VerticalUnits, Ppu);
+            if (!_camera)
+            {
+                return;
+            }
+
+            int unitSize = MathE.GetNearestMultiple(CameraDimensions.y / VerticalUnits, Ppu);
 
             if (unitSize <= 0 || unitSize == int.MaxValue)
             {
                 unitSize = Ppu;
             }
 
-            _camera.orthographicSize = Screen.height / (unitSize * 2f);
+            _camera.orthographicSize = CameraDimensions.y / (unitSize * 2f);
         }
     }
 }
