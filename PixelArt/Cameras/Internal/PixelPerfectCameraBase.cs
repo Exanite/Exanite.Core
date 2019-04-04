@@ -14,6 +14,10 @@ namespace Exanite.PixelArt.Cameras.Internal
         private int screenHeight;
         protected Camera _camera;
 
+        [InfoBox(message: "Camera Dimensions are odd, pixels may not render well.", InfoMessageType = InfoMessageType.Warning, VisibleIf = nameof(AreCameraDimensionsOdd))]
+        [ShowInInspector]
+        public Vector2Int CameraDimensions => new Vector2Int(_camera?.pixelWidth ?? 0, _camera?.pixelHeight ?? 0);
+
         [ShowInInspector]
         public int Ppu
         {
@@ -42,9 +46,9 @@ namespace Exanite.PixelArt.Cameras.Internal
 
         protected virtual void Update()
         {
-            if (screenHeight != Screen.height)
+            if (_camera && screenHeight != CameraDimensions.y)
             {
-                screenHeight = Screen.height;
+                screenHeight = CameraDimensions.y;
 
                 CalculateCameraSize();
             }
@@ -60,5 +64,10 @@ namespace Exanite.PixelArt.Cameras.Internal
 
         [Button(ButtonHeight = 25)]
         public abstract void CalculateCameraSize();
+
+        private bool AreCameraDimensionsOdd()
+        {
+            return CameraDimensions.x.IsOdd() || CameraDimensions.y.IsOdd();
+        }
     }
 }
