@@ -17,7 +17,7 @@ namespace Exanite.PixelArt
 
             set
             {
-                transform.localPosition = value / ppu;
+                transform.localPosition = new Vector3(value.x / ppu, value.y / ppu, transform.localPosition.z);
             }
         }
     } 
