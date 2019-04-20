@@ -6,10 +6,11 @@ namespace Exanite.PixelArt
 {
     public class SnapMovement : MonoBehaviour
     {
-        [Required(MessageType = InfoMessageType.Error)]
+        [Required]
         public CameraRenderEventsHelper cameraRenderEventsHelper;
 
         public int ppu = 16;
+        public bool revertPosition = true;
 
         private Vector3 position;
 
@@ -28,7 +29,10 @@ namespace Exanite.PixelArt
 
         private void OnPostRender()
         {
-            transform.position = position;
+            if (revertPosition)
+            {
+                transform.position = position;
+            }
         }
 
         private void OnDestroy()
@@ -36,5 +40,5 @@ namespace Exanite.PixelArt
             cameraRenderEventsHelper.PreRender -= OnPreRender;
             cameraRenderEventsHelper.PostRender -= OnPostRender;
         }
-    } 
+    }
 }
