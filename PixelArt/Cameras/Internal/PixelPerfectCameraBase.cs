@@ -66,11 +66,6 @@ namespace Exanite.PixelArt.Cameras.Internal
         {
             if (_camera)
             {
-                if (AreCameraDimensionsOdd())
-                {
-                    Debug.LogWarning($"Camera Dimensions are odd, pixels may not render well. Camera Dimensions: {CameraDimensions}");
-                }
-
                 CalculateCameraSize();
             }
         }
