@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Exanite.ObjectPooling.Internal
@@ -46,6 +45,7 @@ namespace Exanite.ObjectPooling.Internal
                 {
                     new GameObject("_ObjectPool", typeof(PoolController));
                 }
+
                 return instance;
             }
         }
@@ -58,7 +58,11 @@ namespace Exanite.ObjectPooling.Internal
             }
             else
             {
-                if (debugMode) Debug.LogWarning($"There is already a {GetType()} in the scene.");
+                if (debugMode)
+                {
+                    Debug.LogWarning($"There is already a {GetType()} in the scene.");
+                }
+
                 Destroy(this);
             }
 
@@ -101,7 +105,10 @@ namespace Exanite.ObjectPooling.Internal
 
             if (!_poolDictionary.ContainsKey(poolKey) || overrideExisting)
             {
-                if (debugMode) Debug.Log($"Creating object pool for {prefab.name} with InstanceID of {poolKey}");
+                if (debugMode)
+                {
+                    Debug.Log($"Creating object pool for {prefab.name} with InstanceID of {poolKey}");
+                }
 
                 Queue<GameObject> oldQueue;
                 if (_poolDictionary.ContainsKey(poolKey))
@@ -199,7 +206,11 @@ namespace Exanite.ObjectPooling.Internal
             }
             else //Create pool and retry
             {
-                if (debugMode) Debug.Log($"Prefab {prefab.name} does not have a pool yet, creating now.");
+                if (debugMode)
+                {
+                    Debug.Log($"Prefab {prefab.name} does not have a pool yet, creating now.");
+                }
+
                 CreatePool(prefab);
                 return Spawn(prefab, position, rotation, parent);
             }
@@ -226,7 +237,11 @@ namespace Exanite.ObjectPooling.Internal
             }
             else
             {
-                if (debugMode) Debug.LogWarning($"{gameObjectToDespawn.name} does not have a corresponding pool and will be destroyed instead.");
+                if (debugMode)
+                {
+                    Debug.LogWarning($"{gameObjectToDespawn.name} does not have a corresponding pool and will be destroyed instead.");
+                }
+
                 Destroy(gameObjectToDespawn);
             }
         }
