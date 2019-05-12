@@ -42,6 +42,10 @@ namespace Exanite.Utility.Editor
                     {
                         DeleteFolders(emptyFolders);
                     }
+                    else
+                    {
+                        Debug.Log("Operation canceled by user, nothing was deleted.");
+                    }
                 }
             }
         }
@@ -54,9 +58,10 @@ namespace Exanite.Utility.Editor
 
             foreach (var subDirectory in directory.GetDirectories("*.*", SearchOption.AllDirectories))
             {
-                var files = subDirectory.GetFiles("*.*", SearchOption.TopDirectoryOnly);
+                List<FileInfo> files = subDirectory.GetFiles("*.*", SearchOption.AllDirectories).ToList();
+                files.RemoveAll(x => x.Extension == ".meta");
 
-                if (files.Length == 0)
+                if (files.Count == 0)
                 {
                     result.Add(subDirectory);
                 }
@@ -69,9 +74,14 @@ namespace Exanite.Utility.Editor
 
         private static void DeleteFolders(List<DirectoryInfo> folders)
         {
+            int foldersDeleted = 0;
+
+            folders = folders.OrderByDescending(x => x.FullName.Length).ToList();
+
             foreach (var folder in folders)
             {
-                var metaFile = folder.Parent.GetFiles($"{folder.Name}.meta", SearchOption.TopDirectoryOnly).First();
+                var metaFile = folder.Parent.GetFiles($"{folder.Name}.meta", SearchOption.TopDirectoryOnly).FirstOrDefault();
+
                 Debug.Log($"Deleting empty folder: {folder.FullName}");
                 folder.Delete();
 
@@ -80,7 +90,13 @@ namespace Exanite.Utility.Editor
                     Debug.Log($"Deleting associated meta file: {metaFile.FullName}");
                     metaFile.Delete();
                 }
+
+                foldersDeleted++;
             }
+
+            Debug.Log($"Deleted {foldersDeleted} empty {(foldersDeleted == 1 ? "folder" : "folders")}.");
+
+            AssetDatabase.Refresh();
         }
     }
 }
