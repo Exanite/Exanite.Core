@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Exanite.Utility.Editor
 {
-    public class CleanEmptyFolders
+    public static class CleanEmptyFolders
     {
         [MenuItem("Exanite/Clean Empty Folders")]
         public static void Clean()
@@ -23,7 +23,7 @@ namespace Exanite.Utility.Editor
 
                 var emptyFolders = GetEmptyFolders(assetsFolder);
 
-                if(!emptyFolders.IsNullOrEmpty())
+                if (!emptyFolders.IsNullOrEmpty())
                 {
                     string foldersToRemove = string.Empty;
 
