@@ -1,5 +1,6 @@
 ﻿using Exanite.PixelArt.Cameras.Internal;
 using Sirenix.OdinInspector;
+using System;
 using UnityEngine;
 
 namespace Exanite.PixelArt.Cameras
@@ -35,14 +36,16 @@ namespace Exanite.PixelArt.Cameras
                 return;
             }
 
-            int unitSize = MathE.GetNearestMultiple(CameraDimensions.y / VerticalUnits, Ppu);
+            bool isNegative = VerticalUnits < 0;
+
+            int unitSize = MathE.GetNearestMultiple(CameraDimensions.y / Math.Abs(VerticalUnits), Ppu);
 
             if (unitSize <= 0 || unitSize == int.MaxValue)
             {
                 unitSize = Ppu;
             }
 
-            _camera.orthographicSize = CameraDimensions.y / (unitSize * 2f);
+            _camera.orthographicSize = (isNegative ? -1 : 1) * CameraDimensions.y / (unitSize * 2f);
         }
     }
 }
