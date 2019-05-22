@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Exanite.Utility.Editor
+namespace Exanite.Core.Editor
 {
 	//Found at http://wiki.unity3d.com/index.php/FixBlenderImportRotation
 	public class BlenderAssetProcessor : AssetPostprocessor

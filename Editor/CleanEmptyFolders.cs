@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Exanite.Core.Utility;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Exanite.Utility.Editor
+namespace Exanite.Core.Editor
 {
     public static class CleanEmptyFolders
     {
