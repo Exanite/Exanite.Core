@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Exanite.BehaviorTree
+namespace Exanite.Core.BehaviorTree
 {
     public class BTBlackboard // Use this to save variables to the tree
     {

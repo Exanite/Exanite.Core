@@ -1,4 +1,4 @@
-﻿namespace Exanite.Stats
+﻿namespace Exanite.Core.Stats
 {
     public enum StatFaction
     {

@@ -1,4 +1,4 @@
-﻿namespace Exanite.Stats
+﻿namespace Exanite.Core.Stats
 {
     /// <summary>
     /// Enum used to state how to apply the mod

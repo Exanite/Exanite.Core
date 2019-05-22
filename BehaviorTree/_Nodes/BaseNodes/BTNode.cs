@@ -1,4 +1,4 @@
-﻿namespace Exanite.BehaviorTree
+﻿namespace Exanite.Core.BehaviorTree
 {
     // Base class for all Nodes
     public abstract class BTNode 

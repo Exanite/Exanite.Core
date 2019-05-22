@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-namespace Exanite.Stats
+namespace Exanite.Core.Stats
 {
     [Serializable]
     public class StatHolder

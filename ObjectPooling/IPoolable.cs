@@ -1,4 +1,4 @@
-﻿namespace Exanite.ObjectPooling
+﻿namespace Exanite.Core.ObjectPooling
 {
     /// <summary>
     /// Interface used in the object pool to call methods on GameObject spawn and despawn

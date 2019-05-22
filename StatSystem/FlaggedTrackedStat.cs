@@ -1,11 +1,11 @@
-﻿using Exanite.Flags;
+﻿using Exanite.Core.Flags;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
 using System.Collections;
 using UnityEngine;
 
-namespace Exanite.StatSystem
+namespace Exanite.Core.StatSystem
 {
     /// <summary>
     /// Tracks modifiers in a <see cref="StatSystem{T}"/> to produce a Value

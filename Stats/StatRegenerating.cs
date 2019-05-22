@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Exanite.Stats
+namespace Exanite.Core.Stats
 {
     [System.Serializable]
     public class StatRegenerating

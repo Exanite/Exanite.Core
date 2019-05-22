@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Exanite.Utility
+namespace Exanite.Core.Utility
 {
     public static class Extensions
     {

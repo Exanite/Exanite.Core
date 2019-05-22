@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Exanite.DataStructures.Grids
+namespace Exanite.Core.DataStructures.Grids
 {
     /// <summary>
     /// Represents if the targeted coordinate(s) are available

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Exanite.ObjectPooling.Example
+namespace Exanite.Core.ObjectPooling.Example
 {
     public class PoolUseExample : MonoBehaviour
     {

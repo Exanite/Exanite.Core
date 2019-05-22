@@ -1,4 +1,4 @@
-﻿namespace Exanite.StatSystem
+﻿namespace Exanite.Core.StatSystem
 {
     /// <summary>
     /// How the modifier is applied to existing <see cref="TrackedStat"/>s

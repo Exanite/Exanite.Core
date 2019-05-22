@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Exanite.BehaviorTree
+namespace Exanite.Core.BehaviorTree
 {
     // Leaf node - This runs a coroutine and returns succeeded on finish
     public class BTCoroutine : BTNodeLeaf

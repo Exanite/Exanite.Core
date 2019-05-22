@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Exanite.ObjectPooling.Internal
+namespace Exanite.Core.ObjectPooling.Internal
 {
     /// <summary>
     /// Main class for object pooling

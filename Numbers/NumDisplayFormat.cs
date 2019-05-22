@@ -1,4 +1,4 @@
-﻿namespace Exanite.Numbers
+﻿namespace Exanite.Core.Numbers
 {
     /// <summary>
     /// How the class <see cref="LargeNumber"/> display the number

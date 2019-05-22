@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Exanite.BehaviorTree
+namespace Exanite.Core.BehaviorTree
 {
     // Base class for all nodes that will have a child
     public abstract class BTNodeParent : BTNode

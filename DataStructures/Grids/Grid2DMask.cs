@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Exanite.DataStructures.Grids
+namespace Exanite.Core.DataStructures.Grids
 {
     /// <summary>
     /// <see cref="Grid2D{T}"/> used to apply a value to predefined locations

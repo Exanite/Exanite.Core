@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Exanite.BehaviorTree
+namespace Exanite.Core.BehaviorTree
 {
     // Composite node - If any fail, stop and fail node, if all succeed, return succeeded
     public class BTSequence : BTNodeComposite

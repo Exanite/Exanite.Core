@@ -1,4 +1,4 @@
-﻿namespace Exanite.Flags
+﻿namespace Exanite.Core.Flags
 {
     /// <summary>
     /// Enum used to state how to match the flags

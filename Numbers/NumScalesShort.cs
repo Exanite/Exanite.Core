@@ -1,4 +1,4 @@
-﻿namespace Exanite.Numbers
+﻿namespace Exanite.Core.Numbers
 {
     /// <summary>
     /// Abbrieviations of number names

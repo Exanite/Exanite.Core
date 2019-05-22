@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Serialization;
 using UnityEngine;
-using Exanite.Utility;
+using Exanite.Core.Utility;
 using Sirenix.OdinInspector;
 
-namespace Exanite.Flags
+namespace Exanite.Core.Flags
 {
     /// <summary>
     /// Combines Enums into a flag system that supports more than 32/64 flags

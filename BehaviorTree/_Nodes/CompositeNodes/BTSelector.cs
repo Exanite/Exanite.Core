@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Linq;
 
-namespace Exanite.BehaviorTree
+namespace Exanite.Core.BehaviorTree
 {
     // Composite node - If any child succeeds stop and return succeeded
     public class BTSelector : BTNodeComposite

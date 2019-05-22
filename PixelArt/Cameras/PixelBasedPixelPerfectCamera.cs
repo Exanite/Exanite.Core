@@ -1,8 +1,8 @@
-﻿using Exanite.PixelArt.Cameras.Internal;
+﻿using Exanite.Core.PixelArt.Cameras.Internal;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Exanite.PixelArt.Cameras
+namespace Exanite.Core.PixelArt.Cameras
 {
     public class PixelBasedPixelPerfectCamera : PixelPerfectCameraBase
     {

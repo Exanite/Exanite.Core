@@ -1,10 +1,10 @@
-﻿using Exanite.Utility;
+﻿using Exanite.Core.Utility;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
 using UnityEngine;
 
-namespace Exanite.StatSystem
+namespace Exanite.Core.StatSystem
 {
     /// <summary>
     /// Base class of all TrackedStats

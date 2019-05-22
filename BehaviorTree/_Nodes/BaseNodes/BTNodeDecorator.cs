@@ -1,4 +1,4 @@
-﻿namespace Exanite.BehaviorTree
+﻿namespace Exanite.Core.BehaviorTree
 {
     // Base class for all nodes that can only have one child
     public abstract class BTNodeDecorator : BTNodeParent

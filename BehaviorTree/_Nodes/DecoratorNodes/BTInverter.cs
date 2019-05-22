@@ -1,4 +1,4 @@
-﻿namespace Exanite.BehaviorTree
+﻿namespace Exanite.Core.BehaviorTree
 {
     // Decorator node - Inverts result of child
     public class BTInverter : BTNodeDecorator 

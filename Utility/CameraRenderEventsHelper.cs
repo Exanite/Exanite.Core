@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Exanite.Utility
+namespace Exanite.Core.Utility
 {
     [RequireComponent(typeof(Camera))]
     public class CameraRenderEventsHelper : MonoBehaviour

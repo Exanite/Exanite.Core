@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Exanite.Utility
+namespace Exanite.Core.Utility
 {
     public class DontDestroyOnLoad : MonoBehaviour 
     {

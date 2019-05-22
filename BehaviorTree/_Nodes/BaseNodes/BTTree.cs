@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Exanite.BehaviorTree
+namespace Exanite.Core.BehaviorTree
 {
     // Root of the behavior tree, define a new tree with this
     public class BTTree : BTNodeComposite 

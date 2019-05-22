@@ -1,4 +1,4 @@
-﻿namespace Exanite.BehaviorTree
+﻿namespace Exanite.Core.BehaviorTree
 {
     [System.Serializable]
     public enum BTState

@@ -5,7 +5,7 @@ using Sirenix.Serialization;
 using Sirenix.OdinInspector;
 #endif
 
-namespace Exanite.DataStructures.Grids
+namespace Exanite.Core.DataStructures.Grids
 {
     /// <summary>
     /// 2D grid that can store any type of value

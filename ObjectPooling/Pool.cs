@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using Exanite.ObjectPooling.Internal;
+using Exanite.Core.ObjectPooling.Internal;
 
-namespace Exanite.ObjectPooling
+namespace Exanite.Core.ObjectPooling
 {
     /// <summary>
     /// Simplifies calling <see cref="PoolController"/> methods

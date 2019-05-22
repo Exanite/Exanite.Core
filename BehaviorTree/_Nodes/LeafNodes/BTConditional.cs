@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Exanite.BehaviorTree
+namespace Exanite.Core.BehaviorTree
 {
     // Takes in a Func<bool> and returns succeeded(true) or failed(false)
     public class BTConditional : BTNodeLeaf 

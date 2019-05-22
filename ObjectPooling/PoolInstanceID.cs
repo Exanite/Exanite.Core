@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Exanite.ObjectPooling
+namespace Exanite.Core.ObjectPooling
 {
     /// <summary>
     /// Used by ObjectPooling to store prefab data

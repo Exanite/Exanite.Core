@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Exanite.Numbers
+namespace Exanite.Core.Numbers
 {
     /// <summary>
     /// A blittable bool

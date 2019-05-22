@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Exanite.ObjectPooling.Utility
+namespace Exanite.Core.ObjectPooling.Utility
 {
     [RequireComponent(typeof(Rigidbody))]
     public class PooledRigidbody : MonoBehaviour, IPoolable

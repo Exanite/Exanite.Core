@@ -1,9 +1,9 @@
 ﻿using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
-using Exanite.Utility;
+using Exanite.Core.Utility;
 
-namespace Exanite.Numbers
+namespace Exanite.Core.Numbers
 {
     /// <summary>
     /// Used to store very large numbers (up to 999.999999x(10^(2^63))) <para/>

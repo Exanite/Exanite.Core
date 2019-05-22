@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Exanite.DataStructures.Grids
+namespace Exanite.Core.DataStructures.Grids
 {
     /// <summary>
     /// Holds data for Grid2DMask match tests

@@ -1,5 +1,5 @@
-﻿using Exanite.Flags;
-using Exanite.Utility;
+﻿using Exanite.Core.Flags;
+using Exanite.Core.Utility;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-namespace Exanite.StatSystem
+namespace Exanite.Core.StatSystem
 {
     /// <summary>
     /// Handles everything you need for a stat system

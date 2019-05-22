@@ -1,11 +1,11 @@
-﻿using Exanite.Flags;
-using Exanite.Utility;
+﻿using Exanite.Core.Flags;
+using Exanite.Core.Utility;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
 using UnityEngine;
 
-namespace Exanite.StatSystem
+namespace Exanite.Core.StatSystem
 {
     /// <summary>
     /// Class used in the StatSystem to modify existing stats

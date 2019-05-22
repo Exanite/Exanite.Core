@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Exanite.Utility
+namespace Exanite.Core.Utility
 {
     /// <summary>
     /// Static class used to hold different types of data about an <see cref="Enum"/>

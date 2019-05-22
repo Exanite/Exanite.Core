@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Exanite.Flags
+namespace Exanite.Core.Flags
 {
     /// <summary>
     /// <see cref="LongFlag"/> that is <see langword="readonly"/>

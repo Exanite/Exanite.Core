@@ -1,7 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Exanite.PixelArt
+namespace Exanite.Core.PixelArt
 {
     public class PixelArtPositioner : MonoBehaviour
     {
