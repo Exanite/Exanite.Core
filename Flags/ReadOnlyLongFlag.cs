@@ -8,7 +8,7 @@ namespace Exanite.Core.Flags
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public class ReadOnlyLongFlag<T> where T : struct, IComparable, IConvertible, IFormattable
+    public class ReadOnlyLongFlag<T> where T : Enum
     {
         private LongFlag<T> longFlag;
 

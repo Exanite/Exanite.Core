@@ -1,7 +1,7 @@
 {
-    "name": "ExaniteCore.Editor",
+    "name": "Exanite.Core.Editor",
     "references": [
-        "ExaniteCore"
+        "Exanite.Core"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [

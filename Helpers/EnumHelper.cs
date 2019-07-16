@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Exanite.Core.Utility
+namespace Exanite.Core.Helpers
 {
     /// <summary>
     /// Static class used to hold different types of data about an <see cref="Enum"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public static class EnumData<T> where T : struct, IComparable, IConvertible, IFormattable
+    public static class EnumHelper<T> where T : Enum
     {
         private static List<string> valuesAsStringList;
 
@@ -44,10 +44,8 @@ namespace Exanite.Core.Utility
             }
         }
 
-        static EnumData()
+        static EnumHelper()
         {
-            if (!typeof(T).IsEnum) throw new ArgumentException($"{typeof(T)} is not an Enum");
-
             Values = Enum.GetValues(typeof(T));
             IEnumerable<int> enumerable = Values.Cast<int>();
             Max = enumerable.Max();
@@ -56,7 +54,7 @@ namespace Exanite.Core.Utility
 
         public static List<string> EnumToStringList()
         {
-            List<string> result = new List<string>();
+            var result = new List<string>();
 
             foreach (var item in Values)
             {

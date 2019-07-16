@@ -1,5 +1,6 @@
-﻿using Exanite.Core.Flags;
-using Exanite.Core.Utility;
+﻿using Exanite.Core.Extensions;
+using Exanite.Core.Flags;
+using Exanite.Core.Helpers;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
@@ -10,7 +11,7 @@ namespace Exanite.Core.StatSystem
     /// <summary>
     /// Class used in the StatSystem to modify existing stats
     /// </summary>
-    public sealed class StatMod<T> where T : struct, IComparable, IConvertible, IFormattable
+    public sealed class StatMod<T> where T : Enum
     {
         #region Fields and Properties
 
@@ -119,7 +120,7 @@ namespace Exanite.Core.StatSystem
 
         static StatMod()
         {
-            int init = EnumData<T>.Max; // only used to initialize the EnumData class
+            int init = EnumHelper<T>.Max; // only used to initialize the EnumData class
         }
 
         /// <summary>

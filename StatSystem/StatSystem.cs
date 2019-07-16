@@ -1,11 +1,11 @@
 ﻿using Exanite.Core.Flags;
-using Exanite.Core.Utility;
+using Exanite.Core.Helpers;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
 namespace Exanite.Core.StatSystem
 {
@@ -13,7 +13,7 @@ namespace Exanite.Core.StatSystem
     /// Handles everything you need for a stat system
     /// </summary>
     [Serializable]
-    public class StatSystem<T> where T : struct, IComparable, IConvertible, IFormattable
+    public class StatSystem<T> where T : Enum
     {
         #region Fields and Properties
 
@@ -48,7 +48,7 @@ namespace Exanite.Core.StatSystem
 
         static StatSystem()
         {
-            int init = EnumData<T>.Max; // only used to initialize the EnumData class
+            int init = EnumHelper<T>.Max; // only used to initialize the EnumData class
         }
 
         /// <summary>

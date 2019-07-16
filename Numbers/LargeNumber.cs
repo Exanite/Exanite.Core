@@ -1,7 +1,7 @@
-﻿using Sirenix.OdinInspector;
+﻿using Exanite.Core.Helpers;
+using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
-using Exanite.Core.Utility;
 
 namespace Exanite.Core.Numbers
 {
@@ -190,7 +190,7 @@ namespace Exanite.Core.Numbers
                 }
                 case (NumDisplayFormat.Short):
                 {
-                    if (Multiplier > EnumData<NumScalesShort>.Max || Multiplier < EnumData<NumScalesShort>.Min)
+                    if (Multiplier > EnumHelper<NumScalesShort>.Max || Multiplier < EnumHelper<NumScalesShort>.Min)
                     {
                         return ToString(NumDisplayFormat.Scientific);
                     }
@@ -198,7 +198,7 @@ namespace Exanite.Core.Numbers
                 }
                 case (NumDisplayFormat.Long):
                 {
-                    if (Math.Abs(Multiplier) > EnumData<NumScalesLong>.Max || Math.Abs(Multiplier) < EnumData<NumScalesLong>.Min)
+                    if (Math.Abs(Multiplier) > EnumHelper<NumScalesLong>.Max || Math.Abs(Multiplier) < EnumHelper<NumScalesLong>.Min)
                     {
                         return ToString(NumDisplayFormat.Short);
                     }

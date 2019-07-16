@@ -11,7 +11,7 @@ namespace Exanite.Core.StatSystem
     /// Tracks modifiers in a <see cref="StatSystem{T}"/> to produce a Value
     /// </summary>
     [Serializable]
-    public class FlaggedTrackedStat<T> : TrackedStat<T> where T : struct, IComparable, IConvertible, IFormattable
+    public class FlaggedTrackedStat<T> : TrackedStat<T> where T : Enum
     {
         [HideInInspector] [OdinSerialize] protected float flatValue = 0f;
         [HideInInspector] [OdinSerialize] protected float incValue = 1f;

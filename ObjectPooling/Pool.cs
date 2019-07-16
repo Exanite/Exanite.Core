@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Exanite.Core.ObjectPooling.Internal;
 
 namespace Exanite.Core.ObjectPooling
 {

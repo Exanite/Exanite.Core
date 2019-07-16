@@ -1,4 +1,4 @@
-﻿using Exanite.Core.Utility;
+﻿using Exanite.Core.Helpers;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
@@ -10,7 +10,7 @@ namespace Exanite.Core.StatSystem
     /// Base class of all TrackedStats
     /// </summary>
     [Serializable]
-    public abstract class TrackedStat<T> where T : struct, IComparable, IConvertible, IFormattable
+    public abstract class TrackedStat<T> where T : Enum
     {
         [HideInInspector, OdinSerialize] private string name;
         [HideInInspector, OdinSerialize] private StatSystem<T> statSystem;
@@ -57,7 +57,7 @@ namespace Exanite.Core.StatSystem
 
         static TrackedStat()
         {
-            int init = EnumData<T>.Max; // only used to initialize the EnumData class
+            int init = EnumHelper<T>.Max; // only used to initialize the EnumData class
         }
 
         /// <summary>

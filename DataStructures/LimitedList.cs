@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Exanite.Core.DataStructures.Lists
+namespace Exanite.Core.DataStructures
 {
     /// <summary>
     /// List with a limited size

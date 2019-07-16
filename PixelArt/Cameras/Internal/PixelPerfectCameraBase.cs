@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using Exanite.Core.Helpers;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Exanite.Core.PixelArt.Cameras.Internal

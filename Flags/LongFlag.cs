@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Exanite.Core.Helpers;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.Serialization;
 using UnityEngine;
-using Exanite.Core.Utility;
-using Sirenix.OdinInspector;
 
 namespace Exanite.Core.Flags
 {
@@ -13,7 +13,7 @@ namespace Exanite.Core.Flags
     /// Combines Enums into a flag system that supports more than 32/64 flags
     /// </summary>
     [Serializable]
-    public class LongFlag<T> : ISerializationCallbackReceiver where T : struct, IComparable, IConvertible, IFormattable
+    public class LongFlag<T> : ISerializationCallbackReceiver where T : Enum
     {
         #region Fields and Properties
 
@@ -90,10 +90,10 @@ namespace Exanite.Core.Flags
 
         protected virtual void InitiateLongFlag()
         {
-            if (EnumData<T>.Min < 0)
+            if (EnumHelper<T>.Min < 0)
                 throw new ArgumentException(string.Format("{0} must not have any negative values", typeof(T)));
 
-            Flags = new BitArray(EnumData<T>.Max + 1);
+            Flags = new BitArray(EnumHelper<T>.Max + 1);
         }
 
         #endregion
@@ -433,7 +433,7 @@ namespace Exanite.Core.Flags
 
             #region Enum Values
 
-            lastEnumValueData = EnumData<T>.ValuesAsStringList;
+            lastEnumValueData = EnumHelper<T>.ValuesAsStringList;
 
             if (missingEnums == null) missingEnums = new List<string>();
 
@@ -458,7 +458,7 @@ namespace Exanite.Core.Flags
 
             #region Enum Values
 
-            if (!lastEnumValueData.SequenceEqual(EnumData<T>.ValuesAsStringList))
+            if (!lastEnumValueData.SequenceEqual(EnumHelper<T>.ValuesAsStringList))
             {
                 RepairBitArray();
             }
@@ -474,11 +474,11 @@ namespace Exanite.Core.Flags
         private void RepairBitArray()
         {
             List<string> oldValues = lastEnumValueData;
-            List<string> newValues = EnumData<T>.ValuesAsStringList;
+            List<string> newValues = EnumHelper<T>.ValuesAsStringList;
             // Gets all the true values in the old BitArray
             List<int> oldIndexes = GetAllTrueIndexes();
 
-            flags = new BitArray(EnumData<T>.Max + 1);
+            flags = new BitArray(EnumHelper<T>.Max + 1);
 
             foreach (int oldIndex in oldIndexes)
             {
