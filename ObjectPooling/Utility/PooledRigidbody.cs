@@ -3,7 +3,7 @@
 namespace Exanite.Core.ObjectPooling.Utility
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PooledRigidbody : MonoBehaviour, IPoolable
+    public class PooledRigidbody : MonoBehaviour, IPoolableGameObject
     {
         private Rigidbody _rigidbody;
 
