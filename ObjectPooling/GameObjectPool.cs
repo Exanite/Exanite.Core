@@ -6,9 +6,6 @@ using UnityEngine;
 
 namespace Exanite.Core.ObjectPooling
 {
-    /// <summary>
-    /// Main class for object pooling
-    /// </summary>
     [DefaultExecutionOrder(-1000)]
     public class GameObjectPool : SingletonBehaviour<GameObjectPool>
     {
