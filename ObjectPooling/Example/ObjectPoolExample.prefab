@@ -43,11 +43,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e99573ab1cd95f74bb0af39c35e8bebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolsToCreate:
+  PoolsToCreate:
   - prefab: {fileID: 1761869782680058, guid: 1d00ea4cedc96f944b418cfc92d14a07, type: 3}
-    amount: 15
+    amount: 10
   - prefab: {fileID: 1551216866065758, guid: 4944690f900a93a4db1eb38c3a593469, type: 3}
-    amount: 30
+    amount: 24
   - prefab: {fileID: 1435424433708852, guid: f587f09340f13ea4f871d9027a7f7ae7, type: 3}
-    amount: 5
-  debugMode: 0
+    amount: 4
