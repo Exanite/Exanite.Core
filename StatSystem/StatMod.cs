@@ -1,6 +1,5 @@
 ﻿using Exanite.Core.Extensions;
 using Exanite.Core.Flags;
-using Exanite.Core.Helpers;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
@@ -117,11 +116,6 @@ namespace Exanite.Core.StatSystem
         #endregion
 
         #region Constructor
-
-        static StatMod()
-        {
-            int init = EnumHelper<T>.Max; // only used to initialize the EnumData class
-        }
 
         /// <summary>
         /// Creates a new StatMod

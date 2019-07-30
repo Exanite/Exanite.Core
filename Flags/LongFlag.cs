@@ -93,7 +93,7 @@ namespace Exanite.Core.Flags
             if (EnumHelper<T>.Min < 0)
                 throw new ArgumentException(string.Format("{0} must not have any negative values", typeof(T)));
 
-            Flags = new BitArray(EnumHelper<T>.Max + 1);
+            Flags = new BitArray((int)EnumHelper<T>.Max + 1);
         }
 
         #endregion
@@ -478,7 +478,7 @@ namespace Exanite.Core.Flags
             // Gets all the true values in the old BitArray
             List<int> oldIndexes = GetAllTrueIndexes();
 
-            flags = new BitArray(EnumHelper<T>.Max + 1);
+            flags = new BitArray((int)EnumHelper<T>.Max + 1);
 
             foreach (int oldIndex in oldIndexes)
             {
