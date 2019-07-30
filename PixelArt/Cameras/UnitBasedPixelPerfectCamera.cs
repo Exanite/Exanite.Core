@@ -1,4 +1,4 @@
-﻿using Exanite.Core.Helpers;
+﻿using Exanite.Core.Extensions;
 using Exanite.Core.PixelArt.Cameras.Internal;
 using Sirenix.OdinInspector;
 using System;
@@ -39,7 +39,7 @@ namespace Exanite.Core.PixelArt.Cameras
 
             bool isNegative = VerticalUnits < 0;
 
-            int unitSize = MathE.GetNearestMultiple(CameraDimensions.y / Math.Abs(VerticalUnits), Ppu);
+            int unitSize = NumberExtensions.GetNearestMultiple(CameraDimensions.y / Math.Abs(VerticalUnits), Ppu);
 
             if (unitSize <= 0 || unitSize == int.MaxValue)
             {

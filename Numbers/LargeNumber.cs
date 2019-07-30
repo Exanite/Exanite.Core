@@ -1,4 +1,5 @@
-﻿using Exanite.Core.Helpers;
+﻿using Exanite.Core.Extensions;
+using Exanite.Core.Helpers;
 using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
@@ -74,7 +75,7 @@ namespace Exanite.Core.Numbers
 
             set
             {
-                placesToRound = MathE.Clamp(value, 0, 15);
+                placesToRound = value.Clamp(0, 15);
             }
         }
         [ShowInInspector]
@@ -135,11 +136,11 @@ namespace Exanite.Core.Numbers
         /// <returns>Formatted string</returns>
         public string ToString(NumDisplayFormat displayFormat, int placesToRound = -1)
         {
-            if(placesToRound < 0)
+            if (placesToRound < 0)
             {
                 placesToRound = PlacesToRound;
             }
-            else if(placesToRound > 15)
+            else if (placesToRound > 15)
             {
                 placesToRound = 15;
             }

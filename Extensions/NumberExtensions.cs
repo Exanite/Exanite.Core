@@ -1,20 +1,11 @@
-﻿namespace Exanite.Core.Helpers
+﻿namespace Exanite.Core.Extensions
 {
-    /// <summary>
-    /// Holds Exanite's math methods
-    /// </summary>
-    public static class MathE
+    public static class NumberExtensions
     {
-        #region Clamp
-
         /// <summary>
         /// Clamps a value between min and max values
         /// </summary>
-        /// <param name="value">Value to clamp</param>
-        /// <param name="min">Minimum value</param>
-        /// <param name="max">Maximum value</param>
-        /// <returns>Clamped value</returns>
-        public static float Clamp(float value, float min, float max)
+        public static float Clamp(this float value, float min, float max)
         {
             if (value < min)
             {
@@ -33,11 +24,7 @@
         /// <summary>
         /// Clamps a value between min and max values
         /// </summary>
-        /// <param name="value">Value to clamp</param>
-        /// <param name="min">Minimum value</param>
-        /// <param name="max">Maximum value</param>
-        /// <returns>Clamped value</returns>
-        public static int Clamp(int value, int min, int max)
+        public static int Clamp(this int value, int min, int max)
         {
             if (value < min)
             {
@@ -56,11 +43,7 @@
         /// <summary>
         /// Clamps a value between min and max values
         /// </summary>
-        /// <param name="value">Value to clamp</param>
-        /// <param name="min">Minimum value</param>
-        /// <param name="max">Maximum value</param>
-        /// <returns>Clamped value</returns>
-        public static double Clamp(double value, double min, double max)
+        public static double Clamp(this double value, double min, double max)
         {
             if (value < min)
             {
@@ -79,11 +62,7 @@
         /// <summary>
         /// Clamps a value between min and max values
         /// </summary>
-        /// <param name="value">Value to clamp</param>
-        /// <param name="min">Minimum value</param>
-        /// <param name="max">Maximum value</param>
-        /// <returns>Clamped value</returns>
-        public static long Clamp(long value, long min, long max)
+        public static long Clamp(this long value, long min, long max)
         {
             if (value < min)
             {
@@ -98,14 +77,12 @@
                 return value;
             }
         }
-
-        #endregion
 
         /// <summary>
         /// Gets the nearest multiple to a value <para/> 
         /// Example: GetNearestMultiple(45, 11) would return 44;
         /// </summary>
-        public static int GetNearestMultiple(int value, int multiple)
+        public static int GetNearestMultiple(this int value, int multiple)
         {
             int remainder = value % multiple;
             int result = value - remainder;
