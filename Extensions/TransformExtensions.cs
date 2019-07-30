@@ -13,17 +13,17 @@ namespace Exanite.Core.Extensions
             
             if (transform.lossyScale.x < 0)
             {
-                direction = Vector3.Reflect(direction, Vector3.right);
+                direction.x *= -1;
             }
 
             if (transform.lossyScale.y < 0)
             {
-                direction = Vector3.Reflect(direction, Vector3.up);
+                direction.y *= -1;
             }
 
             if (transform.lossyScale.z < 0)
             {
-                direction = Vector3.Reflect(direction, Vector3.forward);
+                direction.z *= -1;
             }
 
             rotation = Quaternion.LookRotation(direction, Vector3.up);
@@ -40,20 +40,20 @@ namespace Exanite.Core.Extensions
             rotation = Quaternion.Inverse(transform.rotation) * rotation; // inverse rotate then reflect
 
             var direction = rotation * Vector3.forward;
-            
+
             if (transform.lossyScale.x < 0)
             {
-                direction = Vector3.Reflect(direction, Vector3.right);
+                direction.x *= -1;
             }
 
             if (transform.lossyScale.y < 0)
             {
-                direction = Vector3.Reflect(direction, Vector3.up);
+                direction.y *= -1;
             }
 
             if (transform.lossyScale.z < 0)
             {
-                direction = Vector3.Reflect(direction, Vector3.forward);
+                direction.z *= -1;
             }
 
             rotation = Quaternion.LookRotation(direction, Vector3.up);
