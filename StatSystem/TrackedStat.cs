@@ -1,5 +1,4 @@
-﻿using Exanite.Core.Helpers;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
 using UnityEngine;
@@ -53,11 +52,6 @@ namespace Exanite.Core.StatSystem
             {
                 statSystem = value;
             }
-        }
-
-        static TrackedStat()
-        {
-            int init = EnumHelper<T>.Max; // only used to initialize the EnumData class
         }
 
         /// <summary>

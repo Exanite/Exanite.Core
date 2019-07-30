@@ -5,7 +5,7 @@ using System.Linq;
 namespace Exanite.Core.Helpers
 {
     /// <summary>
-    /// Static class used to hold different types of data about an <see cref="Enum"/>
+    /// Holds cached data for an <see cref="Enum"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public static class EnumHelper<T> where T : Enum
@@ -19,24 +19,24 @@ namespace Exanite.Core.Helpers
         /// <summary>
         /// Max value in <typeparamref name="T"/>
         /// </summary>
-        public static readonly int Max;
+        public static readonly long Max;
         /// <summary>
         /// Min value in <typeparamref name="T"/>
         /// </summary>
-        public static readonly int Min;
+        public static readonly long Min;
         /// <summary>
         /// <see cref="Values"/> as a <see cref="List"/> of <see langword="string"/>s
         /// </summary>
-        public static List<string> ValuesAsStringList
+        public static IReadOnlyList<string> ValuesAsStringList
         {
             get
             {
-                if (ValuesAsStringList == null)
+                if (valuesAsStringList == null)
                 {
                     valuesAsStringList = new List<string>();
                     foreach (var item in Values)
                     {
-                        ValuesAsStringList.Add(item.ToString());
+                        valuesAsStringList.Add(item.ToString());
                     }
                 }
 
@@ -47,21 +47,9 @@ namespace Exanite.Core.Helpers
         static EnumHelper()
         {
             Values = Enum.GetValues(typeof(T));
-            IEnumerable<int> enumerable = Values.Cast<int>();
+            IEnumerable<long> enumerable = Values.Cast<long>();
             Max = enumerable.Max();
             Min = enumerable.Min();
-        }
-
-        public static List<string> EnumToStringList()
-        {
-            var result = new List<string>();
-
-            foreach (var item in Values)
-            {
-                result.Add(item.ToString());
-            }
-
-            return result;
         }
     }
 }
