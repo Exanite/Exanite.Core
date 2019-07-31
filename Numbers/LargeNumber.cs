@@ -1,6 +1,5 @@
 ﻿using Exanite.Core.Extensions;
 using Exanite.Core.Helpers;
-using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
 
@@ -13,40 +12,30 @@ namespace Exanite.Core.Numbers
     [Serializable]
     public struct LargeNumber
     {
-        #region Fields and Properties
-
-        /// <summary>
-        /// The way <see cref="ToString"/> will format the string by default <para/>
-        /// If <see cref="ToString"/> cannot format the string in the way specified, it will use the next lowest NumDisplayFormat to format the string
-        /// </summary>
-        public NumDisplayFormat DisplayFormat;
-
         [SerializeField]
         private double value;
         [SerializeField]
         private long multiplier;
-        [SerializeField]
-        [Range(0, 15)]
-        private int placesToRound;
 
         /// <summary>
-        /// Readonly value of this <see cref="LargeNumber"/>
+        /// Value of this <see cref="LargeNumber"/>
         /// Formatted as xxx.yyyyyy where x = significant digits and y = trailing digits
         /// </summary>
         public double Value
         {
             get
             {
-                AutoShift();
+                ShiftPlaces();
                 return value;
             }
 
             set
             {
                 this.value = value;
-                AutoShift();
+                ShiftPlaces();
             }
         }
+
         /// <summary>
         /// Multiplier of this <see cref="LargeNumber"/>
         /// </summary>
@@ -54,7 +43,7 @@ namespace Exanite.Core.Numbers
         {
             get
             {
-                AutoShift();
+                ShiftPlaces();
                 return multiplier;
             }
 
@@ -63,87 +52,53 @@ namespace Exanite.Core.Numbers
                 multiplier = value;
             }
         }
-        /// <summary>
-        /// Places to round to when <see cref="ToString"/> is called
-        /// </summary>
-        public int PlacesToRound
-        {
-            get
-            {
-                return placesToRound;
-            }
-
-            set
-            {
-                placesToRound = value.Clamp(0, 15);
-            }
-        }
-        [ShowInInspector]
-        public string String
-        {
-            get
-            {
-                AutoShift();
-                return ToString();
-            }
-        }
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Creates a new <see cref="LargeNumber"/>
         /// </summary>
-        /// <param name="value">
-        /// Value of the <see cref="LargeNumber"/><para/>
-        /// In format of: xxx.yyyyyy where x = significant digits and y = trailing digits
-        /// </param>
-        /// <param name="multiplier">
-        /// Multiplier of the <see cref="LargeNumber"/>
-        /// <para/>See: <see cref="NumScalesLong"/> for what multipliers correspond to what values
-        /// </param>
-        /// <param name="placesToRound">Places to round to when <see cref="ToString"/> is called</param>
-        /// <param name="displayFormat">How to format the string when <see cref="ToString"/> is called</param>
-        public LargeNumber(double value = 0, long multiplier = 0, int placesToRound = 2, NumDisplayFormat displayFormat = NumDisplayFormat.Scientific)
+        public LargeNumber(double value = 0, long multiplier = 0)
         {
             this.value = value;
             this.multiplier = multiplier;
-            this.placesToRound = placesToRound;
-            DisplayFormat = displayFormat;
 
-            AutoShift();
+            ShiftPlaces();
         }
 
-        #endregion
-
-        #region ToString
+        /// <summary>
+        /// Shifts the value and multiplier of this <see cref="LargeNumber"/>
+        /// </summary>
+        private void ShiftPlaces()
+        {
+            while (Math.Abs(value) >= 1000) // More than 1000
+            {
+                value /= 1000;
+                multiplier++;
+            }
+            while (Math.Abs(value) > 0 && Math.Abs(value) < 1) // Between 0 and 1
+            {
+                value *= 1000;
+                multiplier--;
+            }
+            if (value == 0)
+            {
+                multiplier = 0;
+            }
+        }
 
         /// <summary>
         /// Converts this LargeNumber into a string
         /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
-            return ToString(DisplayFormat, PlacesToRound);
+            return ToString(NumDisplayFormat.Scientific, 0);
         }
 
         /// <summary>
         /// Converts this LargeNumber into a string
         /// </summary>
-        /// <param name="displayFormat">How to display this LargeNumber</param>
-        /// <param name="placesToRound">Places to round this LargeNumber</param>
-        /// <returns>Formatted string</returns>
-        public string ToString(NumDisplayFormat displayFormat, int placesToRound = -1)
+        public string ToString(NumDisplayFormat displayFormat, int placesToRound = 0)
         {
-            if (placesToRound < 0)
-            {
-                placesToRound = PlacesToRound;
-            }
-            else if (placesToRound > 15)
-            {
-                placesToRound = 15;
-            }
+            placesToRound = MathHelper.Clamp(placesToRound, 0, 15);
 
             double rounded = Math.Round(Value, placesToRound);
 
@@ -207,34 +162,24 @@ namespace Exanite.Core.Numbers
                 }
                 default:
                 {
-                    throw new NotImplementedException($"DisplayFormat: '{DisplayFormat}' is not an implemented display format");
+                    throw new NotImplementedException($"DisplayFormat: '{displayFormat}' is not an implemented display format");
                 }
             }
         }
-
-        #endregion
-
-        #region Operators
-
-        #region Assignment
 
         public static implicit operator LargeNumber(double value)
         {
             return new LargeNumber(value);
         }
 
-        #endregion
-
-        #region Basic
-
         public static LargeNumber operator *(LargeNumber A, LargeNumber B)
         {
-            return new LargeNumber(A.Value * B.Value, A.Multiplier + B.Multiplier, A.PlacesToRound, A.DisplayFormat);
+            return new LargeNumber(A.Value * B.Value, A.Multiplier + B.Multiplier);
         }
 
         public static LargeNumber operator /(LargeNumber A, LargeNumber B)
         {
-            return new LargeNumber(A.Value / B.Value, A.Multiplier - B.Multiplier, A.PlacesToRound, A.DisplayFormat);
+            return new LargeNumber(A.Value / B.Value, A.Multiplier - B.Multiplier);
         }
 
         public static LargeNumber operator +(LargeNumber A, LargeNumber B)
@@ -259,7 +204,7 @@ namespace Exanite.Core.Numbers
                 }
             }
 
-            return new LargeNumber(A.value + B.value, A.multiplier, A.PlacesToRound, A.DisplayFormat);
+            return new LargeNumber(A.value + B.value, A.multiplier);
         }
 
         public static LargeNumber operator -(LargeNumber A, LargeNumber B)
@@ -284,22 +229,18 @@ namespace Exanite.Core.Numbers
                 }
             }
 
-            return new LargeNumber(A.value - B.value, A.multiplier, A.PlacesToRound, A.DisplayFormat);
+            return new LargeNumber(A.value - B.value, A.multiplier);
         }
 
         public static LargeNumber operator ++(LargeNumber A)
         {
-            return new LargeNumber(A.Value + 1, A.Multiplier, A.PlacesToRound, A.DisplayFormat);
+            return new LargeNumber(A.Value + 1, A.Multiplier);
         }
 
         public static LargeNumber operator --(LargeNumber A)
         {
-            return new LargeNumber(A.Value - 1, A.Multiplier, A.PlacesToRound, A.DisplayFormat);
+            return new LargeNumber(A.Value - 1, A.Multiplier);
         }
-
-        #endregion
-
-        #region Comparison
 
         public static bool operator ==(LargeNumber A, LargeNumber B)
         {
@@ -345,10 +286,6 @@ namespace Exanite.Core.Numbers
             return (A < B || A == B);
         }
 
-        #endregion
-
-        #region Overrides
-
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
@@ -358,34 +295,5 @@ namespace Exanite.Core.Numbers
         {
             return base.GetHashCode();
         }
-
-        #endregion
-
-        #endregion
-
-        #region Internal
-
-        /// <summary>
-        /// Automatically shifts the value and multiplier of this <see cref="LargeNumber"/>
-        /// </summary>
-        private void AutoShift()
-        {
-            while (Math.Abs(value) >= 1000) // More than 1000
-            {
-                value /= 1000;
-                multiplier++;
-            }
-            while (Math.Abs(value) > 0 && Math.Abs(value) < 1) // Between 0 and 1
-            {
-                value *= 1000;
-                multiplier--;
-            }
-            if (value == 0)
-            {
-                multiplier = 0;
-            }
-        }
-
-        #endregion
     }
 }
