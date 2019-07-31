@@ -33,7 +33,7 @@ namespace Exanite.Core.Extensions
         }
 
         /// <summary>
-        /// Transforms a rotation from world space to local space. This is the opposite of <see cref="TransformRotation"/>
+        /// Transforms a rotation from world space to local space. This is the opposite of TransformRotation
         /// </summary>
         public static Quaternion InverseTransformRotation(this Transform transform, Quaternion rotation)
         {
