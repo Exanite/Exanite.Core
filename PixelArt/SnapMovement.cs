@@ -1,4 +1,4 @@
-﻿using Exanite.Core.Utility;
+﻿using Exanite.Core.Components;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

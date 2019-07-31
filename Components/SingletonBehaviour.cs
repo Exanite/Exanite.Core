@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Exanite.Core.Utility
+namespace Exanite.Core.Components
 {
     public abstract class SingletonBehaviour<T> : MonoBehaviour where T : SingletonBehaviour<T>
     {

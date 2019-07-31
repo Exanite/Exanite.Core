@@ -1,5 +1,5 @@
 ﻿using Exanite.Core.Extensions;
-using Exanite.Core.Utility;
+using Exanite.Core.Components;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
