@@ -19,11 +19,11 @@ namespace Exanite.Core.Helpers
         /// <summary>
         /// Max value in <typeparamref name="T"/>
         /// </summary>
-        public static readonly long Max;
+        public static readonly int Max;
         /// <summary>
         /// Min value in <typeparamref name="T"/>
         /// </summary>
-        public static readonly long Min;
+        public static readonly int Min;
         /// <summary>
         /// <see cref="Values"/> as a <see cref="List"/> of <see langword="string"/>s
         /// </summary>
@@ -47,7 +47,7 @@ namespace Exanite.Core.Helpers
         static EnumHelper()
         {
             Values = Enum.GetValues(typeof(T));
-            IEnumerable<long> enumerable = Values.Cast<long>();
+            IEnumerable<int> enumerable = Values.Cast<int>();
             Max = enumerable.Max();
             Min = enumerable.Min();
         }
