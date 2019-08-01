@@ -9,7 +9,9 @@
         /// </summary>
         public static float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)
         {
-            return toMin + (toMax - toMin) * ((value - fromMin) / (fromMax - fromMin));
+            float fromRange = fromMax - fromMin;
+            float toRange = toMax - toMin;
+            return toRange * ((value - fromMin) / fromRange) + toMin;
         }
 
         /// <summary>
@@ -17,7 +19,9 @@
         /// </summary>
         public static double Remap(double value, double fromMin, double fromMax, double toMin, double toMax)
         {
-            return toMin + (toMax - toMin) * ((value - fromMin) / (fromMax - fromMin));
+            double fromRange = fromMax - fromMin;
+            double toRange = toMax - toMin;
+            return toRange * ((value - fromMin) / fromRange) + toMin;
         }
 
         /// <summary>
