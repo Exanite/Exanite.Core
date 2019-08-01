@@ -5,6 +5,22 @@
         // note: order between different value type overloads should go by float, double, int, long
 
         /// <summary>
+        /// Remaps a value from one range to another
+        /// </summary>
+        public static float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)
+        {
+            return toMin + (toMax - toMin) * ((value - fromMin) / (fromMax - fromMin));
+        }
+
+        /// <summary>
+        /// Remaps a value from one range to another
+        /// </summary>
+        public static double Remap(double value, double fromMin, double fromMax, double toMin, double toMax)
+        {
+            return toMin + (toMax - toMin) * ((value - fromMin) / (fromMax - fromMin));
+        }
+
+        /// <summary>
         /// Wraps a value between min and max values
         /// </summary>
         public static float Wrap(float value, float min, float max)
@@ -148,7 +164,7 @@
         /// Gets the nearest multiple to a value <para/> 
         /// Example: GetNearestMultiple(45, 11) would return 44;
         /// </summary>
-        public static int GetNearestMultiple( int value, int multiple)
+        public static int GetNearestMultiple(int value, int multiple)
         {
             int remainder = value % multiple;
             int result = value - remainder;
