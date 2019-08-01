@@ -11,7 +11,7 @@
         {
             float fromRange = fromMax - fromMin;
             float toRange = toMax - toMin;
-            return toRange * ((value - fromMin) / fromRange) + toMin;
+            return fromRange == 0 ? toMin : toRange * ((value - fromMin) / fromRange) + toMin;
         }
 
         /// <summary>
@@ -21,7 +21,7 @@
         {
             double fromRange = fromMax - fromMin;
             double toRange = toMax - toMin;
-            return toRange * ((value - fromMin) / fromRange) + toMin;
+            return fromRange == 0 ? toMin : toRange * ((value - fromMin) / fromRange) + toMin;
         }
 
         /// <summary>
