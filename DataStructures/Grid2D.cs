@@ -189,7 +189,12 @@ namespace Exanite.Core.DataStructures
         {
             var newSize = new Vector2Int(XLength + posX + negX, YLength + posY + negY);
 
-            var newArray = new T[newSize.x, newSize.y];
+            if (newSize.x < 0 || newSize.y < 0)
+            {
+                throw new ArgumentException($"Cannot create a grid of size {newSize}");
+            }
+
+            T[,] newArray = new T[newSize.x, newSize.y];
 
             for (int x = 0; x < XLength; x++)
             {
