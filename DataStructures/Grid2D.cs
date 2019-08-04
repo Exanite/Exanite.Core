@@ -10,22 +10,23 @@ namespace Exanite.Core.DataStructures
     /// <summary>
     /// 2D grid that can store any type of value
     /// </summary>
+    [ShowOdinSerializedPropertiesInInspector]
     public class Grid2D<T> : IEnumerable<T>
     {
         /// <summary>
         /// Internal 2D array used for storing values
         /// </summary>
-        [ShowInInspector, OdinSerialize] protected virtual T[,] Grid { get; set; }
+        [OdinSerialize, TableMatrix(ResizableColumns = false)] protected T[,] Grid { get; set; }
 
         /// <summary>
         /// X length of the grid
         /// </summary>
-        public int XLength => Grid.GetLength(0);
+        public int XLength => Grid?.GetLength(0) ?? 0;
 
         /// <summary>
         /// Y length of the grid
         /// </summary>
-        public int YLength => Grid.GetLength(1);
+        public int YLength => Grid?.GetLength(1) ?? 0;
 
         /// <summary>
         /// Returns value at (x, y)
@@ -44,9 +45,14 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
+        /// Creates a new Grid2D with a size of (1, 1)
+        /// </summary>
+        public Grid2D() : this(1, 1) { }
+
+        /// <summary>
         /// Creates a new Grid2D
         /// </summary>
-        public Grid2D(int xLength = 10, int yLength = 10)
+        public Grid2D(int xLength, int yLength)
         {
             if (xLength <= 0)
             {
@@ -64,8 +70,8 @@ namespace Exanite.Core.DataStructures
         /// Rotates the grid clockwise the specified amount of times, negative values are ignored
         /// </summary>
         [Button]
-        [VerticalGroup("Buttons")]
-        [HorizontalGroup("Buttons/A")]
+        [FoldoutGroup("Methods")]
+        [HorizontalGroup("Methods/A")]
         public virtual void RotateClockwise()
         {
             T[,] newArray = new T[YLength, XLength];
@@ -85,7 +91,7 @@ namespace Exanite.Core.DataStructures
         /// Rotates the grid counter-clockwise the specified amount of times, negative values are ignored
         /// </summary>
         [Button]
-        [HorizontalGroup("Buttons/B")]
+        [HorizontalGroup("Methods/B")]
         public virtual void RotateCounterClockwise()
         {
             T[,] newArray = new T[YLength, XLength];
@@ -105,7 +111,7 @@ namespace Exanite.Core.DataStructures
         /// Mirrors the grid over the Y-Axis
         /// </summary>
         [Button]
-        [HorizontalGroup("Buttons/A")]
+        [HorizontalGroup("Methods/A")]
         public virtual void MirrorOverY()
         {
             T[,] newArray = new T[XLength, YLength];
@@ -125,7 +131,7 @@ namespace Exanite.Core.DataStructures
         /// Mirrors the grid over the X-Axis
         /// </summary>
         [Button]
-        [HorizontalGroup("Buttons/B")]
+        [HorizontalGroup("Methods/B")]
         public virtual void MirrorOverX()
         {
             T[,] newArray = new T[XLength, YLength];
@@ -173,18 +179,34 @@ namespace Exanite.Core.DataStructures
             return result;
         }
 
+        [Button]
+        [HorizontalGroup("Methods/C")]
         /// <summary>
-        /// Resizes the grid to the new size
+        /// Resizes the grid by adding/subtracting the number of indexes specified from each side <para/>
+        /// Note: Positive values will always expand the grid, negative will always shrink the grid
         /// </summary>
-        public virtual void Resize(int newX, int newY)
+        public virtual void Resize(int posX, int negX, int posY, int negY)
         {
-            var newArray = new T[newX, newY];
+            var newSize = new Vector2Int(XLength + posX + negX, YLength + posY + negY);
 
-            for (int x = 0; x < XLength || x < newX; x++)
+            var newArray = new T[newSize.x, newSize.y];
+
+            for (int x = 0; x < XLength; x++)
             {
-                for (int y = 0; y < YLength || y < newY; y++)
+                for (int y = 0; y < YLength; y++)
                 {
-                    newArray[x, y] = Grid[x, y];
+                    // pos just check if in range
+                    // neg shifts entire array
+                    var newIndexes = new Vector2Int(x + negX, y + negY);
+
+                    if (newIndexes.x < 0 || newIndexes.y < 0 || newIndexes.x >= newSize.x || newIndexes.y >= newSize.y)
+                    {
+                        continue;
+                    }
+                    else // if in range
+                    {
+                        newArray[newIndexes.x, newIndexes.y] = Grid[x, y];
+                    }
                 }
             }
 
