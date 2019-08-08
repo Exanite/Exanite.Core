@@ -11,7 +11,7 @@
         {
             float fromRange = fromMax - fromMin;
             float toRange = toMax - toMin;
-            return fromRange == 0 ? toMin : toRange * ((value - fromMin) / fromRange) + toMin;
+            return fromRange == 0 ? toMin : (toRange * ((value - fromMin) / fromRange)) + toMin;
         }
 
         /// <summary>
@@ -21,7 +21,7 @@
         {
             double fromRange = fromMax - fromMin;
             double toRange = toMax - toMin;
-            return fromRange == 0 ? toMin : toRange * ((value - fromMin) / fromRange) + toMin;
+            return fromRange == 0 ? toMin : (toRange * ((value - fromMin) / fromRange)) + toMin;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@
         /// </summary>
         public static float Modulo(float value, float divisor)
         {
-            return (value % divisor + value) % divisor;
+            return ((value % divisor) + value) % divisor;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@
         /// </summary>
         public static double Modulo(double value, double divisor)
         {
-            return (value % divisor + value) % divisor;
+            return ((value % divisor) + value) % divisor;
         }
 
         /// <summary>
@@ -77,7 +77,7 @@
         /// </summary>
         public static int Modulo(int value, int divisor)
         {
-            return (value % divisor + value) % divisor;
+            return ((value % divisor) + value) % divisor;
         }
 
         /// <summary>
@@ -85,7 +85,7 @@
         /// </summary>
         public static long Modulo(long value, long divisor)
         {
-            return (value % divisor + value) % divisor;
+            return ((value % divisor) + value) % divisor;
         }
 
         /// <summary>
