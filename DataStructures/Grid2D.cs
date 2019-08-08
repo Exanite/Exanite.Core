@@ -1,9 +1,9 @@
 ﻿using System;
-using UnityEngine;
-using Sirenix.Serialization;
-using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
+using UnityEngine;
 
 namespace Exanite.Core.DataStructures
 {
@@ -13,11 +13,6 @@ namespace Exanite.Core.DataStructures
     [ShowOdinSerializedPropertiesInInspector]
     public class Grid2D<T> : IEnumerable<T>
     {
-        /// <summary>
-        /// Internal 2D array used for storing values
-        /// </summary>
-        [OdinSerialize, TableMatrix(ResizableColumns = false)] protected T[,] Grid { get; set; }
-
         /// <summary>
         /// X length of the grid
         /// </summary>
@@ -45,6 +40,11 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
+        /// Internal 2D array used for storing values.
+        /// </summary>
+        [OdinSerialize, TableMatrix(ResizableColumns = false)] protected T[,] Grid { get; set; }
+
+        /// <summary>
         /// Creates a new Grid2D with a size of (1, 1)
         /// </summary>
         public Grid2D() : this(1, 1) { }
@@ -58,6 +58,7 @@ namespace Exanite.Core.DataStructures
             {
                 throw new ArgumentOutOfRangeException(nameof(xLength));
             }
+
             if (yLength <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(yLength));
@@ -161,6 +162,7 @@ namespace Exanite.Core.DataStructures
             {
                 coords.x = XLength + coords.x;
             }
+
             if (coords.y < 0)
             {
                 coords.y = YLength + coords.y;
@@ -179,12 +181,12 @@ namespace Exanite.Core.DataStructures
             return result;
         }
 
-        [Button]
-        [HorizontalGroup("Methods/C")]
         /// <summary>
         /// Resizes the grid by adding/subtracting the number of indexes specified from each side <para/>
         /// Note: Positive values will always expand the grid, negative will always shrink the grid
         /// </summary>
+        [Button]
+        [HorizontalGroup("Methods/C")]
         public virtual void Resize(int posX, int negX, int posY, int negY)
         {
             var newSize = new Vector2Int(XLength + posX + negX, YLength + posY + negY);
