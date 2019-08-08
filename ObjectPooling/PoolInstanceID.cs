@@ -1,19 +1,22 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using Sirenix.Serialization;
+using UnityEngine;
 
 namespace Exanite.Core.ObjectPooling
 {
     /// <summary>
     /// Used by ObjectPooling to store prefab data
     /// </summary>
-    public class PoolInstanceID : MonoBehaviour 
+    public class PoolInstanceID : SerializedMonoBehaviour
     {
         /// <summary>
         /// Original version of this GameObject, can be used to copy values
         /// </summary>
-        public GameObject originalPrefab;
+        [OdinSerialize] public GameObject OriginalPrefab { get; set; }
+
         /// <summary>
         /// InstanceID of the original prefab
         /// </summary>
-        public int instanceID;
+        [OdinSerialize] public int InstanceID { get; set; }
     }
 }

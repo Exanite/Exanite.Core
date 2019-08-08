@@ -1,7 +1,9 @@
-﻿namespace Exanite.Core.ObjectPooling
+﻿using UnityEngine;
+
+namespace Exanite.Core.ObjectPooling
 {
     /// <summary>
-    /// Interface used in the object pool to call methods on GameObject spawn and despawn
+    /// Interface used to call methods when a <see cref="GameObject"/> is spawned from or despawned to an <see cref="GameObjectPool"/>
     /// </summary>
     public interface IPoolableGameObject
     {

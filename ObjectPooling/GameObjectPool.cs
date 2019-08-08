@@ -1,34 +1,33 @@
-﻿using Exanite.Core.Extensions;
-using Exanite.Core.Components;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Exanite.Core.Components;
+using Exanite.Core.Extensions;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace Exanite.Core.ObjectPooling
 {
     [DefaultExecutionOrder(-1000)]
-    public class GameObjectPool : SingletonBehaviour<GameObjectPool>
+    public class GameObjectPool : SingletonSerializedBehaviour<GameObjectPool>
     {
-        public List<AutoCreatedPools> PoolsToCreate = new List<AutoCreatedPools>();
+        [OdinSerialize] public List<AutoCreatedPools> PoolsToCreate { get; private set; } = new List<AutoCreatedPools>();
 
-        protected Dictionary<int, Pool> pools;
-        protected bool isDirty = false;
-        protected List<GameObject> spawnedGameObjects;
+        private Dictionary<int, Pool> pools;
+        private bool isDirty = false;
+        private List<GameObject> spawnedGameObjects;
 
-        protected static GameObjectPool instance;
-
-        protected virtual void Awake()
+        private void Awake()
         {
             pools = new Dictionary<int, Pool>();
             spawnedGameObjects = new List<GameObject>();
 
             foreach (AutoCreatedPools poolToCreate in PoolsToCreate)
             {
-                CreatePool(poolToCreate.prefab, poolToCreate.amount);
+                CreatePool(poolToCreate.Prefab, poolToCreate.Amount);
             }
         }
 
-        protected virtual void Update()
+        private void Update()
         {
             if (isDirty)
             {
@@ -49,7 +48,7 @@ namespace Exanite.Core.ObjectPooling
         /// <summary>
         /// Creates a new pool
         /// </summary>
-        public virtual void CreatePool(GameObject prefab, int poolSize = 10)
+        public void CreatePool(GameObject prefab, int poolSize = 10)
         {
             int poolKey = prefab.GetInstanceID();
 
@@ -69,7 +68,7 @@ namespace Exanite.Core.ObjectPooling
         /// <summary>
         /// Expands an existing pool or creates a new one if there isn't an existing one
         /// </summary>
-        public virtual void ExpandPool(GameObject prefab, int amount = 5)
+        public void ExpandPool(GameObject prefab, int amount = 5)
         {
             int poolKey = prefab.GetInstanceID();
 
@@ -82,8 +81,8 @@ namespace Exanite.Core.ObjectPooling
                     poolObject.transform.SetParent(transform, true);
 
                     PoolInstanceID poolObjectID = poolObject.GetOrAddComponent<PoolInstanceID>();
-                    poolObjectID.instanceID = poolKey;
-                    poolObjectID.originalPrefab = prefab;
+                    poolObjectID.InstanceID = poolKey;
+                    poolObjectID.OriginalPrefab = prefab;
 
                     pools[poolKey].Queue.Enqueue(poolObject);
                 }
@@ -97,7 +96,7 @@ namespace Exanite.Core.ObjectPooling
         /// <summary>
         /// Spawns a pooled prefab
         /// </summary>
-        public virtual GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
+        public GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
         {
             int poolKey = prefab.GetInstanceID();
 
@@ -130,9 +129,9 @@ namespace Exanite.Core.ObjectPooling
         /// <summary>
         /// Despawns a pooled prefab and returns it to the pool
         /// </summary>
-        public virtual void Despawn(GameObject gameObjectToDespawn)
+        public void Despawn(GameObject gameObjectToDespawn)
         {
-            int poolKey = (int)gameObjectToDespawn.GetComponent<PoolInstanceID>()?.instanceID;
+            int poolKey = (int)gameObjectToDespawn.GetComponent<PoolInstanceID>()?.InstanceID;
 
             if (pools.ContainsKey(poolKey))
             {
@@ -156,8 +155,9 @@ namespace Exanite.Core.ObjectPooling
         /// </summary>
         public class Pool
         {
-            public GameObject Prefab;
-            public Queue<GameObject> Queue = new Queue<GameObject>();
+            public GameObject Prefab { get; set; }
+
+            public Queue<GameObject> Queue { get; set; } = new Queue<GameObject>();
 
             public Pool(GameObject prefab)
             {
@@ -168,8 +168,9 @@ namespace Exanite.Core.ObjectPooling
         [Serializable]
         public class AutoCreatedPools
         {
-            public GameObject prefab;
-            public int amount;
+            public GameObject Prefab { get; set; }
+
+            public int Amount { get; set; }
         }
     }
 }
