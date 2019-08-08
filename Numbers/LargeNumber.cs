@@ -1,7 +1,8 @@
-﻿using Exanite.Core.Extensions;
+﻿using System;
+using Exanite.Core.Extensions;
 using Exanite.Core.Helpers;
-using System;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 namespace Exanite.Core.Numbers
 {
@@ -12,15 +13,14 @@ namespace Exanite.Core.Numbers
     [Serializable]
     public struct LargeNumber
     {
-        [SerializeField]
-        private double value;
-        [SerializeField]
-        private long multiplier;
+        [SerializeField, HideInInspector] private double value;
+        [SerializeField, HideInInspector] private long multiplier;
 
         /// <summary>
         /// Value of this <see cref="LargeNumber"/>
         /// Formatted as xxx.yyyyyy where x = significant digits and y = trailing digits
         /// </summary>
+        [ShowInInspector]
         public double Value
         {
             get
@@ -39,6 +39,7 @@ namespace Exanite.Core.Numbers
         /// <summary>
         /// Multiplier of this <see cref="LargeNumber"/>
         /// </summary>
+        [ShowInInspector]
         public long Multiplier
         {
             get
@@ -109,7 +110,7 @@ namespace Exanite.Core.Numbers
 
             switch (displayFormat)
             {
-                case (NumDisplayFormat.Scientific):
+                case NumDisplayFormat.Scientific:
                 {
                     int extraDigits = 0;
 
@@ -144,7 +145,7 @@ namespace Exanite.Core.Numbers
 
                     return $"{rounded.ToString($"N{placesToRound}")} E{(Multiplier * 3) + extraDigits}";
                 }
-                case (NumDisplayFormat.Short):
+                case NumDisplayFormat.Short:
                 {
                     if (Multiplier > EnumHelper<NumScalesShort>.Max || Multiplier < EnumHelper<NumScalesShort>.Min)
                     {
@@ -152,7 +153,7 @@ namespace Exanite.Core.Numbers
                     }
                     return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesShort)Multiplier}";
                 }
-                case (NumDisplayFormat.Long):
+                case NumDisplayFormat.Long:
                 {
                     if (Math.Abs(Multiplier) > EnumHelper<NumScalesLong>.Max || Math.Abs(Multiplier) < EnumHelper<NumScalesLong>.Min)
                     {
@@ -184,7 +185,7 @@ namespace Exanite.Core.Numbers
 
         public static LargeNumber operator +(LargeNumber A, LargeNumber B)
         {
-            bool AMultIsLarger = (A.Multiplier > B.Multiplier);
+            bool AMultIsLarger = A.Multiplier > B.Multiplier;
             long difference = Math.Abs(A.Multiplier - B.Multiplier);
 
             if (AMultIsLarger)
@@ -209,7 +210,7 @@ namespace Exanite.Core.Numbers
 
         public static LargeNumber operator -(LargeNumber A, LargeNumber B)
         {
-            bool AMultIsLarger = (A.Multiplier > B.Multiplier);
+            bool AMultIsLarger = A.Multiplier > B.Multiplier;
             long difference = Math.Abs(A.Multiplier - B.Multiplier);
 
             if (AMultIsLarger)
@@ -244,7 +245,7 @@ namespace Exanite.Core.Numbers
 
         public static bool operator ==(LargeNumber A, LargeNumber B)
         {
-            return (A.Value == B.Value && A.Multiplier == A.Multiplier);
+            return A.Value == B.Value && A.Multiplier == A.Multiplier;
         }
 
         public static bool operator !=(LargeNumber A, LargeNumber B)
@@ -278,12 +279,12 @@ namespace Exanite.Core.Numbers
 
         public static bool operator >=(LargeNumber A, LargeNumber B)
         {
-            return (A > B || A == B);
+            return A > B || A == B;
         }
 
         public static bool operator <=(LargeNumber A, LargeNumber B)
         {
-            return (A < B || A == B);
+            return A < B || A == B;
         }
 
         public override bool Equals(object obj)
