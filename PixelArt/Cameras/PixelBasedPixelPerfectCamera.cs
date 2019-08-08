@@ -30,14 +30,14 @@ namespace Exanite.Core.PixelArt.Cameras
 
         public override void CalculateCameraSize()
         {
-            if (!_camera)
+            if (!Camera)
             {
                 return;
             }
 
             float verticalPixels = CameraDimensions.y / PixelsPerActualPixel;
 
-            _camera.orthographicSize = verticalPixels / (Ppu * 2);
+            Camera.orthographicSize = verticalPixels / (PixelsPerUnit * 2);
         }
     }
 }

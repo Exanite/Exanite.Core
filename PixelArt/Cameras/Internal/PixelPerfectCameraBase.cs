@@ -7,47 +7,59 @@ namespace Exanite.Core.PixelArt.Cameras.Internal
     [ExecuteAlways]
     [RequireComponent(typeof(Camera))]
     [DisallowMultipleComponent]
-    public abstract class PixelPerfectCameraBase : MonoBehaviour
+    public abstract class PixelPerfectCameraBase : SerializedMonoBehaviour
     {
-        [SerializeField, HideInInspector]
-        private int ppu = 16;
+        [SerializeField, HideInInspector] private int pixelsPerUnit = 16;
 
         private int screenHeight;
-        protected Camera _camera;
+        private Camera _camera;
 
         [InfoBox(message: "Camera Dimensions are odd, pixels may not render well.", InfoMessageType = InfoMessageType.Warning, VisibleIf = nameof(AreCameraDimensionsOdd))]
         [ShowInInspector]
-        public Vector2Int CameraDimensions => new Vector2Int(_camera?.pixelWidth ?? 0, _camera?.pixelHeight ?? 0);
+        public Vector2Int CameraDimensions => new Vector2Int(Camera?.pixelWidth ?? 0, Camera?.pixelHeight ?? 0);
 
         [ShowInInspector]
-        public int Ppu
+        public int PixelsPerUnit
         {
             get
             {
-                return ppu;
+                return pixelsPerUnit;
             }
 
             set
             {
                 if (value > 0)
                 {
-                    ppu = value;
+                    pixelsPerUnit = value;
                 }
 
                 CalculateCameraSize();
             }
         }
 
+        protected Camera Camera
+        {
+            get
+            {
+                if (!_camera)
+                {
+                    _camera = GetComponent<Camera>();
+                }
+
+                return _camera;
+            }
+
+            set
+            {
+                _camera = value;
+            }
+        }
+
         protected virtual void Start()
         {
-            _camera = GetComponent<Camera>();
-
-            if (_camera)
+            if (AreCameraDimensionsOdd())
             {
-                if (AreCameraDimensionsOdd())
-                {
-                    Debug.LogWarning($"Camera Dimensions are odd, pixels may not render well. Camera Dimensions: {CameraDimensions}");
-                }
+                Debug.LogWarning($"Camera Dimensions are odd, pixels may not render well. Camera Dimensions: {CameraDimensions}");
             }
 
             CalculateCameraSize();
@@ -55,7 +67,7 @@ namespace Exanite.Core.PixelArt.Cameras.Internal
 
         protected virtual void Update()
         {
-            if (_camera && screenHeight != CameraDimensions.y)
+            if (Camera && screenHeight != CameraDimensions.y)
             {
                 screenHeight = CameraDimensions.y;
 
@@ -65,7 +77,7 @@ namespace Exanite.Core.PixelArt.Cameras.Internal
 
         protected virtual void OnEnable()
         {
-            if (_camera)
+            if (Camera)
             {
                 CalculateCameraSize();
             }

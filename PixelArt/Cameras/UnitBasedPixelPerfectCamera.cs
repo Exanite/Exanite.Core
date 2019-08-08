@@ -1,7 +1,7 @@
-﻿using Exanite.Core.Extensions;
+﻿using System;
+using Exanite.Core.Extensions;
 using Exanite.Core.PixelArt.Cameras.Internal;
 using Sirenix.OdinInspector;
-using System;
 using UnityEngine;
 
 namespace Exanite.Core.PixelArt.Cameras
@@ -32,21 +32,21 @@ namespace Exanite.Core.PixelArt.Cameras
 
         public override void CalculateCameraSize()
         {
-            if (!_camera)
+            if (!Camera)
             {
                 return;
             }
 
             bool isNegative = VerticalUnits < 0;
 
-            int unitSize = MathHelper.GetNearestMultiple(CameraDimensions.y / Math.Abs(VerticalUnits), Ppu);
+            int unitSize = MathHelper.GetNearestMultiple(CameraDimensions.y / Math.Abs(VerticalUnits), PixelsPerUnit);
 
             if (unitSize <= 0 || unitSize == int.MaxValue)
             {
-                unitSize = Ppu;
+                unitSize = PixelsPerUnit;
             }
 
-            _camera.orthographicSize = (isNegative ? -1 : 1) * CameraDimensions.y / (unitSize * 2f);
+            Camera.orthographicSize = (isNegative ? -1 : 1) * CameraDimensions.y / (unitSize * 2f);
         }
     }
 }

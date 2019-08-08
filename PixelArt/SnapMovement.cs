@@ -1,35 +1,36 @@
-﻿using Exanite.Core.Components;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace Exanite.Core.PixelArt
 {
-    public class SnapMovement : MonoBehaviour
+    public class SnapMovement : SerializedMonoBehaviour
     {
-        [Required]
-        public CameraRenderEventsHelper cameraRenderEventsHelper;
+        [OdinSerialize] public int PixelsPerUnit { get; set; } = 16;
 
-        public int ppu = 16;
-        public bool revertPosition = true;
+        [OdinSerialize] public bool RevertPosition { get; set; } = true;
 
         private Vector3 position;
 
         private void Awake()
         {
-            cameraRenderEventsHelper.PreRender += OnPreRender;
-            cameraRenderEventsHelper.PostRender += OnPostRender;
+            Camera.onPreRender += PreRender;
+            Camera.onPostRender += PostRender;
         }
 
-        private void OnPreRender()
+        private void PreRender(Camera camera)
         {
             position = transform.position;
 
-            transform.position = new Vector3(Mathf.Round(position.x * ppu) / ppu, Mathf.Round(position.y * ppu) / ppu, Mathf.Round(position.z * ppu) / ppu);
+            transform.position = new Vector3(
+                Mathf.Round(position.x * PixelsPerUnit) / PixelsPerUnit,
+                Mathf.Round(position.y * PixelsPerUnit) / PixelsPerUnit,
+                Mathf.Round(position.z * PixelsPerUnit) / PixelsPerUnit);
         }
 
-        private void OnPostRender()
+        private void PostRender(Camera camera)
         {
-            if (revertPosition)
+            if (RevertPosition)
             {
                 transform.position = position;
             }
@@ -37,8 +38,8 @@ namespace Exanite.Core.PixelArt
 
         private void OnDestroy()
         {
-            cameraRenderEventsHelper.PreRender -= OnPreRender;
-            cameraRenderEventsHelper.PostRender -= OnPostRender;
+            Camera.onPreRender -= PreRender;
+            Camera.onPostRender -= PostRender;
         }
     }
 }
