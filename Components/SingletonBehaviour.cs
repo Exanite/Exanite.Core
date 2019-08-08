@@ -1,11 +1,18 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Exanite.Core.Components
 {
-    public abstract class SingletonBehaviour<T> : MonoBehaviour where T : SingletonBehaviour<T>
+    /// <summary>
+    /// Reusable singleton implementation for SerializedMonoBehaviours
+    /// </summary>
+    public abstract class SingletonSerializedBehaviour<T> : SerializedMonoBehaviour where T : SingletonSerializedBehaviour<T>
     {
         private static T instance;
 
+        /// <summary>
+        /// Singleton instance.
+        /// </summary>
         public static T Instance
         {
             get
