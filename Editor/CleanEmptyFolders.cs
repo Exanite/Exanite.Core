@@ -1,7 +1,7 @@
-﻿using Sirenix.Utilities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 

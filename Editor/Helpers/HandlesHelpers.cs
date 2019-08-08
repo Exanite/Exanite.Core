@@ -17,8 +17,8 @@ namespace Exanite.Core.Editor.Helpers
         {
             for (int i = 0; i < lineSegments.Length / 2; i++)
             {
-                Vector3 posA = rotation * Vector3.Scale(lineSegments[i * 2], scale) + position;
-                Vector3 posB = rotation * Vector3.Scale(lineSegments[i * 2 + 1], scale) + position;
+                Vector3 posA = (rotation * Vector3.Scale(lineSegments[i * 2], scale)) + position;
+                Vector3 posB = (rotation * Vector3.Scale(lineSegments[(i * 2) + 1], scale)) + position;
 
                 Handles.DrawLine(posA, posB);
             }
