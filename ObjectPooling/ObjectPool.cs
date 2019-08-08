@@ -5,13 +5,23 @@ namespace Exanite.Core.ObjectPooling
 {
     public class ObjectPool<T>
     {
+        /// <summary>
+        /// Current size of the pool
+        /// </summary>
         public int CurrentSize => Pool.Count;
 
         private Queue<T> Pool { get; } = new Queue<T>();
+
         private Func<T> Factory { get; }
 
+        /// <summary>
+        /// Creates a new <see cref="ObjectPool{T}"/> with an initial size of 10
+        /// </summary>
         public ObjectPool() : this(10, null) { }
 
+        /// <summary>
+        /// Creates a new <see cref="ObjectPool{T}"/>
+        /// </summary>
         public ObjectPool(int initialSize, Func<T> factory = null)
         {
             Factory = factory ?? Activator.CreateInstance<T>;
@@ -19,6 +29,9 @@ namespace Exanite.Core.ObjectPooling
             Expand(initialSize);
         }
 
+        /// <summary>
+        /// Expands the pool by an amount
+        /// </summary>
         public virtual void Expand(int amount)
         {
             for (int i = 0; i < amount; i++)
@@ -27,7 +40,10 @@ namespace Exanite.Core.ObjectPooling
             }
         }
 
-        public virtual T Get()
+        /// <summary>
+        /// Acquire an object from the pool
+        /// </summary>
+        public virtual T Acquire()
         {
             T result;
             if (Pool.Count > 0)
@@ -41,12 +57,15 @@ namespace Exanite.Core.ObjectPooling
 
             if (result is IPoolable poolable)
             {
-                poolable.OnGet();
+                poolable.OnAcquired();
             }
 
             return result;
         }
 
+        /// <summary>
+        /// Release an object back to the pool
+        /// </summary>
         public virtual void Release(T obj)
         {
             if (obj is IPoolable poolable)
