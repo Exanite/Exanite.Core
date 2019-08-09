@@ -11,7 +11,7 @@ namespace Exanite.Core.Numbers
     /// Actual value = <see cref="Value"/> * (10 ^ (<see cref="Multiplier"/> * 3))
     /// </summary>
     [Serializable]
-    public struct LargeNumber
+    public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
     {
         [SerializeField, HideInInspector] private double value;
         [SerializeField, HideInInspector] private long multiplier;
@@ -185,10 +185,10 @@ namespace Exanite.Core.Numbers
 
         public static LargeNumber operator +(LargeNumber A, LargeNumber B)
         {
-            bool AMultIsLarger = A.Multiplier > B.Multiplier;
+            bool multAIsLarger = A.Multiplier > B.Multiplier;
             long difference = Math.Abs(A.Multiplier - B.Multiplier);
 
-            if (AMultIsLarger)
+            if (multAIsLarger)
             {
                 for (int i = 0; i < difference; i++)
                 {
@@ -210,10 +210,10 @@ namespace Exanite.Core.Numbers
 
         public static LargeNumber operator -(LargeNumber A, LargeNumber B)
         {
-            bool AMultIsLarger = A.Multiplier > B.Multiplier;
+            bool multAIsLarger = A.Multiplier > B.Multiplier;
             long difference = Math.Abs(A.Multiplier - B.Multiplier);
 
-            if (AMultIsLarger)
+            if (multAIsLarger)
             {
                 for (int i = 0; i < difference; i++)
                 {
@@ -243,58 +243,68 @@ namespace Exanite.Core.Numbers
             return new LargeNumber(A.Value - 1, A.Multiplier);
         }
 
-        public static bool operator ==(LargeNumber A, LargeNumber B)
+        public static bool operator ==(LargeNumber lhs, LargeNumber rhs)
         {
-            return A.Value == B.Value && A.Multiplier == A.Multiplier;
+            return lhs.Equals(rhs);
         }
 
-        public static bool operator !=(LargeNumber A, LargeNumber B)
+        public static bool operator !=(LargeNumber lhs, LargeNumber rhs)
         {
-            return !(A == B);
+            return !lhs.Equals(rhs);
         }
 
-        public static bool operator >(LargeNumber A, LargeNumber B)
+        public static bool operator >(LargeNumber lhs, LargeNumber rhs)
         {
-            if (A.Multiplier == B.multiplier)
-            {
-                return A.Value > B.Value;
-            }
-            else
-            {
-                return A.Multiplier > B.Multiplier;
-            }
+            return lhs.CompareTo(rhs) > 0;
         }
 
-        public static bool operator <(LargeNumber A, LargeNumber B)
+        public static bool operator <(LargeNumber lhs, LargeNumber rhs)
         {
-            if (A.Multiplier == B.multiplier)
-            {
-                return A.Value < B.Value;
-            }
-            else
-            {
-                return A.Multiplier < B.Multiplier;
-            }
+            return lhs.CompareTo(rhs) < 0;
         }
 
-        public static bool operator >=(LargeNumber A, LargeNumber B)
+        public static bool operator >=(LargeNumber lhs, LargeNumber rhs)
         {
-            return A > B || A == B;
+            return lhs.CompareTo(rhs) >= 0;
         }
 
-        public static bool operator <=(LargeNumber A, LargeNumber B)
+        public static bool operator <=(LargeNumber lhs, LargeNumber rhs)
         {
-            return A < B || A == B;
+            return lhs.CompareTo(rhs) <= 0;
         }
 
         public override bool Equals(object obj)
         {
-            return base.Equals(obj);
+            if (obj is LargeNumber largeNumber)
+            {
+                return Equals(largeNumber);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return (Value, Multiplier).GetHashCode();
+        }
+
+        public bool Equals(LargeNumber other)
+        {
+            return Value == other.Value && Multiplier == other.Multiplier;
+        }
+
+        public int CompareTo(LargeNumber other)
+        {
+            if (Multiplier == other.Multiplier)
+            {
+                return Value.CompareTo(other.Value);
+            }
+            else
+            {
+                return Multiplier.CompareTo(other.Multiplier);
+            }
         }
     }
 }
