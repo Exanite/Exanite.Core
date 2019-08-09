@@ -9,7 +9,7 @@ namespace Exanite.Core.Editor
 {
     public static class CleanEmptyFolders
     {
-        [MenuItem("Exanite/Clean Empty Folders")]
+        [MenuItem("Exanite/Core/Clean Empty Folders", priority = 0)]
         public static void Clean()
         {
             bool shouldProceed = EditorUtility.DisplayDialog(
