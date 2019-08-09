@@ -33,7 +33,7 @@ namespace Exanite.Core.Numbers
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj == null)
             {
                 return false;
             }
