@@ -14,17 +14,17 @@ namespace Exanite.Core.DataStructures
     public class Grid2D<T> : IEnumerable<T>
     {
         /// <summary>
-        /// X length of the grid
+        /// X-length of the grid
         /// </summary>
         public int XLength => Grid?.GetLength(0) ?? 0;
 
         /// <summary>
-        /// Y length of the grid
+        /// Y-length of the grid
         /// </summary>
         public int YLength => Grid?.GetLength(1) ?? 0;
 
         /// <summary>
-        /// Returns value at (x, y)
+        /// Gets or sets the value at (x, y)
         /// </summary>
         public virtual T this[int x, int y]
         {
@@ -40,7 +40,7 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Internal 2D array used for storing values.
+        /// Internal 2D array used for storing values
         /// </summary>
         [OdinSerialize, TableMatrix(ResizableColumns = false)] protected T[,] Grid { get; set; }
 
@@ -68,7 +68,7 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Rotates the grid clockwise the specified amount of times, negative values are ignored
+        /// Rotates the grid clockwise
         /// </summary>
         [Button]
         [FoldoutGroup("Methods")]
@@ -89,7 +89,7 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Rotates the grid counter-clockwise the specified amount of times, negative values are ignored
+        /// Rotates the grid counter-clockwise
         /// </summary>
         [Button]
         [HorizontalGroup("Methods/B")]
@@ -149,7 +149,7 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Wraps the provided (x, y) coordinate to be within range of this Grid2D
+        /// Wraps the provided coordinate to be within range of this Grid2D
         /// </summary>
         public virtual Vector2Int Wrap(int x, int y)
         {
@@ -172,7 +172,7 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Checks if the provided (x, y) coordinate is in range of the grid
+        /// Checks if the provided coordinate is in range of the grid
         /// </summary>
         public virtual bool IsInRange(int x, int y)
         {
