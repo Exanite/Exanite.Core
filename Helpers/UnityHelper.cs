@@ -3,7 +3,7 @@
 namespace Exanite.Core.Helpers
 {
     /// <summary>
-    /// Miscellaneous helper class for Unity
+    /// Contains miscellaneous helper methods for Unity
     /// </summary>
     public static class UnityHelper
     {
@@ -20,6 +20,14 @@ namespace Exanite.Core.Helpers
             {
                 Object.DestroyImmediate(obj);
             }
+        }
+
+        /// <summary>
+        /// Logs the <paramref name="variableName"/> and <paramref name="value"/> formatted as 'name: value' to the Unity console
+        /// </summary>
+        public static void LogVariable(string variableName, object value)
+        {
+            Debug.Log($"{variableName}: {value}");
         }
     } 
 }

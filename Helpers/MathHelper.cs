@@ -1,5 +1,8 @@
 ﻿namespace Exanite.Core.Extensions
 {
+    /// <summary>
+    /// Contains miscellaneous math methods
+    /// </summary>
     public static class MathHelper
     {
         // note: order between different value type overloads should go by float, double, int, long

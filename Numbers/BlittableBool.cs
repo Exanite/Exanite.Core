@@ -11,6 +11,9 @@ namespace Exanite.Core.Numbers
 
         private readonly int value;
 
+        /// <summary>
+        /// Creates a new <see cref="BlittableBool"/>
+        /// </summary>
         public BlittableBool(bool value)
         {
             this.value = value ? 1 : 0;

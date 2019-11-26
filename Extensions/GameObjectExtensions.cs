@@ -2,6 +2,9 @@
 
 namespace Exanite.Core.Extensions
 {
+    /// <summary>
+    /// Contains miscellaneous extension methods for <see cref="GameObject"/>s
+    /// </summary>
     public static class GameObjectExtensions
     {
         public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
