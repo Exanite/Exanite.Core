@@ -70,12 +70,12 @@ namespace Exanite.Core.Numbers
         /// </summary>
         private void ShiftPlaces()
         {
-            while (Math.Abs(value) >= 1000) // More than 1000
+            while (Math.Abs(value) >= 1000) // More than 1000 or less than -1000
             {
                 value /= 1000;
                 multiplier++;
             }
-            while (Math.Abs(value) > 0 && Math.Abs(value) < 1) // Between 0 and 1
+            while (Math.Abs(value) < 1) // Between -1 and 1
             {
                 value *= 1000;
                 multiplier--;
