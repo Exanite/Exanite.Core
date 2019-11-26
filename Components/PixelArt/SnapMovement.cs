@@ -2,7 +2,7 @@
 using Sirenix.Serialization;
 using UnityEngine;
 
-namespace Exanite.Core.PixelArt
+namespace Exanite.Core.Components.PixelArt
 {
     public class SnapMovement : SerializedMonoBehaviour
     {

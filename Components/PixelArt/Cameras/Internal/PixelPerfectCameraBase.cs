@@ -2,7 +2,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Exanite.Core.PixelArt.Cameras.Internal
+namespace Exanite.Core.Components.PixelArt.Cameras.Internal
 {
     [ExecuteAlways]
     [RequireComponent(typeof(Camera))]
