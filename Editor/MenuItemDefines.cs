@@ -1,5 +1,4 @@
 ﻿using UnityEditor;
-using UnityEngine;
 
 namespace Exanite.Core.Editor
 {
@@ -8,13 +7,13 @@ namespace Exanite.Core.Editor
     /// </summary>
     internal static class MenuItemDefines
     {
-        [MenuItem("Exanite/Core/Scriptable Object Creator", priority = 0)]
+        [MenuItem("Tools/Exanite/Core/Scriptable Object Creator", priority = 0)]
         public static void OpenScriptableObjectCreator()
         {
             ScriptableObjectCreator.OpenWindow();
         }
 
-        [MenuItem("Exanite/Core/Clean Empty Folders", priority = 20)]
+        [MenuItem("Tools/Exanite/Core/Clean Empty Folders", priority = 20)]
         public static void CleanEmptyFolders()
         {
             Editor.CleanEmptyFolders.Clean();
