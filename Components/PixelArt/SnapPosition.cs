@@ -4,10 +4,19 @@ using UnityEngine;
 
 namespace Exanite.Core.Components.PixelArt
 {
-    public class SnapMovement : SerializedMonoBehaviour
+    /// <summary>
+    /// Snaps the position of the <see cref="GameObject"/> this is attached to, to a pixel grid
+    /// </summary>
+    public class SnapPosition : SerializedMonoBehaviour
     {
+        /// <summary>
+        /// Size of the pixel grid
+        /// </summary>
         [OdinSerialize] public int PixelsPerUnit { get; set; } = 16;
 
+        /// <summary>
+        /// Should the position changes be reverted after rendering?
+        /// </summary>
         [OdinSerialize] public bool RevertPosition { get; set; } = true;
 
         private Vector3 position;
