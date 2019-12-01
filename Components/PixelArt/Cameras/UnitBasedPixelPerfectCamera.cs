@@ -6,11 +6,17 @@ using UnityEngine;
 
 namespace Exanite.Core.Components.PixelArt.Cameras
 {
+    /// <summary>
+    /// Pixel perfect camera that keeps a certain amount of vertical units on screen
+    /// </summary>
     public class UnitBasedPixelPerfectCamera : PixelPerfectCameraBase
     {
         [SerializeField, HideInInspector]
         private int verticalUnits = 10;
 
+        /// <summary>
+        /// Targeted amount of vertical units to display
+        /// </summary>
         [ShowInInspector]
         public int VerticalUnits
         {
@@ -30,6 +36,9 @@ namespace Exanite.Core.Components.PixelArt.Cameras
             }
         }
 
+        /// <summary>
+        /// Calculates and sets the targeted <see cref="UnityEngine.Camera"/>'s orthographic size
+        /// </summary>
         public override void CalculateCameraSize()
         {
             if (!Camera)
