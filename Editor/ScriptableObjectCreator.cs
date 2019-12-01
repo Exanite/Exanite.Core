@@ -107,7 +107,7 @@ namespace Exanite.Core.Editor
         [TitleGroup("Actions", HorizontalLine = true)]
         [HorizontalGroup("Actions/Buttons")]
         [Button(ButtonSizes.Large), EnableIf(nameof(Preview))]
-        protected virtual void ResetScriptableObject()
+        protected virtual void ResetPreview()
         {
             DestroyPreview();
             CreatePreview();
@@ -193,7 +193,7 @@ namespace Exanite.Core.Editor
                 result = result.AddToStart(typeof(T));
             }
 
-            return result;
+            return result.ToList();
         }
     }
 }
