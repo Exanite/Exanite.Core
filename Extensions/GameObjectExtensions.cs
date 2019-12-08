@@ -3,10 +3,13 @@
 namespace Exanite.Core.Extensions
 {
     /// <summary>
-    /// Contains miscellaneous extension methods for <see cref="GameObject"/>s
+    /// Extension methods for <see cref="GameObject"/>s
     /// </summary>
     public static class GameObjectExtensions
     {
+        /// <summary>
+        /// Gets or adds a component
+        /// </summary>
         public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
         {
             T component = gameObject.GetComponent<T>();
@@ -19,6 +22,9 @@ namespace Exanite.Core.Extensions
             return gameObject.AddComponent<T>();
         }
 
+        /// <summary>
+        /// Gets or adds a component
+        /// </summary>
         public static T GetOrAddComponent<T>(this Collider collider) where T : Component
         {
             T component = collider.GetComponent<T>();

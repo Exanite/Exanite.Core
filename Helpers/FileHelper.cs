@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Exanite.Core.Helpers
 {
     /// <summary>
-    /// Contains miscellaneous helper methods for managing files and paths
+    /// Helper class for managing files and paths
     /// </summary>
     public static class FileHelper
     {

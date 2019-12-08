@@ -1,7 +1,7 @@
 ﻿namespace Exanite.Core.Extensions
 {
     /// <summary>
-    /// Contains miscellaneous math methods
+    /// Helper class for math
     /// </summary>
     public static class MathHelper
     {

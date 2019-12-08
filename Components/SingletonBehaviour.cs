@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Exanite.Core.Components
 {
     /// <summary>
-    /// Reusable singleton implementation for SerializedMonoBehaviours
+    /// Reusable singleton implementation for <see cref="SerializedMonoBehaviour"/>s
     /// </summary>
     public abstract class SingletonSerializedBehaviour<T> : SerializedMonoBehaviour where T : SingletonSerializedBehaviour<T>
     {

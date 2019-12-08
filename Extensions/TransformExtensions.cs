@@ -3,7 +3,7 @@
 namespace Exanite.Core.Extensions
 {
     /// <summary>
-    /// Contains miscellaneous extension methods for <see cref="Transform"/>s
+    /// Extension methods for <see cref="Transform"/>s
     /// </summary>
     public static class TransformExtensions
     {

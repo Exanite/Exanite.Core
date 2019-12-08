@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Exanite.Core.Editor.Helpers
 {
     /// <summary>
-    /// Contains miscellaneous helper methods for drawing <see cref="Handles"/> in the <see cref="SceneView"/>
+    /// Helper methods for drawing <see cref="Handles"/> in the <see cref="SceneView"/>
     /// </summary>
     public static class HandlesHelpers
     {

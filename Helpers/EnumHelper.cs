@@ -5,7 +5,7 @@ using System.Linq;
 namespace Exanite.Core.Helpers
 {
     /// <summary>
-    /// Holds cached data for an <see cref="Enum"/>
+    /// Helper class for <see cref="Enum"/>s
     /// </summary>
     public static class EnumHelper<T> where T : Enum
     {

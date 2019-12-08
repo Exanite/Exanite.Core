@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Exanite.Core.Helpers
 {
     /// <summary>
-    /// Contains miscellaneous helper methods for types
+    /// Helper class for types
     /// </summary>
     public static class TypeHelper
     {

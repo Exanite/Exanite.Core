@@ -3,7 +3,7 @@
 namespace Exanite.Core.Helpers
 {
     /// <summary>
-    /// Contains miscellaneous helper methods for Unity
+    /// Helper class for miscellaneous Unity methods
     /// </summary>
     public static class UnityHelper
     {
@@ -23,11 +23,11 @@ namespace Exanite.Core.Helpers
         }
 
         /// <summary>
-        /// Logs the <paramref name="variableName"/> and <paramref name="value"/> formatted as 'name: value' to the Unity console
+        /// Logs the <paramref name="name"/> and <paramref name="value"/> formatted as 'name: value' to the Unity console
         /// </summary>
-        public static void LogVariable(string variableName, object value)
+        public static void LogVariable(string name, object value)
         {
-            Debug.Log($"{variableName}: {value}");
+            Debug.Log($"{name}: {value}");
         }
     } 
 }

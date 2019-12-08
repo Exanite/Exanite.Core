@@ -5,7 +5,7 @@ using System.Linq;
 namespace Exanite.Core.Extensions
 {
     /// <summary>
-    /// Contains miscellaneous extension methods for collections
+    /// Extension methods for collections
     /// </summary>
     public static class CollectionExtensions
     {

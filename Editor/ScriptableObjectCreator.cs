@@ -13,7 +13,7 @@ using UnityEngine;
 namespace Exanite.Core.Editor
 {
     /// <summary>
-    /// Unity <see cref="EditorWindow"/> that lets the user create any valid <see cref="ScriptableObject"/>
+    /// Unity <see cref="EditorWindow"/> that allows the user to create any valid <see cref="ScriptableObject"/>
     /// </summary>
     public sealed class ScriptableObjectCreator : ScriptableObjectCreator<ScriptableObject>
     {
@@ -27,7 +27,8 @@ namespace Exanite.Core.Editor
     }
 
     /// <summary>
-    /// Abstract base class for a Unity <see cref="EditorWindow"/> that lets the user create <see cref="ScriptableObject"/>s
+    /// Abstract Unity <see cref="EditorWindow"/> that allows the user to create <see cref="ScriptableObject"/>s <para/>
+    /// Note: Must be extended and made concrete to work because Unity does not support generics
     /// </summary>
     public abstract class ScriptableObjectCreator<T> : OdinEditorWindow where T : ScriptableObject
     {
