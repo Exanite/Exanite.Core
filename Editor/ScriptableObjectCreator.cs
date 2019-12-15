@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Exanite.Core.Extensions;
 using Exanite.Core.Helpers;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
@@ -185,14 +184,9 @@ namespace Exanite.Core.Editor
                 .Where(x =>
                     x.IsClass &&
                     x.IsConcrete() &&
-                    x.IsSubclassOf(typeof(T)) &&
-                    !x.IsSubclassOf(typeof(UnityEditor.Editor)) &&
-                    !x.IsSubclassOf(typeof(EditorWindow)));
-
-            if (typeof(T).IsConcrete())
-            {
-                result = result.AddToStart(typeof(T));
-            }
+                    typeof(T).IsAssignableFrom(x) &&
+                    !typeof(UnityEditor.Editor).IsAssignableFrom(x) &&
+                    !typeof(EditorWindow).IsAssignableFrom(x));
 
             return result.ToList();
         }
