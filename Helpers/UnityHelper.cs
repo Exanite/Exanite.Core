@@ -29,5 +29,5 @@ namespace Exanite.Core.Helpers
         {
             Debug.Log($"{name}: {value}");
         }
-    } 
+    }
 }
