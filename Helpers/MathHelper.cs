@@ -64,7 +64,7 @@
         /// </summary>
         public static float Modulo(float value, float divisor)
         {
-            return ((value % divisor) + value) % divisor;
+            return ((value % divisor) + divisor) % divisor;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@
         /// </summary>
         public static double Modulo(double value, double divisor)
         {
-            return ((value % divisor) + value) % divisor;
+            return ((value % divisor) + divisor) % divisor;
         }
 
         /// <summary>
@@ -80,7 +80,7 @@
         /// </summary>
         public static int Modulo(int value, int divisor)
         {
-            return ((value % divisor) + value) % divisor;
+            return ((value % divisor) + divisor) % divisor;
         }
 
         /// <summary>
@@ -88,7 +88,7 @@
         /// </summary>
         public static long Modulo(long value, long divisor)
         {
-            return ((value % divisor) + value) % divisor;
+            return ((value % divisor) + divisor) % divisor;
         }
 
         /// <summary>
