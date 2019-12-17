@@ -56,5 +56,35 @@ namespace Exanite.Core.Extensions
 
             throw new ArgumentException($"'{swizzle}' is not a valid swizzle", nameof(swizzle));
         }
+
+        /// <summary>
+        /// Returns the same <see cref="Vector3"/>, but with the X value set to the provided <paramref name="value"/>
+        /// </summary>
+        public static Vector3 WithXAs(this Vector3 vector3, float value)
+        {
+            vector3.x = value;
+
+            return vector3;
+        }
+
+        /// <summary>
+        /// Returns the same <see cref="Vector3"/>, but with the Y value set to the provided <paramref name="value"/>
+        /// </summary>
+        public static Vector3 WithYAs(this Vector3 vector3, float value)
+        {
+            vector3.y = value;
+
+            return vector3;
+        }
+
+        /// <summary>
+        /// Returns the same <see cref="Vector3"/>, but with the Z value set to the provided <paramref name="value"/>
+        /// </summary>
+        public static Vector3 WithZAs(this Vector3 vector3, float value)
+        {
+            vector3.z = value;
+
+            return vector3;
+        }
     }
 }
