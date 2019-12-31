@@ -5,9 +5,9 @@ using UnityEngine;
 namespace Exanite.Core.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="Vector3"/>s
+    /// Extension methods for Unity's Vectors
     /// </summary>
-    public static class Vector3Extensions
+    public static class VectorExtensions
     {
         /// <summary>
         /// Swaps the component values of a <see cref="Vector3"/> from XYZ to the given format
@@ -85,6 +85,25 @@ namespace Exanite.Core.Extensions
             vector3.z = value;
 
             return vector3;
+        }
+
+        /// <summary>
+        /// Clamps the <see cref="Vector3"/> to the bounds given by <paramref name="min"/> and <paramref name="max"/>
+        /// </summary>
+        public static void Clamp(ref this Vector3 vector3, Vector3 min, Vector3 max)
+        {
+            vector3.x = Mathf.Clamp(vector3.x, min.x, max.x);
+            vector3.y = Mathf.Clamp(vector3.y, min.y, max.y);
+            vector3.z = Mathf.Clamp(vector3.z, min.z, max.z);
+        }
+
+        /// <summary>
+        /// Clamps the <see cref="Vector2"/> to the bounds given by <paramref name="min"/> and <paramref name="max"/>
+        /// </summary>
+        public static void Clamp(ref this Vector2 vector2, Vector2 min, Vector2 max)
+        {
+            vector2.x = Mathf.Clamp(vector2.x, min.x, max.x);
+            vector2.y = Mathf.Clamp(vector2.y, min.y, max.y);
         }
     }
 }
