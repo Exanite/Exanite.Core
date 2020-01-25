@@ -8,7 +8,7 @@ namespace Exanite.Core.Extensions
     public static class GameObjectExtensions
     {
         /// <summary>
-        /// Gets or adds a component
+        /// Gets or adds a <see cref="Component"/>
         /// </summary>
         public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
         {
@@ -23,18 +23,38 @@ namespace Exanite.Core.Extensions
         }
 
         /// <summary>
-        /// Gets or adds a component
+        /// Gets or adds a <see cref="Component"/>
         /// </summary>
-        public static T GetOrAddComponent<T>(this Collider collider) where T : Component
+        public static T GetOrAddComponent<T>(this Component component) where T : Component
         {
-            T component = collider.GetComponent<T>();
+            return component.gameObject.GetOrAddComponent<T>();
+        }
+
+        /// <summary>
+        /// Gets a <see cref="Component"/> if it exists, throws a <see cref="MissingComponentException"/> if it does not
+        /// </summary>
+        /// <exception cref="MissingComponentException"></exception>
+        public static T GetRequiredComponent<T>(this GameObject gameObject) where T : class
+        {
+            Component component = gameObject.GetComponent<T>() as Component;
 
             if (component)
             {
-                return component;
+                return component as T;
             }
+            else
+            {
+                throw new MissingComponentException($"There is no {typeof(T).Name} attached to the '{gameObject.name} game object'");
+            }
+        }
 
-            return collider.gameObject.AddComponent<T>();
+        /// <summary>
+        /// Gets a <see cref="Component"/> if it exists, throws a <see cref="MissingComponentException"/> if it does not
+        /// </summary>
+        /// <exception cref="MissingComponentException"></exception>
+        public static T GetRequiredComponent<T>(this Component component) where T : class
+        {
+            return component.gameObject.GetRequiredComponent<T>();
         }
     }
 }
