@@ -185,6 +185,23 @@
         }
 
         /// <summary>
+        /// Gets the nearest multiple to a value <para/> 
+        /// Example: GetNearestMultiple(45, 11) would return 44;
+        /// </summary>
+        public static long GetNearestMultiple(long value, long multiple)
+        {
+            long remainder = value % multiple;
+            long result = value - remainder;
+
+            if (remainder > (multiple / 2))
+            {
+                result += multiple;
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Returns if the number is even
         /// </summary>
         public static bool IsEven(this int num)
@@ -196,6 +213,22 @@
         /// Returns if the number is odd
         /// </summary>
         public static bool IsOdd(this int num)
+        {
+            return num % 2 != 0;
+        }
+
+        /// <summary>
+        /// Returns if the number is even
+        /// </summary>
+        public static bool IsEven(this long num)
+        {
+            return num % 2 == 0;
+        }
+
+        /// <summary>
+        /// Returns if the number is odd
+        /// </summary>
+        public static bool IsOdd(this long num)
         {
             return num % 2 != 0;
         }
