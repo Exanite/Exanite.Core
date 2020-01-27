@@ -8,7 +8,8 @@ namespace Exanite.Core.Extensions
     public static class TransformExtensions
     {
         /// <summary>
-        /// Transforms a rotation from local space to world space
+        /// Transforms a rotation from local space to world space<para/>
+        /// Note: Has some accuracy issues, but is useable
         /// </summary>
         public static Quaternion TransformRotation(this Transform transform, Quaternion rotation)
         {
@@ -36,7 +37,8 @@ namespace Exanite.Core.Extensions
         }
 
         /// <summary>
-        /// Transforms a rotation from world space to local space. This is the opposite of TransformRotation
+        /// Transforms a rotation from world space to local space. This is the opposite of TransformRotation<para/>
+        /// Note: Has some accuracy issues, but is useable
         /// </summary>
         public static Quaternion InverseTransformRotation(this Transform transform, Quaternion rotation)
         {
