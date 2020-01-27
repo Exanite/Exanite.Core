@@ -1,4 +1,4 @@
-﻿namespace Exanite.Core.Extensions
+﻿namespace Exanite.Core.Helpers
 {
     /// <summary>
     /// Helper class for math

@@ -1,6 +1,6 @@
 ﻿using System;
-using Exanite.Core.Extensions;
 using Exanite.Core.Components.PixelArt.Cameras.Internal;
+using Exanite.Core.Helpers;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
