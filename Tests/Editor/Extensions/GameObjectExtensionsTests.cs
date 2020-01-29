@@ -3,7 +3,7 @@ using Exanite.Core.Helpers;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Exanite.Core.Tests.Editor
+namespace Exanite.Core.Tests.Editor.Extensions
 {
     public class GameObjectExtensionsTests
     {
