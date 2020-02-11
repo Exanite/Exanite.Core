@@ -1,9 +1,9 @@
-﻿namespace Exanite.Core.Helpers
+﻿namespace Exanite.Core.Utilities
 {
     /// <summary>
-    /// Helper class for math
+    /// Utility class for math
     /// </summary>
-    public static class MathHelper
+    public static class MathUtility
     {
         // note: order between different value type overloads should go by float, double, int, long
 

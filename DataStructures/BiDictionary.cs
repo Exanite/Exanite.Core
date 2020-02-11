@@ -2,29 +2,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using Exanite.Core.Extensions;
+using Sirenix.Serialization;
+using UnityEngine;
 
 namespace Exanite.Core.DataStructures
 {
     /// <summary>
     /// A two way dictionary
     /// </summary>
-    public class BiDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
+    [Serializable]
+    public class BiDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
-        private readonly IDictionary<TKey, TValue> forward;
-        private readonly IDictionary<TValue, TKey> backward;
-        private readonly BiDictionary<TValue, TKey> inverse;
+        [OdinSerialize, HideInInspector] private readonly Dictionary<TKey, TValue> forward;
+        private readonly Dictionary<TValue, TKey> backward;
+        [OdinSerialize, HideInInspector] private readonly BiDictionary<TValue, TKey> inverse;
 
         public TValue this[TKey key]
         {
             get
             {
-                return forward[key];
+                return Forward[key];
             }
 
             set
             {
-                forward[key] = value;
-                backward[value] = key;
+                Forward[key] = value;
+                Backward[value] = key;
             }
         }
 
@@ -32,12 +35,12 @@ namespace Exanite.Core.DataStructures
         {
             get
             {
-                if (forward.Count != backward.Count)
+                if (Forward.Count != Backward.Count)
                 {
                     throw new Exception("Internal state mismatched");
                 }
 
-                return forward.Count;
+                return Forward.Count;
             }
         }
 
@@ -56,7 +59,7 @@ namespace Exanite.Core.DataStructures
         {
             get
             {
-                return forward.Keys;
+                return Forward.Keys;
             }
         }
 
@@ -64,15 +67,15 @@ namespace Exanite.Core.DataStructures
         {
             get
             {
-                return forward.Values;
+                return Forward.Values;
             }
         }
-        
+
         bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
         {
             get
             {
-                return forward.IsReadOnly || backward.IsReadOnly;
+                return Forward.IsReadOnly || Backward.IsReadOnly;
             }
         }
 
@@ -80,7 +83,7 @@ namespace Exanite.Core.DataStructures
         {
             get
             {
-                return forward.Keys;
+                return Forward.Keys;
             }
         }
 
@@ -88,7 +91,23 @@ namespace Exanite.Core.DataStructures
         {
             get
             {
-                return forward.Values;
+                return Forward.Values;
+            }
+        }
+
+        protected IDictionary<TKey, TValue> Forward
+        {
+            get
+            {
+                return forward;
+            }
+        }
+
+        protected IDictionary<TValue, TKey> Backward
+        {
+            get
+            {
+                return backward;
             }
         }
 
@@ -132,26 +151,26 @@ namespace Exanite.Core.DataStructures
 
         public void Add(TKey key, TValue value)
         {
-            forward.Add(key, value);
-            backward.Add(value, key);
+            Forward.Add(key, value);
+            Backward.Add(value, key);
         }
 
         public bool TryGetValue(TKey key, out TValue value)
         {
-            return forward.TryGetValue(key, out value);
+            return Forward.TryGetValue(key, out value);
         }
 
         public bool ContainsKey(TKey key)
         {
-            return forward.ContainsKey(key);
+            return Forward.ContainsKey(key);
         }
 
         public bool Remove(TKey key)
         {
             if (TryGetValue(key, out TValue value))
             {
-                forward.Remove(key);
-                backward.Remove(value);
+                Forward.Remove(key);
+                Backward.Remove(value);
 
                 return true;
             }
@@ -163,27 +182,37 @@ namespace Exanite.Core.DataStructures
 
         public void Clear()
         {
-            forward.Clear();
-            backward.Clear();
+            Forward.Clear();
+            Backward.Clear();
+        }
+
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            return Forward.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
         {
-            forward.Add(item);
-            backward.Add(item.AsReverse());
+            Forward.Add(item);
+            Backward.Add(item.AsReverse());
         }
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
         {
-            return forward.Contains(item);
+            return Forward.Contains(item);
         }
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
         {
-            if (forward.Contains(item) && backward.Contains(item.AsReverse()))
+            if (Forward.Contains(item) && Backward.Contains(item.AsReverse()))
             {
-                forward.Remove(item);
-                backward.Remove(item.AsReverse());
+                Forward.Remove(item);
+                Backward.Remove(item.AsReverse());
 
                 return true;
             }
@@ -195,17 +224,19 @@ namespace Exanite.Core.DataStructures
 
         void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
-            forward.CopyTo(array, arrayIndex);
+            Forward.CopyTo(array, arrayIndex);
         }
 
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-        {
-            return forward.GetEnumerator();
-        }
+        void ISerializationCallbackReceiver.OnBeforeSerialize() { }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
-            return GetEnumerator();
+            Backward.Clear();
+
+            foreach (var item in Forward)
+            {
+                Backward.Add(item.Value, item.Key);
+            }
         }
     }
 }

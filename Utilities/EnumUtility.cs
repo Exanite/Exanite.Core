@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Exanite.Core.Helpers
+namespace Exanite.Core.Utilities
 {
     /// <summary>
-    /// Helper class for <see cref="Enum"/>s
+    /// Utility class for <see cref="Enum"/>s
     /// </summary>
-    public static class EnumHelper<T> where T : Enum
+    public static class EnumUtility<T> where T : Enum
     {
         private static List<string> valuesAsStringList;
 
@@ -46,7 +46,7 @@ namespace Exanite.Core.Helpers
             }
         }
 
-        static EnumHelper()
+        static EnumUtility()
         {
             Values = Enum.GetValues(typeof(T));
             IEnumerable<int> enumerable = Values.Cast<int>();

@@ -1,12 +1,12 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Exanite.Core.Helpers
+namespace Exanite.Core.Utilities
 {
     /// <summary>
-    /// Helper class for managing files and paths
+    /// Utility class for managing files and paths
     /// </summary>
-    public static class FileHelper
+    public static class FileUtility
     {
 #if UNITY_EDITOR
         /// <summary>

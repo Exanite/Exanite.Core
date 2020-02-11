@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-namespace Exanite.Core.Helpers
+namespace Exanite.Core.Utilities
 {
     /// <summary>
-    /// Helper class for miscellaneous Unity methods
+    /// Utility class for miscellaneous Unity methods
     /// </summary>
-    public static class UnityHelper
+    public static class UnityUtility
     {
         /// <summary>
         /// Calls Destroy in Play mode and calls DestroyImmediate in Edit mode

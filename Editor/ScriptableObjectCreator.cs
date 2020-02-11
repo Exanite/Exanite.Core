@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Exanite.Core.Extensions;
-using Exanite.Core.Helpers;
+using Exanite.Core.Utilities;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Serialization;
@@ -136,7 +136,7 @@ namespace Exanite.Core.Editor
 
             try
             {
-                path = FileHelper.GetAssetsRelativePath(path);
+                path = FileUtility.GetAssetsRelativePath(path);
             }
             catch (ArgumentException)
             {

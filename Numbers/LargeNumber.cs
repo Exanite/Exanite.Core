@@ -1,5 +1,5 @@
 ﻿using System;
-using Exanite.Core.Helpers;
+using Exanite.Core.Utilities;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
@@ -98,7 +98,7 @@ namespace Exanite.Core.Numbers
         /// </summary>
         public string ToString(NumDisplayFormat displayFormat, int placesToRound = 0)
         {
-            placesToRound = MathHelper.Clamp(placesToRound, 0, 15);
+            placesToRound = MathUtility.Clamp(placesToRound, 0, 15);
 
             double rounded = Math.Round(Value, placesToRound);
 
@@ -146,7 +146,7 @@ namespace Exanite.Core.Numbers
                 }
                 case NumDisplayFormat.Short:
                 {
-                    if (Multiplier > EnumHelper<NumScalesShort>.Max || Multiplier < EnumHelper<NumScalesShort>.Min)
+                    if (Multiplier > EnumUtility<NumScalesShort>.Max || Multiplier < EnumUtility<NumScalesShort>.Min)
                     {
                         return ToString(NumDisplayFormat.Scientific);
                     }
@@ -154,7 +154,7 @@ namespace Exanite.Core.Numbers
                 }
                 case NumDisplayFormat.Long:
                 {
-                    if (Math.Abs(Multiplier) > EnumHelper<NumScalesLong>.Max || Math.Abs(Multiplier) < EnumHelper<NumScalesLong>.Min)
+                    if (Math.Abs(Multiplier) > EnumUtility<NumScalesLong>.Max || Math.Abs(Multiplier) < EnumUtility<NumScalesLong>.Min)
                     {
                         return ToString(NumDisplayFormat.Short);
                     }
