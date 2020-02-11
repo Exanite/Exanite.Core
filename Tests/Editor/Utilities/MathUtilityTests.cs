@@ -1,21 +1,21 @@
-﻿using Exanite.Core.Helpers;
+﻿using Exanite.Core.Utilities;
 using NUnit.Framework;
 
-namespace Exanite.Core.Tests.Editor.Helpers
+namespace Exanite.Core.Tests.Editor.Utilities
 {
-    public class MathHelperTests
+    public class MathUtilityTests
     {
         [TestCase(5, 0, 10, 0, 100, ExpectedResult = 50)]
         public float RemapFloat_ReturnsExpectedValue(float value, float fromMin, float fromMax, float toMin, float toMax)
         {
-            return MathHelper.Remap(value, fromMin, fromMax, toMin, toMax);
+            return MathUtility.Remap(value, fromMin, fromMax, toMin, toMax);
         }
 
         [TestCase(10, 0, 3, ExpectedResult = 1)]
         [TestCase(2, 0, 3, ExpectedResult = 2)]
         public float WrapFloat_ReturnsExpectedValue(float value, float min, float max)
         {
-            return MathHelper.Wrap(value, min, max);
+            return MathUtility.Wrap(value, min, max);
         }
 
         [TestCase(5, 2, ExpectedResult = 1)]
@@ -23,7 +23,7 @@ namespace Exanite.Core.Tests.Editor.Helpers
         [TestCase(-5, 2, ExpectedResult = 1)]
         public float ModuloFloat_ReturnsExpectedValue(float value, float divisor)
         {
-            return MathHelper.Modulo(value, divisor);
+            return MathUtility.Modulo(value, divisor);
         }
 
         [TestCase(5, 0, 10, ExpectedResult = 5)]
@@ -33,13 +33,13 @@ namespace Exanite.Core.Tests.Editor.Helpers
         [TestCase(-10, 10, 0, ExpectedResult = 10)] // min and max are swapped
         public float ClampFloat_ReturnsExpectedValue(float value, float min, float max)
         {
-            return MathHelper.Clamp(value, min, max);
+            return MathUtility.Clamp(value, min, max);
         }
 
         [TestCase(45, 11, ExpectedResult = 44)]
         public int GetNearestMultiple_ReturnsExpectedValue(int value, int multiple)
         {
-            return MathHelper.GetNearestMultiple(value, multiple);
+            return MathUtility.GetNearestMultiple(value, multiple);
         }
     }
 }

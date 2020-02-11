@@ -1,5 +1,5 @@
 ﻿using Exanite.Core.Extensions;
-using Exanite.Core.Helpers;
+using Exanite.Core.Utilities;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -18,7 +18,7 @@ namespace Exanite.Core.Tests.Editor.Extensions
         [TearDown]
         public void TearDown()
         {
-            UnityHelper.SafeDestroy(GameObject);
+            UnityUtility.SafeDestroy(GameObject);
         }
 
         [Test]
