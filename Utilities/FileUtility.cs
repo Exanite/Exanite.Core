@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Exanite.Core.Utilities
 {
     /// <summary>
-    /// Utility class for managing files and paths
+    /// Utility class for managing directories, files and paths
     /// </summary>
     public static class FileUtility
     {
