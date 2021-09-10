@@ -1,10 +1,10 @@
 {
     "name": "Exanite.Core.Tests.Editor",
+    "rootNamespace": "Exanite.Core.Tests.Editor",
     "references": [
-        "GUID:e915c1dc48cf8f44186a00d2dc4ea60c",
-        "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:27619889b8ba8c24980f49ee34dbb44a",
-        "GUID:0acc523941302664db1f4e527237feb3"
+        "Exanite.Core",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
     ],
     "includePlatforms": [
         "Editor"
@@ -19,5 +19,6 @@
     "defineConstraints": [
         "UNITY_INCLUDE_TESTS"
     ],
-    "versionDefines": []
+    "versionDefines": [],
+    "noEngineReferences": false
 }

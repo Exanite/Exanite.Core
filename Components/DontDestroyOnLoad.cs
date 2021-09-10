@@ -3,11 +3,12 @@
 namespace Exanite.Core.Components
 {
     /// <summary>
-    /// Marks the GameObject this component is attached to as DontDestroyOnLoad on Awake
+    ///     Marks the GameObject this component is attached to as
+    ///     DontDestroyOnLoad on Awake
     /// </summary>
-    public class DontDestroyOnLoad : MonoBehaviour 
+    public class DontDestroyOnLoad : MonoBehaviour
     {
-        private void Awake() 
+        private void Awake()
         {
             DontDestroyOnLoad(gameObject);
         }

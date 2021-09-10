@@ -1,9 +1,8 @@
-﻿using Exanite.Core.Extensions;
-using Exanite.Core.Utilities;
+﻿using Exanite.Core.Utilities;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Exanite.Core.Tests.Editor.Extensions
+namespace Exanite.Core.Tests.Editor.Utilities
 {
     public class GameObjectExtensionsTests
     {

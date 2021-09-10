@@ -3,7 +3,7 @@
 namespace Exanite.Core.Components
 {
     /// <summary>
-    /// Sets the target frame rate to -1 (uncapped) on Start
+    ///     Sets the target frame rate to -1 (uncapped) on Start
     /// </summary>
     public class UncapFps : MonoBehaviour
     {

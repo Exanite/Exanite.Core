@@ -1,18 +1,18 @@
 ﻿using UnityEngine;
 
-namespace Exanite.Core.Extensions
+namespace Exanite.Core.Utilities
 {
     /// <summary>
-    /// Extension methods for <see cref="GameObject"/>s
+    ///     Extension methods for <see cref="GameObject" />s
     /// </summary>
     public static class GameObjectExtensions
     {
         /// <summary>
-        /// Gets or adds a <see cref="Component"/>
+        ///     Gets or adds a <see cref="Component" />
         /// </summary>
         public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
         {
-            T component = gameObject.GetComponent<T>();
+            var component = gameObject.GetComponent<T>();
 
             if (component)
             {
@@ -23,7 +23,7 @@ namespace Exanite.Core.Extensions
         }
 
         /// <summary>
-        /// Gets or adds a <see cref="Component"/>
+        ///     Gets or adds a <see cref="Component" />
         /// </summary>
         public static T GetOrAddComponent<T>(this Component component) where T : Component
         {
@@ -31,25 +31,25 @@ namespace Exanite.Core.Extensions
         }
 
         /// <summary>
-        /// Gets a <see cref="Component"/> if it exists, throws a <see cref="MissingComponentException"/> if it does not
+        ///     Gets a <see cref="Component" /> if it exists, throws a
+        ///     <see cref="MissingComponentException" /> if it does not
         /// </summary>
         /// <exception cref="MissingComponentException"></exception>
         public static T GetRequiredComponent<T>(this GameObject gameObject) where T : class
         {
-            Component component = gameObject.GetComponent<T>() as Component;
+            var component = gameObject.GetComponent<T>() as Component;
 
             if (component)
             {
                 return component as T;
             }
-            else
-            {
-                throw new MissingComponentException($"There is no {typeof(T).Name} attached to the '{gameObject.name} game object'");
-            }
+
+            throw new MissingComponentException($"There is no {typeof(T).Name} attached to the '{gameObject.name} game object'");
         }
 
         /// <summary>
-        /// Gets a <see cref="Component"/> if it exists, throws a <see cref="MissingComponentException"/> if it does not
+        ///     Gets a <see cref="Component" /> if it exists, throws a
+        ///     <see cref="MissingComponentException" /> if it does not
         /// </summary>
         /// <exception cref="MissingComponentException"></exception>
         public static T GetRequiredComponent<T>(this Component component) where T : class

@@ -1,22 +1,18 @@
 {
     "name": "Exanite.Core.Editor",
+    "rootNamespace": "Exanite.Core.Editor",
     "references": [
         "Exanite.Core"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
-    "precompiledReferences": [
-        "Sirenix.OdinInspector.Attributes.dll",
-        "Sirenix.OdinInspector.Editor.dll",
-        "Sirenix.Serialization.dll",
-        "Sirenix.Utilities.dll",
-        "Sirenix.Utilities.Editor.dll"
-    ],
-    "autoReferenced": true,
-    "defineConstraints": []
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

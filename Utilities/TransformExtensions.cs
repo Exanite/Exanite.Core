@@ -1,20 +1,21 @@
 ﻿using UnityEngine;
 
-namespace Exanite.Core.Extensions
+namespace Exanite.Core.Utilities
 {
     /// <summary>
-    /// Extension methods for <see cref="Transform"/>s
+    ///     Extension methods for <see cref="Transform" />s
     /// </summary>
     public static class TransformExtensions
     {
         /// <summary>
-        /// Transforms a rotation from local space to world space<para/>
-        /// Note: Has some accuracy issues, but is useable
+        ///     Transforms a rotation from local space to world space
+        ///     <para />
+        ///     Note: Has some accuracy issues, but is useable
         /// </summary>
         public static Quaternion TransformRotation(this Transform transform, Quaternion rotation)
         {
             var direction = rotation * Vector3.forward; // reflect then rotate
-            
+
             if (transform.lossyScale.x < 0)
             {
                 direction.x *= -1;
@@ -37,8 +38,10 @@ namespace Exanite.Core.Extensions
         }
 
         /// <summary>
-        /// Transforms a rotation from world space to local space. This is the opposite of TransformRotation<para/>
-        /// Note: Has some accuracy issues, but is useable
+        ///     Transforms a rotation from world space to local space. This is
+        ///     the opposite of TransformRotation
+        ///     <para />
+        ///     Note: Has some accuracy issues, but is useable
         /// </summary>
         public static Quaternion InverseTransformRotation(this Transform transform, Quaternion rotation)
         {

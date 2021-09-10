@@ -1,34 +1,36 @@
 ﻿namespace Exanite.Core.Utilities
 {
     /// <summary>
-    /// Utility class for math
+    ///     Utility class for math
     /// </summary>
     public static class MathUtility
     {
         // note: order between different value type overloads should go by float, double, int, long
 
         /// <summary>
-        /// Remaps a value from one range to another
+        ///     Remaps a value from one range to another
         /// </summary>
         public static float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)
         {
-            float fromRange = fromMax - fromMin;
-            float toRange = toMax - toMin;
-            return fromRange == 0 ? toMin : (toRange * ((value - fromMin) / fromRange)) + toMin;
+            var fromRange = fromMax - fromMin;
+            var toRange = toMax - toMin;
+
+            return fromRange == 0 ? toMin : toRange * ((value - fromMin) / fromRange) + toMin;
         }
 
         /// <summary>
-        /// Remaps a value from one range to another
+        ///     Remaps a value from one range to another
         /// </summary>
         public static double Remap(double value, double fromMin, double fromMax, double toMin, double toMax)
         {
-            double fromRange = fromMax - fromMin;
-            double toRange = toMax - toMin;
-            return fromRange == 0 ? toMin : (toRange * ((value - fromMin) / fromRange)) + toMin;
+            var fromRange = fromMax - fromMin;
+            var toRange = toMax - toMin;
+
+            return fromRange == 0 ? toMin : toRange * ((value - fromMin) / fromRange) + toMin;
         }
 
         /// <summary>
-        /// Wraps a value between min and max values
+        ///     Wraps a value between min and max values
         /// </summary>
         public static float Wrap(float value, float min, float max)
         {
@@ -36,7 +38,7 @@
         }
 
         /// <summary>
-        /// Wraps a value between min and max values
+        ///     Wraps a value between min and max values
         /// </summary>
         public static double Wrap(double value, double min, double max)
         {
@@ -44,7 +46,7 @@
         }
 
         /// <summary>
-        /// Wraps a value between min and max values
+        ///     Wraps a value between min and max values
         /// </summary>
         public static int Wrap(int value, int min, int max)
         {
@@ -52,7 +54,7 @@
         }
 
         /// <summary>
-        /// Wraps a value between min and max values
+        ///     Wraps a value between min and max values
         /// </summary>
         public static long Wrap(long value, long min, long max)
         {
@@ -60,39 +62,39 @@
         }
 
         /// <summary>
-        /// Returns the true modulo of a value when divided by a divisor
+        ///     Returns the true modulo of a value when divided by a divisor
         /// </summary>
         public static float Modulo(float value, float divisor)
         {
-            return ((value % divisor) + divisor) % divisor;
+            return (value % divisor + divisor) % divisor;
         }
 
         /// <summary>
-        /// Returns the true modulo of a value when divided by a divisor
+        ///     Returns the true modulo of a value when divided by a divisor
         /// </summary>
         public static double Modulo(double value, double divisor)
         {
-            return ((value % divisor) + divisor) % divisor;
+            return (value % divisor + divisor) % divisor;
         }
 
         /// <summary>
-        /// Returns the true modulo of a value when divided by a divisor
+        ///     Returns the true modulo of a value when divided by a divisor
         /// </summary>
         public static int Modulo(int value, int divisor)
         {
-            return ((value % divisor) + divisor) % divisor;
+            return (value % divisor + divisor) % divisor;
         }
 
         /// <summary>
-        /// Returns the true modulo of a value when divided by a divisor
+        ///     Returns the true modulo of a value when divided by a divisor
         /// </summary>
         public static long Modulo(long value, long divisor)
         {
-            return ((value % divisor) + divisor) % divisor;
+            return (value % divisor + divisor) % divisor;
         }
 
         /// <summary>
-        /// Clamps a value between min and max values
+        ///     Clamps a value between min and max values
         /// </summary>
         public static float Clamp(float value, float min, float max)
         {
@@ -100,18 +102,17 @@
             {
                 return min;
             }
-            else if (value > max)
+
+            if (value > max)
             {
                 return max;
             }
-            else
-            {
-                return value;
-            }
+
+            return value;
         }
 
         /// <summary>
-        /// Clamps a value between min and max values
+        ///     Clamps a value between min and max values
         /// </summary>
         public static double Clamp(double value, double min, double max)
         {
@@ -119,18 +120,17 @@
             {
                 return min;
             }
-            else if (value > max)
+
+            if (value > max)
             {
                 return max;
             }
-            else
-            {
-                return value;
-            }
+
+            return value;
         }
 
         /// <summary>
-        /// Clamps a value between min and max values
+        ///     Clamps a value between min and max values
         /// </summary>
         public static int Clamp(int value, int min, int max)
         {
@@ -138,18 +138,17 @@
             {
                 return min;
             }
-            else if (value > max)
+
+            if (value > max)
             {
                 return max;
             }
-            else
-            {
-                return value;
-            }
+
+            return value;
         }
 
         /// <summary>
-        /// Clamps a value between min and max values
+        ///     Clamps a value between min and max values
         /// </summary>
         public static long Clamp(long value, long min, long max)
         {
@@ -157,26 +156,26 @@
             {
                 return min;
             }
-            else if (value > max)
+
+            if (value > max)
             {
                 return max;
             }
-            else
-            {
-                return value;
-            }
+
+            return value;
         }
 
         /// <summary>
-        /// Gets the nearest multiple to a value <para/> 
-        /// Example: GetNearestMultiple(45, 11) would return 44;
+        ///     Gets the nearest multiple to a value
+        ///     <para />
+        ///     Example: GetNearestMultiple(45, 11) would return 44;
         /// </summary>
         public static int GetNearestMultiple(int value, int multiple)
         {
-            int remainder = value % multiple;
-            int result = value - remainder;
+            var remainder = value % multiple;
+            var result = value - remainder;
 
-            if (remainder > (multiple / 2))
+            if (remainder > multiple / 2)
             {
                 result += multiple;
             }
@@ -185,15 +184,16 @@
         }
 
         /// <summary>
-        /// Gets the nearest multiple to a value <para/> 
-        /// Example: GetNearestMultiple(45, 11) would return 44;
+        ///     Gets the nearest multiple to a value
+        ///     <para />
+        ///     Example: GetNearestMultiple(45, 11) would return 44;
         /// </summary>
         public static long GetNearestMultiple(long value, long multiple)
         {
-            long remainder = value % multiple;
-            long result = value - remainder;
+            var remainder = value % multiple;
+            var result = value - remainder;
 
-            if (remainder > (multiple / 2))
+            if (remainder > multiple / 2)
             {
                 result += multiple;
             }
@@ -202,7 +202,7 @@
         }
 
         /// <summary>
-        /// Returns if the number is even
+        ///     Returns if the number is even
         /// </summary>
         public static bool IsEven(this int num)
         {
@@ -210,7 +210,7 @@
         }
 
         /// <summary>
-        /// Returns if the number is odd
+        ///     Returns if the number is odd
         /// </summary>
         public static bool IsOdd(this int num)
         {
@@ -218,7 +218,7 @@
         }
 
         /// <summary>
-        /// Returns if the number is even
+        ///     Returns if the number is even
         /// </summary>
         public static bool IsEven(this long num)
         {
@@ -226,7 +226,7 @@
         }
 
         /// <summary>
-        /// Returns if the number is odd
+        ///     Returns if the number is odd
         /// </summary>
         public static bool IsOdd(this long num)
         {

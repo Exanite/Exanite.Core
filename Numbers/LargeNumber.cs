@@ -1,30 +1,36 @@
 ﻿using System;
 using Exanite.Core.Utilities;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
 namespace Exanite.Core.Numbers
 {
     /// <summary>
-    /// Used to store very large numbers (up to 999.999999x(10^(2^63))) <para/>
-    /// Actual value = <see cref="Value"/> * (10 ^ (<see cref="Multiplier"/> * 3))
+    ///     Used to store very large numbers (up to 999.999999x(10^(2^63)))
+    ///     <para />
+    ///     Actual value = <see cref="Value" /> * (10 ^ (
+    ///     <see cref="Multiplier" /> * 3))
     /// </summary>
     [Serializable]
     public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
     {
-        [SerializeField, HideInInspector] private double value;
-        [SerializeField, HideInInspector] private long multiplier;
+        [SerializeField]
+        [HideInInspector]
+        private double value;
+        [SerializeField]
+        [HideInInspector]
+        private long multiplier;
 
         /// <summary>
-        /// Value of this <see cref="LargeNumber"/>
-        /// Formatted as xxx.yyyyyy where x = significant digits and y = trailing digits
+        ///     Value of this <see cref="LargeNumber" />
+        ///     Formatted as xxx.yyyyyy where x = significant digits and y =
+        ///     trailing digits
         /// </summary>
-        [ShowInInspector]
         public double Value
         {
             get
             {
                 ShiftPlaces();
+
                 return value;
             }
 
@@ -36,25 +42,22 @@ namespace Exanite.Core.Numbers
         }
 
         /// <summary>
-        /// Multiplier of this <see cref="LargeNumber"/>
+        ///     Multiplier of this <see cref="LargeNumber" />
         /// </summary>
-        [ShowInInspector]
         public long Multiplier
         {
             get
             {
                 ShiftPlaces();
+
                 return multiplier;
             }
 
-            set
-            {
-                multiplier = value;
-            }
+            set => multiplier = value;
         }
 
         /// <summary>
-        /// Creates a new <see cref="LargeNumber"/>
+        ///     Creates a new <see cref="LargeNumber" />
         /// </summary>
         public LargeNumber(double value = 0, long multiplier = 0)
         {
@@ -65,7 +68,8 @@ namespace Exanite.Core.Numbers
         }
 
         /// <summary>
-        /// Shifts the value and multiplier of this <see cref="LargeNumber"/>
+        ///     Shifts the value and multiplier of this
+        ///     <see cref="LargeNumber" />
         /// </summary>
         private void ShiftPlaces()
         {
@@ -74,11 +78,13 @@ namespace Exanite.Core.Numbers
                 value /= 1000;
                 multiplier++;
             }
+
             while (Math.Abs(value) < 1) // Between -1 and 1
             {
                 value *= 1000;
                 multiplier--;
             }
+
             if (value == 0)
             {
                 multiplier = 0;
@@ -86,21 +92,21 @@ namespace Exanite.Core.Numbers
         }
 
         /// <summary>
-        /// Converts this LargeNumber into a string
+        ///     Converts this LargeNumber into a string
         /// </summary>
         public override string ToString()
         {
-            return ToString(NumDisplayFormat.Scientific, 0);
+            return ToString(NumDisplayFormat.Scientific);
         }
 
         /// <summary>
-        /// Converts this LargeNumber into a string
+        ///     Converts this LargeNumber into a string
         /// </summary>
         public string ToString(NumDisplayFormat displayFormat, int placesToRound = 0)
         {
             placesToRound = MathUtility.Clamp(placesToRound, 0, 15);
 
-            double rounded = Math.Round(Value, placesToRound);
+            var rounded = Math.Round(Value, placesToRound);
 
             if (Multiplier == 0)
             {
@@ -111,23 +117,25 @@ namespace Exanite.Core.Numbers
             {
                 case NumDisplayFormat.Scientific:
                 {
-                    int extraDigits = 0;
+                    var extraDigits = 0;
 
                     while (rounded >= 10) // Limit to one leading digit
                     {
                         extraDigits++;
                         rounded /= 10;
                     }
+
                     while (rounded <= -10) // Limit to one leading digit
                     {
                         extraDigits--;
                         rounded /= 10;
                     }
+
                     rounded = Math.Round(rounded, placesToRound); // Round the result again because the decimal place shifted in the while loop
 
                     if (Math.Abs(Multiplier) > long.MaxValue / 3)
                     {
-                        bool isNegative = false;
+                        var isNegative = false;
 
                         if (Multiplier < 0)
                         {
@@ -142,7 +150,7 @@ namespace Exanite.Core.Numbers
                         return $"{(isNegative ? "-" : string.Empty)}Infinity";
                     }
 
-                    return $"{rounded.ToString($"N{placesToRound}")} E{(Multiplier * 3) + extraDigits}";
+                    return $"{rounded.ToString($"N{placesToRound}")} E{Multiplier * 3 + extraDigits}";
                 }
                 case NumDisplayFormat.Short:
                 {
@@ -150,7 +158,8 @@ namespace Exanite.Core.Numbers
                     {
                         return ToString(NumDisplayFormat.Scientific);
                     }
-                    return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesShort)Multiplier}";
+
+                    return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesShort) Multiplier}";
                 }
                 case NumDisplayFormat.Long:
                 {
@@ -158,7 +167,8 @@ namespace Exanite.Core.Numbers
                     {
                         return ToString(NumDisplayFormat.Short);
                     }
-                    return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesLong)Math.Abs(Multiplier)}{((Multiplier < 0) ? "th" : string.Empty)}";
+
+                    return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesLong) Math.Abs(Multiplier)}{(Multiplier < 0 ? "th" : string.Empty)}";
                 }
                 default:
                 {
@@ -184,12 +194,12 @@ namespace Exanite.Core.Numbers
 
         public static LargeNumber operator +(LargeNumber A, LargeNumber B)
         {
-            bool multAIsLarger = A.Multiplier > B.Multiplier;
-            long difference = Math.Abs(A.Multiplier - B.Multiplier);
+            var multAIsLarger = A.Multiplier > B.Multiplier;
+            var difference = Math.Abs(A.Multiplier - B.Multiplier);
 
             if (multAIsLarger)
             {
-                for (int i = 0; i < difference; i++)
+                for (var i = 0; i < difference; i++)
                 {
                     B.value /= 1000;
                     B.multiplier++;
@@ -197,7 +207,7 @@ namespace Exanite.Core.Numbers
             }
             else
             {
-                for (int i = 0; i < difference; i++)
+                for (var i = 0; i < difference; i++)
                 {
                     A.value /= 1000;
                     A.multiplier++;
@@ -209,12 +219,12 @@ namespace Exanite.Core.Numbers
 
         public static LargeNumber operator -(LargeNumber A, LargeNumber B)
         {
-            bool multAIsLarger = A.Multiplier > B.Multiplier;
-            long difference = Math.Abs(A.Multiplier - B.Multiplier);
+            var multAIsLarger = A.Multiplier > B.Multiplier;
+            var difference = Math.Abs(A.Multiplier - B.Multiplier);
 
             if (multAIsLarger)
             {
-                for (int i = 0; i < difference; i++)
+                for (var i = 0; i < difference; i++)
                 {
                     B.value /= 1000;
                     B.multiplier++;
@@ -222,7 +232,7 @@ namespace Exanite.Core.Numbers
             }
             else
             {
-                for (int i = 0; i < difference; i++)
+                for (var i = 0; i < difference; i++)
                 {
                     A.value /= 1000;
                     A.multiplier++;
@@ -278,10 +288,8 @@ namespace Exanite.Core.Numbers
             {
                 return Equals(largeNumber);
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public override int GetHashCode()
@@ -300,10 +308,8 @@ namespace Exanite.Core.Numbers
             {
                 return Value.CompareTo(other.Value);
             }
-            else
-            {
-                return Multiplier.CompareTo(other.Multiplier);
-            }
+
+            return Multiplier.CompareTo(other.Multiplier);
         }
     }
 }

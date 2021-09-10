@@ -1,56 +1,47 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
 
-namespace Exanite.Core.DataStructures
+namespace Exanite.Core.Collections
 {
     /// <summary>
-    /// 2D grid that can store any type of value
+    ///     2D grid that can store any type of value
     /// </summary>
-    [ShowOdinSerializedPropertiesInInspector]
     public class Grid2D<T> : IEnumerable<T>
     {
         /// <summary>
-        /// X-length of the grid
+        ///     X-length of the grid
         /// </summary>
         public int XLength => Grid?.GetLength(0) ?? 0;
 
         /// <summary>
-        /// Y-length of the grid
+        ///     Y-length of the grid
         /// </summary>
         public int YLength => Grid?.GetLength(1) ?? 0;
 
         /// <summary>
-        /// Gets or sets the value at (x, y)
+        ///     Gets or sets the value at (x, y)
         /// </summary>
         public virtual T this[int x, int y]
         {
-            get
-            {
-                return Grid[x, y];
-            }
+            get => Grid[x, y];
 
-            set
-            {
-                Grid[x, y] = value;
-            }
+            set => Grid[x, y] = value;
         }
 
         /// <summary>
-        /// Internal 2D array used for storing values
+        ///     Internal 2D array used for storing values
         /// </summary>
-        [OdinSerialize, TableMatrix(ResizableColumns = false)] protected T[,] Grid { get; set; }
+        protected T[,] Grid { get; set; }
 
         /// <summary>
-        /// Creates a new Grid2D with a size of (1, 1)
+        ///     Creates a new Grid2D with a size of (1, 1)
         /// </summary>
         public Grid2D() : this(1, 1) { }
 
         /// <summary>
-        /// Creates a new Grid2D
+        ///     Creates a new Grid2D
         /// </summary>
         public Grid2D(int xLength, int yLength)
         {
@@ -68,20 +59,17 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Rotates the grid clockwise
+        ///     Rotates the grid clockwise
         /// </summary>
-        [Button]
-        [FoldoutGroup("Methods")]
-        [HorizontalGroup("Methods/A")]
         public virtual void RotateClockwise()
         {
-            T[,] newArray = new T[YLength, XLength];
+            var newArray = new T[YLength, XLength];
 
-            for (int x = 0; x < XLength; x++)
+            for (var x = 0; x < XLength; x++)
             {
-                for (int y = 0; y < YLength; y++)
+                for (var y = 0; y < YLength; y++)
                 {
-                    newArray[(YLength - 1) - y, x] = Grid[x, y];
+                    newArray[YLength - 1 - y, x] = Grid[x, y];
                 }
             }
 
@@ -89,19 +77,17 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Rotates the grid counter-clockwise
+        ///     Rotates the grid counter-clockwise
         /// </summary>
-        [Button]
-        [HorizontalGroup("Methods/B")]
         public virtual void RotateCounterClockwise()
         {
-            T[,] newArray = new T[YLength, XLength];
+            var newArray = new T[YLength, XLength];
 
-            for (int x = 0; x < XLength; x++)
+            for (var x = 0; x < XLength; x++)
             {
-                for (int y = 0; y < YLength; y++)
+                for (var y = 0; y < YLength; y++)
                 {
-                    newArray[y, (XLength - 1) - x] = Grid[x, y];
+                    newArray[y, XLength - 1 - x] = Grid[x, y];
                 }
             }
 
@@ -109,19 +95,17 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Mirrors the grid over the Y-Axis
+        ///     Mirrors the grid over the Y-Axis
         /// </summary>
-        [Button]
-        [HorizontalGroup("Methods/A")]
         public virtual void MirrorOverY()
         {
-            T[,] newArray = new T[XLength, YLength];
+            var newArray = new T[XLength, YLength];
 
-            for (int x = 0; x < XLength; x++)
+            for (var x = 0; x < XLength; x++)
             {
-                for (int y = 0; y < YLength; y++)
+                for (var y = 0; y < YLength; y++)
                 {
-                    newArray[x, y] = Grid[(XLength - 1) - x, y];
+                    newArray[x, y] = Grid[XLength - 1 - x, y];
                 }
             }
 
@@ -129,19 +113,17 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Mirrors the grid over the X-Axis
+        ///     Mirrors the grid over the X-Axis
         /// </summary>
-        [Button]
-        [HorizontalGroup("Methods/B")]
         public virtual void MirrorOverX()
         {
-            T[,] newArray = new T[XLength, YLength];
+            var newArray = new T[XLength, YLength];
 
-            for (int x = 0; x < XLength; x++)
+            for (var x = 0; x < XLength; x++)
             {
-                for (int y = 0; y < YLength; y++)
+                for (var y = 0; y < YLength; y++)
                 {
-                    newArray[x, y] = Grid[x, (YLength - 1) - y];
+                    newArray[x, y] = Grid[x, YLength - 1 - y];
                 }
             }
 
@@ -149,7 +131,7 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Wraps the provided coordinate to be within range of this Grid2D
+        ///     Wraps the provided coordinate to be within range of this Grid2D
         /// </summary>
         public virtual Vector2Int Wrap(int x, int y)
         {
@@ -172,21 +154,22 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Checks if the provided coordinate is in range of the grid
+        ///     Checks if the provided coordinate is in range of the grid
         /// </summary>
         public virtual bool IsInRange(int x, int y)
         {
-            bool result = !(x < 0 || x >= XLength || y < 0 || y >= YLength);
+            var result = !(x < 0 || x >= XLength || y < 0 || y >= YLength);
 
             return result;
         }
 
         /// <summary>
-        /// Resizes the grid by adding/subtracting the number of indexes specified from each side <para/>
-        /// Note: Positive values will always expand the grid, negative will always shrink the grid
+        ///     Resizes the grid by adding/subtracting the number of indexes
+        ///     specified from each side
+        ///     <para />
+        ///     Note: Positive values will always expand the grid, negative will
+        ///     always shrink the grid
         /// </summary>
-        [Button]
-        [HorizontalGroup("Methods/C")]
         public virtual void Resize(int posX, int negX, int posY, int negY)
         {
             var newSize = new Vector2Int(XLength + posX + negX, YLength + posY + negY);
@@ -196,20 +179,17 @@ namespace Exanite.Core.DataStructures
                 throw new ArgumentException($"Cannot create a grid of size {newSize}");
             }
 
-            T[,] newArray = new T[newSize.x, newSize.y];
+            var newArray = new T[newSize.x, newSize.y];
 
-            for (int x = 0; x < XLength; x++)
+            for (var x = 0; x < XLength; x++)
             {
-                for (int y = 0; y < YLength; y++)
+                for (var y = 0; y < YLength; y++)
                 {
                     // pos just check if in range
                     // neg shifts entire array
                     var newIndexes = new Vector2Int(x + negX, y + negY);
 
-                    if (newIndexes.x < 0 || newIndexes.y < 0 || newIndexes.x >= newSize.x || newIndexes.y >= newSize.y)
-                    {
-                        continue;
-                    }
+                    if (newIndexes.x < 0 || newIndexes.y < 0 || newIndexes.x >= newSize.x || newIndexes.y >= newSize.y) { }
                     else // if in range
                     {
                         newArray[newIndexes.x, newIndexes.y] = Grid[x, y];
@@ -221,7 +201,7 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Copies the grid to another <see cref="Grid2D{T}"/>
+        ///     Copies the grid to another <see cref="Grid2D{T}" />
         /// </summary>
         /// <returns>Other grid with copied values</returns>
         public virtual Grid2D<T> CopyTo(Grid2D<T> other, int x = 0, int y = 0)
@@ -232,13 +212,13 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Copies the grid's internal array to a 2D array
+        ///     Copies the grid's internal array to a 2D array
         /// </summary>
         /// <returns>2D array with copied values</returns>
         public virtual T[,] CopyTo(T[,] other, int x = 0, int y = 0)
         {
-            int maxX = Math.Max(XLength, other.GetLength(0));
-            int maxY = Math.Max(YLength, other.GetLength(1));
+            var maxX = Math.Max(XLength, other.GetLength(0));
+            var maxY = Math.Max(YLength, other.GetLength(1));
 
             for (; x < maxX; x++)
             {
@@ -252,13 +232,13 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Clears the grid
+        ///     Clears the grid
         /// </summary>
         public virtual void Clear()
         {
-            for (int x = 0; x < XLength; x++)
+            for (var x = 0; x < XLength; x++)
             {
-                for (int y = 0; y < YLength; y++)
+                for (var y = 0; y < YLength; y++)
                 {
                     this[x, y] = default;
                 }
@@ -267,9 +247,9 @@ namespace Exanite.Core.DataStructures
 
         public virtual IEnumerator<T> GetEnumerator()
         {
-            for (int x = 0; x < XLength; x++)
+            for (var x = 0; x < XLength; x++)
             {
-                for (int y = 0; y < YLength; y++)
+                for (var y = 0; y < YLength; y++)
                 {
                     yield return this[x, y];
                 }

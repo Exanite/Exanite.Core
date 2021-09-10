@@ -1,28 +1,18 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Exanite.Core.Extensions;
-using Sirenix.Serialization;
-using UnityEngine;
+using Exanite.Core.Utilities;
 
-namespace Exanite.Core.DataStructures
+namespace Exanite.Core.Collections
 {
-    /// <summary>
-    /// A two way dictionary
-    /// </summary>
-    [Serializable]
-    public class BiDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, ISerializationCallbackReceiver
+    public class TwoWayDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
     {
-        [OdinSerialize, HideInInspector] private readonly Dictionary<TKey, TValue> forward;
+        private readonly Dictionary<TKey, TValue> forward;
         private readonly Dictionary<TValue, TKey> backward;
-        [OdinSerialize, HideInInspector] private readonly BiDictionary<TValue, TKey> inverse;
 
         public TValue this[TKey key]
         {
-            get
-            {
-                return Forward[key];
-            }
+            get => Forward[key];
 
             set
             {
@@ -45,90 +35,40 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Reverse of this <see cref="BiDictionary{TKey, TValue}"/>
+        ///     Reverse of this <see cref="TwoWayDictionary{TKey,TValue}" />
         /// </summary>
-        public BiDictionary<TValue, TKey> Inverse
-        {
-            get
-            {
-                return inverse;
-            }
-        }
+        public TwoWayDictionary<TValue, TKey> Inverse { get; }
 
-        public ICollection<TKey> Keys
-        {
-            get
-            {
-                return Forward.Keys;
-            }
-        }
+        public ICollection<TKey> Keys => Forward.Keys;
+        public ICollection<TValue> Values => Forward.Values;
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => Forward.IsReadOnly || Backward.IsReadOnly;
 
-        public ICollection<TValue> Values
-        {
-            get
-            {
-                return Forward.Values;
-            }
-        }
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Forward.Keys;
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Forward.Values;
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
-        {
-            get
-            {
-                return Forward.IsReadOnly || Backward.IsReadOnly;
-            }
-        }
-
-        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
-        {
-            get
-            {
-                return Forward.Keys;
-            }
-        }
-
-        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values
-        {
-            get
-            {
-                return Forward.Values;
-            }
-        }
-
-        protected IDictionary<TKey, TValue> Forward
-        {
-            get
-            {
-                return forward;
-            }
-        }
-
-        protected IDictionary<TValue, TKey> Backward
-        {
-            get
-            {
-                return backward;
-            }
-        }
+        protected IDictionary<TKey, TValue> Forward => forward;
+        protected IDictionary<TValue, TKey> Backward => backward;
 
         /// <summary>
-        /// Creates a new <see cref="BiDictionary{TKey, TValue}"/>
+        ///     Creates a new <see cref="TwoWayDictionary{TKey,TValue}" />
         /// </summary>
-        public BiDictionary()
+        public TwoWayDictionary()
         {
             forward = new Dictionary<TKey, TValue>();
             backward = new Dictionary<TValue, TKey>();
-            inverse = new BiDictionary<TValue, TKey>(this);
+            Inverse = new TwoWayDictionary<TValue, TKey>(this);
         }
 
         /// <summary>
-        /// Creates a new <see cref="BiDictionary{TKey, TValue}"/> and copies the values from the provided <paramref name="dictionary"/>
+        ///     Creates a new <see cref="TwoWayDictionary{TKey,TValue}" /> and
+        ///     copies the values from the provided
+        ///     <paramref name="dictionary" />
         /// </summary>
-        public BiDictionary(IDictionary<TKey, TValue> dictionary)
+        public TwoWayDictionary(IDictionary<TKey, TValue> dictionary)
         {
             forward = new Dictionary<TKey, TValue>(dictionary.Count);
             backward = new Dictionary<TValue, TKey>(dictionary.Count);
-            inverse = new BiDictionary<TValue, TKey>(this);
+            Inverse = new TwoWayDictionary<TValue, TKey>(this);
 
             foreach (var item in dictionary)
             {
@@ -138,15 +78,16 @@ namespace Exanite.Core.DataStructures
         }
 
         /// <summary>
-        /// Used internally to create the inverse <see cref="BiDictionary{TKey, TValue}"/>
+        ///     Used internally to create the inverse
+        ///     <see cref="TwoWayDictionary{TKey,TValue}" />
         /// </summary>
         /// <param name="other"></param>
-        private BiDictionary(BiDictionary<TValue, TKey> other)
+        private TwoWayDictionary(TwoWayDictionary<TValue, TKey> other)
         {
             forward = other.backward;
             backward = other.forward;
 
-            inverse = other;
+            Inverse = other;
         }
 
         public void Add(TKey key, TValue value)
@@ -167,17 +108,15 @@ namespace Exanite.Core.DataStructures
 
         public bool Remove(TKey key)
         {
-            if (TryGetValue(key, out TValue value))
+            if (TryGetValue(key, out var value))
             {
                 Forward.Remove(key);
                 Backward.Remove(value);
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public void Clear()
@@ -216,27 +155,13 @@ namespace Exanite.Core.DataStructures
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
             Forward.CopyTo(array, arrayIndex);
-        }
-
-        void ISerializationCallbackReceiver.OnBeforeSerialize() { }
-
-        void ISerializationCallbackReceiver.OnAfterDeserialize()
-        {
-            Backward.Clear();
-
-            foreach (var item in Forward)
-            {
-                Backward.Add(item.Value, item.Key);
-            }
         }
     }
 }

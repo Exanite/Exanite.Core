@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 
 namespace Exanite.Core.Editor
 {
     /// <summary>
-    /// Cleans empty folders from the Unity assets folder <para/>
-    /// Useful for version control systems like Git
+    ///     Cleans empty folders from the Unity assets folder
+    ///     <para />
+    ///     Useful for version control systems like Git
     /// </summary>
     public static class CleanEmptyFolders
     {
         /// <summary>
-        /// Cleans empty folders from the Unity assets folder
+        ///     Cleans empty folders from the Unity assets folder
         /// </summary>
         public static void Clean()
         {
-            bool shouldProceed = EditorUtility.DisplayDialog(
+            var shouldProceed = EditorUtility.DisplayDialog(
                 "Remove empty folders?",
                 "This will search through your assets for empty folders and delete them if found. Are you sure you want to do this?",
                 "Yes",
@@ -30,18 +30,18 @@ namespace Exanite.Core.Editor
 
                 var emptyFolders = GetEmptyFolders(assetsFolder);
 
-                if (!emptyFolders.IsNullOrEmpty())
+                if (emptyFolders.Count > 0)
                 {
-                    string foldersToRemove = string.Empty;
+                    var foldersToRemove = string.Empty;
 
                     foreach (var item in emptyFolders)
                     {
                         foldersToRemove += $"\n{item.FullName}";
                     }
 
-                    bool shouldDelete = EditorUtility.DisplayDialog(
+                    var shouldDelete = EditorUtility.DisplayDialog(
                         $"Remove {emptyFolders.Count} empty {(emptyFolders.Count == 1 ? "folder" : "folders")}?",
-                        $"Pressing 'yes' will remove the following folders: {foldersToRemove}",
+                        $"Pressing 'Yes' will remove the following folders: {foldersToRemove}",
                         "Yes",
                         "No");
 
@@ -65,7 +65,7 @@ namespace Exanite.Core.Editor
 
             foreach (var subDirectory in directory.GetDirectories("*.*", SearchOption.AllDirectories))
             {
-                List<FileInfo> files = subDirectory.GetFiles("*.*", SearchOption.AllDirectories).ToList();
+                var files = subDirectory.GetFiles("*.*", SearchOption.AllDirectories).ToList();
                 files.RemoveAll(x => x.Extension == ".meta");
 
                 if (files.Count == 0)
@@ -81,7 +81,7 @@ namespace Exanite.Core.Editor
 
         private static void DeleteFolders(List<DirectoryInfo> folders)
         {
-            int foldersDeleted = 0;
+            var foldersDeleted = 0;
 
             folders = folders.OrderByDescending(x => x.FullName.Length).ToList();
 
