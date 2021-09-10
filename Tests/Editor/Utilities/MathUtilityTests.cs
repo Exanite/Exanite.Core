@@ -31,7 +31,7 @@ namespace Exanite.Core.Tests.Editor.Utilities
         [TestCase(15, 0, 10, ExpectedResult = 10)]
         [TestCase(50, 10, 0, ExpectedResult = 0)] // min and max are swapped
         [TestCase(-10, 10, 0, ExpectedResult = 10)] // min and max are swapped
-        public float ClampFloat_ReturnsExpectedValue(float value, float min, float max)
+        public float ClampInt_ReturnsExpectedValue(int value, int min, int max)
         {
             return MathUtility.Clamp(value, min, max);
         }

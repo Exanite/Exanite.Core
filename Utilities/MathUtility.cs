@@ -18,9 +18,6 @@
             return fromRange == 0 ? toMin : toRange * ((value - fromMin) / fromRange) + toMin;
         }
 
-        /// <summary>
-        ///     Remaps a value from one range to another
-        /// </summary>
         public static double Remap(double value, double fromMin, double fromMax, double toMin, double toMax)
         {
             var fromRange = fromMax - fromMin;
@@ -36,26 +33,17 @@
         {
             return Modulo(value - min, max - min) + min;
         }
-
-        /// <summary>
-        ///     Wraps a value between min and max values
-        /// </summary>
+        
         public static double Wrap(double value, double min, double max)
         {
             return Modulo(value - min, max - min) + min;
         }
-
-        /// <summary>
-        ///     Wraps a value between min and max values
-        /// </summary>
+        
         public static int Wrap(int value, int min, int max)
         {
             return Modulo(value - min, max - min) + min;
         }
-
-        /// <summary>
-        ///     Wraps a value between min and max values
-        /// </summary>
+        
         public static long Wrap(long value, long min, long max)
         {
             return Modulo(value - min, max - min) + min;
@@ -68,26 +56,17 @@
         {
             return (value % divisor + divisor) % divisor;
         }
-
-        /// <summary>
-        ///     Returns the true modulo of a value when divided by a divisor
-        /// </summary>
+        
         public static double Modulo(double value, double divisor)
         {
             return (value % divisor + divisor) % divisor;
         }
-
-        /// <summary>
-        ///     Returns the true modulo of a value when divided by a divisor
-        /// </summary>
+        
         public static int Modulo(int value, int divisor)
         {
             return (value % divisor + divisor) % divisor;
         }
 
-        /// <summary>
-        ///     Returns the true modulo of a value when divided by a divisor
-        /// </summary>
         public static long Modulo(long value, long divisor)
         {
             return (value % divisor + divisor) % divisor;
@@ -96,61 +75,7 @@
         /// <summary>
         ///     Clamps a value between min and max values
         /// </summary>
-        public static float Clamp(float value, float min, float max)
-        {
-            if (value < min)
-            {
-                return min;
-            }
-
-            if (value > max)
-            {
-                return max;
-            }
-
-            return value;
-        }
-
-        /// <summary>
-        ///     Clamps a value between min and max values
-        /// </summary>
-        public static double Clamp(double value, double min, double max)
-        {
-            if (value < min)
-            {
-                return min;
-            }
-
-            if (value > max)
-            {
-                return max;
-            }
-
-            return value;
-        }
-
-        /// <summary>
-        ///     Clamps a value between min and max values
-        /// </summary>
         public static int Clamp(int value, int min, int max)
-        {
-            if (value < min)
-            {
-                return min;
-            }
-
-            if (value > max)
-            {
-                return max;
-            }
-
-            return value;
-        }
-
-        /// <summary>
-        ///     Clamps a value between min and max values
-        /// </summary>
-        public static long Clamp(long value, long min, long max)
         {
             if (value < min)
             {
@@ -183,52 +108,12 @@
             return result;
         }
 
-        /// <summary>
-        ///     Gets the nearest multiple to a value
-        ///     <para />
-        ///     Example: GetNearestMultiple(45, 11) would return 44;
-        /// </summary>
-        public static long GetNearestMultiple(long value, long multiple)
-        {
-            var remainder = value % multiple;
-            var result = value - remainder;
-
-            if (remainder > multiple / 2)
-            {
-                result += multiple;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        ///     Returns if the number is even
-        /// </summary>
         public static bool IsEven(this int num)
         {
             return num % 2 == 0;
         }
 
-        /// <summary>
-        ///     Returns if the number is odd
-        /// </summary>
         public static bool IsOdd(this int num)
-        {
-            return num % 2 != 0;
-        }
-
-        /// <summary>
-        ///     Returns if the number is even
-        /// </summary>
-        public static bool IsEven(this long num)
-        {
-            return num % 2 == 0;
-        }
-
-        /// <summary>
-        ///     Returns if the number is odd
-        /// </summary>
-        public static bool IsOdd(this long num)
         {
             return num % 2 != 0;
         }
