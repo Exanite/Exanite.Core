@@ -1,6 +1,7 @@
 using System;
+using Exanite.Core.Utilities;
 
-namespace Exanite.Arpg.Collections
+namespace Exanite.Core.Collections
 {
     /// <summary>
     ///     Represents a fixed-sized circular queue
@@ -19,7 +20,7 @@ namespace Exanite.Arpg.Collections
         /// <param name="capacity">Power of two capacity of the buffer</param>
         public RingBuffer(int capacity)
         {
-            capacity = GetNextPowerOfTwo(capacity);
+            capacity = MathUtility.GetNextPowerOfTwo(capacity);
             array = new T[capacity];
 
             bitmask = capacity - 1;
@@ -154,17 +155,6 @@ namespace Exanite.Arpg.Collections
             value = default;
 
             return false;
-        }
-
-        private int GetNextPowerOfTwo(int value)
-        {
-            var result = 2;
-            while (result < value)
-            {
-                result <<= 1;
-            }
-
-            return result;
         }
 
         private void ValidateIndex(int index)

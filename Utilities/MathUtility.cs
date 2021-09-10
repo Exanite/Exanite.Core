@@ -33,17 +33,17 @@
         {
             return Modulo(value - min, max - min) + min;
         }
-        
+
         public static double Wrap(double value, double min, double max)
         {
             return Modulo(value - min, max - min) + min;
         }
-        
+
         public static int Wrap(int value, int min, int max)
         {
             return Modulo(value - min, max - min) + min;
         }
-        
+
         public static long Wrap(long value, long min, long max)
         {
             return Modulo(value - min, max - min) + min;
@@ -56,12 +56,12 @@
         {
             return (value % divisor + divisor) % divisor;
         }
-        
+
         public static double Modulo(double value, double divisor)
         {
             return (value % divisor + divisor) % divisor;
         }
-        
+
         public static int Modulo(int value, int divisor)
         {
             return (value % divisor + divisor) % divisor;
@@ -92,9 +92,10 @@
 
         /// <summary>
         ///     Gets the nearest multiple to a value
-        ///     <para />
-        ///     Example: GetNearestMultiple(45, 11) would return 44;
         /// </summary>
+        /// <example>
+        ///     GetNearestMultiple(45, 11) will return 44
+        /// </example>
         public static int GetNearestMultiple(int value, int multiple)
         {
             var remainder = value % multiple;
@@ -103,6 +104,25 @@
             if (remainder > multiple / 2)
             {
                 result += multiple;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Gets the next power of two
+        /// </summary>
+        /// <example>
+        ///     GetNextPowerOfTwo(16) will return 16
+        ///     GetNextPowerOfTwo(5) will return 8
+        /// </example>
+        /// <returns></returns>
+        public static int GetNextPowerOfTwo(int value)
+        {
+            var result = 2;
+            while (result < value)
+            {
+                result <<= 1;
             }
 
             return result;

@@ -41,5 +41,15 @@ namespace Exanite.Core.Tests.Editor.Utilities
         {
             return MathUtility.GetNearestMultiple(value, multiple);
         }
+        
+        [TestCase(0, ExpectedResult = 2)]
+        [TestCase(2, ExpectedResult = 2)]
+        [TestCase(5, ExpectedResult = 8)]
+        [TestCase(16, ExpectedResult = 16)]
+        [TestCase(123, ExpectedResult = 128)]
+        public int GetNextPowerOfTwo_ReturnsExpectedValue(int value)
+        {
+            return MathUtility.GetNextPowerOfTwo(value);
+        }
     }
 }
