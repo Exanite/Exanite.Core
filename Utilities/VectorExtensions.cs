@@ -1,6 +1,7 @@
 ﻿using System;
 using Exanite.Core.Numbers;
 using UnityEngine;
+using NumericsVector2 = System.Numerics.Vector2;
 
 namespace Exanite.Core.Utilities
 {
@@ -111,6 +112,26 @@ namespace Exanite.Core.Utilities
         {
             vector2.x = Mathf.Clamp(vector2.x, min.x, max.x);
             vector2.y = Mathf.Clamp(vector2.y, min.y, max.y);
+        }
+        
+        /// <summary>
+        ///     Normalizes the vector. <br />
+        ///     This handles the case where the provided vector is Vector2.Zero,
+        ///     returning Vector2.Zero rather than NaN.
+        /// </summary>
+        public static NumericsVector2 AsNormalizedSafe(this NumericsVector2 value)
+        {
+            return value.AsNormalizedSafe(NumericsVector2.Zero);
+        }
+
+        /// <summary>
+        ///     Normalizes the vector. <br />
+        ///     This handles the case where the provided vector is Vector2.Zero,
+        ///     returning the provided <see cref="fallback" /> rather than NaN.
+        /// </summary>
+        public static NumericsVector2 AsNormalizedSafe(this NumericsVector2 value, NumericsVector2 fallback)
+        {
+            return value == NumericsVector2.Zero ? fallback : NumericsVector2.Normalize(value);
         }
     }
 }
