@@ -172,7 +172,7 @@ namespace Exanite.Core.Numbers
                 }
                 default:
                 {
-                    throw new NotImplementedException($"DisplayFormat: '{displayFormat}' is not an implemented display format");
+                    throw new NotSupportedException($"DisplayFormat: '{displayFormat}' is not an supported display format");
                 }
             }
         }
