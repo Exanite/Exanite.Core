@@ -1,5 +1,4 @@
-﻿using System;
-using Exanite.Core.Numbers;
+﻿using Exanite.Core.Numbers;
 using UnityEngine;
 using NumericsVector2 = System.Numerics.Vector2;
 
@@ -16,23 +15,16 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static Vector3 Swizzle(this Vector3 vector3, Vector3Swizzle swizzle)
         {
-            switch (swizzle)
+            return swizzle switch
             {
-                case Vector3Swizzle.XYZ:
-                    return vector3;
-                case Vector3Swizzle.XZY:
-                    return new Vector3(vector3.x, vector3.z, vector3.y);
-                case Vector3Swizzle.YXZ:
-                    return new Vector3(vector3.y, vector3.x, vector3.z);
-                case Vector3Swizzle.YZX:
-                    return new Vector3(vector3.y, vector3.z, vector3.x);
-                case Vector3Swizzle.ZXY:
-                    return new Vector3(vector3.z, vector3.x, vector3.y);
-                case Vector3Swizzle.ZYX:
-                    return new Vector3(vector3.z, vector3.y, vector3.x);
-            }
-
-            throw new ArgumentException($"'{swizzle}' is not a valid swizzle", nameof(swizzle));
+                Vector3Swizzle.XYZ => vector3,
+                Vector3Swizzle.XZY => new Vector3(vector3.x, vector3.z, vector3.y),
+                Vector3Swizzle.YXZ => new Vector3(vector3.y, vector3.x, vector3.z),
+                Vector3Swizzle.YZX => new Vector3(vector3.y, vector3.z, vector3.x),
+                Vector3Swizzle.ZXY => new Vector3(vector3.z, vector3.x, vector3.y),
+                Vector3Swizzle.ZYX => new Vector3(vector3.z, vector3.y, vector3.x),
+                _ => throw ExceptionUtility.NotSupportedEnumValue(swizzle),
+            };
         }
 
         /// <summary>
@@ -41,23 +33,16 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static Vector3 InverseSwizzle(this Vector3 vector3, Vector3Swizzle swizzle)
         {
-            switch (swizzle)
+            return swizzle switch
             {
-                case Vector3Swizzle.XYZ:
-                    return vector3;
-                case Vector3Swizzle.XZY:
-                    return new Vector3(vector3.x, vector3.z, vector3.y);
-                case Vector3Swizzle.YXZ:
-                    return new Vector3(vector3.y, vector3.x, vector3.z);
-                case Vector3Swizzle.YZX:
-                    return new Vector3(vector3.z, vector3.x, vector3.y);
-                case Vector3Swizzle.ZXY:
-                    return new Vector3(vector3.y, vector3.z, vector3.x);
-                case Vector3Swizzle.ZYX:
-                    return new Vector3(vector3.z, vector3.y, vector3.x);
-            }
-
-            throw new ArgumentException($"'{swizzle}' is not a valid swizzle", nameof(swizzle));
+                Vector3Swizzle.XYZ => vector3,
+                Vector3Swizzle.XZY => new Vector3(vector3.x, vector3.z, vector3.y),
+                Vector3Swizzle.YXZ => new Vector3(vector3.y, vector3.x, vector3.z),
+                Vector3Swizzle.YZX => new Vector3(vector3.z, vector3.x, vector3.y),
+                Vector3Swizzle.ZXY => new Vector3(vector3.y, vector3.z, vector3.x),
+                Vector3Swizzle.ZYX => new Vector3(vector3.z, vector3.y, vector3.x),
+                _ => throw ExceptionUtility.NotSupportedEnumValue(swizzle),
+            };
         }
 
         /// <summary>
@@ -113,7 +98,7 @@ namespace Exanite.Core.Utilities
             vector2.x = Mathf.Clamp(vector2.x, min.x, max.x);
             vector2.y = Mathf.Clamp(vector2.y, min.y, max.y);
         }
-        
+
         /// <summary>
         ///     Normalizes the vector. <br />
         ///     This handles the case where the provided vector is Vector2.Zero,
