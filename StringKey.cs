@@ -11,9 +11,14 @@ namespace Exanite.Core
             this.Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        public static implicit operator StringKey(string value)
+        public static explicit operator StringKey(string value)
         {
             return new StringKey(value);
+        }
+        
+        public static explicit operator string(StringKey value)
+        {
+            return value.Value;
         }
 
         public static bool operator ==(StringKey lhs, StringKey rhs)
