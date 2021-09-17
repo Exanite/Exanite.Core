@@ -49,5 +49,10 @@ namespace Exanite.Core.Utilities
                 yield return element;
             }
         }
+        
+        public static KeyValuePair<TValue, TKey> AsReverse<TKey, TValue>(this KeyValuePair<TKey, TValue> pair)
+        {
+            return new KeyValuePair<TValue, TKey>(pair.Value, pair.Key);
+        }
     }
 }
