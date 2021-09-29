@@ -1,10 +1,11 @@
-﻿using Exanite.Core.Utilities;
-using Exanite.Core.Numbers;
+﻿using Exanite.Core.Numbers;
+using Exanite.Core.Utilities;
 using NUnit.Framework;
 using UnityEngine;
 
 namespace Exanite.Core.Tests.Editor.Utilities
 {
+    [TestFixture]
     public class VectorExtensionsTests
     {
         [Test]

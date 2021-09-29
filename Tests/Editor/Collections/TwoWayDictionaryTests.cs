@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace Exanite.Core.Tests.Editor.Collections
 {
+    [TestFixture]
     public class TwoWayDictionaryTests
     {
         [Test]

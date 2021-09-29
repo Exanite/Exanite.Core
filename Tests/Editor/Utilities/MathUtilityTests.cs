@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace Exanite.Core.Tests.Editor.Utilities
 {
+    [TestFixture]
     public class MathUtilityTests
     {
         [TestCase(5, 0, 10, 0, 100, ExpectedResult = 50)]
@@ -41,7 +42,7 @@ namespace Exanite.Core.Tests.Editor.Utilities
         {
             return MathUtility.GetNearestMultiple(value, multiple);
         }
-        
+
         [TestCase(0, ExpectedResult = 2)]
         [TestCase(2, ExpectedResult = 2)]
         [TestCase(5, ExpectedResult = 8)]
