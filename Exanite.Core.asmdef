@@ -1,6 +1,6 @@
 {
     "name": "Exanite.Core",
-    "rootNamespace": "Exanite.Core",
+    "rootNamespace": "",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

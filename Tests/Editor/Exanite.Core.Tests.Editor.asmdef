@@ -1,6 +1,6 @@
 {
     "name": "Exanite.Core.Tests.Editor",
-    "rootNamespace": "Exanite.Core.Tests.Editor",
+    "rootNamespace": "",
     "references": [
         "Exanite.Core",
         "UnityEngine.TestRunner",
