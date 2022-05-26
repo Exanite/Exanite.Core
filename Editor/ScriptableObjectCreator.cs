@@ -198,7 +198,7 @@ namespace Exanite.Core.Editor
             var result = AssemblyUtilities.GetTypes(AssemblyTypeFlags.CustomTypes)
                 .Where(x =>
                     x.IsClass 
-                    && !x.IsAbstract
+                    && x.IsConcrete()
                     && typeof(T).IsAssignableFrom(x) 
                     && !typeof(UnityEditor.Editor).IsAssignableFrom(x) 
                     && !typeof(EditorWindow).IsAssignableFrom(x));
