@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "displayName": "Exanite.Core",
   "description": "Exanite's library of reusable code",
+  "license": "MIT",
+  "licensesUrl": "https://example.com/licensing.html",
+  "documentationUrl": "https://github.com/Exanite/Exanite.Core",
   "author": {
     "name": "Exanite",
     "url": "https://github.com/Exanite"
