@@ -1,0 +1,10 @@
+{
+  "name": "com.Exanite.Core",
+  "version": "0.1.0",
+  "displayName": "Exanite.Core",
+  "description": "Exanite's library of reusable code",
+  "author": {
+    "name": "Exanite",
+    "url": "https://github.com/Exanite"
+  }
+}
