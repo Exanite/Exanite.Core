@@ -7,10 +7,18 @@ namespace Exanite.Core.Editor
     /// </summary>
     internal static class MenuItemDefines
     {
-        [MenuItem("Tools/Exanite/Core/Clean Empty Folders", priority = 10)]
+        [MenuItem("Tools/Exanite.Core/Clean Empty Folders")]
         public static void CleanEmptyFolders()
         {
             Editor.CleanEmptyFolders.Clean();
         }
+
+#if ODIN_INSPECTOR
+        [MenuItem("Tools/Exanite.Core/Scriptable Object Creator")]
+        public static void OpenScriptableObjectCreator()
+        {
+            ScriptableObjectCreator.OpenWindow();
+        }
+#endif
     }
 }
