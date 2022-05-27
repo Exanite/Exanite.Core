@@ -5,7 +5,6 @@ using System.Linq;
 using Exanite.Core.Utilities;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
-using Sirenix.Serialization;
 using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
@@ -39,14 +38,6 @@ namespace Exanite.Core.Editor
     {
         private IEnumerable<Type> validTypes;
         private Type selectedType;
-
-        /// <summary>
-        ///     Called whenever this <see cref="EditorWindow"/> creates a
-        ///     <see cref="ScriptableObject"/>
-        /// </summary>
-        [OdinSerialize]
-        [HideInInspector]
-        public Action<T> ScriptableObjectCreated { get; set; }
 
         /// <summary>
         ///     <see cref="Type"/> of <see cref="ScriptableObject"/> to create
@@ -159,7 +150,6 @@ namespace Exanite.Core.Editor
             AssetDatabase.Refresh();
             EditorGUIUtility.PingObject(Preview);
             Selection.activeObject = Preview;
-            ScriptableObjectCreated?.Invoke(Preview as T);
 
             CreatePreview();
         }
