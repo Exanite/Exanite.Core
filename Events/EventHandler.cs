@@ -1,4 +1,4 @@
-﻿namespace Exanite.Core
+﻿namespace Exanite.Core.Events
 {
     /// <summary>
     /// Similar to System.EventHandler, this represents a method that will handle an event when it is raised
