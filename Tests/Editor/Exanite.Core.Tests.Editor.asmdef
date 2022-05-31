@@ -3,8 +3,8 @@
     "rootNamespace": "",
     "references": [
         "Exanite.Core",
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
+        "UnityEditor.TestRunner",
+        "UnityEngine.TestRunner"
     ],
     "includePlatforms": [
         "Editor"
