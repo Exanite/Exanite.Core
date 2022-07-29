@@ -12,6 +12,8 @@ namespace Exanite.Core.Properties
             Name = name;
             Type = type;
         }
+
+        public abstract Property CreateProperty();
     }
     
     public class PropertyDefinition<T> : PropertyDefinition
@@ -22,5 +24,10 @@ namespace Exanite.Core.Properties
         }
         
         public T InitialValue { get; }
+        
+        public override Property CreateProperty()
+        {
+            return new Property<T>(Name, InitialValue);
+        }
     }
 }

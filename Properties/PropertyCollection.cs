@@ -84,14 +84,24 @@ namespace Exanite.Core.Properties
             return false;
         }
 
-        public Property<T> AddProperty<T>(PropertyDefinition<T> definition)
+        public Property AddProperty(PropertyDefinition definition)
         {
-            var property = new Property<T>(definition.Name, definition.InitialValue);
+            var property = definition.CreateProperty();
             properties.Add(property.Name, property);
 
             OnPropertyAdded(property);
 
             return property;
+        }
+
+        public Property<T> AddProperty<T>(PropertyDefinition<T> definition)
+        {
+            var property = definition.CreateProperty();
+            properties.Add(property.Name, property);
+
+            OnPropertyAdded(property);
+
+            return (Property<T>)property;
         }
 
         public bool RemoveProperty(string name)
