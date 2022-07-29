@@ -15,14 +15,20 @@ namespace Exanite.Core.Properties
 
         public event EventHandler<PropertyCollection, PropertyValueChangedEventArgs<object>> PropertyValueChanged;
 
-        public T GetPropertyValue<T>(PropertyDefinition<T> definition)
+        public T GetPropertyValue<T>(PropertyDefinition<T> definition, bool addIfDoesNotExist = false)
         {
+            if (addIfDoesNotExist)
+            {
+                return GetOrAddProperty(definition).Value;
+            }
+            
             return GetProperty(definition).Value;
         }
         
-        public void SetPropertyValue<T>(PropertyDefinition<T> definition, T value)
+        public void SetPropertyValue<T>(PropertyDefinition<T> definition, T value, bool addIfDoesNotExist = false)
         {
-            GetProperty(definition).Value = value;
+            var property = addIfDoesNotExist ? GetOrAddProperty(definition) : GetProperty(definition);
+            property.Value = value;
         }
 
         public Property<T> GetProperty<T>(PropertyDefinition<T> definition)
