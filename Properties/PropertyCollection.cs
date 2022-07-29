@@ -24,8 +24,30 @@ namespace Exanite.Core.Properties
         {
             GetProperty(definition).Value = value;
         }
-        
+
         public Property<T> GetProperty<T>(PropertyDefinition<T> definition)
+        {
+            if (!properties.TryGetValue(definition.Name, out var untypedProperty))
+            {
+                return null;
+            }
+            
+            if (untypedProperty.Type != definition.Type)
+            {
+                throw new PropertyTypeMismatchException(untypedProperty.Type, definition.Type);
+            }
+
+            return (Property<T>)untypedProperty;
+        }
+
+        public bool TryGetProperty<T>(PropertyDefinition<T> definition, out Property<T> property)
+        {
+            property = GetProperty(definition);
+
+            return property != null;
+        }
+        
+        public Property<T> GetOrAddProperty<T>(PropertyDefinition<T> definition)
         {
             Property<T> property;
 
@@ -40,7 +62,7 @@ namespace Exanite.Core.Properties
             }
             else
             {
-                property = CreateProperty(definition);
+                property = AddProperty(definition);
             }
 
             return property;
@@ -54,6 +76,16 @@ namespace Exanite.Core.Properties
             }
 
             return false;
+        }
+        
+        public Property<T> AddProperty<T>(PropertyDefinition<T> definition)
+        {
+            var property = new Property<T>(definition.Name, definition.InitialValue);
+            properties.Add(property.Name, property);
+
+            OnPropertyAdded(property);
+
+            return property;
         }
 
         public bool RemoveProperty(string name)
@@ -80,16 +112,6 @@ namespace Exanite.Core.Properties
             }
         }
 
-        private Property<T> CreateProperty<T>(PropertyDefinition<T> definition)
-        {
-            var property = new Property<T>(definition.Name, definition.InitialValue);
-            properties.Add(property.Name, property);
-
-            OnPropertyAdded(property);
-
-            return property;
-        }
-        
         private void OnPropertyAdded(Property property)
         {
             property.UntypedValueChanged += Property_OnUntypedValueChanged;

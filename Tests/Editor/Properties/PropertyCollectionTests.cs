@@ -20,52 +20,52 @@ namespace Exanite.Core.Tests.Editor.Properties
         }
         
         [Test]
-        public void GetProperty_WhenCalledTwice_ReturnsSameProperty()
+        public void GetOrAddProperty_WhenCalledTwice_ReturnsSameProperty()
         {
-            var propertyA = collection.GetProperty(StringADefinition);
-            var propertyB = collection.GetProperty(StringADefinition);
+            var propertyA = collection.GetOrAddProperty(StringADefinition);
+            var propertyB = collection.GetOrAddProperty(StringADefinition);
             
             Assert.AreEqual(propertyA, propertyB);
         }
 
         [Test]
-        public void GetProperty_WhenProvidedDifferentStringDefinitions_ReturnsDifferentProperties()
+        public void GetOrAddProperty_WhenProvidedDifferentStringDefinitions_ReturnsDifferentProperties()
         {
-            var propertyA = collection.GetProperty(StringADefinition);
-            var propertyB = collection.GetProperty(StringBDefinition);
+            var propertyA = collection.GetOrAddProperty(StringADefinition);
+            var propertyB = collection.GetOrAddProperty(StringBDefinition);
             
             Assert.AreNotEqual(propertyA, propertyB);
         }
 
         [Test]
-        public void GetProperty_WhenProvidedDefaultAndPropertyDoesNotExist_ReturnsPropertyWithProvidedDefault()
+        public void GetOrAddProperty_WhenProvidedDefaultAndPropertyDoesNotExist_ReturnsPropertyWithProvidedDefault()
         {
             const string defaultValue = "DefaultValue";
-            var property = collection.GetProperty(new PropertyDefinition<string>(DefaultPropertyName, defaultValue));
+            var property = collection.GetOrAddProperty(new PropertyDefinition<string>(DefaultPropertyName, defaultValue));
             
             Assert.AreEqual(defaultValue, property.Value);
         }
         
         [Test]
-        public void GetProperty_WhenProvidedDefaultAndPropertyDoesExist_ReturnsPropertyWithExistingValue()
+        public void GetOrAddProperty_WhenProvidedDefaultAndPropertyDoesExist_ReturnsPropertyWithExistingValue()
         {
             const string existingDefaultValue = "Existing";
             const string newDefaultValue = "New";
             
-            var propertyA = collection.GetProperty(new PropertyDefinition<string>(DefaultPropertyName, existingDefaultValue));
-            var propertyB = collection.GetProperty(new PropertyDefinition<string>(DefaultPropertyName, newDefaultValue));
+            var propertyA = collection.GetOrAddProperty(new PropertyDefinition<string>(DefaultPropertyName, existingDefaultValue));
+            var propertyB = collection.GetOrAddProperty(new PropertyDefinition<string>(DefaultPropertyName, newDefaultValue));
             
             Assert.AreEqual(propertyA.Value, existingDefaultValue);
             Assert.AreEqual(propertyB.Value, existingDefaultValue);
         }
 
         [Test]
-        public void GetProperty_WhenCalledTwiceWithDifferentTypes_ThrowsException()
+        public void GetOrAddProperty_WhenCalledTwiceWithDifferentTypes_ThrowsException()
         {
             Assert.Throws<PropertyTypeMismatchException>(() =>
             {
-                collection.GetProperty(new PropertyDefinition<string>(DefaultPropertyName));
-                collection.GetProperty(new PropertyDefinition<int>(DefaultPropertyName));
+                collection.GetOrAddProperty(new PropertyDefinition<string>(DefaultPropertyName));
+                collection.GetOrAddProperty(new PropertyDefinition<int>(DefaultPropertyName));
             });
         }
     }

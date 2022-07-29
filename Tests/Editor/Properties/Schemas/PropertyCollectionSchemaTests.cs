@@ -29,7 +29,7 @@ namespace Exanite.Core.Tests.Editor.Properties.Schemas
                 .Build();
 
             var collection = new PropertyCollection();
-            collection.GetProperty(SharedDefinition);
+            collection.AddProperty(SharedDefinition);
             
             Assert.IsTrue(schema.Validate(collection));
         }
@@ -56,7 +56,7 @@ namespace Exanite.Core.Tests.Editor.Properties.Schemas
                 .Build();
 
             var collection = new PropertyCollection();
-            collection.GetProperty(SharedDefinition);
+            collection.AddProperty(SharedDefinition);
             
             Assert.IsTrue(schema.Validate(collection));
         }
@@ -73,7 +73,7 @@ namespace Exanite.Core.Tests.Editor.Properties.Schemas
                 .Build();
             
             var collection = new PropertyCollection();
-            collection.GetProperty(existingDefinition);
+            collection.AddProperty(existingDefinition);
             
             Assert.IsFalse(schema.Validate(collection));
         }
