@@ -5,7 +5,7 @@ namespace Exanite.Core.Properties.Schemas
     public class PropertyCollectionSchemaEntryBuilder
     {
         private readonly PropertyDefinition definition;
-        private bool isRequired;
+        private bool isRequired = true;
 
         private readonly List<IPropertyValidator> propertyValidators = new List<IPropertyValidator>();
 
@@ -14,10 +14,10 @@ namespace Exanite.Core.Properties.Schemas
             this.definition = definition;
         }
 
-        public PropertyCollectionSchemaEntryBuilder AsRequired()
+        public PropertyCollectionSchemaEntryBuilder AsOptional()
         {
-            isRequired = true;
-            
+            isRequired = false;
+
             return this;
         }
 
@@ -32,7 +32,7 @@ namespace Exanite.Core.Properties.Schemas
 
             return this;
         }
-        
+
         public PropertyCollectionSchemaEntry Build()
         {
             return new PropertyCollectionSchemaEntry(definition, isRequired, propertyValidators);

@@ -21,10 +21,10 @@ namespace Exanite.Core.Properties
             {
                 return GetOrAddProperty(definition).Value;
             }
-            
+
             return GetProperty(definition).Value;
         }
-        
+
         public void SetPropertyValue<T>(PropertyDefinition<T> definition, T value, bool addIfDoesNotExist = false)
         {
             var property = addIfDoesNotExist ? GetOrAddProperty(definition) : GetProperty(definition);
@@ -37,7 +37,7 @@ namespace Exanite.Core.Properties
             {
                 return null;
             }
-            
+
             if (untypedProperty.Type != definition.Type)
             {
                 throw new PropertyTypeMismatchException(untypedProperty.Type, definition.Type);
@@ -52,7 +52,7 @@ namespace Exanite.Core.Properties
 
             return property != null;
         }
-        
+
         public Property<T> GetOrAddProperty<T>(PropertyDefinition<T> definition)
         {
             Property<T> property;
@@ -83,7 +83,7 @@ namespace Exanite.Core.Properties
 
             return false;
         }
-        
+
         public Property<T> AddProperty<T>(PropertyDefinition<T> definition)
         {
             var property = new Property<T>(definition.Name, definition.InitialValue);
@@ -129,7 +129,7 @@ namespace Exanite.Core.Properties
             PropertyRemoved?.Invoke(this, property);
             property.UntypedValueChanged -= Property_OnUntypedValueChanged;
         }
-        
+
         private void Property_OnUntypedValueChanged(Property sender, PropertyValueChangedEventArgs<object> e)
         {
             PropertyValueChanged?.Invoke(this, e);
