@@ -44,19 +44,17 @@ namespace Exanite.Core.Events
         {
             var type = typeof(T);
 
-            if (!listenerLists.TryGetValue(type, out var listenerList))
-            {
-                return;
-            }
-            
             foreach (var anyListener in anyListeners)
             {
                 anyListener.OnAnyEvent(e);
             }
 
-            foreach (var listener in listenerList)
+            if (listenerLists.TryGetValue(type, out var listenerList))
             {
-                ((IEventListener<T>)listener).OnEvent(e);
+                foreach (var listener in listenerList)
+                {
+                    ((IEventListener<T>)listener).OnEvent(e);
+                }
             }
         }
 
