@@ -5,7 +5,18 @@ namespace Exanite.Core.Events
 {
     public class EventBus
     {
+        private readonly List<IAnyEventListener> anyListeners = new List<IAnyEventListener>();
         private readonly Dictionary<Type, List<object>> listenerLists = new Dictionary<Type, List<object>>();
+
+        public void SubscribeAny(IAnyEventListener listener)
+        {
+            anyListeners.Add(listener);
+        }
+        
+        public bool UnsubscribeAny(IAnyEventListener listener)
+        {
+            return anyListeners.Remove(listener);
+        }
 
         public void Subscribe<T>(IEventListener<T> listener)
         {
@@ -19,14 +30,14 @@ namespace Exanite.Core.Events
             listenerLists[type].Add(listener);
         }
 
-        public void Unsubscribe<T>(IEventListener<T> listener)
+        public bool Unsubscribe<T>(IEventListener<T> listener)
         {
             if (!listenerLists.TryGetValue(typeof(T), out var listenerList))
             {
-                return;
+                return false;
             }
 
-            listenerList.Remove(listener);
+            return listenerList.Remove(listener);
         }
 
         public void Publish<T>(T e)
@@ -36,6 +47,11 @@ namespace Exanite.Core.Events
             if (!listenerLists.TryGetValue(type, out var listenerList))
             {
                 return;
+            }
+            
+            foreach (var anyListener in anyListeners)
+            {
+                anyListener.OnAnyEvent(e);
             }
 
             foreach (var listener in listenerList)
