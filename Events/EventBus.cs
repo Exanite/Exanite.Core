@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Exanite.Core.Events
 {
-    public class EventBus : IDisposable
+    public class EventBus : IAnyEventListener, IDisposable
     {
         private readonly List<IAnyEventListener> anyListeners = new List<IAnyEventListener>();
         private readonly Dictionary<Type, List<object>> listenerLists = new Dictionary<Type, List<object>>();
@@ -12,7 +12,7 @@ namespace Exanite.Core.Events
         {
             anyListeners.Add(listener);
         }
-        
+
         public bool UnsubscribeAny(IAnyEventListener listener)
         {
             return anyListeners.Remove(listener);
@@ -63,7 +63,7 @@ namespace Exanite.Core.Events
             anyListeners.Clear();
             listenerLists.Clear();
         }
-        
+
         public void Dispose()
         {
             Dispose(true);
@@ -76,6 +76,11 @@ namespace Exanite.Core.Events
             {
                 Clear();
             }
+        }
+
+        void IAnyEventListener.OnAnyEvent<T>(T e)
+        {
+            Publish(e);
         }
     }
 }
