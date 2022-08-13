@@ -2,6 +2,6 @@ namespace Exanite.Core.Events
 {
     public interface IAnyEventListener
     {
-        void OnAnyEvent(object e);
+        void OnAnyEvent<T>(T e);
     }
 }
