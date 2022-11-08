@@ -179,6 +179,7 @@ namespace Exanite.Core.Editor
                     && typeof(ScriptableObject).IsAssignableFrom(x) 
                     && !typeof(UnityEditor.Editor).IsAssignableFrom(x) 
                     && !typeof(EditorWindow).IsAssignableFrom(x))
+                .OrderBy(x => x.Name)
                 .ToList();;
         }
         
