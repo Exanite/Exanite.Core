@@ -4,7 +4,7 @@ using UnityEditor;
 namespace Exanite.Core.Editor
 {
     /// <summary>
-    /// Defines all the Unity MenuItems used in this assembly
+    ///     Defines all the Unity MenuItems used in this assembly
     /// </summary>
     internal static class MenuItemDefines
     {
@@ -18,7 +18,7 @@ namespace Exanite.Core.Editor
         [MenuItem("Tools/Exanite.Core/Scriptable Object Creator")]
         public static void OpenScriptableObjectCreator()
         {
-            ScriptableObjectCreator.OpenWindow();
+            ScriptableObjectCreator.OpenWindow<ScriptableObjectCreator>();
         }
 #endif
     }

@@ -12,33 +12,19 @@ using UnityEngine;
 namespace Exanite.Core.Editor
 {
     /// <summary>
-    ///     Unity <see cref="EditorWindow"/> that allows the user to create
-    ///     any valid <see cref="ScriptableObject"/>
-    /// </summary>
-    public sealed class ScriptableObjectCreator : ScriptableObjectCreator<ScriptableObject>
-    {
-        /// <summary>
-        ///     Opens an <see cref="EditorWindow"/> that creates
-        ///     <see cref="ScriptableObject"/>s
-        /// </summary>
-        public static void OpenWindow()
-        {
-            CreateInstance<ScriptableObjectCreator>().Show();
-        }
-    }
-
-    /// <summary>
-    ///     Abstract Unity <see cref="EditorWindow"/> that allows the user to
+    ///     Unity <see cref="EditorWindow"/> that allows the user to
     ///     create <see cref="ScriptableObject"/>s
     ///     <para/>
     ///     Note: Must be extended and made concrete to work because Unity
     ///     does not support generics
     /// </summary>
-    public abstract class ScriptableObjectCreator<T> : OdinEditorWindow where T : ScriptableObject
+    public class ScriptableObjectCreator : OdinEditorWindow
     {
         private IEnumerable<Type> validTypes;
         private Type selectedType;
 
+        public virtual string Name { get; } = "Scriptable Object Creator";
+        
         /// <summary>
         ///     <see cref="Type"/> of <see cref="ScriptableObject"/> to create
         /// </summary>
@@ -88,7 +74,8 @@ namespace Exanite.Core.Editor
         {
             base.Initialize();
 
-            name = GetType().GetNiceName().SplitPascalCase();
+            name = Name;
+            titleContent.text = Name;
             Reset();
         }
 
@@ -141,7 +128,7 @@ namespace Exanite.Core.Editor
             }
             catch (ArgumentException)
             {
-                EditorUtility.DisplayDialog($"Cannot create {typeof(T).Name}", "Save location must be in the Unity Assets folder", "Ok");
+                EditorUtility.DisplayDialog($"Cannot create {typeof(ScriptableObject).Name}", "Save location must be in the Unity Assets folder", "Ok");
 
                 return;
             }
@@ -185,15 +172,19 @@ namespace Exanite.Core.Editor
         /// </summary>
         protected virtual IEnumerable<Type> GetValidTypes()
         {
-            var result = AssemblyUtilities.GetTypes(AssemblyTypeFlags.CustomTypes)
+            return AssemblyUtilities.GetTypes(AssemblyTypeFlags.CustomTypes)
                 .Where(x =>
                     x.IsClass 
                     && x.IsConcrete()
-                    && typeof(T).IsAssignableFrom(x) 
+                    && typeof(ScriptableObject).IsAssignableFrom(x) 
                     && !typeof(UnityEditor.Editor).IsAssignableFrom(x) 
-                    && !typeof(EditorWindow).IsAssignableFrom(x));
-
-            return result.ToList();
+                    && !typeof(EditorWindow).IsAssignableFrom(x))
+                .ToList();;
+        }
+        
+        public static void OpenWindow<T>() where T : ScriptableObjectCreator
+        {
+            CreateInstance<T>().Show();
         }
     }
 }
