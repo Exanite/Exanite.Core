@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Exanite.Core.Utilities;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
@@ -20,17 +21,38 @@ namespace Exanite.Core.Editor
     /// </summary>
     public class ScriptableObjectCreator : OdinEditorWindow
     {
-        private IEnumerable<Type> validTypes;
+        private List<Type> validTypes;
+        private List<Assembly> validAssemblies;
+        
         private Type selectedType;
+        private Assembly selectedAssembly;
+        
+        private List<Type> filteredTypes;
 
         public virtual string Name { get; } = "Scriptable Object Creator";
+
+        [TitleGroup("$name", HorizontalLine = true)]
+        
+        [ShowInInspector]
+        [ValueDropdown(nameof(ValidAssemblies), SortDropdownItems = true, CopyValues = false)]
+        public Assembly SelectedAssembly
+        {
+            get => selectedAssembly;
+
+            set
+            {
+                selectedAssembly = value;
+                selectedType = null;
+                
+                UpdateFilteredTypes();
+            }
+        }
         
         /// <summary>
         ///     <see cref="Type"/> of <see cref="ScriptableObject"/> to create
         /// </summary>
-        [TitleGroup("$name", HorizontalLine = true)]
         [ShowInInspector]
-        [ValueDropdown(nameof(ValidTypes))]
+        [ValueDropdown(nameof(FilteredTypes), SortDropdownItems = true, CopyValues = false)]
         public Type SelectedType
         {
             get => selectedType;
@@ -57,7 +79,7 @@ namespace Exanite.Core.Editor
         ///     The types that this <see cref="EditorWindow"/> is allowed to
         ///     create
         /// </summary>
-        protected IEnumerable<Type> ValidTypes
+        protected List<Type> ValidTypes
         {
             get
             {
@@ -67,6 +89,32 @@ namespace Exanite.Core.Editor
                 }
 
                 return validTypes;
+            }
+        }
+
+        protected List<Assembly> ValidAssemblies
+        {
+            get
+            {
+                if (validAssemblies == null)
+                {
+                    validAssemblies = GetValidAssemblies();
+                }
+
+                return validAssemblies;
+            }
+        }
+
+        protected List<Type> FilteredTypes
+        {
+            get
+            {
+                if (filteredTypes == null)
+                {
+                    UpdateFilteredTypes();
+                }
+
+                return filteredTypes;
             }
         }
 
@@ -88,6 +136,8 @@ namespace Exanite.Core.Editor
         protected virtual void Reset()
         {
             SelectedType = null;
+            SelectedAssembly = null;
+            
             DestroyPreview();
         }
 
@@ -170,7 +220,7 @@ namespace Exanite.Core.Editor
         ///     Note: Use ValidTypes instead as it is cached instead of
         ///     calculating the result each time
         /// </summary>
-        protected virtual IEnumerable<Type> GetValidTypes()
+        protected virtual List<Type> GetValidTypes()
         {
             return AssemblyUtilities.GetTypes(AssemblyTypeFlags.CustomTypes)
                 .Where(x =>
@@ -179,10 +229,34 @@ namespace Exanite.Core.Editor
                     && typeof(ScriptableObject).IsAssignableFrom(x) 
                     && !typeof(UnityEditor.Editor).IsAssignableFrom(x) 
                     && !typeof(EditorWindow).IsAssignableFrom(x))
-                .OrderBy(x => x.Name)
                 .ToList();;
         }
-        
+
+        protected virtual List<Assembly> GetValidAssemblies()
+        {
+            return ValidTypes
+                .Select(x => x.Assembly)
+                .Distinct()
+                .ToList();
+        }
+
+        protected virtual List<Type> GetFilteredTypes()
+        {
+            var results = (IEnumerable<Type>)ValidTypes;
+
+            if (SelectedAssembly != null)
+            {
+                results = results.Where(x => x.Assembly == SelectedAssembly);
+            }
+
+            return results.ToList();
+        }
+
+        protected void UpdateFilteredTypes()
+        {
+            filteredTypes = GetFilteredTypes();
+        }
+
         public static void OpenWindow<T>() where T : ScriptableObjectCreator
         {
             CreateInstance<T>().Show();
