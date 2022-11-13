@@ -22,7 +22,14 @@ namespace Exanite.Core.Properties
                 return GetOrAddProperty(definition).Value;
             }
 
-            return GetProperty(definition).Value;
+            try
+            {
+                return GetProperty(definition).Value;
+            }
+            catch (NullReferenceException e)
+            {
+                throw new InvalidOperationException($"PropertyCollection does not contain Property: {definition.Name}", e);
+            }
         }
 
         public void SetPropertyValue<T>(PropertyDefinition<T> definition, T value, bool addIfDoesNotExist = false)
