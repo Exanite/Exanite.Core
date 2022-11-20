@@ -243,8 +243,6 @@ namespace Exanite.Core.Editor
                     && !typeof(UnityEditor.Editor).IsAssignableFrom(x)
                     && !typeof(EditorWindow).IsAssignableFrom(x))
                 .ToList();
-
-            ;
         }
 
         /// <summary>
