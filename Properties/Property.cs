@@ -10,7 +10,7 @@ namespace Exanite.Core.Properties
         public string Name { get; }
         public Type Type { get; }
 
-        public abstract object UntypedValue { get; }
+        public abstract object UntypedValue { get; set; }
 
         public event EventHandler<Property, PropertyValueChangedEventArgs<object>> UntypedValueChanged;
 
@@ -52,7 +52,11 @@ namespace Exanite.Core.Properties
             }
         }
 
-        public override object UntypedValue => Value;
+        public override object UntypedValue
+        {
+            get => value;
+            set => this.value = (T)value;
+        }
         
         public event EventHandler<Property, PropertyValueChangedEventArgs<T>> ValueChanged;
 
