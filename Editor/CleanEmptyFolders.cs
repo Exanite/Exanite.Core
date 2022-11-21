@@ -7,14 +7,14 @@ using UnityEngine;
 namespace Exanite.Core.Editor
 {
     /// <summary>
-    ///     Cleans empty folders from the Unity assets folder
-    ///     <para />
-    ///     Useful for version control systems like Git
+    ///     Cleans empty folders from the Unity assets folder.
+    ///     <para/>
+    ///     Useful for version control systems like Git.
     /// </summary>
     public static class CleanEmptyFolders
     {
         /// <summary>
-        ///     Cleans empty folders from the Unity assets folder
+        ///     Cleans empty folders from the Unity assets folder.
         /// </summary>
         public static void Clean()
         {

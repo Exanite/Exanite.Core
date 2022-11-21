@@ -11,7 +11,7 @@ namespace Exanite.Core.Components
         public bool dontDestroyOnLoad;
 
         private bool hasInitialized;
-        
+
         public static T Instance
         {
             get
@@ -43,14 +43,14 @@ namespace Exanite.Core.Components
             }
 
             hasInitialized = true;
-            
+
             if (instance)
             {
                 Destroy(gameObject);
 
                 return;
             }
-            
+
             instance = (T)this;
 
             if (dontDestroyOnLoad)

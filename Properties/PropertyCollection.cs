@@ -6,7 +6,7 @@ namespace Exanite.Core.Properties
 {
     public class PropertyCollection
     {
-        private Dictionary<string, Property> properties = new Dictionary<string, Property>(StringComparer.Ordinal);
+        private Dictionary<string, Property> properties = new(StringComparer.Ordinal);
 
         public IReadOnlyDictionary<string, Property> PropertiesByName => properties;
 

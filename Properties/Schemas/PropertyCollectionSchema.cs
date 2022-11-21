@@ -5,10 +5,10 @@ namespace Exanite.Core.Properties.Schemas
     public class PropertyCollectionSchema
     {
         // Default validators
-        private readonly RequiredPropertyValidator requiredPropertyValidator = new RequiredPropertyValidator();
-        private readonly PropertyTypeValidator propertyTypeValidator = new PropertyTypeValidator();
-        
-        private readonly List<PropertyCollectionSchemaValidationError> errorsCache = new List<PropertyCollectionSchemaValidationError>();
+        private readonly RequiredPropertyValidator requiredPropertyValidator = new();
+        private readonly PropertyTypeValidator propertyTypeValidator = new();
+
+        private readonly List<PropertyCollectionSchemaValidationError> errorsCache = new();
 
         public PropertyCollectionSchema(List<PropertyCollectionSchemaEntry> entries)
         {

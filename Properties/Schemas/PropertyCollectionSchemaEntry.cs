@@ -10,7 +10,7 @@ namespace Exanite.Core.Properties.Schemas
             IsRequired = isRequired;
             PropertyValidators = new List<IPropertyValidator>(propertyValidators);
         }
-        
+
         public PropertyDefinition Definition { get; }
         public bool IsRequired { get; }
 

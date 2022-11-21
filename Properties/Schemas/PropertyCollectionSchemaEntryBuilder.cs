@@ -7,7 +7,7 @@ namespace Exanite.Core.Properties.Schemas
         private readonly PropertyDefinition definition;
         private bool isRequired = true;
 
-        private readonly List<IPropertyValidator> propertyValidators = new List<IPropertyValidator>();
+        private readonly List<IPropertyValidator> propertyValidators = new();
 
         public PropertyCollectionSchemaEntryBuilder(PropertyDefinition definition)
         {

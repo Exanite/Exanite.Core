@@ -6,9 +6,9 @@ namespace Exanite.Core.Numbers
 {
     /// <summary>
     ///     Used to store very large numbers (up to 999.999999x(10^(2^63)))
-    ///     <para />
-    ///     Actual value = <see cref="Value" /> * (10 ^ (
-    ///     <see cref="Multiplier" /> * 3))
+    ///     <para/>
+    ///     Actual value = <see cref="Value"/> * (10 ^ (
+    ///     <see cref="Multiplier"/> * 3))
     /// </summary>
     [Serializable]
     public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
@@ -21,9 +21,8 @@ namespace Exanite.Core.Numbers
         private long multiplier;
 
         /// <summary>
-        ///     Value of this <see cref="LargeNumber" />
-        ///     Formatted as xxx.yyyyyy where x = significant digits and y =
-        ///     trailing digits
+        ///     Value of this <see cref="LargeNumber"/> Formatted as xxx.yyyyyy
+        ///     where x = significant digits and y = trailing digits
         /// </summary>
         public double Value
         {
@@ -42,7 +41,7 @@ namespace Exanite.Core.Numbers
         }
 
         /// <summary>
-        ///     Multiplier of this <see cref="LargeNumber" />
+        ///     Multiplier of this <see cref="LargeNumber"/>
         /// </summary>
         public long Multiplier
         {
@@ -57,7 +56,7 @@ namespace Exanite.Core.Numbers
         }
 
         /// <summary>
-        ///     Creates a new <see cref="LargeNumber" />
+        ///     Creates a new <see cref="LargeNumber"/>
         /// </summary>
         public LargeNumber(double value = 0, long multiplier = 0)
         {
@@ -68,8 +67,7 @@ namespace Exanite.Core.Numbers
         }
 
         /// <summary>
-        ///     Shifts the value and multiplier of this
-        ///     <see cref="LargeNumber" />
+        ///     Shifts the value and multiplier of this <see cref="LargeNumber"/>
         /// </summary>
         private void ShiftPlaces()
         {
@@ -159,7 +157,7 @@ namespace Exanite.Core.Numbers
                         return ToString(NumDisplayFormat.Scientific);
                     }
 
-                    return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesShort) Multiplier}";
+                    return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesShort)Multiplier}";
                 }
                 case NumDisplayFormat.Long:
                 {
@@ -168,7 +166,7 @@ namespace Exanite.Core.Numbers
                         return ToString(NumDisplayFormat.Short);
                     }
 
-                    return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesLong) Math.Abs(Multiplier)}{(Multiplier < 0 ? "th" : string.Empty)}";
+                    return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesLong)Math.Abs(Multiplier)}{(Multiplier < 0 ? "th" : string.Empty)}";
                 }
                 default:
                 {

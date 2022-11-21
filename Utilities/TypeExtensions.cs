@@ -3,12 +3,12 @@
 namespace Exanite.Core.Utilities
 {
     /// <summary>
-    ///     Extension methods for <see cref="Type" />s
+    ///     Extension methods for <see cref="Type"/>s.
     /// </summary>
     public static class TypeExtensions
     {
         /// <summary>
-        ///     Returns true if the type is not abstract or generic
+        ///     Returns true if the type is not abstract or generic.
         /// </summary>
         public static bool IsConcrete(this Type type)
         {
@@ -16,7 +16,7 @@ namespace Exanite.Core.Utilities
         }
 
         /// <summary>
-        ///     Gets the default value for the provided <see cref="Type" />
+        ///     Gets the default value for the provided <see cref="Type"/>.
         /// </summary>
         public static object GetDefault(this Type type)
         {

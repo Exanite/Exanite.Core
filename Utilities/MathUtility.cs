@@ -1,14 +1,14 @@
 ﻿namespace Exanite.Core.Utilities
 {
     /// <summary>
-    ///     Utility class for math
+    ///     Utility class for math.
     /// </summary>
     public static class MathUtility
     {
-        // note: order between different value type overloads should go by float, double, int, long
+        // Note: Order between different value type overloads should go by float, double, int, long
 
         /// <summary>
-        ///     Remaps a value from one range to another
+        ///     Remaps a value from one range to another.
         /// </summary>
         public static float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)
         {
@@ -27,7 +27,7 @@
         }
 
         /// <summary>
-        ///     Wraps a value between min and max values
+        ///     Wraps a value between min and max values.
         /// </summary>
         public static float Wrap(float value, float min, float max)
         {
@@ -50,7 +50,7 @@
         }
 
         /// <summary>
-        ///     Returns the true modulo of a value when divided by a divisor
+        ///     Returns the true modulo of a value when divided by a divisor.
         /// </summary>
         public static float Modulo(float value, float divisor)
         {
@@ -73,7 +73,7 @@
         }
 
         /// <summary>
-        ///     Clamps a value between min and max values
+        ///     Clamps a value between min and max values.
         /// </summary>
         public static int Clamp(int value, int min, int max)
         {
@@ -91,10 +91,10 @@
         }
 
         /// <summary>
-        ///     Gets the nearest multiple to a value
+        ///     Gets the nearest multiple to a value.
         /// </summary>
         /// <example>
-        ///     GetNearestMultiple(45, 11) will return 44
+        ///     GetNearestMultiple(45, 11) will return 44.
         /// </example>
         public static int GetNearestMultiple(int value, int multiple)
         {
@@ -110,13 +110,12 @@
         }
 
         /// <summary>
-        ///     Gets the next power of two
+        ///     Gets the next power of two.
         /// </summary>
         /// <example>
-        ///     GetNextPowerOfTwo(16) will return 16
-        ///     GetNextPowerOfTwo(5) will return 8
+        ///     GetNextPowerOfTwo(16) will return 16 GetNextPowerOfTwo(5) will
+        ///     return 8.
         /// </example>
-        /// <returns></returns>
         public static int GetNextPowerOfTwo(int value)
         {
             var result = 2;

@@ -35,7 +35,7 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Reverse of this <see cref="TwoWayDictionary{TKey,TValue}" />
+        ///     Reverse of this <see cref="TwoWayDictionary{TKey,TValue}"/>.
         /// </summary>
         public TwoWayDictionary<TValue, TKey> Inverse { get; }
 
@@ -49,9 +49,6 @@ namespace Exanite.Core.Collections
         protected IDictionary<TKey, TValue> Forward => forward;
         protected IDictionary<TValue, TKey> Backward => backward;
 
-        /// <summary>
-        ///     Creates a new <see cref="TwoWayDictionary{TKey,TValue}" />
-        /// </summary>
         public TwoWayDictionary()
         {
             forward = new Dictionary<TKey, TValue>();
@@ -60,9 +57,8 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Creates a new <see cref="TwoWayDictionary{TKey,TValue}" /> and
-        ///     copies the values from the provided
-        ///     <paramref name="dictionary" />
+        ///     Creates a new <see cref="TwoWayDictionary{TKey,TValue}"/> and
+        ///     copies the values from the provided <paramref name="dictionary"/>.
         /// </summary>
         public TwoWayDictionary(IDictionary<TKey, TValue> dictionary)
         {
@@ -79,9 +75,10 @@ namespace Exanite.Core.Collections
 
         /// <summary>
         ///     Used internally to create the inverse
-        ///     <see cref="TwoWayDictionary{TKey,TValue}" />
+        ///     <see cref="TwoWayDictionary{TKey,TValue}"/>.
         /// </summary>
-        /// <param name="other"></param>
+        /// <param name="other">
+        /// </param>
         private TwoWayDictionary(TwoWayDictionary<TValue, TKey> other)
         {
             forward = other.backward;

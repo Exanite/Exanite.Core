@@ -13,7 +13,7 @@ namespace Exanite.Core.Utilities
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> WithRangeAtStart<T>(this IEnumerable<T> collection, IEnumerable<T> toStart)
         {
             foreach (var element in toStart)
@@ -36,7 +36,7 @@ namespace Exanite.Core.Utilities
 
             yield return toEnd;
         }
-        
+
         public static IEnumerable<T> WithRangeAtEnd<T>(this IEnumerable<T> collection, IEnumerable<T> toEnd)
         {
             foreach (var item in collection)
@@ -49,7 +49,7 @@ namespace Exanite.Core.Utilities
                 yield return element;
             }
         }
-        
+
         public static KeyValuePair<TValue, TKey> AsReverse<TKey, TValue>(this KeyValuePair<TKey, TValue> pair)
         {
             return new KeyValuePair<TValue, TKey>(pair.Value, pair.Key);

@@ -12,7 +12,7 @@ namespace Exanite.Core.Properties
     {
         private static readonly string PropertyPrefix = "PDC_";
 
-        private static readonly Dictionary<Type, PropertyDefinition> Cache = new Dictionary<Type, PropertyDefinition>();
+        private static readonly Dictionary<Type, PropertyDefinition> Cache = new();
 
         /// <summary>
         ///     Returns a constant property definition for the specified type.

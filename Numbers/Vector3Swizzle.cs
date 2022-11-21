@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Exanite.Core.Numbers
 {
     /// <summary>
-    ///     Defines how a <see cref="Vector3" /> value should be swizzled
+    ///     Defines how a <see cref="Vector3"/> value should be swizzled.
     /// </summary>
     [Serializable]
     public enum Vector3Swizzle
@@ -15,27 +15,27 @@ namespace Exanite.Core.Numbers
         XYZ,
 
         /// <summary>
-        ///     Swaps the component positions from XYZ to XZY
+        ///     Swaps the component positions from XYZ to XZY.
         /// </summary>
         XZY,
 
         /// <summary>
-        ///     Swaps the component positions from XYZ to YXZ
+        ///     Swaps the component positions from XYZ to YXZ.
         /// </summary>
         YXZ,
 
         /// <summary>
-        ///     Swaps the component positions from XYZ to YZX
+        ///     Swaps the component positions from XYZ to YZX.
         /// </summary>
         YZX,
 
         /// <summary>
-        ///     Swaps the component positions from XYZ to ZXY
+        ///     Swaps the component positions from XYZ to ZXY.
         /// </summary>
         ZXY,
 
         /// <summary>
-        ///     Swaps the component positions from XYZ to ZYX
+        ///     Swaps the component positions from XYZ to ZYX.
         /// </summary>
         ZYX,
     }

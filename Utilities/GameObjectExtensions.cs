@@ -2,14 +2,8 @@
 
 namespace Exanite.Core.Utilities
 {
-    /// <summary>
-    ///     Extension methods for <see cref="GameObject" />s
-    /// </summary>
     public static class GameObjectExtensions
     {
-        /// <summary>
-        ///     Gets or adds a <see cref="Component" />
-        /// </summary>
         public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
         {
             var component = gameObject.GetComponent<T>();
@@ -22,19 +16,17 @@ namespace Exanite.Core.Utilities
             return gameObject.AddComponent<T>();
         }
 
-        /// <summary>
-        ///     Gets or adds a <see cref="Component" />
-        /// </summary>
         public static T GetOrAddComponent<T>(this Component component) where T : Component
         {
             return component.gameObject.GetOrAddComponent<T>();
         }
 
         /// <summary>
-        ///     Gets a <see cref="Component" /> if it exists, throws a
-        ///     <see cref="MissingComponentException" /> if it does not
+        ///     Gets a <see cref="Component"/> if it exists, throws a
+        ///     <see cref="MissingComponentException"/> if it does not.
         /// </summary>
-        /// <exception cref="MissingComponentException"></exception>
+        /// <exception cref="MissingComponentException">
+        /// </exception>
         public static T GetRequiredComponent<T>(this GameObject gameObject) where T : class
         {
             var component = gameObject.GetComponent<T>() as Component;
@@ -48,10 +40,11 @@ namespace Exanite.Core.Utilities
         }
 
         /// <summary>
-        ///     Gets a <see cref="Component" /> if it exists, throws a
-        ///     <see cref="MissingComponentException" /> if it does not
+        ///     Gets a <see cref="Component"/> if it exists, throws a
+        ///     <see cref="MissingComponentException"/> if it does not.
         /// </summary>
-        /// <exception cref="MissingComponentException"></exception>
+        /// <exception cref="MissingComponentException">
+        /// </exception>
         public static T GetRequiredComponent<T>(this Component component) where T : class
         {
             return component.gameObject.GetRequiredComponent<T>();

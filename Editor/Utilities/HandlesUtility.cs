@@ -4,21 +4,21 @@ using UnityEngine;
 namespace Exanite.Core.Editor.Utilities
 {
     /// <summary>
-    ///     Helper methods for drawing <see cref="Handles" /> in the
-    ///     <see cref="SceneView" />
+    ///     Helper methods for drawing <see cref="Handles"/> in the
+    ///     <see cref="SceneView"/>.
     /// </summary>
     public static class HandlesUtility
     {
         private static readonly Vector3[] Square =
         {
-            new Vector3(-0.5f, 0, -0.5f), new Vector3(-0.5f, 0, 0.5f),
-            new Vector3(-0.5f, 0, 0.5f), new Vector3(0.5f, 0, 0.5f),
-            new Vector3(0.5f, 0, 0.5f), new Vector3(0.5f, 0, -0.5f),
-            new Vector3(0.5f, 0, -0.5f), new Vector3(-0.5f, 0, -0.5f),
+            new(-0.5f, 0, -0.5f), new(-0.5f, 0, 0.5f),
+            new(-0.5f, 0, 0.5f), new(0.5f, 0, 0.5f),
+            new(0.5f, 0, 0.5f), new(0.5f, 0, -0.5f),
+            new(0.5f, 0, -0.5f), new(-0.5f, 0, -0.5f),
         };
 
         /// <summary>
-        ///     Draws multiple lines
+        ///     Draws multiple lines.
         /// </summary>
         public static void DrawLines(Vector3[] lineSegments, Vector3 position, Quaternion rotation, Vector3 scale)
         {
@@ -32,7 +32,7 @@ namespace Exanite.Core.Editor.Utilities
         }
 
         /// <summary>
-        ///     Draws a rectangle
+        ///     Draws a rectangle.
         /// </summary>
         public static void DrawRectangle(Vector3 position, Quaternion rotation, Vector3 scale)
         {

@@ -5,8 +5,8 @@ namespace Exanite.Core.Events
 {
     public class EventBus : IAnyEventListener, IDisposable
     {
-        private readonly List<IAnyEventListener> anyListeners = new List<IAnyEventListener>();
-        private readonly Dictionary<Type, List<object>> listenerLists = new Dictionary<Type, List<object>>();
+        private readonly List<IAnyEventListener> anyListeners = new();
+        private readonly Dictionary<Type, List<object>> listenerLists = new();
 
         public void SubscribeAny(IAnyEventListener listener)
         {

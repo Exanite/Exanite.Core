@@ -11,7 +11,7 @@ namespace Exanite.Core.Interpolation
         {
             var timeSinceLastPush = time - lastPushTime;
             timeSinceLastPush += extrapolationMultiplier * timeBetweenPushes;
-            
+
             var t = timeSinceLastPush / timeBetweenPushes;
 
             return Lerp(Previous, Current, t);
