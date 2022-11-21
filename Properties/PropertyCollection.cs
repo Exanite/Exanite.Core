@@ -17,38 +17,31 @@ namespace Exanite.Core.Properties
 
         public T GetPropertyValue<T>(PropertyDefinition<T> definition, bool addIfDoesNotExist = false)
         {
-            if (addIfDoesNotExist)
+            var property = addIfDoesNotExist ? GetOrAddProperty(definition) : GetProperty(definition);
+
+            if (property != null)
             {
-                return GetOrAddProperty(definition).Value;
+                return property.Value;
             }
 
-            try
-            {
-                return GetProperty(definition).Value;
-            }
-            catch (NullReferenceException e)
-            {
-                throw new InvalidOperationException($"PropertyCollection does not contain Property: {definition.Name}", e);
-            }
+            throw new PropertyNotFoundException(definition);
         }
 
         public void SetPropertyValue<T>(PropertyDefinition<T> definition, T value, bool addIfDoesNotExist = false)
         {
             var property = addIfDoesNotExist ? GetOrAddProperty(definition) : GetProperty(definition);
-            property.Value = value;
+
+            if (property != null)
+            {
+                property.Value = value;
+            }
+            else
+            {
+                throw new PropertyNotFoundException(definition);
+            }
         }
 
         public Property GetUntypedProperty(PropertyDefinition definition)
-        {
-            if (!properties.TryGetValue(definition.Name, out var untypedProperty))
-            {
-                return null;
-            }
-
-            return untypedProperty;
-        }
-
-        public Property<T> GetProperty<T>(PropertyDefinition<T> definition)
         {
             if (!properties.TryGetValue(definition.Name, out var untypedProperty))
             {
@@ -60,7 +53,12 @@ namespace Exanite.Core.Properties
                 throw new PropertyTypeMismatchException(untypedProperty.Type, definition.Type);
             }
 
-            return (Property<T>)untypedProperty;
+            return untypedProperty;
+        }
+
+        public Property<T> GetProperty<T>(PropertyDefinition<T> definition)
+        {
+            return (Property<T>)GetUntypedProperty(definition);
         }
 
         public bool TryGetProperty<T>(PropertyDefinition<T> definition, out Property<T> property)

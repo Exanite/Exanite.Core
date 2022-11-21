@@ -29,18 +29,18 @@ namespace Exanite.Core.Tests.Editor.Properties
         }
 
         [Test]
-        public void GetPropertyValue_WhenPropertyDoesNotExist_ThrowsError()
+        public void GetPropertyValue_WhenPropertyDoesNotExist_ThrowsException()
         {
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<PropertyNotFoundException>(() =>
             {
                 collection.GetPropertyValue(StringADefinition);
             });
         }
 
         [Test]
-        public void SetPropertyValue_WhenPropertyDoesNotExist_ThrowsError()
+        public void SetPropertyValue_WhenPropertyDoesNotExist_ThrowsException()
         {
-            Assert.Throws<NullReferenceException>(() =>
+            Assert.Throws<PropertyNotFoundException>(() =>
             {
                 collection.SetPropertyValue(StringADefinition, "");
             });
