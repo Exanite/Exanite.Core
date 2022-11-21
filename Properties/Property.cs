@@ -26,6 +26,7 @@ namespace Exanite.Core.Properties
         {
             propertyValueChangedEventArgs.PreviousValue = previousValue;
             propertyValueChangedEventArgs.NewValue = newValue;
+            
             UntypedValueChanged?.Invoke(this, propertyValueChangedEventArgs);
         }
     }
@@ -63,11 +64,9 @@ namespace Exanite.Core.Properties
         public Property(string name) : base(name, typeof(T))
         {
             propertyValueChangedEventArgs = new PropertyValueChangedEventArgs<T>(this);
-            
-            Value = value;
         }
 
-        protected void OnValueChanged(T previousValue, T newValue)
+        private void OnValueChanged(T previousValue, T newValue)
         {
             propertyValueChangedEventArgs.PreviousValue = previousValue;
             propertyValueChangedEventArgs.NewValue = newValue;

@@ -1,4 +1,3 @@
-using System;
 using Exanite.Core.Properties;
 using NUnit.Framework;
 
