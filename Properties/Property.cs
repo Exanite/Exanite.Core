@@ -60,7 +60,7 @@ namespace Exanite.Core.Properties
         
         public event EventHandler<Property, PropertyValueChangedEventArgs<T>> ValueChanged;
 
-        public Property(string name, T value) : base(name, typeof(T))
+        public Property(string name) : base(name, typeof(T))
         {
             propertyValueChangedEventArgs = new PropertyValueChangedEventArgs<T>(this);
             

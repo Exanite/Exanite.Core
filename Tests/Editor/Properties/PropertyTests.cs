@@ -12,7 +12,8 @@ namespace Exanite.Core.Tests.Editor.Properties
         [Test]
         public void UntypedValue_IsEqualToValue()
         {
-            var property = new Property<string>(DefaultPropertyName, "A");
+            var property = new Property<string>(DefaultPropertyName);
+            property.Value = "A";
 
             Assert.AreEqual(property.UntypedValue, property.Value);
 
@@ -27,7 +28,9 @@ namespace Exanite.Core.Tests.Editor.Properties
             const string previousValue = "Previous";
             const string newValue = "New";
 
-            var property = new Property<string>(DefaultPropertyName, previousValue);
+            var property = new Property<string>(DefaultPropertyName);
+            property.Value = previousValue;
+            
             var valueChangedRecorder = new EventRaisedRecorder();
             property.ValueChanged += (sender, args) =>
             {
@@ -49,7 +52,9 @@ namespace Exanite.Core.Tests.Editor.Properties
             const string previousValue = "Previous";
             const string newValue = "New";
 
-            var property = new Property<string>(DefaultPropertyName, previousValue);
+            var property = new Property<string>(DefaultPropertyName);
+            property.Value = previousValue;
+            
             var valueChangedRecorder = new EventRaisedRecorder();
             property.UntypedValueChanged += (sender, args) =>
             {

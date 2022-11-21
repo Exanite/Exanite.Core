@@ -65,28 +65,6 @@ namespace Exanite.Core.Tests.Editor.Properties
         }
 
         [Test]
-        public void GetOrAddProperty_WhenProvidedDefaultAndPropertyDoesNotExist_ReturnsPropertyWithProvidedDefault()
-        {
-            const string defaultValue = "DefaultValue";
-            var property = collection.GetOrAddProperty(new PropertyDefinition<string>(DefaultPropertyName, defaultValue));
-
-            Assert.AreEqual(defaultValue, property.Value);
-        }
-
-        [Test]
-        public void GetOrAddProperty_WhenProvidedDefaultAndPropertyDoesExist_ReturnsPropertyWithExistingValue()
-        {
-            const string existingDefaultValue = "Existing";
-            const string newDefaultValue = "New";
-
-            var propertyA = collection.GetOrAddProperty(new PropertyDefinition<string>(DefaultPropertyName, existingDefaultValue));
-            var propertyB = collection.GetOrAddProperty(new PropertyDefinition<string>(DefaultPropertyName, newDefaultValue));
-
-            Assert.AreEqual(propertyA.Value, existingDefaultValue);
-            Assert.AreEqual(propertyB.Value, existingDefaultValue);
-        }
-
-        [Test]
         public void GetOrAddProperty_WhenCalledTwiceWithDifferentTypes_ThrowsException()
         {
             Assert.Throws<PropertyTypeMismatchException>(() =>

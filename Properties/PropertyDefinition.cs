@@ -18,16 +18,11 @@ namespace Exanite.Core.Properties
     
     public class PropertyDefinition<T> : PropertyDefinition
     {
-        public PropertyDefinition(string name, T initialValue = default) : base(name, typeof(T))
-        {
-            InitialValue = initialValue;
-        }
-        
-        public T InitialValue { get; }
+        public PropertyDefinition(string name) : base(name, typeof(T)) {}
         
         public override Property CreateProperty()
         {
-            return new Property<T>(Name, InitialValue);
+            return new Property<T>(Name);
         }
     }
 }
