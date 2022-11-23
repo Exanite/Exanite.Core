@@ -52,7 +52,7 @@ namespace Exanite.Core.Properties
                 OnValueChanged(previousValue, value);
             }
         }
-
+        
         public override object UntypedValue
         {
             get => value;
