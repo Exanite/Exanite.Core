@@ -41,7 +41,7 @@ namespace Exanite.Core.Properties
             }
         }
 
-        public Property GetUntypedProperty(string name)
+        public Property GetProperty(string name)
         {
             if (!properties.TryGetValue(name, out var untypedProperty))
             {
@@ -51,7 +51,7 @@ namespace Exanite.Core.Properties
             return untypedProperty;
         }
 
-        public Property GetUntypedProperty(PropertyDefinition definition)
+        public Property GetProperty(PropertyDefinition definition)
         {
             if (!properties.TryGetValue(definition.Name, out var untypedProperty))
             {
@@ -68,7 +68,7 @@ namespace Exanite.Core.Properties
 
         public Property<T> GetProperty<T>(PropertyDefinition<T> definition)
         {
-            return (Property<T>)GetUntypedProperty(definition);
+            return (Property<T>)GetProperty((PropertyDefinition)definition);
         }
 
         public bool TryGetProperty<T>(PropertyDefinition<T> definition, out Property<T> property)
@@ -76,6 +76,27 @@ namespace Exanite.Core.Properties
             property = GetProperty(definition);
 
             return property != null;
+        }
+        
+        public Property GetOrAddProperty(PropertyDefinition definition)
+        {
+            Property property;
+
+            if (properties.TryGetValue(definition.Name, out var untypedProperty))
+            {
+                if (untypedProperty.Type != definition.Type)
+                {
+                    throw new PropertyTypeMismatchException(untypedProperty.Type, definition.Type);
+                }
+
+                property = untypedProperty;
+            }
+            else
+            {
+                property = AddProperty(definition);
+            }
+
+            return property;
         }
 
         public Property<T> GetOrAddProperty<T>(PropertyDefinition<T> definition)
@@ -99,7 +120,7 @@ namespace Exanite.Core.Properties
             return property;
         }
 
-        public bool HasProperty<T>(PropertyDefinition<T> definition)
+        public bool HasProperty(PropertyDefinition definition)
         {
             if (properties.TryGetValue(definition.Name, out var untypedProperty))
             {
