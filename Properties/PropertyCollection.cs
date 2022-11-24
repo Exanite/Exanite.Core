@@ -41,6 +41,16 @@ namespace Exanite.Core.Properties
             }
         }
 
+        public Property GetUntypedProperty(string name)
+        {
+            if (!properties.TryGetValue(name, out var untypedProperty))
+            {
+                return null;
+            }
+            
+            return untypedProperty;
+        }
+
         public Property GetUntypedProperty(PropertyDefinition definition)
         {
             if (!properties.TryGetValue(definition.Name, out var untypedProperty))
