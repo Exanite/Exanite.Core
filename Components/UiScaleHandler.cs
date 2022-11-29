@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Project.Source.UserInterface
+namespace Exanite.Core.Components
 {
     public class UiScaleHandler : MonoBehaviour
     {
