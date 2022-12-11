@@ -9,9 +9,9 @@ namespace Exanite.Core.Utilities
     {
         /// <summary>
         ///     Calls Destroy in Play mode and calls DestroyImmediate in Edit
-        ///     mode.
+        ///     mode. Unsafe because this can destroy assets.
         /// </summary>
-        public static void SafeDestroy(Object obj)
+        public static void UnsafeDestroy(Object obj)
         {
             if (Application.isPlaying)
             {

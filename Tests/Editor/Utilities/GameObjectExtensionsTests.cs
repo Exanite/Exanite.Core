@@ -18,7 +18,7 @@ namespace Exanite.Core.Tests.Editor.Utilities
         [TearDown]
         public void TearDown()
         {
-            UnityUtility.SafeDestroy(GameObject);
+            UnityUtility.UnsafeDestroy(GameObject);
         }
 
         [Test]
