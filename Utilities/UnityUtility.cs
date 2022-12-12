@@ -22,14 +22,5 @@ namespace Exanite.Core.Utilities
                 Object.DestroyImmediate(obj);
             }
         }
-
-        /// <summary>
-        ///     Logs the <paramref name="name"/> and <paramref name="value"/>
-        ///     formatted as 'name: value' to the Unity console.
-        /// </summary>
-        public static void LogVariable(string name, object value)
-        {
-            Debug.Log($"{name}: {value}");
-        }
     }
 }
