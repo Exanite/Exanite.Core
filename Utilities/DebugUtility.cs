@@ -20,7 +20,7 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static T Dump<T>(this T value)
         {
-            if (value is IEnumerable enumerable)
+            if (value is IEnumerable enumerable && value is not string)
             {
                 DumpEnumerable(enumerable);
 
