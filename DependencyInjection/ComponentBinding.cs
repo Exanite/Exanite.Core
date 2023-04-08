@@ -7,7 +7,7 @@ using Sirenix.Serialization;
 using UniDi;
 using UnityEngine;
 
-namespace Plugins.Exanite.Core.DependencyInjection
+namespace Exanite.Core.DependencyInjection
 {
     [HideReferenceObjectPicker]
     [Serializable]

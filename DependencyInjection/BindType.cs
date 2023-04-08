@@ -1,5 +1,5 @@
 #if EXANITE_UNIDI && ODIN_INSPECTOR
-namespace Plugins.Exanite.Core.DependencyInjection
+namespace Exanite.Core.DependencyInjection
 {
     public enum BindType
     {

@@ -1,7 +1,7 @@
 #if EXANITE_UNIDI && ODIN_INSPECTOR
 using System;
 
-namespace Plugins.Exanite.Core.DependencyInjection
+namespace Exanite.Core.DependencyInjection
 {
     public class DiBindingException : Exception
     {

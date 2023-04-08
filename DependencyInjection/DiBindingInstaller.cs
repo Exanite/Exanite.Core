@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UniDi;
 
-namespace Plugins.Exanite.Core.DependencyInjection
+namespace Exanite.Core.DependencyInjection
 {
     public class DiBindingInstaller : InstallerBase
     {

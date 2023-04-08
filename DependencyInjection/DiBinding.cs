@@ -5,7 +5,7 @@ using Sirenix.Serialization;
 using UniDi;
 using UnityEngine;
 
-namespace Plugins.Exanite.Core.DependencyInjection
+namespace Exanite.Core.DependencyInjection
 {
     [DefaultExecutionOrder(-12000)]
     public class DiBinding : SerializedMonoBehaviour
