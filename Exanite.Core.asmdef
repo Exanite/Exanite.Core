@@ -1,6 +1,5 @@
 {
     "name": "Exanite.Core",
-    "rootNamespace": "",
     "references": [
         "UniDi.UniDi"
     ],

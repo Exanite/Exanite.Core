@@ -1,6 +1,5 @@
 {
     "name": "Exanite.Core.Editor",
-    "rootNamespace": "",
     "references": [
         "Exanite.Core"
     ],
