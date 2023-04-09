@@ -11,7 +11,13 @@ namespace Exanite.Core.Editor
         [MenuItem("Tools/Exanite.Core/Clean Empty Folders")]
         public static void CleanEmptyFolders()
         {
-            Editor.CleanEmptyFolders.Clean();
+            Editor.CleanEmptyFolders.Run();
+        }
+
+        [MenuItem("Tools/Exanite.Core/Reserialize All Assets")]
+        public static void ReserializeAllAssets()
+        {
+            Editor.ReserializeAllAssets.Run();
         }
 
 #if ODIN_INSPECTOR

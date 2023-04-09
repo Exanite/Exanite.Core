@@ -16,7 +16,7 @@ namespace Exanite.Core.Editor
         /// <summary>
         ///     Cleans empty folders from the Unity assets folder.
         /// </summary>
-        public static void Clean()
+        public static void Run()
         {
             var shouldProceed = EditorUtility.DisplayDialog(
                 "Remove empty folders?",
@@ -24,35 +24,37 @@ namespace Exanite.Core.Editor
                 "Yes",
                 "No");
 
-            if (shouldProceed)
+            if (!shouldProceed)
             {
-                var assetsFolder = new DirectoryInfo(Application.dataPath);
+                return;
+            }
 
-                var emptyFolders = GetEmptyFolders(assetsFolder);
+            var assetsFolder = new DirectoryInfo(Application.dataPath);
 
-                if (emptyFolders.Count > 0)
+            var emptyFolders = GetEmptyFolders(assetsFolder);
+
+            if (emptyFolders.Count > 0)
+            {
+                var foldersToRemove = string.Empty;
+
+                foreach (var item in emptyFolders)
                 {
-                    var foldersToRemove = string.Empty;
+                    foldersToRemove += $"\n{item.FullName}";
+                }
 
-                    foreach (var item in emptyFolders)
-                    {
-                        foldersToRemove += $"\n{item.FullName}";
-                    }
+                var shouldDelete = EditorUtility.DisplayDialog(
+                    $"Remove {emptyFolders.Count} empty {(emptyFolders.Count == 1 ? "folder" : "folders")}?",
+                    $"Pressing 'Yes' will remove the following folders: {foldersToRemove}",
+                    "Yes",
+                    "No");
 
-                    var shouldDelete = EditorUtility.DisplayDialog(
-                        $"Remove {emptyFolders.Count} empty {(emptyFolders.Count == 1 ? "folder" : "folders")}?",
-                        $"Pressing 'Yes' will remove the following folders: {foldersToRemove}",
-                        "Yes",
-                        "No");
-
-                    if (shouldDelete)
-                    {
-                        DeleteFolders(emptyFolders);
-                    }
-                    else
-                    {
-                        Debug.Log("Operation canceled by user, nothing was deleted.");
-                    }
+                if (shouldDelete)
+                {
+                    DeleteFolders(emptyFolders);
+                }
+                else
+                {
+                    Debug.Log("Operation canceled by user, nothing was deleted.");
                 }
             }
         }
