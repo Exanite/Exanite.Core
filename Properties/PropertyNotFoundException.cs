@@ -7,7 +7,7 @@ namespace Exanite.Core.Properties
         public PropertyDefinition Definition { get; }
 
         public PropertyNotFoundException(PropertyDefinition definition)
-            : base($"PropertyCollection does not contain Property: {definition.Name}")
+            : base($"PropertyCollection does not contain Property: {definition.Key}")
         {
             Definition = definition;
         }

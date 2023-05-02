@@ -8,7 +8,7 @@ namespace Exanite.Core.Properties
     {
         private Dictionary<string, Property> properties = new(StringComparer.Ordinal);
 
-        public IReadOnlyDictionary<string, Property> PropertiesByName => properties;
+        public IReadOnlyDictionary<string, Property> PropertiesByKey => properties;
 
         public event EventHandler<PropertyCollection, Property> PropertyAdded;
         public event EventHandler<PropertyCollection, Property> PropertyRemoved;
@@ -41,19 +41,19 @@ namespace Exanite.Core.Properties
             }
         }
 
-        public Property GetProperty(string name)
+        public Property GetProperty(string key)
         {
-            if (!properties.TryGetValue(name, out var untypedProperty))
+            if (!properties.TryGetValue(key, out var untypedProperty))
             {
                 return null;
             }
-            
+
             return untypedProperty;
         }
 
         public Property GetProperty(PropertyDefinition definition)
         {
-            if (!properties.TryGetValue(definition.Name, out var untypedProperty))
+            if (!properties.TryGetValue(definition.Key, out var untypedProperty))
             {
                 return null;
             }
@@ -77,12 +77,12 @@ namespace Exanite.Core.Properties
 
             return property != null;
         }
-        
+
         public Property GetOrAddProperty(PropertyDefinition definition)
         {
             Property property;
 
-            if (properties.TryGetValue(definition.Name, out var untypedProperty))
+            if (properties.TryGetValue(definition.Key, out var untypedProperty))
             {
                 if (untypedProperty.Type != definition.Type)
                 {
@@ -103,7 +103,7 @@ namespace Exanite.Core.Properties
         {
             Property<T> property;
 
-            if (properties.TryGetValue(definition.Name, out var untypedProperty))
+            if (properties.TryGetValue(definition.Key, out var untypedProperty))
             {
                 if (untypedProperty.Type != definition.Type)
                 {
@@ -122,7 +122,7 @@ namespace Exanite.Core.Properties
 
         public bool HasProperty(PropertyDefinition definition)
         {
-            if (properties.TryGetValue(definition.Name, out var untypedProperty))
+            if (properties.TryGetValue(definition.Key, out var untypedProperty))
             {
                 return untypedProperty.Type == definition.Type;
             }
@@ -133,7 +133,7 @@ namespace Exanite.Core.Properties
         public Property AddProperty(PropertyDefinition definition)
         {
             var property = definition.CreateProperty();
-            properties.Add(property.Name, property);
+            properties.Add(property.Key, property);
 
             OnPropertyAdded(property);
 
@@ -143,21 +143,21 @@ namespace Exanite.Core.Properties
         public Property<T> AddProperty<T>(PropertyDefinition<T> definition)
         {
             var property = definition.CreateProperty();
-            properties.Add(property.Name, property);
+            properties.Add(property.Key, property);
 
             OnPropertyAdded(property);
 
             return (Property<T>)property;
         }
 
-        public bool RemoveProperty(string name)
+        public bool RemoveProperty(string key)
         {
-            if (!properties.TryGetValue(name, out var property))
+            if (!properties.TryGetValue(key, out var property))
             {
                 return false;
             }
 
-            properties.Remove(name);
+            properties.Remove(key);
             OnPropertyRemoved(property);
 
             return true;

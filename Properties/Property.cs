@@ -7,18 +7,18 @@ namespace Exanite.Core.Properties
     {
         private readonly PropertyValueChangedEventArgs<object> propertyValueChangedEventArgs;
 
-        public string Name { get; }
+        public string Key { get; }
         public Type Type { get; }
 
         public abstract object UntypedValue { get; set; }
 
         public event EventHandler<Property, PropertyValueChangedEventArgs<object>> UntypedValueChanged;
 
-        protected Property(string name, Type type)
+        protected Property(string key, Type type)
         {
             propertyValueChangedEventArgs = new PropertyValueChangedEventArgs<object>(this);
 
-            Name = name;
+            Key = key;
             Type = type;
         }
 
@@ -52,7 +52,7 @@ namespace Exanite.Core.Properties
                 OnValueChanged(previousValue, value);
             }
         }
-        
+
         public override object UntypedValue
         {
             get => value;
@@ -61,7 +61,7 @@ namespace Exanite.Core.Properties
 
         public event EventHandler<Property, PropertyValueChangedEventArgs<T>> ValueChanged;
 
-        public Property(string name) : base(name, typeof(T))
+        public Property(string key) : base(key, typeof(T))
         {
             propertyValueChangedEventArgs = new PropertyValueChangedEventArgs<T>(this);
         }

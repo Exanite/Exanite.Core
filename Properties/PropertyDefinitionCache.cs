@@ -8,12 +8,12 @@ namespace Exanite.Core.Properties
     /// </summary>
     public class PropertyDefinitionCache
     {
-        private readonly string namePrefix;
+        private readonly string keyPrefix;
         private readonly Dictionary<Type, PropertyDefinition> cache = new();
 
-        public PropertyDefinitionCache(string namePrefix)
+        public PropertyDefinitionCache(string keyPrefix)
         {
-            this.namePrefix = namePrefix;
+            this.keyPrefix = keyPrefix;
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Exanite.Core.Properties
         {
             if (!cache.ContainsKey(typeof(T)))
             {
-                cache[typeof(T)] = new PropertyDefinition<T>($"{namePrefix}{typeof(T).FullName}");
+                cache[typeof(T)] = new PropertyDefinition<T>($"{keyPrefix}{typeof(T).FullName}");
             }
 
             return cache[typeof(T)] as PropertyDefinition<T>;

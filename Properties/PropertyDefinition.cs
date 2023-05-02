@@ -4,12 +4,12 @@ namespace Exanite.Core.Properties
 {
     public abstract class PropertyDefinition
     {
-        public string Name { get; }
+        public string Key { get; }
         public Type Type { get; }
 
-        protected PropertyDefinition(string name, Type type)
+        protected PropertyDefinition(string key, Type type)
         {
-            Name = name;
+            Key = key;
             Type = type;
         }
 
@@ -18,11 +18,11 @@ namespace Exanite.Core.Properties
 
     public class PropertyDefinition<T> : PropertyDefinition
     {
-        public PropertyDefinition(string name) : base(name, typeof(T)) {}
+        public PropertyDefinition(string key) : base(key, typeof(T)) {}
 
         public override Property CreateProperty()
         {
-            return new Property<T>(Name);
+            return new Property<T>(Key);
         }
     }
 }

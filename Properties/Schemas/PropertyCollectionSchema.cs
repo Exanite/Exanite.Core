@@ -35,7 +35,7 @@ namespace Exanite.Core.Properties.Schemas
 
             foreach (var entry in Entries)
             {
-                collection.PropertiesByName.TryGetValue(entry.Definition.Name, out var property);
+                collection.PropertiesByKey.TryGetValue(entry.Definition.Key, out var property);
 
                 if (!ValidateDefault(errors, property, entry))
                 {
