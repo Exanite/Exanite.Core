@@ -58,7 +58,15 @@ namespace Exanite.Core.Utilities
 
         private static void Log(object value)
         {
-            Debug.Log(value);
+            if (value is Object context)
+            {
+                // If provided a context object, clicking on the log message will select that object
+                Debug.Log(value, context);
+            }
+            else
+            {
+                Debug.Log(value);
+            }
         }
     }
 }
