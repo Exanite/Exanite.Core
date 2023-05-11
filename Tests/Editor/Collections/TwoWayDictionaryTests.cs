@@ -14,7 +14,7 @@ namespace Exanite.Core.Tests.Editor.Collections
                 ["id"] = 5,
             };
 
-            Assert.AreEqual(dictionary["id"], 5);
+            Assert.AreEqual(5, dictionary["id"]);
         }
 
         [Test]
@@ -25,7 +25,7 @@ namespace Exanite.Core.Tests.Editor.Collections
                 ["id"] = 5,
             };
 
-            Assert.AreEqual(dictionary.Inverse[5], "id");
+            Assert.AreEqual("id", dictionary.Inverse[5]);
         }
 
         [Test]

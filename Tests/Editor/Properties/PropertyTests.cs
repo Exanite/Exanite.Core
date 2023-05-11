@@ -30,15 +30,15 @@ namespace Exanite.Core.Tests.Editor.Properties
 
             var property = new Property<string>(DefaultPropertyName);
             property.Value = previousValue;
-            
+
             var valueChangedRecorder = new EventRaisedRecorder();
             property.ValueChanged += (sender, args) =>
             {
                 valueChangedRecorder.OnEventRaised();
 
-                Assert.AreEqual(args.Property, property);
-                Assert.AreEqual(args.PreviousValue, previousValue);
-                Assert.AreEqual(args.NewValue, newValue);
+                Assert.AreEqual(property, args.Property);
+                Assert.AreEqual(previousValue, args.PreviousValue);
+                Assert.AreEqual(newValue, args.NewValue);
             };
 
             property.Value = newValue;
@@ -54,15 +54,15 @@ namespace Exanite.Core.Tests.Editor.Properties
 
             var property = new Property<string>(DefaultPropertyName);
             property.Value = previousValue;
-            
+
             var valueChangedRecorder = new EventRaisedRecorder();
             property.UntypedValueChanged += (sender, args) =>
             {
                 valueChangedRecorder.OnEventRaised();
 
-                Assert.AreEqual(args.Property, property);
-                Assert.AreEqual(args.PreviousValue, previousValue);
-                Assert.AreEqual(args.NewValue, newValue);
+                Assert.AreEqual(property, args.Property);
+                Assert.AreEqual(previousValue, args.PreviousValue);
+                Assert.AreEqual(newValue, args.NewValue);
             };
 
             property.Value = newValue;
