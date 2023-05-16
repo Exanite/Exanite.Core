@@ -35,6 +35,13 @@ namespace Exanite.Core.Utilities
         private static void DumpEnumerable(this IEnumerable enumerable)
         {
             var stringBuilder = new StringBuilder();
+            FormatEnumerable(enumerable, stringBuilder);
+
+            Log(stringBuilder.ToString());
+        }
+
+        private static void FormatEnumerable(IEnumerable enumerable, StringBuilder stringBuilder)
+        {
             stringBuilder.Append("[");
 
             var isFirst = true;
@@ -46,14 +53,19 @@ namespace Exanite.Core.Utilities
                     stringBuilder.Append(", ");
                 }
 
-                stringBuilder.Append(value);
+                if (value is IEnumerable nestedEnumerable && value is not string)
+                {
+                    FormatEnumerable(nestedEnumerable, stringBuilder);
+                }
+                else
+                {
+                    stringBuilder.Append(value);
+                }
 
                 isFirst = false;
             }
 
             stringBuilder.Append("]");
-
-            Log(stringBuilder.ToString());
         }
 
         private static void Log(object value)
