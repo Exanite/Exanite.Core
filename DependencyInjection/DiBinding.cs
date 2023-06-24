@@ -10,7 +10,7 @@ namespace Exanite.Core.DependencyInjection
     [DefaultExecutionOrder(-12000)]
     public class DiBinding : SerializedMonoBehaviour
     {
-        [ListDrawerSettings(Expanded = true, CustomAddFunction = nameof(AddBinding))]
+        [ListDrawerSettings(DefaultExpandedState = true, CustomAddFunction = nameof(AddBinding))]
         [OdinSerialize] private List<ComponentBinding> bindings = new();
 
         [SerializeField] private bool useSceneContext = false;
