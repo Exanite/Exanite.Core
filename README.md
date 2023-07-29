@@ -6,7 +6,7 @@ Note: This package is intended for personal use. Things can change without warni
 
 ## Compilation Symbols
 
-- `EXANITE_CORE_DISABLE_MENU_ITEMS` - Prevents the Tools/Exanite.Core menu items from being registered.
+- `EXANITE_CORE_DISABLE_MENU_ITEMS` - Prevents the menu items in Tools/Exanite.Core from being registered.
 
 ## License
 
