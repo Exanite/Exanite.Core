@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Exanite.Core.Tests.Editor.Utilities
 {
     [TestFixture]
-    public class VectorExtensionsTests
+    public class VectorUtilityTests
     {
         [Test]
         public void InverseSwizzleVector3_ReversesSwizzleVector3([Values] Vector3Swizzle swizzle)

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Exanite.Core.Tests.Editor.Utilities
 {
     [TestFixture]
-    public class GameObjectExtensionsTests
+    public class GameObjectUtilityTests
     {
         public GameObject GameObject { get; set; }
 
