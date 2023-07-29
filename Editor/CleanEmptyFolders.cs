@@ -110,5 +110,4 @@ namespace Exanite.Core.Editor
         }
     }
 }
-
 #endif
