@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 
 namespace Exanite.Core.Editor
@@ -21,3 +22,5 @@ namespace Exanite.Core.Editor
         }
     }
 }
+
+#endif

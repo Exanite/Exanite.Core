@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 #if ODIN_INSPECTOR
 using System;
 using System.Collections.Generic;
@@ -282,4 +283,5 @@ namespace Exanite.Core.Editor
         }
     }
 }
+#endif
 #endif

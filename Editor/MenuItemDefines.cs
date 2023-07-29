@@ -1,4 +1,5 @@
-﻿#if !EXANITE_CORE_DISABLE_MENU_ITEMS
+﻿#if UNITY_EDITOR
+#if !EXANITE_CORE_DISABLE_MENU_ITEMS
 using UnityEditor;
 
 namespace Exanite.Core.Editor
@@ -29,4 +30,5 @@ namespace Exanite.Core.Editor
 #endif
     }
 }
+#endif
 #endif
