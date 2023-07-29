@@ -5,9 +5,9 @@ using NumericsVector2 = System.Numerics.Vector2;
 namespace Exanite.Core.Utilities
 {
     /// <summary>
-    ///     Extension methods for Unity's Vectors.
+    ///     Utility and extension methods for Unity's Vectors.
     /// </summary>
-    public static class VectorExtensions
+    public static class VectorUtility
     {
         /// <summary>
         ///     Swaps the component values of a <see cref="Vector3"/> from XYZ to

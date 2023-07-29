@@ -1,8 +1,5 @@
 ﻿namespace Exanite.Core.Utilities
 {
-    /// <summary>
-    ///     Utility class for math.
-    /// </summary>
     public static class MathUtility
     {
         // Note: Order between different value type overloads should go by float, double, int, long

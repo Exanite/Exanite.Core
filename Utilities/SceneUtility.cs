@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace Exanite.Core.Utilities
 {
-    public static class SceneExtensions
+    public static class SceneUtility
     {
         public static GameObject Instantiate(this Scene scene, GameObject original)
         {

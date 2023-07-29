@@ -2,10 +2,7 @@
 
 namespace Exanite.Core.Utilities
 {
-    /// <summary>
-    ///     Extension methods for <see cref="Type"/>s.
-    /// </summary>
-    public static class TypeExtensions
+    public static class TypeUtility
     {
         /// <summary>
         ///     Returns true if the type is not abstract or generic.

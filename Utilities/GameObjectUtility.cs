@@ -2,7 +2,7 @@
 
 namespace Exanite.Core.Utilities
 {
-    public static class GameObjectExtensions
+    public static class GameObjectUtility
     {
         public static T GetOrAddComponent<T>(this GameObject gameObject) where T : Component
         {
