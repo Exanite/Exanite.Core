@@ -24,7 +24,7 @@ namespace Exanite.Core.DependencyInjection
         [EnableIf(nameof(component))]
         [ShowIf(nameof(bindType), BindType.Custom)]
         [ValidateInput(nameof(ValidateCustomBindTypes))]
-        [ValueDropdown(nameof(GetValidCustomBindTypes))]
+        [ValueDropdown(nameof(GetValidCustomBindTypes), ExcludeExistingValuesInList = true)]
         [OdinSerialize] private List<Type> customBindTypes = new();
 
         public Component Component => component;
