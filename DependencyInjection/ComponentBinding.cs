@@ -80,6 +80,7 @@ namespace Exanite.Core.DependencyInjection
                 }
                 case BindType.Custom:
                 {
+                    customBindTypes.RemoveAll(t => t == null);
                     container.Bind(customBindTypes).FromInstance(component);
 
                     break;
