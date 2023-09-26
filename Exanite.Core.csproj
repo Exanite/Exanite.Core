@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- For Unity compatibility -->
+    <TargetFramework>net4.8</TargetFramework>
+    <LangVersion>8</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);Tests/**/*</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>
