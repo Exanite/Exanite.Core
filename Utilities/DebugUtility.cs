@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Text;
+#if UNITY_ENGINE
 using UnityEngine;
+#endif
 
 namespace Exanite.Core.Utilities
 {
@@ -12,7 +15,7 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static void LogVariable(string name, object value)
         {
-            Debug.Log($"{name}: {value}");
+            Log($"{name}: {value}");
         }
 
         /// <summary>
@@ -70,6 +73,7 @@ namespace Exanite.Core.Utilities
 
         private static void Log(object value)
         {
+#if UNITY_ENGINE
             if (value is Object context)
             {
                 // If provided a context object, clicking on the log message will select that object
@@ -79,6 +83,9 @@ namespace Exanite.Core.Utilities
             {
                 Debug.Log(value);
             }
+#else
+            Console.WriteLine(value);
+#endif
         }
     }
 }
