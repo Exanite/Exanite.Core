@@ -9,6 +9,7 @@
       $(DefaultItemExcludes);
       Tests/**/*;
       Components/**/*;
+      **/*.meta;
     </DefaultItemExcludes>
   </PropertyGroup>
 </Project>
