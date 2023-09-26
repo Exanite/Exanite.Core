@@ -1,4 +1,5 @@
-﻿using Exanite.Core.Numbers;
+﻿#if UNITY_ENGINE
+using Exanite.Core.Numbers;
 using UnityEngine;
 using NumericsVector2 = System.Numerics.Vector2;
 
@@ -120,3 +121,4 @@ namespace Exanite.Core.Utilities
         }
     }
 }
+#endif

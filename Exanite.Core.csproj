@@ -5,6 +5,10 @@
     <LangVersion>9</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <DefaultItemExcludes>$(DefaultItemExcludes);Tests/**/*</DefaultItemExcludes>
+    <DefaultItemExcludes>
+      $(DefaultItemExcludes);
+      Tests/**/*;
+      Components/**/*;
+    </DefaultItemExcludes>
   </PropertyGroup>
 </Project>

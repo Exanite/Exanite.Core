@@ -1,7 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
+#if UNITY_EDITOR
+using System;
 using UnityEngine;
+#endif
 
 namespace Exanite.Core.Utilities
 {

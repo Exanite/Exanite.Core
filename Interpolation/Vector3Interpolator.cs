@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_ENGINE
+using UnityEngine;
 
 namespace Exanite.Core.Interpolation
 {
@@ -10,3 +11,4 @@ namespace Exanite.Core.Interpolation
         }
     }
 }
+#endif

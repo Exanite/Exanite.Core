@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_ENGINE
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Exanite.Core.Utilities
@@ -40,3 +41,4 @@ namespace Exanite.Core.Utilities
         }
     }
 }
+#endif

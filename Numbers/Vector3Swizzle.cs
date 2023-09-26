@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_ENGINE
+using System;
 using UnityEngine;
 
 namespace Exanite.Core.Numbers
@@ -40,3 +41,4 @@ namespace Exanite.Core.Numbers
         ZYX,
     }
 }
+#endif

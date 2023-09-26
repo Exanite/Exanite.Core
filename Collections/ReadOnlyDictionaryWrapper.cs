@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace Exanite.Core.Collections
 {
@@ -11,7 +10,7 @@ namespace Exanite.Core.Collections
     {
         private readonly IDictionary<TKey, TValue> dictionary;
 
-        public ReadOnlyDictionaryWrapper([NotNull] IDictionary<TKey, TValue> dictionary)
+        public ReadOnlyDictionaryWrapper(IDictionary<TKey, TValue> dictionary)
         {
             this.dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
         }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_ENGINE
+using UnityEngine;
 
 namespace Exanite.Core.Utilities
 {
@@ -49,3 +50,4 @@ namespace Exanite.Core.Utilities
         }
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_ENGINE
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -251,3 +252,4 @@ namespace Exanite.Core.Collections
         }
     }
 }
+#endif
