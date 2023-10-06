@@ -1,4 +1,6 @@
-﻿namespace Exanite.Core.Utilities
+﻿using System;
+
+namespace Exanite.Core.Utilities
 {
     public static class MathUtility
     {
@@ -132,6 +134,37 @@
         public static bool IsOdd(this int num)
         {
             return num % 2 != 0;
+        }
+
+        public static float SmoothDamp(float current, float target, float smoothTime, float deltaTime, ref float currentVelocity, float maxSpeed = float.PositiveInfinity)
+        {
+            // From https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Math/Mathf.cs#L309
+            // Based on Game Programming Gems 4 Chapter 1.10
+            smoothTime = MathF.Max(0.0001f, smoothTime);
+            var omega = 2f / smoothTime;
+
+            var x = omega * deltaTime;
+            var exp = 1f / (1f + x + 0.48f * x * x + 0.235f * x * x * x);
+            var change = current - target;
+            var originalTo = target;
+
+            // Clamp maximum speed
+            var maxChange = maxSpeed * smoothTime;
+            change = Math.Clamp(change, -maxChange, maxChange);
+            target = current - change;
+
+            var temp = (currentVelocity + omega * change) * deltaTime;
+            currentVelocity = (currentVelocity - omega * temp) * exp;
+            var output = target + (change + temp) * exp;
+
+            // Prevent overshooting
+            if (originalTo - current > 0.0f == output > originalTo)
+            {
+                output = originalTo;
+                currentVelocity = (output - originalTo) / deltaTime;
+            }
+
+            return output;
         }
     }
 }
