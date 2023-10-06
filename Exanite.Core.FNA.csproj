@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- For Unity compatibility -->
+    <TargetFramework>net5</TargetFramework>
+    <LangVersion>9</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefaultItemExcludes>
+      $(DefaultItemExcludes);
+      Tests/**/*;
+      Components/**/*;
+      **/*.meta;
+    </DefaultItemExcludes>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>
+      $(DefineConstants);
+      FNA;
+    </DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FNA\FNA.csproj" />
+  </ItemGroup>
+</Project>
