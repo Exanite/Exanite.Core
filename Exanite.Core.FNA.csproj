@@ -17,10 +17,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants>
-      $(DefineConstants);
-      FNA;
-    </DefineConstants>
+    <DefineConstants>$(DefineConstants);FNA</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
