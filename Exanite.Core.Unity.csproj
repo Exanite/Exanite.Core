@@ -2,8 +2,8 @@
   <PropertyGroup>
     <RootNamespace>Exanite.Core</RootNamespace>
 
-    <!-- For Unity compatibility (C# 9) -->
-    <TargetFramework>net7.0</TargetFramework>
+    <!-- For Unity compatibility (net471 and C# 9) -->
+    <TargetFramework>net471</TargetFramework>
     <LangVersion>9</LangVersion>
   </PropertyGroup>
 
@@ -15,15 +15,4 @@
       **/*.meta;
     </DefaultItemExcludes>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <DefineConstants>
-      $(DefineConstants);
-      FNA;
-    </DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\FNA\FNA.csproj"/>
-  </ItemGroup>
 </Project>

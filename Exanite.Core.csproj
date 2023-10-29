@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <!-- For Unity compatibility -->
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>9</LangVersion>
-
     <RootNamespace>Exanite.Core</RootNamespace>
+
+    <!-- For Unity compatibility (C# 9) -->
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
