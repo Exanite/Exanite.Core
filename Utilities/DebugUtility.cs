@@ -71,7 +71,7 @@ namespace Exanite.Core.Utilities
             stringBuilder.Append("]");
         }
 
-        private static void Log(object value)
+        public static void Log(object value)
         {
 #if UNITY_ENGINE
             if (value is Object context)
