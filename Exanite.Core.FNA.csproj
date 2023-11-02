@@ -21,6 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FNA\FNA.csproj"/>
+    <ProjectReference Include="..\FNA\FNA.Core.csproj"/>
   </ItemGroup>
 </Project>
