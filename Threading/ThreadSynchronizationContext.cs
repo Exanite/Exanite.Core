@@ -19,7 +19,7 @@ namespace Exanite.Core.Threading
 
         private int recursivePostCount = 0;
 
-        private readonly BlockingCollection<Callback> callbacks = new(new ConcurrentQueue<Callback>());
+        private readonly ConcurrentQueue<Callback> callbacks = new();
 
         /// <param name="targetThread">The thread callbacks should be executed on.</param>
         public ThreadSynchronizationContext(Thread targetThread)
@@ -54,7 +54,7 @@ namespace Exanite.Core.Threading
                 }
             }
 
-            callbacks.Add(new Callback(callback, state));
+            callbacks.Enqueue(new Callback(callback, state));
         }
 
         public override SynchronizationContext CreateCopy()
@@ -74,7 +74,7 @@ namespace Exanite.Core.Threading
                 throw new InvalidOperationException($"{nameof(Run)} must be ran on the target thread.");
             }
 
-            foreach (var callback in callbacks.GetConsumingEnumerable())
+            while (callbacks.TryDequeue(out var callback))
             {
                 callback.Invoke();
             }
