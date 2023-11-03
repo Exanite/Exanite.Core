@@ -41,8 +41,6 @@ namespace Exanite.Core.Threading
         {
             if (Thread.CurrentThread == TargetThread)
             {
-                callback(state);
-
                 // Based on https://github.com/kekyo/SynchContextSample/blob/master/SynchContextSample/QueueSynchronizationContext.cs
                 if (recursivePostCount < MaxRecursivePostCount)
                 {
