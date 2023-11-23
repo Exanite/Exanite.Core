@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <AssemblyName>Exanite.Core</AssemblyName>
     <RootNamespace>Exanite.Core</RootNamespace>
 
     <!-- For Unity compatibility (C# 9) -->
