@@ -59,8 +59,6 @@ namespace Exanite.Core.Utilities
                 return stringBuilder.ToString();
             }
 
-            Log(value);
-
             return value.ToString();
         }
 
