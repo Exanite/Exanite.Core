@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Exanite.Core.Collections
 {
     /// <summary>
-    ///     2D grid that can store any type of value.
+    /// 2D grid that can store any type of value.
     /// </summary>
     public class Grid2D<T> : IEnumerable<T>
     {
@@ -16,7 +16,7 @@ namespace Exanite.Core.Collections
         public int YLength => Grid?.GetLength(1) ?? 0;
 
         /// <summary>
-        ///     Gets or sets the value at (x, y).
+        /// Gets or sets the value at (x, y).
         /// </summary>
         public virtual T this[int x, int y]
         {
@@ -26,12 +26,12 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Internal 2D array used for storing values.
+        /// Internal 2D array used for storing values.
         /// </summary>
         protected T[,] Grid { get; set; }
 
         /// <summary>
-        ///     Creates a new Grid2D with a size of (1, 1).
+        /// Creates a new Grid2D with a size of (1, 1).
         /// </summary>
         public Grid2D() : this(1, 1) {}
 
@@ -81,7 +81,7 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Mirrors the grid over the y-axis.
+        /// Mirrors the grid over the y-axis.
         /// </summary>
         public virtual void MirrorOverY()
         {
@@ -99,7 +99,7 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Mirrors the grid over the x-axis.
+        /// Mirrors the grid over the x-axis.
         /// </summary>
         public virtual void MirrorOverX()
         {
@@ -117,7 +117,7 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Wraps the provided coordinate to be within range of this Grid2D.
+        /// Wraps the provided coordinate to be within range of this Grid2D.
         /// </summary>
         public virtual Vector2Int Wrap(int x, int y)
         {
@@ -140,7 +140,7 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Checks if the provided coordinate is in range of the grid.
+        /// Checks if the provided coordinate is in range of the grid.
         /// </summary>
         public virtual bool IsInRange(int x, int y)
         {
@@ -150,11 +150,11 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Resizes the grid by adding/subtracting the number of indexes
-        ///     specified from each side.
-        ///     <para/>
-        ///     Note: Positive values will always expand the grid, negative will
-        ///     always shrink the grid.
+        /// Resizes the grid by adding/subtracting the number of indexes
+        /// specified from each side.
+        /// <para/>
+        /// Note: Positive values will always expand the grid, negative will
+        /// always shrink the grid.
         /// </summary>
         public virtual void Resize(int posX, int negX, int posY, int negY)
         {
@@ -187,10 +187,10 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Copies the grid to another <see cref="Grid2D{T}"/>.
+        /// Copies the grid to another <see cref="Grid2D{T}"/>.
         /// </summary>
         /// <returns>
-        ///     Other grid with copied values.
+        /// Other grid with copied values.
         /// </returns>
         public virtual Grid2D<T> CopyTo(Grid2D<T> other, int x = 0, int y = 0)
         {
@@ -200,10 +200,10 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Copies the grid's internal array to a 2D array.
+        /// Copies the grid's internal array to a 2D array.
         /// </summary>
         /// <returns>
-        ///     2D array with copied values.
+        /// 2D array with copied values.
         /// </returns>
         public virtual T[,] CopyTo(T[,] other, int x = 0, int y = 0)
         {
@@ -222,7 +222,7 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Clears the grid.
+        /// Clears the grid.
         /// </summary>
         public virtual void Clear()
         {

@@ -3,7 +3,7 @@
 namespace Exanite.Core.Numbers
 {
     /// <summary>
-    ///     Abbreviations of number names
+    /// Abbreviations of number names
     /// </summary>
     [Serializable]
     public enum NumScalesShort

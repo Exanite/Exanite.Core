@@ -3,14 +3,14 @@
 namespace Exanite.Core.Numbers
 {
     /// <summary>
-    ///     Whole number names
+    /// Whole number names
     /// </summary>
     [Serializable]
     public enum NumScalesLong
     {
         // Scales found at https://en.wikipedia.org/wiki/Names_of_large_numbers
 
-        /*  
+        /*
          *  Units   | Tens              | Hundreds
          *  ------------------------------------------------
          *  Un      | Deci          (N) | Centi         (NX)

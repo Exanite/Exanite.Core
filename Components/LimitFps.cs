@@ -3,9 +3,9 @@
 namespace Exanite.Core.Components
 {
     /// <summary>
-    ///     Sets the target frame rate to the specified TargetFps on Start.
-    ///     Can be optionally set to run only when
-    ///     <see cref="Application.isBatchMode"/> is true is used.
+    /// Sets the target frame rate to the specified TargetFps on Start.
+    /// Can be optionally set to run only when
+    /// <see cref="Application.isBatchMode"/> is true is used.
     /// </summary>
     public class LimitFps : MonoBehaviour
     {

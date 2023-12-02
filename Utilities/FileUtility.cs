@@ -8,12 +8,12 @@ using UnityEngine;
 namespace Exanite.Core.Utilities
 {
     /// <summary>
-    ///     Utility class for managing directories, files and paths
+    /// Utility class for managing directories, files and paths
     /// </summary>
     public static class FileUtility
     {
         /// <summary>
-        ///     Returns true if the provided directory is empty
+        /// Returns true if the provided directory is empty
         /// </summary>
         public static bool IsEmpty(this DirectoryInfo directory)
         {
@@ -22,7 +22,7 @@ namespace Exanite.Core.Utilities
 
 #if UNITY_EDITOR
         /// <summary>
-        ///     Returns the provided path relative to the Unity assets folder
+        /// Returns the provided path relative to the Unity assets folder
         /// </summary>
         /// <exception cref="ArgumentException"/>
         public static string GetAssetsRelativePath(string path)

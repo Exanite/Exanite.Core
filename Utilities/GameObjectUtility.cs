@@ -23,8 +23,8 @@ namespace Exanite.Core.Utilities
         }
 
         /// <summary>
-        ///     Gets a <see cref="Component"/> if it exists, throws a
-        ///     <see cref="MissingComponentException"/> if it does not.
+        /// Gets a <see cref="Component"/> if it exists, throws a
+        /// <see cref="MissingComponentException"/> if it does not.
         /// </summary>
         /// <exception cref="MissingComponentException"/>
         public static T GetRequiredComponent<T>(this GameObject gameObject) where T : class
@@ -40,8 +40,8 @@ namespace Exanite.Core.Utilities
         }
 
         /// <summary>
-        ///     Gets a <see cref="Component"/> if it exists, throws a
-        ///     <see cref="MissingComponentException"/> if it does not.
+        /// Gets a <see cref="Component"/> if it exists, throws a
+        /// <see cref="MissingComponentException"/> if it does not.
         /// </summary>
         /// <exception cref="MissingComponentException"/>
         public static T GetRequiredComponent<T>(this Component component) where T : class

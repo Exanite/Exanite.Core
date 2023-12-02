@@ -5,7 +5,7 @@ using UnityEditor;
 namespace Exanite.Core.Editor
 {
     /// <summary>
-    ///     Defines all the Unity MenuItems used in this assembly
+    /// Defines all the Unity MenuItems used in this assembly
     /// </summary>
     internal static class MenuItemDefines
     {

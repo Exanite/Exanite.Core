@@ -4,13 +4,13 @@ using UnityEngine;
 namespace Exanite.Core.Utilities
 {
     /// <summary>
-    ///     Utility class for miscellaneous Unity methods.
+    /// Utility class for miscellaneous Unity methods.
     /// </summary>
     public static class UnityUtility
     {
         /// <summary>
-        ///     Calls Destroy in Play mode and calls DestroyImmediate in Edit
-        ///     mode. Unsafe because this can destroy assets.
+        /// Calls Destroy in Play mode and calls DestroyImmediate in Edit
+        /// mode. Unsafe because this can destroy assets.
         /// </summary>
         public static void UnsafeDestroy(Object obj)
         {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Exanite.Core.Properties
 {
     /// <summary>
-    ///     Stores cached property definitions.
+    /// Stores cached property definitions.
     /// </summary>
     public class PropertyDefinitionCache
     {
@@ -17,7 +17,7 @@ namespace Exanite.Core.Properties
         }
 
         /// <summary>
-        ///     Returns a cached property definition for the specified type.
+        /// Returns a cached property definition for the specified type.
         /// </summary>
         public PropertyDefinition<T> GetConstantForType<T>()
         {

@@ -4,7 +4,7 @@ using Exanite.Core.Utilities;
 namespace Exanite.Core.Collections
 {
     /// <summary>
-    ///     Represents a fixed-sized circular queue.
+    /// Represents a fixed-sized circular queue.
     /// </summary>
     public class RingBuffer<T>
     {
@@ -15,10 +15,10 @@ namespace Exanite.Core.Collections
         private int write;
 
         /// <summary>
-        ///     Creates a new <see cref="RingBuffer{T}"/>.
+        /// Creates a new <see cref="RingBuffer{T}"/>.
         /// </summary>
         /// <param name="capacity">
-        ///     Power of two capacity of the buffer.
+        /// Power of two capacity of the buffer.
         /// </param>
         public RingBuffer(int capacity)
         {
@@ -29,7 +29,7 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Gets or sets the object at the specified index.
+        /// Gets or sets the object at the specified index.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">
         /// </exception>
@@ -50,14 +50,14 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     The max number of objects the <see cref="RingBuffer{T}"/> can
-        ///     hold.
+        /// The max number of objects the <see cref="RingBuffer{T}"/> can
+        /// hold.
         /// </summary>
         public int Capacity => array.Length;
 
         /// <summary>
-        ///     The number of objects contained in the
-        ///     <see cref="RingBuffer{T}"/>.
+        /// The number of objects contained in the
+        /// <see cref="RingBuffer{T}"/>.
         /// </summary>
         public int Count => write - read;
 
@@ -66,10 +66,10 @@ namespace Exanite.Core.Collections
         public bool IsFull => Count == Capacity;
 
         /// <summary>
-        ///     Adds an object to the end of the <see cref="RingBuffer{T}"/>.
+        /// Adds an object to the end of the <see cref="RingBuffer{T}"/>.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        ///     The <see cref="RingBuffer{T}"/> is full.
+        /// The <see cref="RingBuffer{T}"/> is full.
         /// </exception>
         public void Enqueue(T value)
         {
@@ -82,11 +82,11 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Removes and returns the object at the beginning of the
-        ///     <see cref="RingBuffer{T}"/>.
+        /// Removes and returns the object at the beginning of the
+        /// <see cref="RingBuffer{T}"/>.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        ///     The <see cref="RingBuffer{T}"/> is empty.
+        /// The <see cref="RingBuffer{T}"/> is empty.
         /// </exception>
         public T Dequeue()
         {
@@ -99,8 +99,8 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Tries to remove and return the object at the beginning of the
-        ///     <see cref="RingBuffer{T}"/>.
+        /// Tries to remove and return the object at the beginning of the
+        /// <see cref="RingBuffer{T}"/>.
         /// </summary>
         public bool TryDequeue(out T value)
         {
@@ -117,11 +117,11 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Returns the object at the beginning of the
-        ///     <see cref="RingBuffer{T}"/> without removing it.
+        /// Returns the object at the beginning of the
+        /// <see cref="RingBuffer{T}"/> without removing it.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        ///     The <see cref="RingBuffer{T}"/> is empty.
+        /// The <see cref="RingBuffer{T}"/> is empty.
         /// </exception>
         public T Peek()
         {
@@ -134,8 +134,8 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        ///     Tries to returns the object at the beginning of the
-        ///     <see cref="RingBuffer{T}"/> without removing it.
+        /// Tries to returns the object at the beginning of the
+        /// <see cref="RingBuffer{T}"/> without removing it.
         /// </summary>
         public bool TryPeek(out T value)
         {

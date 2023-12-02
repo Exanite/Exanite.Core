@@ -14,11 +14,11 @@ using UnityEngine;
 namespace Exanite.Core.Editor
 {
     /// <summary>
-    ///     Unity <see cref="EditorWindow"/> that allows the user to create
-    ///     <see cref="ScriptableObject"/>s
-    ///     <para/>
-    ///     Note: Must be extended and made concrete to work because Unity
-    ///     does not support generics
+    /// Unity <see cref="EditorWindow"/> that allows the user to create
+    /// <see cref="ScriptableObject"/>s
+    /// <para/>
+    /// Note: Must be extended and made concrete to work because Unity
+    /// does not support generics
     /// </summary>
     public class ScriptableObjectCreator : OdinEditorWindow
     {
@@ -31,12 +31,12 @@ namespace Exanite.Core.Editor
         private List<Type> filteredTypes;
 
         /// <summary>
-        ///     Editor window name.
+        /// Editor window name.
         /// </summary>
         public virtual string Name { get; } = "Scriptable Object Creator";
 
         /// <summary>
-        ///     Selected assembly to filter the resulting types by.
+        /// Selected assembly to filter the resulting types by.
         /// </summary>
         [TitleGroup("$name", HorizontalLine = true)]
         [ShowInInspector]
@@ -55,7 +55,7 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        ///     <see cref="Type"/> of <see cref="ScriptableObject"/> to create.
+        /// <see cref="Type"/> of <see cref="ScriptableObject"/> to create.
         /// </summary>
         [ShowInInspector]
         [ValueDropdown(nameof(FilteredTypes), SortDropdownItems = true, CopyValues = false)]
@@ -73,7 +73,7 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        ///     Preview of the object that is about to be created.
+        /// Preview of the object that is about to be created.
         /// </summary>
         [ShowInInspector]
         [TitleGroup("Preview", HorizontalLine = true)]
@@ -82,8 +82,8 @@ namespace Exanite.Core.Editor
         public ScriptableObject Preview { get; protected set; }
 
         /// <summary>
-        ///     The types that this <see cref="EditorWindow"/> is allowed to
-        ///     create.
+        /// The types that this <see cref="EditorWindow"/> is allowed to
+        /// create.
         /// </summary>
         protected List<Type> ValidTypes
         {
@@ -99,7 +99,7 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        ///     Assemblies containing <see cref="ValidTypes"/>.
+        /// Assemblies containing <see cref="ValidTypes"/>.
         /// </summary>
         protected List<Assembly> ValidAssemblies
         {
@@ -115,7 +115,7 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        ///     List of types shown to the user in the editor window.
+        /// List of types shown to the user in the editor window.
         /// </summary>
         protected List<Type> FilteredTypes
         {
@@ -140,7 +140,7 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        ///     Resets the <see cref="EditorWindow"/> to its default state.
+        /// Resets the <see cref="EditorWindow"/> to its default state.
         /// </summary>
         [TitleGroup("Actions", HorizontalLine = true)]
         [HorizontalGroup("Actions/Buttons")]
@@ -154,7 +154,7 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        ///     Resets the <see cref="Preview"/> to its default state.
+        /// Resets the <see cref="Preview"/> to its default state.
         /// </summary>
         [TitleGroup("Actions", HorizontalLine = true)]
         [HorizontalGroup("Actions/Buttons")]
@@ -167,7 +167,7 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        ///     Creates the <see cref="ScriptableObject"/>.
+        /// Creates the <see cref="ScriptableObject"/>.
         /// </summary>
         /// <exception cref="InvalidOperationException">
         /// </exception>
@@ -209,7 +209,7 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        ///     Creates a new preview.
+        /// Creates a new preview.
         /// </summary>
         protected virtual void CreatePreview()
         {
@@ -220,7 +220,7 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        ///     Destroys the currently previewed object.
+        /// Destroys the currently previewed object.
         /// </summary>
         protected virtual void DestroyPreview()
         {
@@ -231,8 +231,8 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        ///     Gets all the types that this <see cref="EditorWindow"/> is
-        ///     allowed to create.
+        /// Gets all the types that this <see cref="EditorWindow"/> is
+        /// allowed to create.
         /// </summary>
         protected virtual List<Type> GetValidTypes()
         {
@@ -247,7 +247,7 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        ///     Gets all the assemblies containing the <see cref="validTypes"/>.
+        /// Gets all the assemblies containing the <see cref="validTypes"/>.
         /// </summary>
         protected virtual List<Assembly> GetValidAssemblies()
         {
@@ -258,7 +258,7 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        ///     Returns the types that this window can create after filtering.
+        /// Returns the types that this window can create after filtering.
         /// </summary>
         protected virtual List<Type> GetFilteredTypes()
         {
