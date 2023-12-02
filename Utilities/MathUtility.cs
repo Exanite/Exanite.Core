@@ -166,5 +166,21 @@ namespace Exanite.Core.Utilities
 
             return output;
         }
+
+        /// <summary>
+        /// Converts radians to degrees.
+        /// </summary>
+        public static float Rad2Deg(float radians)
+        {
+            return radians * (180f / float.Pi);
+        }
+
+        /// <summary>
+        /// Converts degrees to radians.
+        /// </summary>
+        public static float Deg2Rad(float degrees)
+        {
+            return degrees * (float.Pi / 180f);
+        }
     }
 }
