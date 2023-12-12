@@ -182,5 +182,31 @@ namespace Exanite.Core.Utilities
         {
             return degrees * (float.Pi / 180f);
         }
+
+        // sRGB-Linear conversion formulas are from: https://entropymine.com/imageworsener/srgbformula/
+
+        /// <summary>
+        /// Converts a sRGB [0, 1] color value to linear [0, 1].
+        /// </summary>
+        public static float SrgbToLinear(float value)
+        {
+            if (value <= 0.04045f) {
+                return value / 12.92f;
+            } else {
+                return MathF.Pow((value + 0.055f) / 1.055f, 2.4f);
+            }
+        }
+
+        /// <summary>
+        /// Converts a linear [0, 1] color value to sRGB [0, 1].
+        /// </summary>
+        public static float LinearToSrgb(float value)
+        {
+            if (value <= 0.0031308f) {
+                return value * 12.92f;
+            } else {
+                return MathF.Pow(value, 1 / 2.4f) * 1.055f - 0.055f;
+            }
+        }
     }
 }
