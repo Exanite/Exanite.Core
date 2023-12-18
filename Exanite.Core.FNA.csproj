@@ -7,6 +7,9 @@
     <TargetFramework>net7.0</TargetFramework>
     <LangVersion>9</LangVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FNA\FNA.Core.csproj"/>
+  </ItemGroup>
 
   <PropertyGroup>
     <DefaultItemExcludes>
@@ -20,8 +23,4 @@
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);FNA</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\FNA\FNA.Core.csproj"/>
-  </ItemGroup>
 </Project>

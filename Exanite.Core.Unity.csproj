@@ -3,7 +3,7 @@
     <AssemblyName>Exanite.Core</AssemblyName>
     <RootNamespace>Exanite.Core</RootNamespace>
 
-    <!-- For Unity compatibility (net5.0 and C# 9) -->
+    <!-- For estimating Unity compatibility (net5.0 and C# 9) -->
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>9</LangVersion>
   </PropertyGroup>
