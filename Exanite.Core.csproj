@@ -2,6 +2,7 @@
   <PropertyGroup>
     <AssemblyName>Exanite.Core</AssemblyName>
     <RootNamespace>Exanite.Core</RootNamespace>
+    <OutputPath>bin\$(MSBuildProjectName)\$(Configuration)</OutputPath>
 
     <!-- For Unity compatibility (C# 9) -->
     <TargetFramework>net7.0</TargetFramework>
