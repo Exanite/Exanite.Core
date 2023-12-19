@@ -11,6 +11,12 @@
     <ProjectReference Include="..\FNA\FNA.Core.csproj"/>
   </ItemGroup>
 
+  <!-- Defines -->
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);FNA</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Exclude files that only compile in Unity -->
   <PropertyGroup>
     <DefaultItemExcludes>
       $(DefaultItemExcludes);
@@ -18,9 +24,5 @@
       Components/**/*;
       **/*.meta;
     </DefaultItemExcludes>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <DefineConstants>$(DefineConstants);FNA</DefineConstants>
   </PropertyGroup>
 </Project>

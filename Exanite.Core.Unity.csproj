@@ -8,6 +8,7 @@
     <LangVersion>9</LangVersion>
   </PropertyGroup>
 
+  <!-- Exclude files that only compile in Unity -->
   <PropertyGroup>
     <DefaultItemExcludes>
       $(DefaultItemExcludes);
