@@ -1,6 +1,6 @@
 # Exanite.Core
 
-Miscellaneous code I use for my Unity projects.
+Collection of miscellaneous code I use for my C# and Unity projects.
 
 Note: This package is intended for personal use. Things can change without warning.
 
