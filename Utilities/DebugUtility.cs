@@ -51,6 +51,11 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static string Format(object value)
         {
+            if (value == null)
+            {
+                return "Null";
+            }
+
             if (value is IEnumerable enumerable && value is not string)
             {
                 var stringBuilder = new StringBuilder();
