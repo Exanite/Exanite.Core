@@ -72,24 +72,6 @@ namespace Exanite.Core.Utilities
         }
 
         /// <summary>
-        /// Clamps a value between min and max values.
-        /// </summary>
-        public static int Clamp(int value, int min, int max)
-        {
-            if (value < min)
-            {
-                return min;
-            }
-
-            if (value > max)
-            {
-                return max;
-            }
-
-            return value;
-        }
-
-        /// <summary>
         /// Gets the nearest multiple to a value.
         /// </summary>
         /// <example>
