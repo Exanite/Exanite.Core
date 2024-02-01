@@ -108,7 +108,7 @@ namespace Exanite.Core.Numbers
         /// </summary>
         public string ToString(NumDisplayFormat displayFormat, int placesToRound = 0)
         {
-            placesToRound = MathUtility.Clamp(placesToRound, 0, 15);
+            placesToRound = Math.Clamp(placesToRound, 0, 15);
 
             var rounded = Math.Round(Value, placesToRound);
 
