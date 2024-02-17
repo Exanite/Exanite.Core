@@ -5,7 +5,7 @@ using FnaVector2 = Microsoft.Xna.Framework.Vector2;
 namespace Exanite.Core.Utilities
 {
     /// <summary>
-    /// Utility and extension methods for Unity's Vectors.
+    /// Utility and extension methods for FNA Vectors.
     /// </summary>
     public static partial class VectorUtility
     {

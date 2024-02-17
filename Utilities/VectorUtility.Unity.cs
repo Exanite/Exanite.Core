@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Exanite.Core.Utilities
 {
     /// <summary>
-    /// Utility and extension methods for Unity's Vectors.
+    /// Utility and extension methods for Unity Vectors.
     /// </summary>
     public static partial class VectorUtility
     {
