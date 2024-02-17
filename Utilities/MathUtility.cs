@@ -149,6 +149,7 @@ namespace Exanite.Core.Utilities
             return output;
         }
 
+#if !UNITY_5_3_OR_NEWER
         /// <summary>
         /// Converts radians to degrees.
         /// </summary>
@@ -164,6 +165,7 @@ namespace Exanite.Core.Utilities
         {
             return degrees * (float.Pi / 180f);
         }
+#endif
 
         // sRGB-Linear conversion formulas are from: https://entropymine.com/imageworsener/srgbformula/
 
