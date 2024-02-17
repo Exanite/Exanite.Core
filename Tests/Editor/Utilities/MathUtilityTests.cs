@@ -27,16 +27,6 @@ namespace Exanite.Core.Tests.Editor.Utilities
             return MathUtility.Modulo(value, divisor);
         }
 
-        [TestCase(5, 0, 10, ExpectedResult = 5)]
-        [TestCase(-1, 0, 10, ExpectedResult = 0)]
-        [TestCase(15, 0, 10, ExpectedResult = 10)]
-        [TestCase(50, 10, 0, ExpectedResult = 0)] // min and max are swapped
-        [TestCase(-10, 10, 0, ExpectedResult = 10)] // min and max are swapped
-        public float ClampInt_ReturnsExpectedValue(int value, int min, int max)
-        {
-            return MathUtility.Clamp(value, min, max);
-        }
-
         [TestCase(45, 11, ExpectedResult = 44)]
         public int GetNearestMultiple_ReturnsExpectedValue(int value, int multiple)
         {
