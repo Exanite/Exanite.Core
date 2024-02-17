@@ -1,4 +1,4 @@
-﻿#if UNITY_ENGINE
+﻿#if UNITY_2021_3_OR_NEWER
 using UnityEngine;
 
 namespace Exanite.Core.Interpolation

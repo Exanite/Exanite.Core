@@ -1,6 +1,6 @@
 ﻿using System;
 using Exanite.Core.Utilities;
-#if UNITY_ENGINE
+#if UNITY_2021_3_OR_NEWER
 using UnityEngine;
 #endif
 
@@ -15,12 +15,12 @@ namespace Exanite.Core.Numbers
     [Serializable]
     public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
     {
-#if UNITY_ENGINE
+#if UNITY_2021_3_OR_NEWER
         [SerializeField]
         [HideInInspector]
 #endif
         private double value;
-#if UNITY_ENGINE
+#if UNITY_2021_3_OR_NEWER
         [SerializeField]
         [HideInInspector]
 #endif

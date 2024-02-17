@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
 using System.Text;
-#if UNITY_ENGINE
+#if UNITY_2021_3_OR_NEWER
 using UnityEngine;
+using Object = UnityEngine.Object;
 #endif
 
 namespace Exanite.Core.Utilities
@@ -100,7 +101,7 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static void DefaultLogAction(object value)
         {
-#if UNITY_ENGINE
+#if UNITY_2021_3_OR_NEWER
             if (value is Object context)
             {
                 // If provided a context object, clicking on the log message will select that object
