@@ -10,7 +10,7 @@ namespace Exanite.Core.Utilities
     /// </summary>
     public static partial class VectorUtility
     {
-        #if UNITY_2021_3_OR_NEWER
+#if UNITY_2021_3_OR_NEWER
         /// <summary>
         /// Swaps the component values of a <see cref="Vector3"/> from XYZ to
         /// the given format.
