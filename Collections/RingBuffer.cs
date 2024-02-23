@@ -45,8 +45,7 @@ namespace Exanite.Core.Collections
         /// </summary>
         public int Count => write - read;
 
-        public bool IsEmpty => read == write;
-
+        public bool IsEmpty => Count == 0;
         public bool IsFull => Count == Capacity;
 
         /// <summary>
