@@ -75,7 +75,7 @@ namespace Exanite.Core.Collections
         {
             if (IsFull)
             {
-                throw new InvalidOperationException("Buffer is full. Cannot Queue a new item.");
+                throw new InvalidOperationException($"Buffer is full. Cannot {nameof(Enqueue)} a new item.");
             }
 
             array[bitmask & write++] = value;
@@ -92,7 +92,7 @@ namespace Exanite.Core.Collections
         {
             if (IsEmpty)
             {
-                throw new InvalidOperationException("Buffer is empty. Cannot Dequeue an item.");
+                throw new InvalidOperationException($"Buffer is empty. Cannot {nameof(Dequeue)} an item.");
             }
 
             return array[bitmask & read++];
