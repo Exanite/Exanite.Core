@@ -31,7 +31,7 @@ namespace Exanite.Core.Collections
         /// <summary>
         /// Gets or sets the object at the specified index.
         /// </summary>
-        public ref T this[int index] => ref data[capacityMask & (readOffset + MathUtility.Wrap(index, 0, Capacity))];
+        public ref T this[int index] => ref data[capacityMask & (readOffset + index)];
 
         /// <summary>
         /// The max number of objects the <see cref="RingBuffer{T}"/> can
