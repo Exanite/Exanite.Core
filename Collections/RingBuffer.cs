@@ -104,16 +104,14 @@ namespace Exanite.Core.Collections
         /// </summary>
         public bool TryDequeue(out T value)
         {
-            if (!IsEmpty)
+            if (IsEmpty)
             {
-                value = array[bitmask & read++];
-
-                return true;
+                value = default;
+                return false;
             }
 
-            value = default;
-
-            return false;
+            value = array[bitmask & read++];
+            return true;
         }
 
         /// <summary>
@@ -139,16 +137,14 @@ namespace Exanite.Core.Collections
         /// </summary>
         public bool TryPeek(out T value)
         {
-            if (!IsEmpty)
+            if (IsEmpty)
             {
-                value = array[bitmask & read];
-
-                return true;
+                value = default;
+                return false;
             }
 
-            value = default;
-
-            return false;
+            value = array[bitmask & read];
+            return true;
         }
     }
 }
