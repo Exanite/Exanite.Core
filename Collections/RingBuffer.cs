@@ -65,6 +65,23 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
+        /// Tries to adds an object to the end of the <see cref="RingBuffer{T}"/>.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// The <see cref="RingBuffer{T}"/> is full.
+        /// </exception>
+        public bool TryEnqueue(T value)
+        {
+            if (IsFull)
+            {
+                return false;
+            }
+
+            array[bitmask & write++] = value;
+            return true;
+        }
+
+        /// <summary>
         /// Removes and returns the object at the beginning of the
         /// <see cref="RingBuffer{T}"/>.
         /// </summary>
