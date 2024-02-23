@@ -31,23 +31,7 @@ namespace Exanite.Core.Collections
         /// <summary>
         /// Gets or sets the object at the specified index.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// </exception>
-        public T this[int index]
-        {
-            get
-            {
-                ValidateIndex(index);
-
-                return array[bitmask & (read + index)];
-            }
-
-            set
-            {
-                ValidateIndex(index);
-                array[bitmask & (read + index)] = value;
-            }
-        }
+        public ref T this[int index] => ref array[bitmask & (read + MathUtility.Wrap(index, 0, Capacity))];
 
         /// <summary>
         /// The max number of objects the <see cref="RingBuffer{T}"/> can
@@ -149,15 +133,6 @@ namespace Exanite.Core.Collections
             value = default;
 
             return false;
-        }
-
-        private void ValidateIndex(int index)
-        {
-            if (index < 0 || index >= Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index),
-                    "Index was out of range. Must be non-negative and less than the size of the collection");
-            }
         }
     }
 }
