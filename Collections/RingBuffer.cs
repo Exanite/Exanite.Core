@@ -28,6 +28,11 @@ namespace Exanite.Core.Collections
             data = new T[capacity];
         }
 
+        public T[] RawData => data;
+        public int RawCapacityMask => capacityMask;
+        public ref int RawReadOffset => ref readOffset;
+        public ref int RawWriteOffset => ref writeOffset;
+
         /// <summary>
         /// Gets or sets the object at the specified index.
         /// </summary>
