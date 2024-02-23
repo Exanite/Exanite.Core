@@ -8,11 +8,11 @@ namespace Exanite.Core.Collections
     /// </summary>
     public class RingBuffer<T>
     {
-        private readonly T[] array;
-        private readonly int bitmask;
+        private readonly T[] data;
+        private readonly int capacityMask;
 
-        private int read;
-        private int write;
+        private int readOffset;
+        private int writeOffset;
 
         /// <summary>
         /// Creates a new <see cref="RingBuffer{T}"/>.
@@ -23,27 +23,27 @@ namespace Exanite.Core.Collections
         public RingBuffer(int capacity)
         {
             capacity = MathUtility.GetNextPowerOfTwo(capacity);
-            array = new T[capacity];
+            capacityMask = capacity - 1;
 
-            bitmask = capacity - 1;
+            data = new T[capacity];
         }
 
         /// <summary>
         /// Gets or sets the object at the specified index.
         /// </summary>
-        public ref T this[int index] => ref array[bitmask & (read + MathUtility.Wrap(index, 0, Capacity))];
+        public ref T this[int index] => ref data[capacityMask & (readOffset + MathUtility.Wrap(index, 0, Capacity))];
 
         /// <summary>
         /// The max number of objects the <see cref="RingBuffer{T}"/> can
         /// hold.
         /// </summary>
-        public int Capacity => array.Length;
+        public int Capacity => data.Length;
 
         /// <summary>
         /// The number of objects contained in the
         /// <see cref="RingBuffer{T}"/>.
         /// </summary>
-        public int Count => write - read;
+        public int Count => writeOffset - readOffset;
 
         public bool IsEmpty => Count == 0;
         public bool IsFull => Count == Capacity;
@@ -61,7 +61,7 @@ namespace Exanite.Core.Collections
                 throw new InvalidOperationException($"Buffer is full. Cannot {nameof(Enqueue)} a new item.");
             }
 
-            array[bitmask & write++] = value;
+            data[capacityMask & writeOffset++] = value;
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Exanite.Core.Collections
                 return false;
             }
 
-            array[bitmask & write++] = value;
+            data[capacityMask & writeOffset++] = value;
             return true;
         }
 
@@ -95,7 +95,7 @@ namespace Exanite.Core.Collections
                 throw new InvalidOperationException($"Buffer is empty. Cannot {nameof(Dequeue)} an item.");
             }
 
-            return array[bitmask & read++];
+            return data[capacityMask & readOffset++];
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Exanite.Core.Collections
                 return false;
             }
 
-            value = array[bitmask & read++];
+            value = data[capacityMask & readOffset++];
             return true;
         }
 
@@ -128,7 +128,7 @@ namespace Exanite.Core.Collections
                 throw new InvalidOperationException("Buffer is empty. Cannot Peek an item.");
             }
 
-            return array[bitmask & read];
+            return data[capacityMask & readOffset];
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Exanite.Core.Collections
                 return false;
             }
 
-            value = array[bitmask & read];
+            value = data[capacityMask & readOffset];
             return true;
         }
     }
