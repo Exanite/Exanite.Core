@@ -1,3 +1,5 @@
+// Originally from https://gist.github.com/oxysoft/66fe16fd12f1402232e8a0c770f3a89e
+
 #if UNITY_EDITOR && ODIN_INSPECTOR
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
