@@ -103,7 +103,7 @@ namespace Exanite.Core.OdinInspector
                 }
                 case InlineLabelType.Above:
                 {
-                    SirenixEditorGUI.Title(Property.NiceName, "", TextAlignment.Left, false);
+                    SirenixEditorGUI.Title(Property.NiceName, "", TextAlignment.Left, false, false);
                     label = null;
 
                     break;
