@@ -12,7 +12,8 @@
         "Sirenix.OdinInspector.Editor.dll",
         "Sirenix.Serialization.dll",
         "Sirenix.Utilities.Editor.dll",
-        "Sirenix.Utilities.dll"
+        "Sirenix.Utilities.dll",
+        "UniDi-Usage.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
