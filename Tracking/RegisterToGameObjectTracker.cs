@@ -1,3 +1,4 @@
+#if EXANITE_UNIDI
 using UniDi;
 using UnityEngine;
 
@@ -18,3 +19,4 @@ namespace Exanite.Core.Tracking
         }
     }
 }
+#endif
