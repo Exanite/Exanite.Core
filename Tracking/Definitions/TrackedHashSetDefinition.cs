@@ -18,8 +18,7 @@ namespace Exanite.Core.Tracking.Definitions
         {
             if (IsMatch(gameObject, out var narrowedValue))
             {
-                var typedCollection = collection;
-                typedCollection.Add(narrowedValue);
+                collection.Add(narrowedValue);
             }
         }
 
@@ -27,8 +26,7 @@ namespace Exanite.Core.Tracking.Definitions
         {
             if (IsMatch(gameObject, out var narrowedValue))
             {
-                var typedCollection = collection;
-                typedCollection.Remove(narrowedValue);
+                collection.Remove(narrowedValue);
             }
         }
     }
