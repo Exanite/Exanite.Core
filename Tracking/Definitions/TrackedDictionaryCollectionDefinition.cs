@@ -6,35 +6,33 @@ using UnityEngine;
 
 namespace Exanite.Core.Tracking.Definitions
 {
-    public class TrackedDictionaryCollectionDefinition<TKey, TValue> : TrackedCollectionDefinition<TValue, IReadOnlyDictionary<TKey, TValue>>
+    public class TrackedDictionaryCollectionDefinition<TKey, TValue> : TrackedCollectionDefinition<TValue, Dictionary<TKey, TValue>>
     {
         private readonly Func<TValue, TKey> getKey;
-        
+
         public TrackedDictionaryCollectionDefinition([NotNull] MatchCondition<TValue> matchCondition, [NotNull] Func<TValue, TKey> getKey) : base(matchCondition)
         {
             this.getKey = getKey;
         }
 
-        public override IReadOnlyDictionary<TKey, TValue> CreateCollection()
+        public override Dictionary<TKey, TValue> CreateCollection()
         {
             return new Dictionary<TKey, TValue>();
         }
 
-        public override void TryAddToCollection(IReadOnlyDictionary<TKey, TValue> collection, GameObject gameObject)
+        public override void TryAddToCollection(Dictionary<TKey, TValue> collection, GameObject gameObject)
         {
             if (IsMatch(gameObject, out var value))
             {
-                var typedCollection = (Dictionary<TKey, TValue>)collection;
-                typedCollection.Add(getKey.Invoke(value), value);
+                collection.Add(getKey.Invoke(value), value);
             }
         }
 
-        public override void TryRemoveFromCollection(IReadOnlyDictionary<TKey, TValue> collection, GameObject gameObject)
+        public override void TryRemoveFromCollection(Dictionary<TKey, TValue> collection, GameObject gameObject)
         {
             if (IsMatch(gameObject, out var value))
             {
-                var typedCollection = (Dictionary<TKey, TValue>)collection;
-                typedCollection.Remove(getKey.Invoke(value));
+                collection.Remove(getKey.Invoke(value));
             }
         }
     }
