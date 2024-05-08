@@ -51,6 +51,11 @@ namespace Exanite.Core.Editor
             return results;
         }
 
+        internal static void ClearAssetDependentsCache()
+        {
+            AssetDependents = null;
+        }
+
         private static void UpdateAssetDependents(bool force = false)
         {
             if (AssetDependents != null && !force)
