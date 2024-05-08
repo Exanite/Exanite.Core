@@ -35,7 +35,7 @@ namespace Exanite.Core.Editor
             Selection.objects = dependents.Select(path => AssetDatabase.LoadMainAssetAtPath(path)).ToArray();
         }
 
-        public static HashSet<string> GetDependentAssetPaths(IEnumerable<string> assetPaths)
+        private static HashSet<string> GetDependentAssetPaths(IEnumerable<string> assetPaths)
         {
             UpdateAssetDependents();
 
@@ -56,18 +56,19 @@ namespace Exanite.Core.Editor
             AssetDependents = null;
         }
 
-        private static void UpdateAssetDependents(bool force = false)
+        private static void UpdateAssetDependents()
         {
-            if (AssetDependents != null && !force)
+            if (AssetDependents != null)
             {
                 return;
             }
 
             AssetDependents = new Dictionary<string, HashSet<string>>();
 
-            var allAssetPaths = AssetDatabase.FindAssets("").Select(guid => AssetDatabase.GUIDToAssetPath(guid));
-            foreach (var assetPath in allAssetPaths)
+            var allAssetPaths = AssetDatabase.FindAssets("").Select(guid => AssetDatabase.GUIDToAssetPath(guid)).ToArray();
+            for (var i = 0; i < allAssetPaths.Length; i++)
             {
+                var assetPath = allAssetPaths[i];
                 var dependencies = new HashSet<string>(AssetDatabase.GetDependencies(assetPath, true));
                 foreach (var dependency in dependencies)
                 {
@@ -79,7 +80,16 @@ namespace Exanite.Core.Editor
 
                     dependents.Add(assetPath);
                 }
+
+                UpdateProgressBar(assetPath, i + 1, allAssetPaths.Length);
             }
+
+            EditorUtility.ClearProgressBar();
+        }
+
+        private static void UpdateProgressBar(string currentAssetPath, int current, int total)
+        {
+            EditorUtility.DisplayProgressBar("Finding asset dependents", $"Building cache ({current} / {total}) - {currentAssetPath}", (float)current / total);
         }
     }
 }
