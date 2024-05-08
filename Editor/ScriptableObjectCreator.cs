@@ -22,8 +22,8 @@ namespace Exanite.Core.Editor
         private List<Type> validTypes;
         private List<Assembly> validAssemblies;
 
-        private Type selectedType;
-        private Assembly selectedAssembly;
+        private Type typeToCreate;
+        private Assembly assemblyFilter;
 
         private List<Type> filteredTypes;
 
@@ -38,14 +38,14 @@ namespace Exanite.Core.Editor
         [TitleGroup("$name", HorizontalLine = true)]
         [ShowInInspector]
         [ValueDropdown(nameof(ValidAssemblies), SortDropdownItems = true, CopyValues = false)]
-        public Assembly SelectedAssembly
+        public Assembly AssemblyFilter
         {
-            get => selectedAssembly;
+            get => assemblyFilter;
 
             set
             {
-                selectedAssembly = value;
-                selectedType = null;
+                assemblyFilter = value;
+                typeToCreate = null;
 
                 filteredTypes = GetFilteredTypes();
             }
@@ -56,13 +56,13 @@ namespace Exanite.Core.Editor
         /// </summary>
         [ShowInInspector]
         [ValueDropdown(nameof(FilteredTypes), SortDropdownItems = true, CopyValues = false)]
-        public Type SelectedType
+        public Type TypeToCreate
         {
-            get => selectedType;
+            get => typeToCreate;
 
             set
             {
-                selectedType = value;
+                typeToCreate = value;
 
                 DestroyPreview();
                 CreatePreview();
@@ -143,8 +143,8 @@ namespace Exanite.Core.Editor
         [Button(ButtonSizes.Large)]
         protected virtual void Reset()
         {
-            SelectedType = null;
-            SelectedAssembly = null;
+            TypeToCreate = null;
+            AssemblyFilter = null;
 
             DestroyPreview();
         }
@@ -177,7 +177,7 @@ namespace Exanite.Core.Editor
                 throw new InvalidOperationException("Cannot create a new ScriptableObject at this time");
             }
 
-            var path = EditorUtility.SaveFilePanel($"Save {SelectedType.Name} to folder", "Assets", $"new {SelectedType.Name}", "asset");
+            var path = EditorUtility.SaveFilePanel($"Save {TypeToCreate.Name} to folder", "Assets", $"new {TypeToCreate.Name}", "asset");
 
             if (path.IsNullOrWhitespace())
             {
@@ -209,9 +209,9 @@ namespace Exanite.Core.Editor
         /// </summary>
         protected virtual void CreatePreview()
         {
-            if (SelectedType != null)
+            if (TypeToCreate != null)
             {
-                Preview = CreateInstance(SelectedType);
+                Preview = CreateInstance(TypeToCreate);
             }
         }
 
@@ -250,9 +250,9 @@ namespace Exanite.Core.Editor
         {
             var results = (IEnumerable<Type>)ValidTypes;
 
-            if (SelectedAssembly != null)
+            if (AssemblyFilter != null)
             {
-                results = results.Where(x => x.Assembly == SelectedAssembly);
+                results = results.Where(x => x.Assembly == AssemblyFilter);
             }
 
             return results.ToList();
