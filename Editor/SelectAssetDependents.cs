@@ -11,6 +11,11 @@ namespace Exanite.Core.Editor
     {
         private static Dictionary<string, HashSet<string>> AssetDependents;
 
+        /// <remarks>
+        /// This behaves slightly differently compared to Unity's "Select Dependencies" option.
+        /// Instead of adding the dependencies to the selection, this only selects the dependents of the original selection.
+        /// This makes it easier to tell if there are any dependents since no objects will be selected if there aren't any.
+        /// </remarks>
         public static void Run()
         {
             var selectedObjects = Selection.objects;
