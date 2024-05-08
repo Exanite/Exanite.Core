@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.Windows;
 
 #if UNITY_EDITOR
@@ -32,7 +33,15 @@ namespace Exanite.Core.Editor
             }
 
             var dependents = GetDependentAssetPaths(selectedAssetPaths);
+
             Selection.objects = dependents.Select(path => AssetDatabase.LoadMainAssetAtPath(path)).ToArray();
+
+            var logMessage = $"Found {dependents.Count} dependents:\n";
+            foreach (var dependent in dependents.ToList().OrderBy(x => x))
+            {
+                logMessage += $"{dependent}\n";
+            }
+            Debug.Log(logMessage);
         }
 
         private static HashSet<string> GetDependentAssetPaths(IEnumerable<string> assetPaths)
