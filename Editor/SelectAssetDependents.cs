@@ -57,6 +57,11 @@ namespace Exanite.Core.Editor
                 }
             }
 
+            foreach (var assetPath in assetPaths)
+            {
+                results.Remove(assetPath);
+            }
+
             return results;
         }
 
