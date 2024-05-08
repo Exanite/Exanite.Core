@@ -15,10 +15,10 @@ namespace Exanite.Core.Editor
             Editor.CleanEmptyFolders.Run();
         }
 
-        [MenuItem("Tools/Exanite.Core/Find Asset Dependents")]
-        public static void FindAssetDependents()
+        [MenuItem("Tools/Exanite.Core/Select Asset Dependents")]
+        public static void SelectAssetDependents()
         {
-            Editor.FindAssetDependents.Run();
+            Editor.SelectAssetDependents.Run();
         }
 
         [MenuItem("Tools/Exanite.Core/Reserialize All Assets")]
