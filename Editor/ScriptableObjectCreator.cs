@@ -236,7 +236,7 @@ namespace Exanite.Core.Editor
         /// </summary>
         protected virtual List<Type> GetValidTypes()
         {
-            return AssemblyUtilities.GetTypes(AssemblyTypeFlags.CustomTypes)
+            return AssemblyUtilities.GetTypes(~(AssemblyCategory.UnityEngine | AssemblyCategory.DotNetRuntime))
                 .Where(x =>
                     x.IsClass
                     && x.IsConcrete()
