@@ -37,7 +37,7 @@ namespace Exanite.Core.Editor
         /// </summary>
         [TitleGroup("$name", HorizontalLine = true)]
         [ShowInInspector]
-        [ValueDropdown(nameof(ValidAssemblies), SortDropdownItems = true, CopyValues = false)]
+        [ValueDropdown(nameof(ValidAssemblies), SortDropdownItems = true, CopyValues = false, NumberOfItemsBeforeEnablingSearch = 0)]
         public Assembly AssemblyFilter
         {
             get => assemblyFilter;
@@ -55,7 +55,7 @@ namespace Exanite.Core.Editor
         /// <see cref="Type"/> of <see cref="ScriptableObject"/> to create.
         /// </summary>
         [ShowInInspector]
-        [ValueDropdown(nameof(FilteredTypes), SortDropdownItems = true, CopyValues = false)]
+        [ValueDropdown(nameof(FilteredTypes), SortDropdownItems = true, CopyValues = false, NumberOfItemsBeforeEnablingSearch = 0)]
         public Type TypeToCreate
         {
             get => typeToCreate;
