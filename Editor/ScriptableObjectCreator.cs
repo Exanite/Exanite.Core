@@ -16,9 +16,6 @@ namespace Exanite.Core.Editor
     /// <summary>
     /// Unity <see cref="EditorWindow"/> that allows the user to create
     /// <see cref="ScriptableObject"/>s
-    /// <para/>
-    /// Note: Must be extended and made concrete to work because Unity
-    /// does not support generics
     /// </summary>
     public class ScriptableObjectCreator : OdinEditorWindow
     {
@@ -50,7 +47,7 @@ namespace Exanite.Core.Editor
                 selectedAssembly = value;
                 selectedType = null;
 
-                UpdateFilteredTypes();
+                filteredTypes = GetFilteredTypes();
             }
         }
 
@@ -82,8 +79,7 @@ namespace Exanite.Core.Editor
         public ScriptableObject Preview { get; protected set; }
 
         /// <summary>
-        /// The types that this <see cref="EditorWindow"/> is allowed to
-        /// create.
+        /// The types that this <see cref="EditorWindow"/> is allowed to create.
         /// </summary>
         protected List<Type> ValidTypes
         {
@@ -115,7 +111,7 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        /// List of types shown to the user in the editor window.
+        /// List of types shown to the user.
         /// </summary>
         protected List<Type> FilteredTypes
         {
@@ -123,7 +119,7 @@ namespace Exanite.Core.Editor
             {
                 if (filteredTypes == null)
                 {
-                    UpdateFilteredTypes();
+                    filteredTypes = GetFilteredTypes();
                 }
 
                 return filteredTypes;
@@ -231,34 +227,24 @@ namespace Exanite.Core.Editor
         }
 
         /// <summary>
-        /// Gets all the types that this <see cref="EditorWindow"/> is
-        /// allowed to create.
+        /// Gets the types that this window can create.
         /// </summary>
         protected virtual List<Type> GetValidTypes()
         {
             return AssemblyUtilities.GetTypes(~(AssemblyCategory.UnityEngine | AssemblyCategory.DotNetRuntime))
-                .Where(x =>
-                    x.IsClass
-                    && x.IsConcrete()
-                    && typeof(ScriptableObject).IsAssignableFrom(x)
-                    && !typeof(UnityEditor.Editor).IsAssignableFrom(x)
-                    && !typeof(EditorWindow).IsAssignableFrom(x))
+                .Where(type =>
+                {
+                    return type.IsClass
+                        && type.IsConcrete()
+                        && typeof(ScriptableObject).IsAssignableFrom(type)
+                        && !typeof(UnityEditor.Editor).IsAssignableFrom(type)
+                        && !typeof(EditorWindow).IsAssignableFrom(type);
+                })
                 .ToList();
         }
 
         /// <summary>
-        /// Gets all the assemblies containing the <see cref="validTypes"/>.
-        /// </summary>
-        protected virtual List<Assembly> GetValidAssemblies()
-        {
-            return ValidTypes
-                .Select(x => x.Assembly)
-                .Distinct()
-                .ToList();
-        }
-
-        /// <summary>
-        /// Returns the types that this window can create after filtering.
+        /// Gets the types that this window can create after filtering.
         /// </summary>
         protected virtual List<Type> GetFilteredTypes()
         {
@@ -272,9 +258,15 @@ namespace Exanite.Core.Editor
             return results.ToList();
         }
 
-        protected void UpdateFilteredTypes()
+        /// <summary>
+        /// Gets the assemblies that contain <see cref="ValidTypes"/>.
+        /// </summary>
+        protected List<Assembly> GetValidAssemblies()
         {
-            filteredTypes = GetFilteredTypes();
+            return ValidTypes
+                .Select(x => x.Assembly)
+                .Distinct()
+                .ToList();
         }
 
         public static void OpenWindow<T>() where T : ScriptableObjectCreator
