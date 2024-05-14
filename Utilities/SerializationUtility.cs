@@ -17,8 +17,7 @@ namespace Exanite.Core.Utilities
             var builder = new StringBuilder();
             BuildTypeName(type, builder);
 
-            type.AssemblyQualifiedName.Dump();
-            return builder.ToString().Dump();
+            return builder.ToString();
         }
 
         public static Type DeserializeType(string value)
