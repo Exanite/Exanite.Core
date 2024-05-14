@@ -3,17 +3,8 @@ using System;
 #if EXANITE_UNIDI && ODIN_INSPECTOR
 namespace Exanite.Core.DependencyInjection
 {
-    [Obsolete]
-    public enum DeprecatedBindType
-    {
-        Self,
-        AllInterfaces,
-        AllInterfacesAndSelf,
-        Custom,
-    }
-
     [Flags]
-    public enum BindType
+    public enum BindTypes
     {
         None = 0,
         Self = 1 << 0,
