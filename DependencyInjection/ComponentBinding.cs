@@ -7,18 +7,20 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UniDi;
 using UnityEngine;
+using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
 
 namespace Exanite.Core.DependencyInjection
 {
-    [HideReferenceObjectPicker]
     [Serializable]
-    public class ComponentBinding
+    public class ComponentBinding : ISerializationCallbackReceiver
     {
         [PropertyOrder(0)]
         [SerializeField] private Component component = new();
 
         [HideInInspector]
         [SerializeField] private BindType bindType = BindType.Self;
+
+        [SerializeField] private List<string> unitySerializedCustomBindTypes = new();
 
         [PropertyOrder(2)]
         [EnableIf(nameof(component))]
@@ -144,6 +146,20 @@ namespace Exanite.Core.DependencyInjection
 
                 currentType = currentType.BaseType;
             }
+        }
+
+        public void OnBeforeSerialize()
+        {
+            // Todo Use Clear instead after removing Odin serialization
+            unitySerializedCustomBindTypes = new();
+            foreach (var customBindType in customBindTypes)
+            {
+                unitySerializedCustomBindTypes.Add(SerializationUtility.SerializeType(customBindType));
+            }
+        }
+
+        public void OnAfterDeserialize()
+        {
         }
     }
 }

@@ -10,6 +10,9 @@ namespace Exanite.Core.DependencyInjection
     [DefaultExecutionOrder(-12000)]
     public class DiBinding : SerializedMonoBehaviour
     {
+        [SerializeField] private List<ComponentBinding> unitySerializedBindings = new();
+
+        [HideReferenceObjectPicker]
         [ListDrawerSettings(DefaultExpandedState = true, CustomAddFunction = nameof(AddBinding))]
         [OdinSerialize] private List<ComponentBinding> bindings = new();
 
@@ -80,6 +83,14 @@ namespace Exanite.Core.DependencyInjection
         private void AddBinding()
         {
             bindings.Add(new ComponentBinding());
+        }
+
+        protected override void OnBeforeSerialize()
+        {
+            base.OnBeforeSerialize();
+
+            unitySerializedBindings.Clear();
+            unitySerializedBindings.AddRange(bindings);
         }
     }
 }
