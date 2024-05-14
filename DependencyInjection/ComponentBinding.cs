@@ -117,7 +117,7 @@ namespace Exanite.Core.DependencyInjection
             return true;
         }
 
-        public void OnBeforeSerialize()
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
             serializedCustomBindTypes.Clear();
             foreach (var customBindType in customBindTypes)
@@ -126,7 +126,7 @@ namespace Exanite.Core.DependencyInjection
             }
         }
 
-        public void OnAfterDeserialize()
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
             customBindTypes.Clear();
             foreach (var serializedBindType in serializedCustomBindTypes)
