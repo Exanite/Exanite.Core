@@ -17,7 +17,7 @@ namespace Exanite.Core.DependencyInjection
     {
         None = 0,
         Self = 1 << 0,
-        AllInterfaces = 1 << 1,
+        Interfaces = 1 << 1,
         Custom = 1 << 2,
     }
 }

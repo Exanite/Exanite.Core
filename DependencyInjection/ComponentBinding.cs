@@ -17,6 +17,9 @@ namespace Exanite.Core.DependencyInjection
         [PropertyOrder(0)]
         [SerializeField] private Component component = new();
 
+        [EnumToggleButtons]
+        [SerializeField] private BindType newBindType = DependencyInjection.BindType.Self;
+
         [HideInInspector]
         [SerializeField] private DeprecatedBindType bindType = DeprecatedBindType.Self;
 
@@ -158,6 +161,15 @@ namespace Exanite.Core.DependencyInjection
             {
                 serializedCustomBindTypes.Add(SerializationUtility.SerializeType(customBindType));
             }
+
+            newBindType = bindType switch
+            {
+                DeprecatedBindType.Self => DependencyInjection.BindType.Self,
+                DeprecatedBindType.AllInterfaces => DependencyInjection.BindType.Interfaces,
+                DeprecatedBindType.AllInterfacesAndSelf => DependencyInjection.BindType.Self | DependencyInjection.BindType.Interfaces,
+                DeprecatedBindType.Custom => DependencyInjection.BindType.Custom,
+                _ => DependencyInjection.BindType.None,
+            };
         }
 
         public void OnAfterDeserialize()
