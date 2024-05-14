@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Exanite.Core.Utilities;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UniDi;
 using UnityEngine;
+using UnityEngine.Serialization;
 using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
 
 namespace Exanite.Core.DependencyInjection
@@ -20,14 +20,17 @@ namespace Exanite.Core.DependencyInjection
         [HideInInspector]
         [SerializeField] private BindType bindType = BindType.Self;
 
-        [SerializeField] private List<string> unitySerializedCustomBindTypes = new();
+        [HideInInspector]
+        [FormerlySerializedAs("unitySerializedCustomBindTypes")]
+        [SerializeField] private List<string> serializedCustomBindTypes = new();
 
+        [ShowInInspector]
         [PropertyOrder(2)]
         [EnableIf(nameof(component))]
         [ShowIf(nameof(bindType), BindType.Custom)]
         [ValidateInput(nameof(ValidateCustomBindTypes))]
         [ValueDropdown(nameof(GetValidCustomBindTypes), ExcludeExistingValuesInList = true)]
-        [OdinSerialize] private List<Type> customBindTypes = new();
+        private List<Type> customBindTypes = new();
 
         public Component Component => component;
 
@@ -150,16 +153,20 @@ namespace Exanite.Core.DependencyInjection
 
         public void OnBeforeSerialize()
         {
-            // Todo Use Clear instead after removing Odin serialization
-            unitySerializedCustomBindTypes = new();
+            serializedCustomBindTypes.Clear();
             foreach (var customBindType in customBindTypes)
             {
-                unitySerializedCustomBindTypes.Add(SerializationUtility.SerializeType(customBindType));
+                serializedCustomBindTypes.Add(SerializationUtility.SerializeType(customBindType));
             }
         }
 
         public void OnAfterDeserialize()
         {
+            customBindTypes.Clear();
+            foreach (var serializedBindType in serializedCustomBindTypes)
+            {
+                customBindTypes.Add(SerializationUtility.DeserializeType(serializedBindType));
+            }
         }
     }
 }

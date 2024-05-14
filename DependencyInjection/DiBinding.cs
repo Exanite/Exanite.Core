@@ -1,20 +1,19 @@
 #if EXANITE_UNIDI && ODIN_INSPECTOR
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UniDi;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Exanite.Core.DependencyInjection
 {
     [DefaultExecutionOrder(-12000)]
-    public class DiBinding : SerializedMonoBehaviour
+    public class DiBinding : MonoBehaviour
     {
-        [SerializeField] private List<ComponentBinding> unitySerializedBindings = new();
-
+        [FormerlySerializedAs("unitySerializedBindings")]
         [HideReferenceObjectPicker]
         [ListDrawerSettings(DefaultExpandedState = true, CustomAddFunction = nameof(AddBinding))]
-        [OdinSerialize] private List<ComponentBinding> bindings = new();
+        [SerializeField] private List<ComponentBinding> bindings = new();
 
         [SerializeField] private bool useSceneContext = false;
         [DisableIf(nameof(useSceneContext))] [SerializeField]
@@ -83,14 +82,6 @@ namespace Exanite.Core.DependencyInjection
         private void AddBinding()
         {
             bindings.Add(new ComponentBinding());
-        }
-
-        protected override void OnBeforeSerialize()
-        {
-            base.OnBeforeSerialize();
-
-            unitySerializedBindings.Clear();
-            unitySerializedBindings.AddRange(bindings);
         }
     }
 }
