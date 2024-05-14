@@ -5,7 +5,6 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using UniDi;
 using UnityEngine;
-using UnityEngine.Serialization;
 using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
 
 namespace Exanite.Core.DependencyInjection
@@ -16,12 +15,10 @@ namespace Exanite.Core.DependencyInjection
         [PropertyOrder(0)]
         [SerializeField] private Component component = new();
 
-        [FormerlySerializedAs("newBindType")]
         [EnumToggleButtons]
         [SerializeField] private BindTypes bindTypes = BindTypes.Self;
 
         [HideInInspector]
-        [FormerlySerializedAs("unitySerializedCustomBindTypes")]
         [SerializeField] private List<string> serializedCustomBindTypes = new();
 
         [ShowInInspector]

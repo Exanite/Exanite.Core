@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UniDi;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Exanite.Core.DependencyInjection
 {
     [DefaultExecutionOrder(-12000)]
     public class DiBinding : MonoBehaviour
     {
-        [FormerlySerializedAs("unitySerializedBindings")]
         [HideReferenceObjectPicker]
         [ListDrawerSettings(DefaultExpandedState = true, CustomAddFunction = nameof(AddBinding))]
         [SerializeField] private List<ComponentBinding> bindings = new();
