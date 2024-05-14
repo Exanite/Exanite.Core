@@ -15,6 +15,7 @@ namespace Exanite.Core.Tests.Editor.Utilities
                 Assert.AreEqual(type, SerializationUtility.DeserializeType(SerializationUtility.SerializeType(type)));
             }
 
+            Test(null);
             Test(typeof(int));
             Test(typeof(object));
             Test(typeof(NestedClass));

@@ -5,6 +5,8 @@ namespace Exanite.Core.Utilities
 {
     public static class SerializationUtility
     {
+        public const string NullSerializedValue = "null";
+
         /// <summary>
         /// Serialize type into a format loadable by <see cref="Type.GetType()"/>.
         /// This format is similar to <see cref="Type.AssemblyQualifiedName"/>, but only includes type and assembly names.
@@ -14,6 +16,11 @@ namespace Exanite.Core.Utilities
         /// </remarks>
         public static string SerializeType(Type type)
         {
+            if (type == null)
+            {
+                return NullSerializedValue;
+            }
+
             var builder = new StringBuilder();
             BuildTypeName(type, builder);
 
@@ -22,6 +29,11 @@ namespace Exanite.Core.Utilities
 
         public static Type DeserializeType(string value)
         {
+            if (value == NullSerializedValue)
+            {
+                return null;
+            }
+
             var result = Type.GetType(value);
             if (result == null)
             {
