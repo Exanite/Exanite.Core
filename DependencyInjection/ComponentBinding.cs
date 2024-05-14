@@ -18,7 +18,7 @@ namespace Exanite.Core.DependencyInjection
         [SerializeField] private Component component = new();
 
         [HideInInspector]
-        [SerializeField] private BindType bindType = BindType.Self;
+        [SerializeField] private DeprecatedBindType bindType = DeprecatedBindType.Self;
 
         [HideInInspector]
         [FormerlySerializedAs("unitySerializedCustomBindTypes")]
@@ -27,7 +27,7 @@ namespace Exanite.Core.DependencyInjection
         [ShowInInspector]
         [PropertyOrder(2)]
         [EnableIf(nameof(component))]
-        [ShowIf(nameof(bindType), BindType.Custom)]
+        [ShowIf(nameof(bindType), DeprecatedBindType.Custom)]
         [ValidateInput(nameof(ValidateCustomBindTypes))]
         [ValueDropdown(nameof(GetValidCustomBindTypes), ExcludeExistingValuesInList = true)]
         private List<Type> customBindTypes = new();
@@ -36,7 +36,7 @@ namespace Exanite.Core.DependencyInjection
 
         [PropertyOrder(1)]
         [ShowInInspector]
-        public BindType BindType
+        public DeprecatedBindType BindType
         {
             get => bindType;
             set
@@ -46,7 +46,7 @@ namespace Exanite.Core.DependencyInjection
                     return;
                 }
 
-                if (value == BindType.Custom)
+                if (value == DeprecatedBindType.Custom)
                 {
                     customBindTypes.Clear();
                     customBindTypes.AddRange(GetTypesForBindType(bindType));
@@ -65,25 +65,25 @@ namespace Exanite.Core.DependencyInjection
 
             switch (bindType)
             {
-                case BindType.Self:
+                case DeprecatedBindType.Self:
                 {
                     container.Bind(component.GetType()).FromInstance(component);
 
                     break;
                 }
-                case BindType.AllInterfaces:
+                case DeprecatedBindType.AllInterfaces:
                 {
                     container.BindInterfacesTo(component.GetType()).FromInstance(component);
 
                     break;
                 }
-                case BindType.AllInterfacesAndSelf:
+                case DeprecatedBindType.AllInterfacesAndSelf:
                 {
                     container.BindInterfacesAndSelfTo(component.GetType()).FromInstance(component);
 
                     break;
                 }
-                case BindType.Custom:
+                case DeprecatedBindType.Custom:
                 {
                     customBindTypes.RemoveAll(t => t == null);
                     container.Bind(customBindTypes).FromInstance(component);
@@ -94,15 +94,15 @@ namespace Exanite.Core.DependencyInjection
             }
         }
 
-        private IEnumerable<Type> GetTypesForBindType(BindType bindType)
+        private IEnumerable<Type> GetTypesForBindType(DeprecatedBindType bindType)
         {
             // Consider using bit masks here
-            if (bindType == BindType.Self || bindType == BindType.AllInterfacesAndSelf)
+            if (bindType == DeprecatedBindType.Self || bindType == DeprecatedBindType.AllInterfacesAndSelf)
             {
                 yield return component.GetType();
             }
 
-            if (bindType == BindType.AllInterfaces || bindType == BindType.AllInterfacesAndSelf)
+            if (bindType == DeprecatedBindType.AllInterfaces || bindType == DeprecatedBindType.AllInterfacesAndSelf)
             {
                 foreach (var type in GetValidCustomBindTypes().Where(t => t.IsInterface))
                 {
