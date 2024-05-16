@@ -5,7 +5,7 @@ using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Collections
 {
-    public class TwoWayDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
+    public class TwoWayDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyTwoWayDictionary<TKey, TValue>
     {
         private readonly Dictionary<TKey, TValue> forward;
         private readonly Dictionary<TValue, TKey> backward;
@@ -38,6 +38,7 @@ namespace Exanite.Core.Collections
         /// Reverse of this <see cref="TwoWayDictionary{TKey,TValue}"/>.
         /// </summary>
         public TwoWayDictionary<TValue, TKey> Inverse { get; }
+        IReadOnlyTwoWayDictionary<TValue, TKey> IReadOnlyTwoWayDictionary<TKey, TValue>.Inverse => Inverse;
 
         public ICollection<TKey> Keys => Forward.Keys;
         public ICollection<TValue> Values => Forward.Values;
