@@ -35,7 +35,7 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        /// Reverse of this <see cref="TwoWayDictionary{TKey,TValue}"/>.
+        /// This dictionary, but with the keys and values reversed.
         /// </summary>
         public TwoWayDictionary<TValue, TKey> Inverse { get; }
         IReadOnlyTwoWayDictionary<TValue, TKey> IReadOnlyTwoWayDictionary<TKey, TValue>.Inverse => Inverse;
@@ -58,8 +58,7 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        /// Creates a new <see cref="TwoWayDictionary{TKey,TValue}"/> and
-        /// copies the values from the provided <paramref name="dictionary"/>.
+        /// Creates a new <see cref="TwoWayDictionary{TKey,TValue}"/> by copying the values from the provided <see cref="dictionary"/>.
         /// </summary>
         public TwoWayDictionary(IDictionary<TKey, TValue> dictionary)
         {
@@ -75,11 +74,8 @@ namespace Exanite.Core.Collections
         }
 
         /// <summary>
-        /// Used internally to create the inverse
-        /// <see cref="TwoWayDictionary{TKey,TValue}"/>.
+        /// Used internally to create the inverse <see cref="TwoWayDictionary{TKey,TValue}"/>.
         /// </summary>
-        /// <param name="other">
-        /// </param>
         private TwoWayDictionary(TwoWayDictionary<TValue, TKey> other)
         {
             forward = other.backward;
