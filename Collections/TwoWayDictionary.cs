@@ -16,6 +16,16 @@ namespace Exanite.Core.Collections
 
             set
             {
+                if (key == null)
+                {
+                    throw new ArgumentNullException(nameof(key));
+                }
+
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
                 Forward[key] = value;
                 Backward[value] = key;
             }
@@ -85,6 +95,16 @@ namespace Exanite.Core.Collections
 
         public void Add(TKey key, TValue value)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             Forward.Add(key, value);
             Backward.Add(value, key);
         }
