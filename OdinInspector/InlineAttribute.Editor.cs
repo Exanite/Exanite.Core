@@ -110,6 +110,13 @@ namespace Exanite.Core.OdinInspector
 
                     break;
                 }
+                case InlineLabelType.BoldedAbove:
+                {
+                    SirenixEditorGUI.Title(Property.NiceName, "", TextAlignment.Left, false);
+                    label = null;
+
+                    break;
+                }
             }
 
             CallNextDrawer(label);

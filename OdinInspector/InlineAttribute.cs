@@ -7,19 +7,24 @@ namespace Exanite.Core.OdinInspector
     public enum InlineLabelType
     {
         /// <summary>
-        /// Do not draw the label.
+        /// Do not draw a label.
         /// </summary>
         Hidden = 0,
 
         /// <summary>
-        /// Draws the label as a prefix.
+        /// Draws a label as a prefix.
         /// </summary>
         Prefix = 1,
 
         /// <summary>
-        /// Draws the label above.
+        /// Draws a label above.
         /// </summary>
         Above = 2,
+
+        /// <summary>
+        /// Draws a bolded label above.
+        /// </summary>
+        BoldedAbove = 3,
     }
 
     [AttributeUsage(AttributeTargets.All)]
