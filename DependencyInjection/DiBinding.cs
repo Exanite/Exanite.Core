@@ -19,11 +19,6 @@ namespace Exanite.Core.DependencyInjection
 
         private void Awake()
         {
-            if (!isActiveAndEnabled)
-            {
-                return;
-            }
-
             if (!context)
             {
                 context = FindContext();
