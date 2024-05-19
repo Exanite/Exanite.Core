@@ -37,7 +37,7 @@ namespace Exanite.Core.Utilities
             var result = Type.GetType(value);
             if (result == null)
             {
-                throw new ArgumentException($"Could not deserialize '{value}'", nameof(value));
+                throw new ArgumentException($"Could not deserialize type: '{value}'", nameof(value));
             }
 
             return result;
