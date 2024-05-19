@@ -138,8 +138,9 @@ namespace Exanite.Core.DependencyInjection
             {
                 serializedCustomBindTypes.Add(SerializationUtility.SerializeType(customBindType));
             }
-
             serializedCustomBindTypes.AddRange(unknownBindTypes);
+
+            serializedCustomBindTypes.Sort(StringComparer.Ordinal);
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
