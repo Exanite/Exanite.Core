@@ -21,13 +21,21 @@ namespace Exanite.Core.DependencyInjection
         [HideInInspector]
         [SerializeField] private List<string> serializedCustomBindTypes = new();
 
-        [ShowInInspector]
         [PropertyOrder(2)]
-        [EnableIf(nameof(component))]
+        [ShowInInspector]
         [ShowIf(nameof(IsCustomBindTypeEnabled))]
+        [EnableIf(nameof(component))]
         [ValidateInput(nameof(ValidateCustomBindTypes))]
         [ValueDropdown(nameof(GetValidBindTypes), ExcludeExistingValuesInList = true)]
         private List<Type> customBindTypes = new();
+
+        [PropertyOrder(3)]
+        [ShowInInspector]
+        [ReadOnly]
+        [ShowIf(nameof(HasUnknownBindTypes))]
+        [DelayedProperty]
+        [InfoBox("Some types were not found. Please update or remove the unknown types (this requires manually editing Unity serialized data).", InfoMessageType.Error)]
+        private List<string> unknownBindTypes = new();
 
         public Component Component => component;
 
@@ -98,6 +106,11 @@ namespace Exanite.Core.DependencyInjection
             return (bindTypes & BindTypes.Custom) != 0;
         }
 
+        private bool HasUnknownBindTypes()
+        {
+            return unknownBindTypes.Count > 0;
+        }
+
         private bool ValidateCustomBindTypes(List<Type> customBindTypes, ref string errorMessage, ref InfoMessageType? messageType)
         {
             var validCustomBindTypes = new HashSet<Type>(GetValidBindTypes());
@@ -120,18 +133,32 @@ namespace Exanite.Core.DependencyInjection
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
             serializedCustomBindTypes.Clear();
+
             foreach (var customBindType in customBindTypes)
             {
                 serializedCustomBindTypes.Add(SerializationUtility.SerializeType(customBindType));
             }
+
+            serializedCustomBindTypes.AddRange(unknownBindTypes);
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
             customBindTypes.Clear();
+            unknownBindTypes.Clear();
+
             foreach (var serializedBindType in serializedCustomBindTypes)
             {
-                customBindTypes.Add(SerializationUtility.DeserializeType(serializedBindType));
+                try
+                {
+                    customBindTypes.Add(SerializationUtility.DeserializeType(serializedBindType));
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e);
+
+                    unknownBindTypes.Add(serializedBindType);
+                }
             }
         }
     }
