@@ -15,13 +15,13 @@ namespace Exanite.Core.Editor
             Editor.CleanEmptyFolders.Run();
         }
 
-        [MenuItem("Assets/Select Dependents", false, priority = 30)]
+        [MenuItem("Assets/Select Dependents (Exanite.Core)", false, priority = 30)]
         public static void SelectAssetDependents()
         {
             Editor.SelectAssetDependents.Run();
         }
 
-        [MenuItem("Assets/Select Dependents", true)]
+        [MenuItem("Assets/Select Dependents (Exanite.Core)", true)]
         public static bool SelectAssetDependentsValidate() {
             return Selection.objects.Length > 0;
         }
