@@ -95,6 +95,11 @@ namespace Exanite.Core.DependencyInjection
                     types.Add(currentType);
                     currentType = currentType.BaseType;
                 }
+
+                foreach (var type in GetValidBindTypes().Where(t => t.IsInterface))
+                {
+                    types.Add(type);
+                }
             }
 
             if ((filter & BindTypeFilter.Self) != 0)
