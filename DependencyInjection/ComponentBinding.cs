@@ -5,6 +5,7 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using UniDi;
 using UnityEngine;
+using Object = UnityEngine.Object;
 using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
 
 namespace Exanite.Core.DependencyInjection
@@ -12,6 +13,15 @@ namespace Exanite.Core.DependencyInjection
     [Serializable]
     public class ComponentBinding : ISerializationCallbackReceiver
     {
+        private static HashSet<Type> IgnoredTypes = new HashSet<Type>()
+        {
+            typeof(MonoBehaviour),
+            typeof(Behaviour),
+            typeof(Component),
+            typeof(ScriptableObject),
+            typeof(Object),
+        };
+
         [PropertyOrder(0)]
         [SerializeField] private Component component = new();
 
@@ -52,6 +62,21 @@ namespace Exanite.Core.DependencyInjection
         private IEnumerable<Type> GetTypesToBindNonCustom()
         {
             var types = new HashSet<Type>();
+
+            if ((newBindTypes & BindTypes.Smart) != 0)
+            {
+                var currentType = component.GetType();
+                while (currentType != null)
+                {
+                    if (IgnoredTypes.Contains(currentType))
+                    {
+                        break;
+                    }
+
+                    types.Add(currentType);
+                    currentType = currentType.BaseType;
+                }
+            }
 
             if ((newBindTypes & BindTypes.Self) != 0)
             {
