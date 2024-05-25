@@ -16,7 +16,7 @@ namespace Exanite.Core.DependencyInjection
         /// <summary>
         /// Types ignored by <see cref="BindTypeFilter.Smart"/>.
         /// </summary>
-        public static IReadOnlyCollection<Type> IgnoredTypes { get; } = new HashSet<Type>()
+        public static IReadOnlyCollection<Type> IgnoredTypes { get; } = new HashSet<Type>
         {
             typeof(MonoBehaviour),
             typeof(Behaviour),
@@ -54,7 +54,16 @@ namespace Exanite.Core.DependencyInjection
         [PropertyOrder(3)]
         [ShowInInspector]
         [ReadOnly]
-        private List<Type> TypesToBind => GetTypesToBind().ToList();
+        private List<Type> TypesToBind
+        {
+            get
+            {
+                var results = GetTypesToBind().ToList();
+                results.Sort((a, b) => string.Compare(a.ToString(), b.ToString(), StringComparison.CurrentCulture));
+
+                return results;
+            }
+        }
 #endif
 
         public Component Component => component;
