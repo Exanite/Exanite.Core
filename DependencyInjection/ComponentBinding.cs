@@ -49,7 +49,7 @@ namespace Exanite.Core.DependencyInjection
             container.Bind(GetTypesToBind()).FromInstance(component);
         }
 
-        private IEnumerable<Type> GetTypesToBind()
+        private IEnumerable<Type> GetTypesToBindNonCustom()
         {
             var types = new HashSet<Type>();
 
@@ -65,6 +65,13 @@ namespace Exanite.Core.DependencyInjection
                     types.Add(type);
                 }
             }
+
+            return types;
+        }
+
+        private IEnumerable<Type> GetTypesToBind()
+        {
+            var types = new HashSet<Type>(GetTypesToBindNonCustom());
 
             if ((bindTypes & BindTypes.Custom) != 0)
             {
@@ -144,10 +151,17 @@ namespace Exanite.Core.DependencyInjection
         {
             serializedCustomBindTypes.Clear();
 
+            var typesToBindNonCustom = new HashSet<Type>(GetTypesToBindNonCustom());
             foreach (var customBindType in customBindTypes)
             {
+                if (typesToBindNonCustom.Contains(customBindType))
+                {
+                    continue;
+                }
+
                 serializedCustomBindTypes.Add(SerializationUtility.SerializeType(customBindType));
             }
+
             serializedCustomBindTypes.AddRange(unknownBindTypes);
 
             serializedCustomBindTypes.Sort(StringComparer.Ordinal);
