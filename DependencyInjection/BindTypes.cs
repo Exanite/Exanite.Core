@@ -1,6 +1,6 @@
+#if EXANITE_UNIDI && ODIN_INSPECTOR
 using System;
 
-#if EXANITE_UNIDI && ODIN_INSPECTOR
 namespace Exanite.Core.DependencyInjection
 {
     [Flags]
@@ -10,6 +10,16 @@ namespace Exanite.Core.DependencyInjection
         Self = 1 << 0,
         Interfaces = 1 << 1,
         Custom = 1 << 2,
+    }
+
+    [Flags]
+    public enum NewBindTypes
+    {
+        None = 0,
+        Smart = 1 << 1,
+        Self = 1 << 2,
+        Interfaces = 1 << 3,
+        Custom = 1 << 30,
     }
 }
 #endif

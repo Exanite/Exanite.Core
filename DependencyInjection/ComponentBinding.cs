@@ -17,6 +17,7 @@ namespace Exanite.Core.DependencyInjection
 
         [EnumToggleButtons]
         [SerializeField] private BindTypes bindTypes = BindTypes.Self;
+        [SerializeField] private NewBindTypes newBindTypes = NewBindTypes.Smart;
 
         [HideInInspector]
         [SerializeField] private List<string> serializedCustomBindTypes = new();
@@ -149,6 +150,22 @@ namespace Exanite.Core.DependencyInjection
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
+            newBindTypes = NewBindTypes.None;
+            if ((bindTypes & BindTypes.Interfaces) != 0)
+            {
+                newBindTypes |= NewBindTypes.Interfaces;
+            }
+
+            if ((bindTypes & BindTypes.Self) != 0)
+            {
+                newBindTypes |= NewBindTypes.Self;
+            }
+
+            if ((bindTypes & BindTypes.Custom) != 0)
+            {
+                newBindTypes |= NewBindTypes.Custom;
+            }
+
             serializedCustomBindTypes.Clear();
 
             var typesToBindNonCustom = new HashSet<Type>(GetTypesToBindNonCustom());
