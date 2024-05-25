@@ -5,6 +5,7 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using UniDi;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
 
@@ -25,8 +26,9 @@ namespace Exanite.Core.DependencyInjection
         [PropertyOrder(0)]
         [SerializeField] private Component component = new();
 
+        [FormerlySerializedAs("newBindTypes")]
         [EnumToggleButtons]
-        [SerializeField] private BindTypes newBindTypes = BindTypes.Smart;
+        [SerializeField] private BindTypes bindTypes = BindTypes.Smart;
 
         [HideInInspector]
         [SerializeField] private List<string> serializedCustomBindTypes = new();
@@ -63,7 +65,7 @@ namespace Exanite.Core.DependencyInjection
         {
             var types = new HashSet<Type>();
 
-            if ((newBindTypes & BindTypes.Smart) != 0)
+            if ((bindTypes & BindTypes.Smart) != 0)
             {
                 var currentType = component.GetType();
                 while (currentType != null)
@@ -78,12 +80,12 @@ namespace Exanite.Core.DependencyInjection
                 }
             }
 
-            if ((newBindTypes & BindTypes.Self) != 0)
+            if ((bindTypes & BindTypes.Self) != 0)
             {
                 types.Add(component.GetType());
             }
 
-            if ((newBindTypes & BindTypes.Interfaces) != 0)
+            if ((bindTypes & BindTypes.Interfaces) != 0)
             {
                 foreach (var type in GetValidBindTypes().Where(t => t.IsInterface))
                 {
@@ -98,7 +100,7 @@ namespace Exanite.Core.DependencyInjection
         {
             var types = new HashSet<Type>(GetTypesToBindNonCustom());
 
-            if ((newBindTypes & BindTypes.Custom) != 0)
+            if ((bindTypes & BindTypes.Custom) != 0)
             {
                 foreach (var customBindType in customBindTypes)
                 {
@@ -145,7 +147,7 @@ namespace Exanite.Core.DependencyInjection
 
         private bool IsCustomBindTypeEnabled()
         {
-            return (newBindTypes & BindTypes.Custom) != 0;
+            return (bindTypes & BindTypes.Custom) != 0;
         }
 
         private bool HasUnknownBindTypes()
