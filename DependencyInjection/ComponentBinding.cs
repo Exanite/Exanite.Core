@@ -5,7 +5,6 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using UniDi;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
 
@@ -14,7 +13,10 @@ namespace Exanite.Core.DependencyInjection
     [Serializable]
     public class ComponentBinding : ISerializationCallbackReceiver
     {
-        private static HashSet<Type> IgnoredTypes = new HashSet<Type>()
+        /// <summary>
+        /// Types ignored by <see cref="BindTypes.Smart"/>.
+        /// </summary>
+        public static IReadOnlyCollection<Type> IgnoredTypes { get; } = new HashSet<Type>()
         {
             typeof(MonoBehaviour),
             typeof(Behaviour),
