@@ -53,7 +53,6 @@ namespace Exanite.Core.DependencyInjection
         {
             var types = new HashSet<Type>();
 
-            // Consider using bit masks here
             if ((bindTypes & BindTypes.Self) != 0)
             {
                 types.Add(component.GetType());
