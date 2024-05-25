@@ -4,7 +4,7 @@ using System;
 namespace Exanite.Core.DependencyInjection
 {
     [Flags]
-    public enum BindTypes
+    public enum BindTypeFilter
     {
         None = 0,
 

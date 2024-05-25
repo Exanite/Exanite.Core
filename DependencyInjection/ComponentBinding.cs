@@ -5,6 +5,7 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using UniDi;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
 
@@ -14,7 +15,7 @@ namespace Exanite.Core.DependencyInjection
     public class ComponentBinding : ISerializationCallbackReceiver
     {
         /// <summary>
-        /// Types ignored by <see cref="BindTypes.Smart"/>.
+        /// Types ignored by <see cref="BindTypeFilter.Smart"/>.
         /// </summary>
         public static IReadOnlyCollection<Type> IgnoredTypes { get; } = new HashSet<Type>()
         {
@@ -28,8 +29,9 @@ namespace Exanite.Core.DependencyInjection
         [PropertyOrder(0)]
         [SerializeField] private Component component = new();
 
+        [FormerlySerializedAs("bindTypes")]
         [EnumToggleButtons]
-        [SerializeField] private BindTypes bindTypes = BindTypes.Smart;
+        [SerializeField] private BindTypeFilter filter = BindTypeFilter.Smart;
 
         [HideInInspector]
         [SerializeField] private List<string> serializedCustomBindTypes = new();
@@ -66,7 +68,7 @@ namespace Exanite.Core.DependencyInjection
         {
             var types = new HashSet<Type>();
 
-            if ((bindTypes & BindTypes.Smart) != 0)
+            if ((filter & BindTypeFilter.Smart) != 0)
             {
                 var currentType = component.GetType();
                 while (currentType != null)
@@ -81,12 +83,12 @@ namespace Exanite.Core.DependencyInjection
                 }
             }
 
-            if ((bindTypes & BindTypes.Self) != 0)
+            if ((filter & BindTypeFilter.Self) != 0)
             {
                 types.Add(component.GetType());
             }
 
-            if ((bindTypes & BindTypes.Interfaces) != 0)
+            if ((filter & BindTypeFilter.Interfaces) != 0)
             {
                 foreach (var type in GetValidBindTypes().Where(t => t.IsInterface))
                 {
@@ -101,7 +103,7 @@ namespace Exanite.Core.DependencyInjection
         {
             var types = new HashSet<Type>(GetTypesToBindNonCustom());
 
-            if ((bindTypes & BindTypes.Custom) != 0)
+            if ((filter & BindTypeFilter.Custom) != 0)
             {
                 foreach (var customBindType in customBindTypes)
                 {
@@ -148,7 +150,7 @@ namespace Exanite.Core.DependencyInjection
 
         private bool IsCustomBindTypeEnabled()
         {
-            return (bindTypes & BindTypes.Custom) != 0;
+            return (filter & BindTypeFilter.Custom) != 0;
         }
 
         private bool HasUnknownBindTypes()
