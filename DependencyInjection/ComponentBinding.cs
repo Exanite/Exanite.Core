@@ -200,8 +200,6 @@ namespace Exanite.Core.DependencyInjection
             }
 
             serializedCustomBindTypes.AddRange(unknownBindTypes);
-
-            serializedCustomBindTypes.Sort(StringComparer.Ordinal);
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
