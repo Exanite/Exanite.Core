@@ -26,7 +26,6 @@ namespace Exanite.Core.DependencyInjection
         [PropertyOrder(0)]
         [SerializeField] private Component component = new();
 
-        [FormerlySerializedAs("newBindTypes")]
         [EnumToggleButtons]
         [SerializeField] private BindTypes bindTypes = BindTypes.Smart;
 
