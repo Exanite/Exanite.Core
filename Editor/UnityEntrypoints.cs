@@ -7,7 +7,7 @@ namespace Exanite.Core.Editor
     {
         public static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
         {
-            SelectAssetDependents.ClearAssetDependentsCache();
+            AssetDependencies.ClearAssetDependentsCache();
         }
     }
 }

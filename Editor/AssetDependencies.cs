@@ -7,16 +7,58 @@ using UnityEngine.Windows;
 #if UNITY_EDITOR
 namespace Exanite.Core.Editor
 {
-    public static class SelectAssetDependents
+    public static class AssetDependencies
     {
         private static Dictionary<string, HashSet<string>> AssetDependents;
+
+        /// <remarks>
+        /// This behaves slightly differently compared to Unity's "Select Dependencies" option.
+        /// Instead of adding the dependencies to the selection, this only selects the dependencies of the original selection.
+        /// This makes it easier to tell if there are any dependencies since no objects will be selected if there aren't any.
+        /// </remarks>
+        public static void RunSelectAssetDependencies()
+        {
+            var selectedAssetPaths = GetSelectedAssetPaths();
+            var dependencies = new HashSet<string>();
+            foreach (var assetPath in selectedAssetPaths)
+            {
+                foreach (var dependency in AssetDatabase.GetDependencies(assetPath, true))
+                {
+                    dependencies.Add(dependency);
+                }
+            }
+
+            Selection.objects = dependencies.Select(path => AssetDatabase.LoadMainAssetAtPath(path)).ToArray();
+
+            var logMessage = $"Found {dependencies.Count} dependencies:\n";
+            foreach (var dependent in dependencies.ToList().OrderBy(x => x))
+            {
+                logMessage += $"{dependent}\n";
+            }
+            Debug.Log(logMessage);
+        }
 
         /// <remarks>
         /// This behaves slightly differently compared to Unity's "Select Dependencies" option.
         /// Instead of adding the dependencies to the selection, this only selects the dependents of the original selection.
         /// This makes it easier to tell if there are any dependents since no objects will be selected if there aren't any.
         /// </remarks>
-        public static void Run()
+        public static void RunSelectAssetDependents()
+        {
+            var selectedAssetPaths = GetSelectedAssetPaths();
+            var dependents = GetDependentAssetPaths(selectedAssetPaths);
+
+            Selection.objects = dependents.Select(path => AssetDatabase.LoadMainAssetAtPath(path)).ToArray();
+
+            var logMessage = $"Found {dependents.Count} dependents:\n";
+            foreach (var dependent in dependents.ToList().OrderBy(x => x))
+            {
+                logMessage += $"{dependent}\n";
+            }
+            Debug.Log(logMessage);
+        }
+
+        private static HashSet<string> GetSelectedAssetPaths()
         {
             var selectedObjects = Selection.objects;
             var selectedAssetPaths = new HashSet<string>();
@@ -37,16 +79,7 @@ namespace Exanite.Core.Editor
                 }
             }
 
-            var dependents = GetDependentAssetPaths(selectedAssetPaths);
-
-            Selection.objects = dependents.Select(path => AssetDatabase.LoadMainAssetAtPath(path)).ToArray();
-
-            var logMessage = $"Found {dependents.Count} dependents:\n";
-            foreach (var dependent in dependents.ToList().OrderBy(x => x))
-            {
-                logMessage += $"{dependent}\n";
-            }
-            Debug.Log(logMessage);
+            return selectedAssetPaths;
         }
 
         private static HashSet<string> GetDependentAssetPaths(IEnumerable<string> assetPaths)

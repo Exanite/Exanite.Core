@@ -15,14 +15,22 @@ namespace Exanite.Core.Editor
             Editor.CleanEmptyFolders.Run();
         }
 
-        [MenuItem("Assets/Select Dependents (Exanite.Core)", false, priority = 30)]
-        public static void SelectAssetDependents()
+        [MenuItem("Assets/Select Dependencies (Exanite.Core)", false, priority = 30)]
+        public static void SelectAssetDependencies()
         {
-            Editor.SelectAssetDependents.Run();
+            AssetDependencies.RunSelectAssetDependencies();
         }
 
+        [MenuItem("Assets/Select Dependents (Exanite.Core)", false, priority = 31)]
+        public static void SelectAssetDependents()
+        {
+            AssetDependencies.RunSelectAssetDependents();
+        }
+
+        [MenuItem("Assets/Select Dependencies (Exanite.Core)", true)]
         [MenuItem("Assets/Select Dependents (Exanite.Core)", true)]
-        public static bool SelectAssetDependentsValidate() {
+        public static bool SelectAssetsValidate()
+        {
             return Selection.objects.Length > 0;
         }
 
