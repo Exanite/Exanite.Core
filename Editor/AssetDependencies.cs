@@ -28,6 +28,11 @@ namespace Exanite.Core.Editor
                 }
             }
 
+            foreach (var assetPath in selectedAssetPaths)
+            {
+                dependencies.Remove(assetPath);
+            }
+
             Selection.objects = dependencies.Select(path => AssetDatabase.LoadMainAssetAtPath(path)).ToArray();
 
             var logMessage = $"Found {dependencies.Count} dependencies:\n";
@@ -47,6 +52,11 @@ namespace Exanite.Core.Editor
         {
             var selectedAssetPaths = GetSelectedAssetPaths();
             var dependents = GetDependentAssetPaths(selectedAssetPaths);
+
+            foreach (var assetPath in selectedAssetPaths)
+            {
+                dependents.Remove(assetPath);
+            }
 
             Selection.objects = dependents.Select(path => AssetDatabase.LoadMainAssetAtPath(path)).ToArray();
 
@@ -93,11 +103,6 @@ namespace Exanite.Core.Editor
                 {
                     results.UnionWith(dependents);
                 }
-            }
-
-            foreach (var assetPath in assetPaths)
-            {
-                results.Remove(assetPath);
             }
 
             return results;
