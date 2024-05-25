@@ -26,7 +26,7 @@ namespace Exanite.Core.DependencyInjection
         [ShowIf(nameof(IsCustomBindTypeEnabled))]
         [EnableIf(nameof(component))]
         [ValidateInput(nameof(ValidateCustomBindTypes))]
-        [ValueDropdown(nameof(GetValidBindTypes), ExcludeExistingValuesInList = true)]
+        [ValueDropdown(nameof(GetBindTypesToDisplay), ExcludeExistingValuesInList = true)]
         private List<Type> customBindTypes = new();
 
         [PropertyOrder(3)]
@@ -98,6 +98,17 @@ namespace Exanite.Core.DependencyInjection
 
                 currentType = currentType.BaseType;
             }
+        }
+
+        private IEnumerable<Type> GetBindTypesToDisplay()
+        {
+            var types = new HashSet<Type>(GetValidBindTypes());
+            foreach (var type in GetTypesToBind())
+            {
+                types.Remove(type);
+            }
+
+            return types;
         }
 
         private bool IsCustomBindTypeEnabled()
