@@ -52,6 +52,13 @@ namespace Exanite.Core.DependencyInjection
         [InfoBox("Some types were not found. Please update or remove the unknown types (this requires manually editing Unity serialized data).", InfoMessageType.Error)]
         private List<string> unknownBindTypes = new();
 
+#if UNITY_EDITOR
+        [PropertyOrder(3)]
+        [ShowInInspector]
+        [ReadOnly]
+        private List<Type> TypesToBind => GetTypesToBind().ToList();
+#endif
+
         public Component Component => component;
 
         public void Install(DiContainer container)
