@@ -33,8 +33,9 @@ namespace Exanite.Core.DependencyInjection
         [EnumToggleButtons]
         [SerializeField] private BindTypeFilter filter = BindTypeFilter.Smart;
 
+        [FormerlySerializedAs("serializedCustomBindTypes")]
         [HideInInspector]
-        [SerializeField] private List<string> serializedCustomBindTypes = new();
+        [SerializeField] private List<string> serializedCustomTypes = new();
 
         [PropertyOrder(2)]
         [ShowInInspector]
@@ -42,7 +43,7 @@ namespace Exanite.Core.DependencyInjection
         [EnableIf(nameof(component))]
         [ValidateInput(nameof(ValidateCustomBindTypes))]
         [ValueDropdown(nameof(GetBindTypesToDisplay), ExcludeExistingValuesInList = true)]
-        private List<Type> customBindTypes = new();
+        private List<Type> customTypes = new();
 
         [PropertyOrder(3)]
         [ShowInInspector]
@@ -50,7 +51,7 @@ namespace Exanite.Core.DependencyInjection
         [ShowIf(nameof(HasUnknownBindTypes))]
         [DelayedProperty]
         [InfoBox("Some types were not found. Please update or remove the unknown types (this requires manually editing Unity serialized data).", InfoMessageType.Error)]
-        private List<string> unknownCustomBindTypes = new();
+        private List<string> unknownCustomTypes = new();
 
 #if UNITY_EDITOR
         [PropertyOrder(3)]
@@ -112,7 +113,7 @@ namespace Exanite.Core.DependencyInjection
 
             if ((filter & BindTypeFilter.Custom) != 0)
             {
-                foreach (var customBindType in customBindTypes)
+                foreach (var customBindType in customTypes)
                 {
                     types.Add(customBindType);
                 }
@@ -162,7 +163,7 @@ namespace Exanite.Core.DependencyInjection
 
         private bool HasUnknownBindTypes()
         {
-            return unknownCustomBindTypes.Count > 0;
+            return unknownCustomTypes.Count > 0;
         }
 
         private bool ValidateCustomBindTypes(List<Type> customBindTypes, ref string errorMessage, ref InfoMessageType? messageType)
@@ -186,41 +187,41 @@ namespace Exanite.Core.DependencyInjection
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
-            serializedCustomBindTypes.Clear();
+            serializedCustomTypes.Clear();
 
             if ((filter & BindTypeFilter.Custom) != 0)
             {
                 var typesToBindNonCustom = new HashSet<Type>(GetTypesToBindNonCustom());
-                foreach (var customBindType in customBindTypes)
+                foreach (var customBindType in customTypes)
                 {
                     if (typesToBindNonCustom.Contains(customBindType))
                     {
                         continue;
                     }
 
-                    serializedCustomBindTypes.Add(SerializationUtility.SerializeType(customBindType));
+                    serializedCustomTypes.Add(SerializationUtility.SerializeType(customBindType));
                 }
 
-                serializedCustomBindTypes.AddRange(unknownCustomBindTypes);
+                serializedCustomTypes.AddRange(unknownCustomTypes);
             }
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
-            customBindTypes.Clear();
-            unknownCustomBindTypes.Clear();
+            customTypes.Clear();
+            unknownCustomTypes.Clear();
 
-            foreach (var serializedBindType in serializedCustomBindTypes)
+            foreach (var serializedBindType in serializedCustomTypes)
             {
                 try
                 {
-                    customBindTypes.Add(SerializationUtility.DeserializeType(serializedBindType));
+                    customTypes.Add(SerializationUtility.DeserializeType(serializedBindType));
                 }
                 catch (Exception e)
                 {
                     Debug.LogError(e);
 
-                    unknownCustomBindTypes.Add(serializedBindType);
+                    unknownCustomTypes.Add(serializedBindType);
                 }
             }
         }
