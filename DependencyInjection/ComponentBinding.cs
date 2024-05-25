@@ -5,7 +5,6 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using UniDi;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
 
@@ -29,11 +28,9 @@ namespace Exanite.Core.DependencyInjection
         [PropertyOrder(0)]
         [SerializeField] private Component component = new();
 
-        [FormerlySerializedAs("bindTypes")]
         [EnumToggleButtons]
         [SerializeField] private BindTypeFilter filter = BindTypeFilter.Smart;
 
-        [FormerlySerializedAs("serializedCustomBindTypes")]
         [HideInInspector]
         [SerializeField] private List<string> serializedCustomTypes = new();
 
