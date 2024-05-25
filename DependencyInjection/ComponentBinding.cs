@@ -16,8 +16,7 @@ namespace Exanite.Core.DependencyInjection
         [SerializeField] private Component component = new();
 
         [EnumToggleButtons]
-        [SerializeField] private BindTypes bindTypes = BindTypes.Self;
-        [SerializeField] private NewBindTypes newBindTypes = NewBindTypes.Smart;
+        [SerializeField] private BindTypes newBindTypes = BindTypes.Smart;
 
         [HideInInspector]
         [SerializeField] private List<string> serializedCustomBindTypes = new();
@@ -54,12 +53,12 @@ namespace Exanite.Core.DependencyInjection
         {
             var types = new HashSet<Type>();
 
-            if ((bindTypes & BindTypes.Self) != 0)
+            if ((newBindTypes & BindTypes.Self) != 0)
             {
                 types.Add(component.GetType());
             }
 
-            if ((bindTypes & BindTypes.Interfaces) != 0)
+            if ((newBindTypes & BindTypes.Interfaces) != 0)
             {
                 foreach (var type in GetValidBindTypes().Where(t => t.IsInterface))
                 {
@@ -74,7 +73,7 @@ namespace Exanite.Core.DependencyInjection
         {
             var types = new HashSet<Type>(GetTypesToBindNonCustom());
 
-            if ((bindTypes & BindTypes.Custom) != 0)
+            if ((newBindTypes & BindTypes.Custom) != 0)
             {
                 foreach (var customBindType in customBindTypes)
                 {
@@ -121,7 +120,7 @@ namespace Exanite.Core.DependencyInjection
 
         private bool IsCustomBindTypeEnabled()
         {
-            return (bindTypes & BindTypes.Custom) != 0;
+            return (newBindTypes & BindTypes.Custom) != 0;
         }
 
         private bool HasUnknownBindTypes()
@@ -150,22 +149,6 @@ namespace Exanite.Core.DependencyInjection
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
-            newBindTypes = NewBindTypes.None;
-            if ((bindTypes & BindTypes.Interfaces) != 0)
-            {
-                newBindTypes |= NewBindTypes.Interfaces;
-            }
-
-            if ((bindTypes & BindTypes.Self) != 0)
-            {
-                newBindTypes |= NewBindTypes.Self;
-            }
-
-            if ((bindTypes & BindTypes.Custom) != 0)
-            {
-                newBindTypes |= NewBindTypes.Custom;
-            }
-
             serializedCustomBindTypes.Clear();
 
             var typesToBindNonCustom = new HashSet<Type>(GetTypesToBindNonCustom());
