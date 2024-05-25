@@ -50,7 +50,7 @@ namespace Exanite.Core.DependencyInjection
         [ShowIf(nameof(HasUnknownBindTypes))]
         [DelayedProperty]
         [InfoBox("Some types were not found. Please update or remove the unknown types (this requires manually editing Unity serialized data).", InfoMessageType.Error)]
-        private List<string> unknownBindTypes = new();
+        private List<string> unknownCustomBindTypes = new();
 
 #if UNITY_EDITOR
         [PropertyOrder(3)]
@@ -162,7 +162,7 @@ namespace Exanite.Core.DependencyInjection
 
         private bool HasUnknownBindTypes()
         {
-            return unknownBindTypes.Count > 0;
+            return unknownCustomBindTypes.Count > 0;
         }
 
         private bool ValidateCustomBindTypes(List<Type> customBindTypes, ref string errorMessage, ref InfoMessageType? messageType)
@@ -188,24 +188,27 @@ namespace Exanite.Core.DependencyInjection
         {
             serializedCustomBindTypes.Clear();
 
-            var typesToBindNonCustom = new HashSet<Type>(GetTypesToBindNonCustom());
-            foreach (var customBindType in customBindTypes)
+            if ((filter & BindTypeFilter.Custom) != 0)
             {
-                if (typesToBindNonCustom.Contains(customBindType))
+                var typesToBindNonCustom = new HashSet<Type>(GetTypesToBindNonCustom());
+                foreach (var customBindType in customBindTypes)
                 {
-                    continue;
+                    if (typesToBindNonCustom.Contains(customBindType))
+                    {
+                        continue;
+                    }
+
+                    serializedCustomBindTypes.Add(SerializationUtility.SerializeType(customBindType));
                 }
 
-                serializedCustomBindTypes.Add(SerializationUtility.SerializeType(customBindType));
+                serializedCustomBindTypes.AddRange(unknownCustomBindTypes);
             }
-
-            serializedCustomBindTypes.AddRange(unknownBindTypes);
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
             customBindTypes.Clear();
-            unknownBindTypes.Clear();
+            unknownCustomBindTypes.Clear();
 
             foreach (var serializedBindType in serializedCustomBindTypes)
             {
@@ -217,7 +220,7 @@ namespace Exanite.Core.DependencyInjection
                 {
                     Debug.LogError(e);
 
-                    unknownBindTypes.Add(serializedBindType);
+                    unknownCustomBindTypes.Add(serializedBindType);
                 }
             }
         }
