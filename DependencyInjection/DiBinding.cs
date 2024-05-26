@@ -11,7 +11,7 @@ namespace Exanite.Core.DependencyInjection
     {
         [HideReferenceObjectPicker]
         [ListDrawerSettings(DefaultExpandedState = true, CustomAddFunction = nameof(AddBinding))]
-        [SerializeField] private List<ComponentBinding> bindings = new();
+        [SerializeField] private List<ObjectBinding> bindings = new();
 
         [SerializeField] private bool useSceneContext = false;
         [DisableIf(nameof(useSceneContext))] [SerializeField]
@@ -74,7 +74,7 @@ namespace Exanite.Core.DependencyInjection
 
         private void AddBinding()
         {
-            bindings.Add(new ComponentBinding());
+            bindings.Add(new ObjectBinding());
         }
     }
 }

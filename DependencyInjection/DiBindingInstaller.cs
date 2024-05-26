@@ -6,9 +6,9 @@ namespace Exanite.Core.DependencyInjection
 {
     public class DiBindingInstaller : InstallerBase
     {
-        private readonly List<ComponentBinding> bindings;
+        private readonly List<ObjectBinding> bindings;
 
-        public DiBindingInstaller(List<ComponentBinding> bindings)
+        public DiBindingInstaller(List<ObjectBinding> bindings)
         {
             this.bindings = bindings;
         }

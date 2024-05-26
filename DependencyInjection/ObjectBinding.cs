@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 using UniDi;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
@@ -13,7 +14,7 @@ using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
 namespace Exanite.Core.DependencyInjection
 {
     [Serializable]
-    public class ComponentBinding : ISerializationCallbackReceiver
+    public class ObjectBinding : ISerializationCallbackReceiver
     {
         /// <summary>
         /// Types ignored by <see cref="BindTypeFilter.Smart"/>.
@@ -30,8 +31,10 @@ namespace Exanite.Core.DependencyInjection
             typeof(MaskableGraphic),
         };
 
+        [FormerlySerializedAs("component")]
         [PropertyOrder(0)]
-        [SerializeField] private Component component = new();
+        [LabelText("Object")]
+        [SerializeField] private Object instance = new();
 
         [EnumToggleButtons]
         [SerializeField] private BindTypeFilter filter = BindTypeFilter.Smart;
@@ -42,7 +45,7 @@ namespace Exanite.Core.DependencyInjection
         [PropertyOrder(2)]
         [ShowInInspector]
         [ShowIf(nameof(IsCustomBindTypeEnabled))]
-        [EnableIf(nameof(component))]
+        [EnableIf(nameof(instance))]
         [ValidateInput(nameof(ValidateCustomBindTypes))]
         [ValueDropdown(nameof(GetBindTypesToDisplay), ExcludeExistingValuesInList = true)]
         private List<Type> customTypes = new();
@@ -71,16 +74,16 @@ namespace Exanite.Core.DependencyInjection
         }
 #endif
 
-        public Component Component => component;
+        public Object Instance => instance;
 
         public void Install(DiContainer container)
         {
-            if (!component)
+            if (!instance)
             {
                 return;
             }
 
-            container.Bind(GetTypesToBind()).FromInstance(component);
+            container.Bind(GetTypesToBind()).FromInstance(instance);
         }
 
         private IEnumerable<Type> GetTypesToBindNonCustom()
@@ -89,7 +92,7 @@ namespace Exanite.Core.DependencyInjection
 
             if ((filter & BindTypeFilter.Smart) != 0)
             {
-                var currentType = component.GetType();
+                var currentType = instance.GetType();
                 while (currentType != null)
                 {
                     if (IgnoredTypes.Contains(currentType))
@@ -109,7 +112,7 @@ namespace Exanite.Core.DependencyInjection
 
             if ((filter & BindTypeFilter.Self) != 0)
             {
-                types.Add(component.GetType());
+                types.Add(instance.GetType());
             }
 
             if ((filter & BindTypeFilter.Interfaces) != 0)
@@ -142,17 +145,17 @@ namespace Exanite.Core.DependencyInjection
 
         private IEnumerable<Type> GetValidBindTypes()
         {
-            if (!component)
+            if (!instance)
             {
                 yield break;
             }
 
-            foreach (var interfaceType in component.GetType().GetInterfaces())
+            foreach (var interfaceType in instance.GetType().GetInterfaces())
             {
                 yield return interfaceType;
             }
 
-            var currentType = component.GetType();
+            var currentType = instance.GetType();
             while (currentType != null)
             {
                 yield return currentType;
@@ -191,7 +194,7 @@ namespace Exanite.Core.DependencyInjection
                 {
                     var typeName = customBindType == null ? "Null" : customBindType.ToString();
 
-                    errorMessage = $"{typeName} is not a valid bind type for {component.GetType()}";
+                    errorMessage = $"{typeName} is not a valid bind type for {instance.GetType()}";
                     messageType = InfoMessageType.Error;
 
                     return false;
