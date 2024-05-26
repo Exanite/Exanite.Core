@@ -6,7 +6,6 @@ using Sirenix.OdinInspector;
 using UniDi;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
@@ -31,7 +30,6 @@ namespace Exanite.Core.DependencyInjection
             typeof(MaskableGraphic),
         };
 
-        [FormerlySerializedAs("component")]
         [PropertyOrder(0)]
         [LabelText("Object")]
         [SerializeField] private Object instance = new();
