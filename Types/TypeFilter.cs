@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Exanite.Core.Types
 {
-    public class TypeFilter : IInstanceTypeFilter
+    public class TypeFilter : ITypeFilter
     {
-        private List<IInstanceTypeFilter> filters = new();
+        private List<ITypeFilter> filters = new();
 
         public TypeFilter Self()
         {

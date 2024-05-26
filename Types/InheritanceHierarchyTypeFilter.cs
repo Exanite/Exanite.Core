@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Exanite.Core.Types
 {
-    public class InheritanceHierarchyTypeFilter : IInstanceTypeFilter
+    public class InheritanceHierarchyTypeFilter : ITypeFilter
     {
         public Type BaseType { get; }
         public bool Inclusive { get; }
