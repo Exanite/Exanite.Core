@@ -27,7 +27,7 @@ namespace Exanite.Core.Utilities
         }
 
         /// <inheritdoc cref="GetInheritanceHierarchyUpTo"/>
-        public static IEnumerable<Type> GetInheritanceHierarchyUpTo<TBaseType>(object instance, bool isInclusive)
+        public static IEnumerable<Type> GetInheritanceHierarchyUpTo<TBaseType>(Type instanceType, bool isInclusive)
         {
             return GetInheritanceHierarchyUpTo(typeof(TBaseType), instance, isInclusive);
         }
@@ -35,14 +35,14 @@ namespace Exanite.Core.Utilities
         /// <summary>
         /// Given an instance, this method will return the types starting from the instance's type up to the specified base type.
         /// </summary>
-        public static IEnumerable<Type> GetInheritanceHierarchyUpTo(Type baseType, object instance, bool isInclusive)
+        public static IEnumerable<Type> GetInheritanceHierarchyUpTo(Type baseType, Type instanceType, bool isInclusive)
         {
-            var currentType = instance.GetType();
+            var currentType = instanceType;
             while (currentType != baseType)
             {
                 if (currentType == null)
                 {
-                    throw new ArgumentException($"Object instance of type '{instance.GetType().Name}' does not inherit from base type '{baseType.Name}'", nameof(instance));
+                    throw new ArgumentException($"Instance type '{instanceType.Name}' does not inherit from base type '{baseType.Name}'", nameof(instanceType));
                 }
 
                 yield return currentType;
