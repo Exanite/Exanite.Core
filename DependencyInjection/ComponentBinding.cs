@@ -5,6 +5,8 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using UniDi;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
 
@@ -23,6 +25,9 @@ namespace Exanite.Core.DependencyInjection
             typeof(Component),
             typeof(ScriptableObject),
             typeof(Object),
+            typeof(UIBehaviour),
+            typeof(Graphic),
+            typeof(MaskableGraphic),
         };
 
         [PropertyOrder(0)]
