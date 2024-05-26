@@ -33,6 +33,11 @@ namespace Exanite.Core.Types
             {
                 if (BaseTypes.Contains(currentType))
                 {
+                    if (Inclusive)
+                    {
+                        yield return currentType;
+                    }
+
                     hasReachedBaseType = true;
 
                     break;
