@@ -31,6 +31,8 @@ namespace Exanite.Core.Types
             {
                 if (currentType == BaseType)
                 {
+                    hasReachedBaseType = true;
+
                     break;
                 }
 
