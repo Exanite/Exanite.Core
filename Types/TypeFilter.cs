@@ -5,32 +5,32 @@ namespace Exanite.Core.Types
 {
     public class TypeFilter : ITypeFilter
     {
-        private List<ITypeFilter> filters = new();
+        public List<ITypeFilter> Filters { get; } = new();
 
         public TypeFilter Self()
         {
-            filters.Add(new SelfTypeFilter());
+            Filters.Add(new SelfTypeFilter());
 
             return this;
         }
 
         public TypeFilter Interfaces()
         {
-            filters.Add(new InterfaceTypeFilter());
+            Filters.Add(new InterfaceTypeFilter());
 
             return this;
         }
 
         public TypeFilter InheritanceHierarchy<TBaseType>(bool inclusive = false, bool mustExtendBaseType = false)
         {
-            filters.Add(new InheritanceHierarchyTypeFilter(typeof(TBaseType), inclusive, mustExtendBaseType));
+            Filters.Add(new InheritanceHierarchyTypeFilter(typeof(TBaseType), inclusive, mustExtendBaseType));
 
             return this;
         }
 
         public TypeFilter InheritanceHierarchy(Type baseType, bool inclusive = false, bool mustExtendBaseType = false)
         {
-            filters.Add(new InheritanceHierarchyTypeFilter(baseType, inclusive, mustExtendBaseType));
+            Filters.Add(new InheritanceHierarchyTypeFilter(baseType, inclusive, mustExtendBaseType));
 
             return this;
         }
@@ -38,7 +38,7 @@ namespace Exanite.Core.Types
         public IEnumerable<Type> Filter(Type type)
         {
             var results = new HashSet<Type>();
-            foreach (var filter in filters)
+            foreach (var filter in Filters)
             {
                 foreach (var filterType in filter.Filter(type))
                 {
