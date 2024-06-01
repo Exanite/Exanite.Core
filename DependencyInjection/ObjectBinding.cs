@@ -65,7 +65,7 @@ namespace Exanite.Core.DependencyInjection
             get
             {
                 var results = GetTypesToBind().ToList();
-                results.Sort((a, b) => string.Compare(a.ToString(), b.ToString(), StringComparison.CurrentCulture));
+                results.Sort((a, b) => string.Compare(a.ToString(), b.ToString(), StringComparison.Ordinal));
 
                 return results;
             }
