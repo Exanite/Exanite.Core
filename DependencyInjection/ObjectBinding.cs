@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Exanite.Core.Types;
 using Sirenix.OdinInspector;
 using UniDi;
 using UnityEngine;
@@ -86,42 +87,25 @@ namespace Exanite.Core.DependencyInjection
 
         private IEnumerable<Type> GetTypesToBindNonCustom()
         {
-            var types = new HashSet<Type>();
+            var typeFilter = new TypeFilter();
 
             if ((filter & BindTypeFilter.Smart) != 0)
             {
-                var currentType = instance.GetType();
-                while (currentType != null)
-                {
-                    if (IgnoredTypes.Contains(currentType))
-                    {
-                        break;
-                    }
-
-                    types.Add(currentType);
-                    currentType = currentType.BaseType;
-                }
-
-                foreach (var type in GetValidBindTypes().Where(t => t.IsInterface))
-                {
-                    types.Add(type);
-                }
+                typeFilter.Add(new InheritanceHierarchyTypeFilter(IgnoredTypes, false, false));
+                typeFilter.Interfaces();
             }
 
             if ((filter & BindTypeFilter.Self) != 0)
             {
-                types.Add(instance.GetType());
+                typeFilter.Self();
             }
 
             if ((filter & BindTypeFilter.Interfaces) != 0)
             {
-                foreach (var type in GetValidBindTypes().Where(t => t.IsInterface))
-                {
-                    types.Add(type);
-                }
+                typeFilter.Interfaces();
             }
 
-            return types;
+            return typeFilter.Filter(instance.GetType());
         }
 
         private IEnumerable<Type> GetTypesToBind()
@@ -130,10 +114,7 @@ namespace Exanite.Core.DependencyInjection
 
             if ((filter & BindTypeFilter.Custom) != 0)
             {
-                foreach (var customBindType in customTypes)
-                {
-                    types.Add(customBindType);
-                }
+                types.UnionWith(customTypes);
             }
 
             types.Remove(null);
@@ -143,23 +124,11 @@ namespace Exanite.Core.DependencyInjection
 
         private IEnumerable<Type> GetValidBindTypes()
         {
-            if (!instance)
-            {
-                yield break;
-            }
+            var typeFilter = new TypeFilter();
+            typeFilter.Interfaces();
+            typeFilter.InheritanceHierarchy(null, false, false);
 
-            foreach (var interfaceType in instance.GetType().GetInterfaces())
-            {
-                yield return interfaceType;
-            }
-
-            var currentType = instance.GetType();
-            while (currentType != null)
-            {
-                yield return currentType;
-
-                currentType = currentType.BaseType;
-            }
+            return typeFilter.Filter(instance.GetType());
         }
 
         private IEnumerable<Type> GetBindTypesToDisplay()
