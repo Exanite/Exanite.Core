@@ -35,6 +35,13 @@ namespace Exanite.Core.Types
             return this;
         }
 
+        public TypeFilter Add(ITypeFilter filter)
+        {
+            Filters.Add(filter);
+
+            return this;
+        }
+
         public IEnumerable<Type> Filter(Type type)
         {
             var results = new HashSet<Type>();
