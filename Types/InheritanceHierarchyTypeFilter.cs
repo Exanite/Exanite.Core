@@ -18,6 +18,8 @@ namespace Exanite.Core.Types
             BaseTypes = baseTypes;
             Inclusive = inclusive;
             MustExtendBaseType = mustExtendBaseType;
+
+            BaseTypes.Remove(null);
         }
 
         public IEnumerable<Type> Filter(Type type)
