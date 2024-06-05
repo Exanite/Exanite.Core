@@ -1,10 +1,10 @@
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Windows;
 
-#if UNITY_EDITOR
 namespace Exanite.Core.Editor
 {
     public static class AssetDependencies
