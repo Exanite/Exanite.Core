@@ -9,14 +9,14 @@ namespace Exanite.Core.Types
 
         public TypeFilter Self()
         {
-            Filters.Add(new SelfTypeFilter());
+            Filters.Add(TypeFilters.Self);
 
             return this;
         }
 
         public TypeFilter Interfaces()
         {
-            Filters.Add(new InterfaceTypeFilter());
+            Filters.Add(TypeFilters.Interface);
 
             return this;
         }
@@ -30,7 +30,14 @@ namespace Exanite.Core.Types
 
         public TypeFilter InheritanceHierarchy(Type baseType = null, bool inclusive = false, bool mustExtendBaseType = false)
         {
-            Filters.Add(new InheritanceHierarchyTypeFilter(baseType, inclusive, mustExtendBaseType));
+            if (baseType == null && inclusive == false && mustExtendBaseType == false)
+            {
+                Filters.Add(TypeFilters.InheritanceHierarchy);
+            }
+            else
+            {
+                Filters.Add(new InheritanceHierarchyTypeFilter(baseType, inclusive, mustExtendBaseType));
+            }
 
             return this;
         }
