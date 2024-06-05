@@ -13,8 +13,10 @@
   <PropertyGroup>
     <DefaultItemExcludes>
       $(DefaultItemExcludes);
-      Tests/**/*;
       Components/**/*;
+      Editor/**/*;
+      Tracking/**/*;
+      Tests/**/*;
       **/*.meta;
     </DefaultItemExcludes>
   </PropertyGroup>
