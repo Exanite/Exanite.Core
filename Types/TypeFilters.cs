@@ -7,7 +7,7 @@ namespace Exanite.Core.Types
         public static ITypeFilter InheritanceHierarchy { get; } = new InheritanceHierarchyTypeFilter();
         public static ITypeFilter Smart { get; } = new TypeFilter().InheritanceHierarchy().Interfaces();
 
-#if UNITY_5_3_OR_NEWER
+#if UNITY_2021_3_OR_NEWER
         // Todo public static TypeFilter UnitySmart { get; } = new TypeFilter().InheritanceHierarchy().Interfaces();
 #endif
     }

@@ -149,7 +149,7 @@ namespace Exanite.Core.Utilities
             return output;
         }
 
-#if !UNITY_5_3_OR_NEWER
+#if !UNITY_2021_3_OR_NEWER
         /// <summary>
         /// Converts radians to degrees.
         /// </summary>
