@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Exanite.Core.Utilities;
 #if UNITY_2021_3_OR_NEWER
 using UnityEngine;
@@ -114,7 +115,7 @@ namespace Exanite.Core.Numerics
 
             if (Multiplier == 0)
             {
-                return rounded.ToString();
+                return rounded.ToString(CultureInfo.CurrentCulture);
             }
 
             switch (displayFormat)
@@ -186,74 +187,74 @@ namespace Exanite.Core.Numerics
             return new LargeNumber(value);
         }
 
-        public static LargeNumber operator *(LargeNumber A, LargeNumber B)
+        public static LargeNumber operator *(LargeNumber a, LargeNumber b)
         {
-            return new LargeNumber(A.Value * B.Value, A.Multiplier + B.Multiplier);
+            return new LargeNumber(a.Value * b.Value, a.Multiplier + b.Multiplier);
         }
 
-        public static LargeNumber operator /(LargeNumber A, LargeNumber B)
+        public static LargeNumber operator /(LargeNumber a, LargeNumber b)
         {
-            return new LargeNumber(A.Value / B.Value, A.Multiplier - B.Multiplier);
+            return new LargeNumber(a.Value / b.Value, a.Multiplier - b.Multiplier);
         }
 
-        public static LargeNumber operator +(LargeNumber A, LargeNumber B)
+        public static LargeNumber operator +(LargeNumber a, LargeNumber b)
         {
-            var multAIsLarger = A.Multiplier > B.Multiplier;
-            var difference = Math.Abs(A.Multiplier - B.Multiplier);
+            var multAIsLarger = a.Multiplier > b.Multiplier;
+            var difference = Math.Abs(a.Multiplier - b.Multiplier);
 
             if (multAIsLarger)
             {
                 for (var i = 0; i < difference; i++)
                 {
-                    B.value /= 1000;
-                    B.multiplier++;
+                    b.value /= 1000;
+                    b.multiplier++;
                 }
             }
             else
             {
                 for (var i = 0; i < difference; i++)
                 {
-                    A.value /= 1000;
-                    A.multiplier++;
+                    a.value /= 1000;
+                    a.multiplier++;
                 }
             }
 
-            return new LargeNumber(A.value + B.value, A.multiplier);
+            return new LargeNumber(a.value + b.value, a.multiplier);
         }
 
-        public static LargeNumber operator -(LargeNumber A, LargeNumber B)
+        public static LargeNumber operator -(LargeNumber a, LargeNumber b)
         {
-            var multAIsLarger = A.Multiplier > B.Multiplier;
-            var difference = Math.Abs(A.Multiplier - B.Multiplier);
+            var multAIsLarger = a.Multiplier > b.Multiplier;
+            var difference = Math.Abs(a.Multiplier - b.Multiplier);
 
             if (multAIsLarger)
             {
                 for (var i = 0; i < difference; i++)
                 {
-                    B.value /= 1000;
-                    B.multiplier++;
+                    b.value /= 1000;
+                    b.multiplier++;
                 }
             }
             else
             {
                 for (var i = 0; i < difference; i++)
                 {
-                    A.value /= 1000;
-                    A.multiplier++;
+                    a.value /= 1000;
+                    a.multiplier++;
                 }
             }
 
-            return new LargeNumber(A.value - B.value, A.multiplier);
+            return new LargeNumber(a.value - b.value, a.multiplier);
         }
 
-        public static LargeNumber operator ++(LargeNumber A)
+        public static LargeNumber operator ++(LargeNumber a)
         {
-            return new LargeNumber(A.Value + 1, A.Multiplier);
+            return new LargeNumber(a.Value + 1, a.Multiplier);
         }
 
-        public static LargeNumber operator --(LargeNumber A)
+        public static LargeNumber operator --(LargeNumber a)
         {
-            return new LargeNumber(A.Value - 1, A.Multiplier);
+            return new LargeNumber(a.Value - 1, a.Multiplier);
         }
 
         public static bool operator ==(LargeNumber lhs, LargeNumber rhs)
