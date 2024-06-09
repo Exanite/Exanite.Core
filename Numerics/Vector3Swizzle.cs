@@ -1,11 +1,9 @@
-﻿#if UNITY_2021_3_OR_NEWER
-using System;
-using UnityEngine;
+﻿using System;
 
 namespace Exanite.Core.Numerics
 {
     /// <summary>
-    /// Defines how a <see cref="Vector3"/> value should be swizzled.
+    /// Defines how the components of a Vector3 should be swizzled.
     /// </summary>
     [Serializable]
     public enum Vector3Swizzle
@@ -41,4 +39,3 @@ namespace Exanite.Core.Numerics
         ZYX,
     }
 }
-#endif
