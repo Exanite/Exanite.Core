@@ -7,18 +7,13 @@ using Exanite.Core.Utilities;
 namespace Exanite.Core.Threading
 {
     /// <summary>
-    /// Ensures posted callbacks are always ran on a specific thread.
-    /// If the callback is posted on the configured thread, it will be ran immediately.
-    /// Otherwise, the callback will be ran the next time Run() is called.
-    /// <para/>
-    /// Recommended usage for games is to call <see cref="Run"/> during each update on the main thread.
+    /// Ensures posted callbacks are always ran on a specific thread. Callbacks will be ran when <see cref="Run"/> is called.
     /// </summary>
+    /// <remarks>
+    /// Recommended usage for games is to call <see cref="Run"/> during each update on the main thread.
+    /// </remarks>
     public class ThreadSynchronizationContext : SynchronizationContext
     {
-        private const int MaxRecursivePostCount = 50;
-
-        private int recursivePostCount = 0;
-
         private readonly ConcurrentQueue<Callback> callbacks = new();
 
         /// <param name="targetThread">The thread callbacks should be executed on.</param>
@@ -39,19 +34,6 @@ namespace Exanite.Core.Threading
 
         public override void Post(SendOrPostCallback callback, object state)
         {
-            if (Thread.CurrentThread == TargetThread)
-            {
-                // Based on https://github.com/kekyo/SynchContextSample/blob/master/SynchContextSample/QueueSynchronizationContext.cs
-                if (recursivePostCount < MaxRecursivePostCount)
-                {
-                    recursivePostCount++;
-                    callback(state);
-                    recursivePostCount--;
-
-                    return;
-                }
-            }
-
             callbacks.Enqueue(new Callback(callback, state));
         }
 
