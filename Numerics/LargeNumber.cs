@@ -303,7 +303,7 @@ namespace Exanite.Core.Numerics
 
         public bool Equals(LargeNumber other)
         {
-            return Value == other.Value && Multiplier == other.Multiplier;
+            return Math.Abs(Value - other.Value) < float.Epsilon && Multiplier == other.Multiplier;
         }
 
         public int CompareTo(LargeNumber other)
