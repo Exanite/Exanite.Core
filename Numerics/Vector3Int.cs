@@ -27,7 +27,7 @@ namespace Exanite.Core.Numerics
         /// <inheritdoc cref="Vector3.UnitY"/>
         public static Vector3Int UnitY => new Vector3Int(0, 1, 0);
 
-        /// <inheritdoc cref="Vector3.UnitY"/>
+        /// <inheritdoc cref="Vector3.UnitZ"/>
         public static Vector3Int UnitZ => new Vector3Int(0, 0, 1);
 
         public Vector3Int(int value) : this(value, value, value) {}
