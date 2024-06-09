@@ -11,31 +11,31 @@ namespace Exanite.Core.Numerics
         /// <summary>
         /// Keeps the component positions at XYZ.
         /// </summary>
-        XYZ,
+        XYZ = 0,
 
         /// <summary>
         /// Swaps the component positions from XYZ to XZY.
         /// </summary>
-        XZY,
+        XZY = 1,
 
         /// <summary>
         /// Swaps the component positions from XYZ to YXZ.
         /// </summary>
-        YXZ,
+        YXZ = 2,
 
         /// <summary>
         /// Swaps the component positions from XYZ to YZX.
         /// </summary>
-        YZX,
+        YZX = 3,
 
         /// <summary>
         /// Swaps the component positions from XYZ to ZXY.
         /// </summary>
-        ZXY,
+        ZXY = 4,
 
         /// <summary>
         /// Swaps the component positions from XYZ to ZYX.
         /// </summary>
-        ZYX,
+        ZYX = 5,
     }
 }
