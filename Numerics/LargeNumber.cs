@@ -4,7 +4,7 @@ using Exanite.Core.Utilities;
 using UnityEngine;
 #endif
 
-namespace Exanite.Core.Numbers
+namespace Exanite.Core.Numerics
 {
     /// <summary>
     /// Used to store very large numbers (up to 999.999999x(10^(2^63)))

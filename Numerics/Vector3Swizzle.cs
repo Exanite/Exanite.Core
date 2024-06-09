@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace Exanite.Core.Numbers
+namespace Exanite.Core.Numerics
 {
     /// <summary>
     /// Defines how a <see cref="Vector3"/> value should be swizzled.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Exanite.Core.Numbers
+namespace Exanite.Core.Numerics
 {
     /// <summary>
     /// How the class <see cref="LargeNumber"/> display the number.
