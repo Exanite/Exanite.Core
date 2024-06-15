@@ -1,5 +1,6 @@
 #nullable enable
 
+#if NETCOREAPP
 using System;
 using System.Threading.Tasks;
 
@@ -28,3 +29,4 @@ namespace Exanite.Core.Utilities
         }
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if NETCOREAPP
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -34,3 +35,4 @@ namespace Exanite.Core.Utilities
         }
     }
 }
+#endif

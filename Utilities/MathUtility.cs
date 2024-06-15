@@ -118,6 +118,7 @@ namespace Exanite.Core.Utilities
             return num % 2 != 0;
         }
 
+#if NETCOREAPP
         public static float SmoothDamp(float current, float target, float smoothTime, float deltaTime, ref float currentVelocity, float maxSpeed = float.PositiveInfinity)
         {
             // From https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Math/Mathf.cs#L309
@@ -148,7 +149,9 @@ namespace Exanite.Core.Utilities
 
             return output;
         }
+#endif
 
+#if NETCOREAPP
 #if !UNITY_2021_3_OR_NEWER
         /// <summary>
         /// Converts radians to degrees.
@@ -166,7 +169,9 @@ namespace Exanite.Core.Utilities
             return degrees * (float.Pi / 180f);
         }
 #endif
+#endif
 
+#if NETCOREAPP
         // sRGB-Linear conversion formulas are from: https://entropymine.com/imageworsener/srgbformula/
 
         /// <summary>
@@ -192,5 +197,6 @@ namespace Exanite.Core.Utilities
                 return MathF.Pow(value, 1 / 2.4f) * 1.055f - 0.055f;
             }
         }
+#endif
     }
 }

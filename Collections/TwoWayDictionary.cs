@@ -76,9 +76,9 @@ namespace Exanite.Core.Collections
             backward = new Dictionary<TValue, TKey>(dictionary.Count);
             Inverse = new TwoWayDictionary<TValue, TKey>(this);
 
-            foreach (var (key, value) in dictionary)
+            foreach (var kvp in dictionary)
             {
-                Add(key, value);
+                Add(kvp.Key, kvp.Value);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using NumericsVector2 = System.Numerics.Vector2;
+﻿#if NETCOREAPP
+using NumericsVector2 = System.Numerics.Vector2;
 
 namespace Exanite.Core.Utilities
 {
@@ -28,3 +29,4 @@ namespace Exanite.Core.Utilities
         }
     }
 }
+#endif
