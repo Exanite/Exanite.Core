@@ -32,6 +32,11 @@ namespace Exanite.Core.Utilities
         {
             return new Vector2(value.X, value.Y);
         }
+
+        public static Vector3 Xy0(this Vector2 value)
+        {
+            return new Vector3(value.X, value.Y, 0);
+        }
     }
 }
 #endif
