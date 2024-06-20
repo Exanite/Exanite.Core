@@ -1,5 +1,5 @@
 ﻿#if NETCOREAPP
-using NumericsVector2 = System.Numerics.Vector2;
+using System.Numerics;
 
 namespace Exanite.Core.Utilities
 {
@@ -13,9 +13,9 @@ namespace Exanite.Core.Utilities
         /// provided vector is Vector2.Zero, returning Vector2.Zero rather
         /// than NaN.
         /// </summary>
-        public static NumericsVector2 AsNormalizedSafe(this NumericsVector2 value)
+        public static Vector2 AsNormalizedSafe(this Vector2 value)
         {
-            return value.AsNormalizedSafe(NumericsVector2.Zero);
+            return value.AsNormalizedSafe(Vector2.Zero);
         }
 
         /// <summary>
@@ -23,9 +23,14 @@ namespace Exanite.Core.Utilities
         /// provided vector is Vector2.Zero, returning the provided
         /// <see cref="fallback"/> rather than NaN.
         /// </summary>
-        public static NumericsVector2 AsNormalizedSafe(this NumericsVector2 value, NumericsVector2 fallback)
+        public static Vector2 AsNormalizedSafe(this Vector2 value, Vector2 fallback)
         {
-            return value == NumericsVector2.Zero ? fallback : NumericsVector2.Normalize(value);
+            return value == Vector2.Zero ? fallback : Vector2.Normalize(value);
+        }
+
+        public static Vector2 Xy(this Vector3 value)
+        {
+            return new Vector2(value.X, value.Y);
         }
     }
 }
