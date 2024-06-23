@@ -1,4 +1,4 @@
-﻿using Exanite.Core.Numbers;
+﻿using Exanite.Core.Numerics;
 using Exanite.Core.Utilities;
 using NUnit.Framework;
 using UnityEngine;

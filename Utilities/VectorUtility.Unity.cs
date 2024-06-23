@@ -1,5 +1,5 @@
 #if UNITY_2021_3_OR_NEWER
-using Exanite.Core.Numbers;
+using Exanite.Core.Numerics;
 using UnityEngine;
 #endif
 
