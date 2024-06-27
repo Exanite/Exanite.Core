@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Exanite.Core.Pooling
 {
-    public class ObjectPool<T> : IDisposable where T : class
+    public class Pool<T> : IDisposable where T : class
     {
         private readonly List<T> values;
 
@@ -19,7 +19,7 @@ namespace Exanite.Core.Pooling
         public int CountActive => CountAll - CountInactive;
         public int CountInactive => values.Count;
 
-        public ObjectPool(
+        public Pool(
             Func<T> createObject,
             Action<T>? onObjectGet = null,
             Action<T>? onObjectRelease = null,

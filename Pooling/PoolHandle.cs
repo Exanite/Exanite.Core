@@ -6,9 +6,9 @@ namespace Exanite.Core.Pooling
     public struct PoolHandle<T> : IDisposable where T : class
     {
         private readonly T value;
-        private readonly ObjectPool<T> pool;
+        private readonly Pool<T> pool;
 
-        public PoolHandle(T value, ObjectPool<T> pool)
+        public PoolHandle(T value, Pool<T> pool)
         {
             this.value = value;
             this.pool = pool;
