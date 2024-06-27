@@ -8,10 +8,10 @@ namespace Exanite.Core.Pooling
     {
         private readonly List<T> values;
 
-        private readonly Func<T> createObject;
-        private readonly Action<T>? onObjectGet;
-        private readonly Action<T>? onObjectRelease;
-        private readonly Action<T>? onObjectDestroy;
+        private readonly Func<T> create;
+        private readonly Action<T>? onGet;
+        private readonly Action<T>? onRelease;
+        private readonly Action<T>? onDestroy;
 
         public int MaxCapacity { get; private set; }
 
@@ -20,10 +20,10 @@ namespace Exanite.Core.Pooling
         public int CountInactive => values.Count;
 
         public Pool(
-            Func<T> createObject,
-            Action<T>? onObjectGet = null,
-            Action<T>? onObjectRelease = null,
-            Action<T>? onObjectDestroy = null,
+            Func<T> create,
+            Action<T>? onGet = null,
+            Action<T>? onRelease = null,
+            Action<T>? onDestroy = null,
             int defaultCapacity = 10,
             int maxCapacity = 10000)
         {
@@ -40,10 +40,10 @@ namespace Exanite.Core.Pooling
             values = new List<T>(defaultCapacity);
             MaxCapacity = maxCapacity;
 
-            this.createObject = createObject;
-            this.onObjectGet = onObjectGet;
-            this.onObjectRelease = onObjectRelease;
-            this.onObjectDestroy = onObjectDestroy;
+            this.create = create;
+            this.onGet = onGet;
+            this.onRelease = onRelease;
+            this.onDestroy = onDestroy;
         }
 
         public PoolHandle<T> Acquire(out T value)
@@ -55,7 +55,7 @@ namespace Exanite.Core.Pooling
         {
             if (values.Count == 0)
             {
-                values.Add(createObject());
+                values.Add(create());
                 CountAll++;
             }
 
@@ -63,14 +63,14 @@ namespace Exanite.Core.Pooling
             var value = values[index];
             values.RemoveAt(index);
 
-            onObjectGet?.Invoke(value);
+            onGet?.Invoke(value);
 
             return value;
         }
 
         public void Release(T element)
         {
-            var actionOnRelease = onObjectRelease;
+            var actionOnRelease = onRelease;
             if (actionOnRelease != null)
             {
                 actionOnRelease(element);
@@ -83,17 +83,17 @@ namespace Exanite.Core.Pooling
             else
             {
                 CountAll--;
-                onObjectDestroy?.Invoke(element);
+                onDestroy?.Invoke(element);
             }
         }
 
         public void Clear()
         {
-            if (onObjectDestroy != null)
+            if (onDestroy != null)
             {
                 foreach (var value in values)
                 {
-                    onObjectDestroy(value);
+                    onDestroy(value);
                 }
             }
 
