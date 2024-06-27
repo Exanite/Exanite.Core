@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Exanite.Core.Pooling
 {
+    /// <summary>
+    /// Conventional object pool where objects can be acquired and released.
+    /// </summary>
     public class Pool<T> : IDisposable where T : class
     {
         private readonly List<T> values;
