@@ -9,7 +9,14 @@ namespace Exanite.Core.Pooling
 
     public abstract class CollectionPool<TCollection, TItem> where TCollection : class, ICollection<TItem>, new()
     {
-        private static readonly Pool<TCollection> Pool = new(() => new TCollection(), onRelease: value => value.Clear());
+        private static readonly Pool<TCollection> Pool = Create();
+
+        public static Pool<TCollection> Create()
+        {
+            return new Pool<TCollection>(
+                create: () => new TCollection(),
+                onRelease: value => value.Clear());
+        }
 
         public static PoolHandle<TCollection> Acquire(out TCollection value)
         {
