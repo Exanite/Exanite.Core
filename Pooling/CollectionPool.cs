@@ -16,7 +16,10 @@ namespace Exanite.Core.Pooling
             return Pool.Acquire(out value);
         }
 
-        public static TCollection Acquire() => Pool.Acquire();
+        public static TCollection Acquire()
+        {
+            return Pool.Acquire();
+        }
 
         public static void Release(TCollection value)
         {
