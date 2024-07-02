@@ -16,8 +16,11 @@ namespace Exanite.Core.Pooling
         private readonly Action<T>? onRelease;
         private readonly Action<T>? onDestroy;
 
-        public int Count => values.Count;
         public int MaxCapacity { get; private set; }
+
+        public int CountAll { get; private set; }
+        public int CountActive => CountAll - CountInactive;
+        public int CountInactive => values.Count;
 
         public Pool(
             Func<T> create,
@@ -56,6 +59,7 @@ namespace Exanite.Core.Pooling
             if (values.Count == 0)
             {
                 values.Add(create());
+                CountAll++;
             }
 
             var index = values.Count - 1;
@@ -75,12 +79,13 @@ namespace Exanite.Core.Pooling
                 actionOnRelease(element);
             }
 
-            if (Count < MaxCapacity)
+            if (CountInactive < MaxCapacity)
             {
                 values.Add(element);
             }
             else
             {
+                CountAll--;
                 onDestroy?.Invoke(element);
             }
         }
