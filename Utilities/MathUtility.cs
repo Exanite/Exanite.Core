@@ -1,4 +1,5 @@
-﻿using System;
+﻿// ReSharper disable once RedundantUsingDirective - Using statements can be unused due to conditional compilation
+using System;
 
 namespace Exanite.Core.Utilities
 {

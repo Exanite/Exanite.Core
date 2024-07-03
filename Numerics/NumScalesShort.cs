@@ -1,5 +1,4 @@
-﻿// ReSharper disable InconsistentNaming
-using System;
+﻿using System;
 
 namespace Exanite.Core.Numerics
 {
@@ -10,6 +9,8 @@ namespace Exanite.Core.Numerics
     public enum NumScalesShort
     {
         // Scales found at https://en.wikipedia.org/wiki/Names_of_large_numbers
+
+        // ReSharper disable InconsistentNaming
 
         None = 0,
         K = 1,

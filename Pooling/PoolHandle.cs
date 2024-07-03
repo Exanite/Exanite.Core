@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 
 namespace Exanite.Core.Pooling

@@ -1,5 +1,3 @@
-#nullable enable
-
 namespace Exanite.Core.Properties.Schemas
 {
     public class PropertyCollectionSchemaValidationError

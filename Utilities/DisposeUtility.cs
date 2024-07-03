@@ -1,5 +1,3 @@
-#nullable enable
-
 #if NETCOREAPP
 using System;
 using System.Threading.Tasks;

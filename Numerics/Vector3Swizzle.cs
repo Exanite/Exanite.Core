@@ -1,5 +1,4 @@
-﻿// ReSharper disable InconsistentNaming
-using System;
+﻿using System;
 
 namespace Exanite.Core.Numerics
 {
@@ -9,6 +8,8 @@ namespace Exanite.Core.Numerics
     [Serializable]
     public enum Vector3Swizzle
     {
+        // ReSharper disable InconsistentNaming
+        
         /// <summary>
         /// Keeps the component positions at XYZ.
         /// </summary>
