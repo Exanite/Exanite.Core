@@ -40,9 +40,25 @@ namespace Exanite.Core.Utilities
         /// The provided value is returned to allow <see cref="Dump{T}"/>
         /// to be inserted in the middle of statements for convenience.
         /// </summary>
+        /// <param name="value">The value to be logged.</param>
         public static T Dump<T>(this T value)
         {
             Log(Format(value));
+
+            return value;
+        }
+
+        /// <summary>
+        /// Uses <see cref="Format"/> to format the provided value and logs it.
+        /// <para/>
+        /// The provided value is returned to allow <see cref="Dump{T}"/>
+        /// to be inserted in the middle of statements for convenience.
+        /// </summary>
+        /// <param name="value">The value to be logged.</param>
+        /// <param name="name">Will be prepended to the log message in the format: <c>{name}: {value}</c></param>
+        public static T Dump<T>(this T value, string name)
+        {
+            Log($"{name}: {Format(value)}");
 
             return value;
         }

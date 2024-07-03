@@ -16,16 +16,16 @@ namespace Exanite.Core.Threading
     {
         private readonly ConcurrentQueue<Callback> callbacks = new();
 
+        /// <summary>
+        /// The thread callbacks should be executed on.
+        /// </summary>
+        public Thread TargetThread { get; set; }
+
         /// <param name="targetThread">The thread callbacks should be executed on.</param>
         public ThreadSynchronizationContext(Thread targetThread)
         {
             TargetThread = targetThread;
         }
-
-        /// <summary>
-        /// The thread callbacks should be executed on.
-        /// </summary>
-        public Thread TargetThread { get; set; }
 
         public override void Send(SendOrPostCallback callback, object state)
         {

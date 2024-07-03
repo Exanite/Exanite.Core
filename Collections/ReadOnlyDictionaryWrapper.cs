@@ -10,17 +10,17 @@ namespace Exanite.Core.Collections
     {
         private readonly IDictionary<TKey, TValue> dictionary;
 
-        public ReadOnlyDictionaryWrapper(IDictionary<TKey, TValue> dictionary)
-        {
-            this.dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
-        }
-
         public TReadOnlyValue this[TKey key] => dictionary[key];
 
         public IEnumerable<TKey> Keys => dictionary.Keys;
         public IEnumerable<TReadOnlyValue> Values => dictionary.Values.Cast<TReadOnlyValue>();
 
         public int Count => dictionary.Count;
+
+        public ReadOnlyDictionaryWrapper(IDictionary<TKey, TValue> dictionary)
+        {
+            this.dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
+        }
 
         public bool ContainsKey(TKey key)
         {
