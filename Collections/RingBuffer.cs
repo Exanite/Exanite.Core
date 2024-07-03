@@ -15,20 +15,6 @@ namespace Exanite.Core.Collections
         private int writeOffset;
 
         /// <summary>
-        /// Creates a new <see cref="RingBuffer{T}"/>.
-        /// </summary>
-        /// <param name="capacity">
-        /// Power of two capacity of the buffer.
-        /// </param>
-        public RingBuffer(int capacity)
-        {
-            capacity = MathUtility.GetNextPowerOfTwo(capacity);
-            capacityMask = capacity - 1;
-
-            data = new T[capacity];
-        }
-
-        /// <summary>
         /// Gets or sets the object at the specified index.
         /// </summary>
         public ref T this[int index] => ref data[capacityMask & (readOffset + index)];
@@ -47,6 +33,20 @@ namespace Exanite.Core.Collections
 
         public bool IsEmpty => Count == 0;
         public bool IsFull => Count == Capacity;
+
+        /// <summary>
+        /// Creates a new <see cref="RingBuffer{T}"/>.
+        /// </summary>
+        /// <param name="capacity">
+        /// Power of two capacity of the buffer.
+        /// </param>
+        public RingBuffer(int capacity)
+        {
+            capacity = MathUtility.GetNextPowerOfTwo(capacity);
+            capacityMask = capacity - 1;
+
+            data = new T[capacity];
+        }
 
         /// <summary>
         /// Adds an object to the end of the <see cref="RingBuffer{T}"/>.
