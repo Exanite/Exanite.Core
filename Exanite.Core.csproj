@@ -7,6 +7,7 @@
     <!-- For Unity compatibility (C# 9) -->
     <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <!-- Exclude files that only compile in Unity -->
