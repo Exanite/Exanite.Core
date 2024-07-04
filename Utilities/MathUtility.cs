@@ -2,6 +2,7 @@
 
 using System.Numerics;
 using System;
+using Exanite.Core.Numerics;
 
 namespace Exanite.Core.Utilities
 {
@@ -128,12 +129,29 @@ namespace Exanite.Core.Utilities
         /// <remarks>
         /// .NET doesn't provide this method of construction for some reason.
         /// </remarks>
-        public static Plane CreatePlane(Vector3 position, Vector3 normal)
+        public static Plane CreatePlane(Vector3 position, Vector3 normal) // Todo Verify that this is correct
         {
             normal = normal.AsNormalizedSafe();
-            var distance = -Vector3.Dot(normal, position); // Todo Verify that this is correct
+            var distance = -Vector3.Dot(normal, position);
 
             return new Plane(normal, distance);
+        }
+
+        public static bool Raycast(this Plane plane, Ray ray, out float distance) // Todo Verify that this is correct
+        {
+            var vdot = Vector3.Dot(ray.DirectionMagnitude.AsNormalizedSafe(), plane.Normal);
+            var ndot = -Vector3.Dot(ray.Origin, plane.Normal) - plane.D;
+
+            if (IsApproximatelyEqual(vdot, 0f))
+            {
+                distance = 0.0F;
+
+                return false;
+            }
+
+            distance = ndot / vdot;
+
+            return distance > 0.0F;
         }
 
         /// <summary>
@@ -157,12 +175,14 @@ namespace Exanite.Core.Utilities
         public static bool IsApproximatelyEqual(float a, float b)
         {
             var maxAb = MathF.Max(MathF.Abs(a), MathF.Abs(b));
+
             return MathF.Abs(a - b) < MathF.Max(0.00000_1f /* 6 digits */ * maxAb, float.Epsilon * 8);
         }
 
         public static bool IsApproximatelyEqual(double a, double b)
         {
             var maxAb = Math.Max(Math.Abs(a), Math.Abs(b));
+
             return Math.Abs(a - b) < Math.Max(0.00000_00000_00000_1 /* 15 digits */ * maxAb, double.Epsilon * 8);
         }
 
@@ -204,11 +224,12 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static float SrgbToLinear(float value)
         {
-            if (value <= 0.04045f) {
+            if (value <= 0.04045f)
+            {
                 return value / 12.92f;
-            } else {
-                return MathF.Pow((value + 0.055f) / 1.055f, 2.4f);
             }
+
+            return MathF.Pow((value + 0.055f) / 1.055f, 2.4f);
         }
 
         /// <summary>
@@ -216,11 +237,12 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static float LinearToSrgb(float value)
         {
-            if (value <= 0.0031308f) {
+            if (value <= 0.0031308f)
+            {
                 return value * 12.92f;
-            } else {
-                return MathF.Pow(value, 1 / 2.4f) * 1.055f - 0.055f;
             }
+
+            return MathF.Pow(value, 1 / 2.4f) * 1.055f - 0.055f;
         }
 #endif
     }
