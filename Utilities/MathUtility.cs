@@ -154,7 +154,7 @@ namespace Exanite.Core.Utilities
         }
 #endif
 
-#if !UNITY_2021_3_OR_NEWER
+#if NETCOREAPP && !UNITY_2021_3_OR_NEWER
         /// <summary>
         /// Creates a plane from a position and a normal.
         /// </summary>
