@@ -5,7 +5,7 @@ using Object = UnityEngine.Object;
 
 namespace Exanite.Core.Utilities
 {
-    public static class UnityAssetUtility
+    public static class UnityEditorUtility
     {
         /// <summary>
         /// Returns the override importer of an asset. Returns null when the provided
