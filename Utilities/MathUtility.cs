@@ -288,7 +288,7 @@ namespace Exanite.Core.Utilities
 
         public static bool Raycast(this Plane plane, Ray ray, out float distance)
         {
-            var vdot = Vector3.Dot(ray.DirectionMagnitude.AsNormalizedSafe(), plane.Normal);
+            var vdot = Vector3.Dot(ray.Direction, plane.Normal);
             var ndot = -Vector3.Dot(ray.Origin, plane.Normal) - plane.D;
 
             if (IsApproximatelyEqual(vdot, 0f))

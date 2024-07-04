@@ -1,35 +1,30 @@
-using System;
+using System.Diagnostics;
 using System.Numerics;
-using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics
 {
-    /// <remarks>
-    /// This was added to support Jolt Physics, but can be used as a general use Ray struct.
-    /// </remarks>
     public struct Ray
     {
-        /// <remarks>
-        /// Jolt uses a direction-magnitude vector for specifying rays.
-        /// Using <see cref="float.MaxValue"/> will cause precision issues,
-        /// so we limit the max length when using the distance-based constructor.
-        /// </remarks>
-        public const float MaxLength = 1_00000;
-
         public Vector3 Origin;
-        public Vector3 DirectionMagnitude;
+        public Vector3 Direction;
+        public float Length;
 
-        public Ray(Vector3 origin, Vector3 directionMagnitude)
+        public Vector3 DirectionMagnitude => Direction * Length;
+        public Vector3 End => Origin + Direction * Length;
+
+        public Ray(Vector3 origin, Vector3 direction, float length)
         {
-            Origin = origin;
-            DirectionMagnitude = directionMagnitude;
-        }
+            Debug.Assert(length >= 0);
+            Debug.Assert(!float.IsInfinity(length));
 
-        public Ray(Vector3 origin, Vector3 direction, float length) : this(origin, direction * MathF.Min(MaxLength, length)) {}
+            Origin = origin;
+            Direction = direction;
+            Length = length;
+        }
 
         public Vector3 GetPoint(float distance)
         {
-            return Origin + distance * DirectionMagnitude.AsNormalizedSafe();
+            return Origin + Direction * distance;
         }
     }
 }
