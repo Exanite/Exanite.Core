@@ -1,6 +1,6 @@
 using System;
 
-namespace Exanite.Core.Utilities
+namespace Exanite.Core.HighPerformance
 {
     /// <summary>
     /// <see cref="IDisposable"/> implementation that does nothing.
