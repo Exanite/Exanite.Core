@@ -3,6 +3,7 @@ using Assert = NUnit.Framework.Legacy.ClassicAssert;
 #endif
 
 using System.Numerics;
+using Exanite.Core.Numerics;
 using Exanite.Core.Utilities;
 using NUnit.Framework;
 
@@ -78,6 +79,33 @@ namespace Exanite.Core.Tests.Utilities
 
             Assert.IsTrue(MathUtility.IsApproximatelyEqual(-1, plane.D));
             Assert.IsTrue(MathUtility.IsApproximatelyEqual(Vector3.UnitX, plane.Normal));
+        }
+
+        [TestCase]
+        public void PlaneRaycast_ReturnsExpectedResult1()
+        {
+            var expectedDistance = 10;
+            var expectedPosition = new Vector2(1, 2);
+
+            var plane = MathUtility.CreatePlane(Vector3.UnitZ, Vector3.Zero);
+            var ray = new Ray(new Vector3(expectedPosition.X, expectedPosition.Y, -expectedDistance), Vector3.UnitZ, 0);
+
+            var isHit = plane.Raycast(ray, out var distance);
+
+            Assert.IsTrue(isHit);
+            Assert.IsTrue(MathUtility.IsApproximatelyEqual(expectedDistance, distance));
+            Assert.IsTrue(MathUtility.IsApproximatelyEqual(expectedPosition.Xy0(), ray.GetPoint(distance)));
+        }
+
+        [TestCase]
+        public void PlaneRaycast_ReturnsExpectedResult2()
+        {
+            var plane = MathUtility.CreatePlane(Vector3.UnitZ, Vector3.Zero);
+            var ray = new Ray(new Vector3(1, 2, -10), -Vector3.UnitZ, 0);
+
+            var isHit = plane.Raycast(ray, out _);
+
+            Assert.IsFalse(isHit);
         }
     }
 }

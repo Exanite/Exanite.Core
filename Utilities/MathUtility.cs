@@ -286,6 +286,11 @@ namespace Exanite.Core.Utilities
             return new Plane(normal, distance);
         }
 
+        /// <summary>
+        /// Casts a ray against the specified plane.
+        /// <para/>
+        /// The ray's length is ignored during this check.
+        /// </summary>
         public static bool Raycast(this Plane plane, Ray ray, out float distance)
         {
             var vdot = Vector3.Dot(ray.Direction, plane.Normal);
@@ -293,14 +298,14 @@ namespace Exanite.Core.Utilities
 
             if (IsApproximatelyEqual(vdot, 0f))
             {
-                distance = 0.0F;
+                distance = 0f;
 
                 return false;
             }
 
             distance = ndot / vdot;
 
-            return distance > 0.0F;
+            return distance > 0f;
         }
 
         #endregion
