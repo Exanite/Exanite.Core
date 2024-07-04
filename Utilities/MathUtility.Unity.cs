@@ -95,6 +95,17 @@ namespace Exanite.Core.Utilities
             vector2.x = Mathf.Clamp(vector2.x, min.x, max.x);
             vector2.y = Mathf.Clamp(vector2.y, min.y, max.y);
         }
+
+        public static Rect WithInset(this Rect rect, float inset)
+        {
+            rect.xMin += inset;
+            rect.yMin += inset;
+
+            rect.xMax -= inset;
+            rect.yMax -= inset;
+
+            return rect;
+        }
     }
 }
 #endif
