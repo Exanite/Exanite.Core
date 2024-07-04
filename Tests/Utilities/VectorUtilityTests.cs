@@ -1,7 +1,8 @@
 ﻿#if UNITY_2021_3_OR_NEWER
-using System.Numerics;
 using Exanite.Core.Numerics;
+using Exanite.Core.Utilities;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace Exanite.Core.Tests.Utilities
 {
