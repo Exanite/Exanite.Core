@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace Exanite.Core.Tests.Utilities
 {
     [TestFixture]
-    public class MathUtilityTests
+    public partial class MathUtilityTests
     {
         [TestCase(5, 0, 10, 0, 100, ExpectedResult = 50f)]
         public float RemapFloat_ReturnsExpectedResult(float value, float fromMin, float fromMax, float toMin, float toMax)
@@ -48,7 +48,6 @@ namespace Exanite.Core.Tests.Utilities
             return MathUtility.GetNextPowerOfTwo(value);
         }
 
-#if NETCOREAPP
         [TestCase(0, float.Epsilon, ExpectedResult = true)]
         [TestCase(0, 1, ExpectedResult = false)]
         public bool IsApproximatelyEqual_ReturnsExpectedResult(float a, float b)
@@ -62,14 +61,11 @@ namespace Exanite.Core.Tests.Utilities
         {
             return MathUtility.IsApproximatelyEqual(a, b);
         }
-<<<<<<< HEAD
-#endif
-=======
 
         [TestCase]
         public void CreatePlane_ReturnsExpectedResult1()
         {
-            var plane = MathUtility.CreatePlane(Vector3.Zero, Vector3.UnitX);
+            var plane = MathUtility.CreatePlane(Vector3.UnitX, Vector3.Zero);
 
             Assert.IsTrue(MathUtility.IsApproximatelyEqual(0, plane.D));
             Assert.IsTrue(MathUtility.IsApproximatelyEqual(Vector3.UnitX, plane.Normal));
@@ -80,9 +76,8 @@ namespace Exanite.Core.Tests.Utilities
         {
             var plane = MathUtility.CreatePlane(Vector3.UnitX, Vector3.UnitX);
 
-            Assert.IsTrue(MathUtility.IsApproximatelyEqual(1, plane.D));
+            Assert.IsTrue(MathUtility.IsApproximatelyEqual(-1, plane.D));
             Assert.IsTrue(MathUtility.IsApproximatelyEqual(Vector3.UnitX, plane.Normal));
         }
->>>>>>> refs/subrepo/TurnBasedTacticsGame/Assets/Plugins/Exanite/Core/fetch
     }
 }

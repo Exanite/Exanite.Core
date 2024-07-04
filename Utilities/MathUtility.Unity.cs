@@ -6,6 +6,20 @@ namespace Exanite.Core.Utilities
 {
     public static partial class MathUtility
     {
+        #region IsApproximatelyEqual
+
+        public static bool IsApproximatelyEqual(Vector2 a, Vector2 b)
+        {
+            return IsApproximatelyEqual(a.x, b.x) && IsApproximatelyEqual(a.y, b.y);
+        }
+
+        public static bool IsApproximatelyEqual(Vector3 a, Vector3 b)
+        {
+            return IsApproximatelyEqual(a.x, b.x) && IsApproximatelyEqual(a.y, b.y) && IsApproximatelyEqual(a.z, b.z);
+        }
+
+        #endregion
+
         #region Vectors
 
         /// <summary>

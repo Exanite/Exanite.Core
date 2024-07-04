@@ -278,7 +278,7 @@ namespace Exanite.Core.Utilities
         /// <remarks>
         /// .NET doesn't provide this method of construction for some reason.
         /// </remarks>
-        public static Plane CreatePlane(Vector3 position, Vector3 normal) // Todo Verify that this is correct
+        public static Plane CreatePlane(Vector3 normal, Vector3 position)
         {
             normal = normal.AsNormalizedSafe();
             var distance = -Vector3.Dot(normal, position);
@@ -286,7 +286,7 @@ namespace Exanite.Core.Utilities
             return new Plane(normal, distance);
         }
 
-        public static bool Raycast(this Plane plane, Ray ray, out float distance) // Todo Verify that this is correct
+        public static bool Raycast(this Plane plane, Ray ray, out float distance)
         {
             var vdot = Vector3.Dot(ray.DirectionMagnitude.AsNormalizedSafe(), plane.Normal);
             var ndot = -Vector3.Dot(ray.Origin, plane.Normal) - plane.D;
