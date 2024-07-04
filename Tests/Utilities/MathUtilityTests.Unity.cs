@@ -7,6 +7,16 @@ namespace Exanite.Core.Tests.Utilities
 {
     public partial class MathUtilityTests
     {
+        [Test]
+        public void InverseSwizzleVector3_ReversesSwizzleVector3([Values] Vector3Swizzle swizzle)
+        {
+            var original = new Vector3(1, 2, 3);
+            Vector3 result;
+
+            result = original.Swizzle(swizzle).InverseSwizzle(swizzle);
+            Assert.AreEqual(original, result);
+        }
+
         [TestCase]
         public void CreateUnityPlane_ReturnsExpectedResult1()
         {
