@@ -2,7 +2,6 @@
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 #endif
 
-
 using Exanite.Core.Properties;
 using NUnit.Framework;
 
