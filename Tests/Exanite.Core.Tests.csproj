@@ -9,7 +9,8 @@
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
 
-    <NoWarn>CS0649;CS0169;CA1050;CA1822;CA2211;IDE1006</NoWarn>
+    <!-- Disable diagnostics that require using newer NUnit APIs for Unity compatibility -->
+    <NoWarn>NUnit2005</NoWarn>
   </PropertyGroup>
 
   <!-- Exclude files that only compile in Unity -->

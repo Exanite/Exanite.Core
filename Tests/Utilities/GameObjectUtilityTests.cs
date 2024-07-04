@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿#if UNITY_2021_3_OR_NEWER
+using NUnit.Framework;
 
 namespace Exanite.Core.Tests.Utilities
 {
@@ -70,3 +71,4 @@ namespace Exanite.Core.Tests.Utilities
         public class TestComponent : MonoBehaviour, ITestComponent { }
     }
 }
+#endif

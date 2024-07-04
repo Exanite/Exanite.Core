@@ -1,3 +1,7 @@
+#if !UNITY_2021_3_OR_NEWER
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
+#endif
+
 using Exanite.Core.Properties;
 using Exanite.Core.Properties.Schemas;
 using NUnit.Framework;

@@ -6,22 +6,22 @@ namespace Exanite.Core.Tests.Utilities
     [TestFixture]
     public class MathUtilityTests
     {
-        [TestCase(5, 0, 10, 0, 100, ExpectedResult = 50)]
+        [TestCase(5, 0, 10, 0, 100, ExpectedResult = 50f)]
         public float RemapFloat_ReturnsExpectedValue(float value, float fromMin, float fromMax, float toMin, float toMax)
         {
             return MathUtility.Remap(value, fromMin, fromMax, toMin, toMax);
         }
 
-        [TestCase(10, 0, 3, ExpectedResult = 1)]
-        [TestCase(2, 0, 3, ExpectedResult = 2)]
+        [TestCase(10, 0, 3, ExpectedResult = 1f)]
+        [TestCase(2, 0, 3, ExpectedResult = 2f)]
         public float WrapFloat_ReturnsExpectedValue(float value, float min, float max)
         {
             return MathUtility.Wrap(value, min, max);
         }
 
-        [TestCase(5, 2, ExpectedResult = 1)]
-        [TestCase(6, 2, ExpectedResult = 0)]
-        [TestCase(-5, 2, ExpectedResult = 1)]
+        [TestCase(5, 2, ExpectedResult = 1f)]
+        [TestCase(6, 2, ExpectedResult = 0f)]
+        [TestCase(-5, 2, ExpectedResult = 1f)]
         public float ModuloFloat_ReturnsExpectedValue(float value, float divisor)
         {
             return MathUtility.Modulo(value, divisor);
