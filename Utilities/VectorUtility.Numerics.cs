@@ -30,6 +30,26 @@ namespace Exanite.Core.Utilities
             return value == Vector2.Zero ? fallback : Vector2.Normalize(value);
         }
 
+        /// <summary>
+        /// Normalizes the vector. <br/> This handles the case where the
+        /// provided vector is Vector3.Zero, returning Vector3.Zero rather
+        /// than NaN.
+        /// </summary>
+        public static Vector3 AsNormalizedSafe(this Vector3 value)
+        {
+            return value.AsNormalizedSafe(Vector3.Zero);
+        }
+
+        /// <summary>
+        /// Normalizes the vector. <br/> This handles the case where the
+        /// provided vector is Vector3.Zero, returning the provided
+        /// <see cref="fallback"/> rather than NaN.
+        /// </summary>
+        public static Vector3 AsNormalizedSafe(this Vector3 value, Vector3 fallback)
+        {
+            return value == Vector3.Zero ? fallback : Vector3.Normalize(value);
+        }
+
         public static Vector2 Xy(this Vector3 value)
         {
             return new Vector2(value.X, value.Y);
