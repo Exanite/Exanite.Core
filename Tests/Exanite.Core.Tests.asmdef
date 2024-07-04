@@ -1,5 +1,5 @@
 {
-    "name": "Exanite.Core.Tests.Editor",
+    "name": "Exanite.Core.Tests",
     "rootNamespace": "",
     "references": [
         "Exanite.Core",

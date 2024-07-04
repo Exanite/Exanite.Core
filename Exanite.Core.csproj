@@ -14,11 +14,11 @@
   <PropertyGroup>
     <DefaultItemExcludes>
       $(DefaultItemExcludes);
+      **/*.meta;
       Components/**/*;
       Editor/**/*;
       Tracking/**/*;
       Tests/**/*;
-      **/*.meta;
     </DefaultItemExcludes>
   </PropertyGroup>
 </Project>

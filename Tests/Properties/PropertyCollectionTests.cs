@@ -1,7 +1,7 @@
 using Exanite.Core.Properties;
 using NUnit.Framework;
 
-namespace Exanite.Core.Tests.Editor.Properties
+namespace Exanite.Core.Tests.Properties
 {
     [TestFixture]
     public class PropertyCollectionTests

@@ -2,7 +2,7 @@ using Exanite.Core.Properties;
 using Exanite.Core.Properties.Schemas;
 using NUnit.Framework;
 
-namespace Exanite.Core.Tests.Editor.Properties.Schemas
+namespace Exanite.Core.Tests.Properties.Schemas
 {
     [TestFixture]
     public class PropertyCollectionSchemaTests

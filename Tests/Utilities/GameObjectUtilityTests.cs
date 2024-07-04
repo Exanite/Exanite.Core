@@ -1,8 +1,6 @@
-﻿using Exanite.Core.Utilities;
-using NUnit.Framework;
-using UnityEngine;
+﻿using NUnit.Framework;
 
-namespace Exanite.Core.Tests.Editor.Utilities
+namespace Exanite.Core.Tests.Utilities
 {
     [TestFixture]
     public class GameObjectUtilityTests

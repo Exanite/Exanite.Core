@@ -1,7 +1,7 @@
 ﻿using Exanite.Core.Collections;
 using NUnit.Framework;
 
-namespace Exanite.Core.Tests.Editor.Collections
+namespace Exanite.Core.Tests.Collections
 {
     [TestFixture]
     public class TwoWayDictionaryTests

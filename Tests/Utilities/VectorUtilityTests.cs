@@ -1,9 +1,9 @@
-﻿using Exanite.Core.Numerics;
-using Exanite.Core.Utilities;
+﻿using System;
+using System.Numerics;
+using Exanite.Core.Numerics;
 using NUnit.Framework;
-using UnityEngine;
 
-namespace Exanite.Core.Tests.Editor.Utilities
+namespace Exanite.Core.Tests.Utilities
 {
     [TestFixture]
     public class VectorUtilityTests
