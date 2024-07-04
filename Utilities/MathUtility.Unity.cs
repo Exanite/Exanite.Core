@@ -6,6 +6,8 @@ namespace Exanite.Core.Utilities
 {
     public static partial class MathUtility
     {
+        #region Vectors
+
         /// <summary>
         /// Swaps the component values of a <see cref="Vector3"/> from XYZ to
         /// the given format.
@@ -96,6 +98,10 @@ namespace Exanite.Core.Utilities
             vector2.y = Mathf.Clamp(vector2.y, min.y, max.y);
         }
 
+        #endregion
+
+        #region Rects
+
         public static Rect WithInset(this Rect rect, float inset)
         {
             rect.xMin += inset;
@@ -106,6 +112,8 @@ namespace Exanite.Core.Utilities
 
             return rect;
         }
+
+        #endregion
     }
 }
 #endif

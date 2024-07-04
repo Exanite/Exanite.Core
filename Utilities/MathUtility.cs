@@ -6,6 +6,8 @@ namespace Exanite.Core.Utilities
 {
     public static partial class MathUtility
     {
+        #region Ranges
+
         // Note: Order between different value type overloads should go by float, double, int, long
 
         /// <summary>
@@ -73,6 +75,10 @@ namespace Exanite.Core.Utilities
             return (value % divisor + divisor) % divisor;
         }
 
+        #endregion
+
+        #region Damping
+
         public static float SmoothDamp(float current, float target, float smoothTime, float deltaTime, ref float currentVelocity, float maxSpeed = float.PositiveInfinity)
         {
             // From https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Math/Mathf.cs#L309
@@ -103,6 +109,10 @@ namespace Exanite.Core.Utilities
 
             return output;
         }
+
+        #endregion
+
+        #region Integer Math
 
         /// <summary>
         /// Gets the nearest multiple to a value.
@@ -151,6 +161,10 @@ namespace Exanite.Core.Utilities
             return num % 2 != 0;
         }
 
+        #endregion
+
+        #region IsApproximatelyEqual
+
         public static bool IsApproximatelyEqual(float a, float b)
         {
             var maxAb = MathF.Max(MathF.Abs(a), MathF.Abs(b));
@@ -175,6 +189,10 @@ namespace Exanite.Core.Utilities
             return IsApproximatelyEqual(a.X, b.X) && IsApproximatelyEqual(a.Y, b.Y) && IsApproximatelyEqual(a.Z, b.Z);
         }
 
+        #endregion
+
+        #region Trigonometry
+
         /// <summary>
         /// Converts radians to degrees.
         /// </summary>
@@ -190,6 +208,10 @@ namespace Exanite.Core.Utilities
         {
             return degrees * (MathF.PI / 180f);
         }
+
+        #endregion
+
+        #region Vectors
 
         /// <summary>
         /// Normalizes the vector. <br/> This handles the case where the
@@ -246,6 +268,45 @@ namespace Exanite.Core.Utilities
             return new Vector3(value.X, value.Y, 1);
         }
 
+        #endregion
+
+        #region Planes
+
+        /// <summary>
+        /// Creates a plane from a position and a normal.
+        /// </summary>
+        /// <remarks>
+        /// .NET doesn't provide this method of construction for some reason.
+        /// </remarks>
+        public static Plane CreatePlane(Vector3 position, Vector3 normal) // Todo Verify that this is correct
+        {
+            normal = normal.AsNormalizedSafe();
+            var distance = -Vector3.Dot(normal, position);
+
+            return new Plane(normal, distance);
+        }
+
+        public static bool Raycast(this Plane plane, Ray ray, out float distance) // Todo Verify that this is correct
+        {
+            var vdot = Vector3.Dot(ray.DirectionMagnitude.AsNormalizedSafe(), plane.Normal);
+            var ndot = -Vector3.Dot(ray.Origin, plane.Normal) - plane.D;
+
+            if (IsApproximatelyEqual(vdot, 0f))
+            {
+                distance = 0.0F;
+
+                return false;
+            }
+
+            distance = ndot / vdot;
+
+            return distance > 0.0F;
+        }
+
+        #endregion
+
+        #region Colors
+
         // sRGB-Linear conversion formulas are from: https://entropymine.com/imageworsener/srgbformula/
 
         /// <summary>
@@ -284,35 +345,6 @@ namespace Exanite.Core.Utilities
             return new Vector4(MathUtility.LinearToSrgb(srgb.X), MathUtility.LinearToSrgb(srgb.Y), MathUtility.LinearToSrgb(srgb.Z), srgb.W);
         }
 
-        /// <summary>
-        /// Creates a plane from a position and a normal.
-        /// </summary>
-        /// <remarks>
-        /// .NET doesn't provide this method of construction for some reason.
-        /// </remarks>
-        public static Plane CreatePlane(Vector3 position, Vector3 normal) // Todo Verify that this is correct
-        {
-            normal = normal.AsNormalizedSafe();
-            var distance = -Vector3.Dot(normal, position);
-
-            return new Plane(normal, distance);
-        }
-
-        public static bool Raycast(this Plane plane, Ray ray, out float distance) // Todo Verify that this is correct
-        {
-            var vdot = Vector3.Dot(ray.DirectionMagnitude.AsNormalizedSafe(), plane.Normal);
-            var ndot = -Vector3.Dot(ray.Origin, plane.Normal) - plane.D;
-
-            if (IsApproximatelyEqual(vdot, 0f))
-            {
-                distance = 0.0F;
-
-                return false;
-            }
-
-            distance = ndot / vdot;
-
-            return distance > 0.0F;
-        }
+        #endregion
     }
 }
