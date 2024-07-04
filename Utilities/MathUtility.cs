@@ -1,4 +1,6 @@
 ﻿// ReSharper disable once RedundantUsingDirective - Using statements can be unused due to conditional compilation
+
+using System.Numerics;
 using System;
 
 namespace Exanite.Core.Utilities
@@ -152,8 +154,21 @@ namespace Exanite.Core.Utilities
         }
 #endif
 
-#if NETCOREAPP
 #if !UNITY_2021_3_OR_NEWER
+        /// <summary>
+        /// Creates a plane from a position and a normal.
+        /// </summary>
+        /// <remarks>
+        /// .NET doesn't provide this method of construction for some reason.
+        /// </remarks>
+        public static Plane CreatePlane(Vector3 position, Vector3 normal)
+        {
+            normal = normal.AsNormalizedSafe();
+            var distance = -Vector3.Dot(normal, position); // Todo Verify that this is correct
+
+            return new Plane(normal, distance);
+        }
+
         /// <summary>
         /// Converts radians to degrees.
         /// </summary>
@@ -169,7 +184,6 @@ namespace Exanite.Core.Utilities
         {
             return degrees * (float.Pi / 180f);
         }
-#endif
 #endif
 
 #if NETCOREAPP
