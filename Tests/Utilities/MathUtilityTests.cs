@@ -43,6 +43,7 @@ namespace Exanite.Core.Tests.Utilities
             return MathUtility.GetNextPowerOfTwo(value);
         }
 
+#if NETCOREAPP
         [TestCase(0, float.Epsilon, ExpectedResult = true)]
         [TestCase(0, 1, ExpectedResult = false)]
         public bool IsApproximatelyEqual_ReturnsExpectedResult(float a, float b)
@@ -56,5 +57,6 @@ namespace Exanite.Core.Tests.Utilities
         {
             return MathUtility.IsApproximatelyEqual(a, b);
         }
+#endif
     }
 }
