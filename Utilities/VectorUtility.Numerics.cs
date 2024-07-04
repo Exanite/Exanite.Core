@@ -10,6 +10,16 @@ namespace Exanite.Core.Utilities
     /// </summary>
     public static partial class VectorUtility
     {
+        public static bool IsApproximatelyEqual(Vector2 a, Vector2 b)
+        {
+            return MathUtility.IsApproximatelyEqual(a.X, b.X) && MathUtility.IsApproximatelyEqual(a.Y, b.Y);
+        }
+
+        public static bool IsApproximatelyEqual(Vector3 a, Vector3 b)
+        {
+            return MathUtility.IsApproximatelyEqual(a.X, b.X) && MathUtility.IsApproximatelyEqual(a.Y, b.Y) && MathUtility.IsApproximatelyEqual(a.Z, b.Z);
+        }
+
         /// <summary>
         /// Normalizes the vector. <br/> This handles the case where the
         /// provided vector is Vector2.Zero, returning Vector2.Zero rather
