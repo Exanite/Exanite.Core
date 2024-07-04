@@ -2,12 +2,12 @@ namespace Exanite.Core.Interpolation
 {
     public abstract class Interpolator<T>
     {
-        public T Current;
-        public T Previous;
+        public T? Current;
+        public T? Previous;
 
         private float lastPushTime;
 
-        public T Update(float time, float timeBetweenPushes, float extrapolationMultiplier = 0.5f)
+        public T? Update(float time, float timeBetweenPushes, float extrapolationMultiplier = 0.5f)
         {
             var timeSinceLastPush = time - lastPushTime;
             timeSinceLastPush += extrapolationMultiplier * timeBetweenPushes;
@@ -17,7 +17,7 @@ namespace Exanite.Core.Interpolation
             return Lerp(Previous, Current, t);
         }
 
-        public void PushNext(T next, float time)
+        public void PushNext(T? next, float time)
         {
             Previous = Current;
             Current = next;
@@ -25,6 +25,6 @@ namespace Exanite.Core.Interpolation
             lastPushTime = time;
         }
 
-        public abstract T Lerp(T previous, T current, float time);
+        public abstract T? Lerp(T? previous, T? current, float time);
     }
 }

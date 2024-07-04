@@ -11,7 +11,7 @@ namespace Exanite.Core.Tests.Editor.Properties
         private static readonly PropertyDefinition<string> StringADefinition = new PropertyDefinition<string>("StringA");
         private static readonly PropertyDefinition<string> StringBDefinition = new PropertyDefinition<string>("StringB");
 
-        private PropertyCollection collection;
+        private PropertyCollection collection = null!;
 
         [SetUp]
         public void SetUp()

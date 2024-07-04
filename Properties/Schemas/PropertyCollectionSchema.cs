@@ -56,7 +56,7 @@ namespace Exanite.Core.Properties.Schemas
             return errors.Count == 0;
         }
 
-        private bool ValidateDefault(List<PropertyCollectionSchemaValidationError> errors, Property property, PropertyCollectionSchemaEntry entry)
+        private bool ValidateDefault(List<PropertyCollectionSchemaValidationError> errors, Property? property, PropertyCollectionSchemaEntry entry)
         {
             if (!requiredPropertyValidator.Validate(property))
             {

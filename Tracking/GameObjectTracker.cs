@@ -11,7 +11,7 @@ namespace Exanite.Core.Tracking
 
         public IReadOnlyCollection<GameObject> TrackedObjects => trackedObjects;
 
-        public TCollection GetCollection<TValue, TCollection>(TrackedCollectionDefinition<TValue, TCollection> definition)
+        public TCollection GetCollection<TValue, TCollection>(TrackedCollectionDefinition<TValue, TCollection> definition) where TCollection : notnull
         {
             if (!trackedCollections.TryGetValue(definition, out var collection))
             {

@@ -288,7 +288,7 @@ namespace Exanite.Core.Numerics
             return lhs.CompareTo(rhs) <= 0;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is LargeNumber largeNumber)
             {

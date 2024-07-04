@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 #if UNITY_2021_3_OR_NEWER
 using Exanite.Core.Numerics;
 using UnityEngine;
@@ -6,6 +5,8 @@ using UnityEngine;
 
 namespace Exanite.Core.Utilities
 {
+    // ReSharper disable once PartialTypeWithSinglePart
+
     /// <summary>
     /// Utility and extension methods for Unity Vectors.
     /// </summary>

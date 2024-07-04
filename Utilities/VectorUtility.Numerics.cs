@@ -3,6 +3,8 @@ using System.Numerics;
 
 namespace Exanite.Core.Utilities
 {
+    // ReSharper disable once PartialTypeWithSinglePart
+
     /// <summary>
     /// Utility and extension methods for System.Numerics Vectors.
     /// </summary>

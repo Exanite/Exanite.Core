@@ -4,11 +4,18 @@ namespace Exanite.Core.Properties.Schemas
 {
     public class PropertyTypeValidator : IPropertyValidator
     {
-        public Type ExpectedType;
+        public Type? ExpectedType;
 
-        public bool Validate(Property property)
+        public PropertyTypeValidator() {}
+
+        public PropertyTypeValidator(Type expectedType)
         {
-            return property.Type == ExpectedType;
+            ExpectedType = expectedType;
+        }
+
+        public bool Validate(Property? property)
+        {
+            return property!.Type == ExpectedType;
         }
     }
 }

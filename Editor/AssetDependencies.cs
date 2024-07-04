@@ -9,7 +9,7 @@ namespace Exanite.Core.Editor
 {
     public static class AssetDependencies
     {
-        private static Dictionary<string, HashSet<string>> AssetDependents;
+        private static Dictionary<string, HashSet<string>>? AssetDependents;
 
         /// <remarks>
         /// This behaves slightly differently compared to Unity's "Select Dependencies" option.
@@ -99,7 +99,7 @@ namespace Exanite.Core.Editor
             var results = new HashSet<string>();
             foreach (var assetPath in assetPaths)
             {
-                if (AssetDependents.TryGetValue(assetPath, out var dependents))
+                if (AssetDependents!.TryGetValue(assetPath, out var dependents))
                 {
                     results.UnionWith(dependents);
                 }

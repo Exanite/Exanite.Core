@@ -19,13 +19,13 @@ namespace Exanite.Core.Editor
     /// </summary>
     public class ScriptableObjectCreator : OdinEditorWindow
     {
-        private List<Type> validTypes;
-        private List<Assembly> validAssemblies;
+        private List<Type>? validTypes;
+        private List<Assembly>? validAssemblies;
 
-        private Type typeToCreate;
-        private Assembly assemblyFilter;
+        private Type? typeToCreate;
+        private Assembly? assemblyFilter;
 
-        private List<Type> filteredTypes;
+        private List<Type>? filteredTypes;
 
         /// <summary>
         /// Editor window name.
@@ -38,10 +38,9 @@ namespace Exanite.Core.Editor
         [TitleGroup("$name", HorizontalLine = true)]
         [ShowInInspector]
         [ValueDropdown(nameof(ValidAssemblies), SortDropdownItems = true, CopyValues = false, NumberOfItemsBeforeEnablingSearch = 0)]
-        public Assembly AssemblyFilter
+        public Assembly? AssemblyFilter
         {
             get => assemblyFilter;
-
             set
             {
                 assemblyFilter = value;
@@ -56,10 +55,9 @@ namespace Exanite.Core.Editor
         /// </summary>
         [ShowInInspector]
         [ValueDropdown(nameof(FilteredTypes), SortDropdownItems = true, CopyValues = false, NumberOfItemsBeforeEnablingSearch = 0)]
-        public Type TypeToCreate
+        public Type? TypeToCreate
         {
             get => typeToCreate;
-
             set
             {
                 typeToCreate = value;
@@ -76,7 +74,7 @@ namespace Exanite.Core.Editor
         [TitleGroup("Preview", HorizontalLine = true)]
         [InlineEditor(DrawGUI = true, DrawHeader = false, DrawPreview = false, Expanded = true,
             ObjectFieldMode = InlineEditorObjectFieldModes.CompletelyHidden)]
-        public ScriptableObject Preview { get; protected set; }
+        public ScriptableObject? Preview { get; protected set; }
 
         /// <summary>
         /// The types that this <see cref="EditorWindow"/> is allowed to create.
@@ -177,7 +175,7 @@ namespace Exanite.Core.Editor
                 throw new InvalidOperationException("Cannot create a new ScriptableObject at this time");
             }
 
-            var path = EditorUtility.SaveFilePanel($"Save {TypeToCreate.Name} to folder", "Assets", $"new {TypeToCreate.Name}", "asset");
+            var path = EditorUtility.SaveFilePanel($"Save {TypeToCreate!.Name} to folder", "Assets", $"new {TypeToCreate.Name}", "asset");
 
             if (path.IsNullOrWhitespace())
             {

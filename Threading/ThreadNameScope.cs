@@ -5,7 +5,7 @@ namespace Exanite.Core.Threading
 {
     public struct ThreadNameScope : IDisposable
     {
-        private readonly string originalName;
+        private readonly string? originalName;
 
         public ThreadNameScope(string name)
         {

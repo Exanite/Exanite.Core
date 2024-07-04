@@ -15,21 +15,21 @@ namespace Exanite.Core.Utilities
         /// <para/>
         /// This can be replaced to allow custom logging implementations to be used.
         /// </summary>
-        public static Action<object> LogAction = DefaultLogAction;
+        public static Action<object?> LogAction = DefaultLogAction;
 
         /// <summary>
         /// Logs the value using the current <see cref="LogAction"/>. Defaults to <see cref="DefaultLogAction"/>.
         /// </summary>
-        public static void Log(object value)
+        public static void Log(object? value)
         {
-            LogAction?.Invoke(value);
+            LogAction.Invoke(value);
         }
 
         /// <summary>
         /// Logs the <paramref name="name"/> and <paramref name="value"/>
         /// formatted as 'name: value' to the Unity console.
         /// </summary>
-        public static void LogVariable(string name, object value)
+        public static void LogVariable(string name, object? value)
         {
             Log($"{name}: {value}");
         }
@@ -37,7 +37,7 @@ namespace Exanite.Core.Utilities
         /// <summary>
         /// Uses <see cref="Format"/> to format the provided value and logs it.
         /// <para/>
-        /// The provided value is returned to allow <see cref="Dump{T}"/>
+        /// The provided value is returned to allow <see cref="Dump{T}(T)"/>
         /// to be inserted in the middle of statements for convenience.
         /// </summary>
         /// <param name="value">The value to be logged.</param>
@@ -51,7 +51,7 @@ namespace Exanite.Core.Utilities
         /// <summary>
         /// Uses <see cref="Format"/> to format the provided value and logs it.
         /// <para/>
-        /// The provided value is returned to allow <see cref="Dump{T}"/>
+        /// The provided value is returned to allow <see cref="Dump{T}(T)"/>
         /// to be inserted in the middle of statements for convenience.
         /// </summary>
         /// <param name="value">The value to be logged.</param>
@@ -66,7 +66,7 @@ namespace Exanite.Core.Utilities
         /// <summary>
         /// Formats collections (and IEnumerables) in an array-like format.
         /// </summary>
-        public static string Format(object value)
+        public static string Format(object? value)
         {
             if (value == null)
             {
@@ -115,7 +115,7 @@ namespace Exanite.Core.Utilities
         /// <summary>
         /// Logs the value using Debug.Log on Unity and Console.WriteLine elsewhere.
         /// </summary>
-        public static void DefaultLogAction(object value)
+        public static void DefaultLogAction(object? value)
         {
 #if UNITY_2021_3_OR_NEWER
             if (value is Object context)

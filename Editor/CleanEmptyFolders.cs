@@ -90,7 +90,7 @@ namespace Exanite.Core.Editor
 
             foreach (var folder in folders)
             {
-                var metaFile = folder.Parent.GetFiles($"{folder.Name}.meta", SearchOption.TopDirectoryOnly).FirstOrDefault();
+                var metaFile = folder.Parent!.GetFiles($"{folder.Name}.meta", SearchOption.TopDirectoryOnly).FirstOrDefault();
 
                 Debug.Log($"Deleting empty folder: {folder.FullName}");
                 folder.Delete();

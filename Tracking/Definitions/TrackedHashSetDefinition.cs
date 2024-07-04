@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using Exanite.Core.Tracking.Conditions;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Exanite.Core.Tracking.Definitions
 {
     public class TrackedHashSetDefinition<T> : TrackedCollectionDefinition<T, HashSet<T>>
     {
-        public TrackedHashSetDefinition([NotNull] MatchCondition<T> matchCondition) : base(matchCondition) {}
+        public TrackedHashSetDefinition(MatchCondition<T> matchCondition) : base(matchCondition) {}
 
         public override HashSet<T> CreateCollection()
         {

@@ -29,11 +29,9 @@ namespace Exanite.Core.Utilities
         /// <exception cref="MissingComponentException"/>
         public static T GetRequiredComponent<T>(this GameObject gameObject) where T : class
         {
-            var component = gameObject.GetComponent<T>() as Component;
-
-            if (component)
+            if (gameObject.GetComponent<T>() is {} typedComponent)
             {
-                return component as T;
+                return typedComponent;
             }
 
             throw new MissingComponentException($"There is no {typeof(T).Name} attached to the '{gameObject.name} game object'");

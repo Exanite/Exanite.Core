@@ -5,15 +5,15 @@ namespace Exanite.Core.Types
 {
     public class InheritanceHierarchyTypeFilter : ITypeFilter
     {
-        public HashSet<Type> BaseTypes { get; }
+        public HashSet<Type?> BaseTypes { get; }
         public bool Inclusive { get; set; }
         public bool MustExtendBaseType { get; set; }
 
-        public InheritanceHierarchyTypeFilter(Type baseType = null, bool inclusive = false, bool mustExtendBaseType = false) : this(new HashSet<Type>() { baseType }, inclusive, mustExtendBaseType) {}
+        public InheritanceHierarchyTypeFilter(Type? baseType = null, bool inclusive = false, bool mustExtendBaseType = false) : this(new HashSet<Type?>() { baseType }, inclusive, mustExtendBaseType) {}
 
-        public InheritanceHierarchyTypeFilter(IEnumerable<Type> baseTypes, bool inclusive = false, bool mustExtendBaseType = false) : this(new HashSet<Type>(baseTypes), inclusive, mustExtendBaseType) {}
+        public InheritanceHierarchyTypeFilter(IEnumerable<Type?> baseTypes, bool inclusive = false, bool mustExtendBaseType = false) : this(new HashSet<Type?>(baseTypes), inclusive, mustExtendBaseType) {}
 
-        private InheritanceHierarchyTypeFilter(HashSet<Type> baseTypes, bool inclusive, bool mustExtendBaseType)
+        private InheritanceHierarchyTypeFilter(HashSet<Type?> baseTypes, bool inclusive, bool mustExtendBaseType)
         {
             BaseTypes = baseTypes;
             Inclusive = inclusive;

@@ -1,11 +1,10 @@
 using System;
 using Exanite.Core.Tracking.Conditions;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Exanite.Core.Tracking.Definitions
 {
-    public abstract class TrackedCollectionDefinition<TValue, TCollection> : ITrackedCollectionDefinition
+    public abstract class TrackedCollectionDefinition<TValue, TCollection> : ITrackedCollectionDefinition where TCollection : notnull
     {
         /// <summary>
         /// This technically can be implemented as an abstract method instead,
@@ -14,7 +13,7 @@ namespace Exanite.Core.Tracking.Definitions
         /// </summary>
         protected MatchCondition<TValue> IsMatch { get; }
 
-        protected TrackedCollectionDefinition([NotNull] MatchCondition<TValue> matchCondition)
+        protected TrackedCollectionDefinition(MatchCondition<TValue> matchCondition)
         {
             IsMatch = matchCondition ?? throw new ArgumentNullException(nameof(matchCondition));
         }

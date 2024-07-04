@@ -102,7 +102,7 @@ namespace Exanite.Core.Collections
         /// Tries to remove and return the object at the beginning of the
         /// <see cref="RingBuffer{T}"/>.
         /// </summary>
-        public bool TryDequeue(out T value)
+        public bool TryDequeue(out T? value)
         {
             if (IsEmpty)
             {
@@ -135,7 +135,7 @@ namespace Exanite.Core.Collections
         /// Tries to returns the object at the beginning of the
         /// <see cref="RingBuffer{T}"/> without removing it.
         /// </summary>
-        public bool TryPeek(out T value)
+        public bool TryPeek(out T? value)
         {
             if (IsEmpty)
             {

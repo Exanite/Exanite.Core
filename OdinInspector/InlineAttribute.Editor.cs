@@ -40,7 +40,7 @@ namespace Exanite.Core.OdinInspector
 
         public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
         {
-            Type memberType = null;
+            Type? memberType = null;
 
             if (member is FieldInfo field)
             {
@@ -86,7 +86,7 @@ namespace Exanite.Core.OdinInspector
     public class InlineAttributeDrawer<TAttribute> : OdinAttributeDrawer<TAttribute>
         where TAttribute : InlineAttribute
     {
-        protected override void DrawPropertyLayout(GUIContent label)
+        protected override void DrawPropertyLayout(GUIContent? label)
         {
             if (Property.ValueEntry.WeakSmartValue == null &&
                 Property.Attributes.Any(attr => attr is SerializableAttribute) &&

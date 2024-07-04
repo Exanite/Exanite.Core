@@ -10,9 +10,9 @@ namespace Exanite.Core.Properties
         public string Key { get; }
         public Type Type { get; }
 
-        public abstract object UntypedValue { get; set; }
+        public abstract object? UntypedValue { get; set; }
 
-        public event EventHandler<Property, PropertyValueChangedEventArgs<object>> UntypedValueChanged;
+        public event EventHandler<Property, PropertyValueChangedEventArgs<object>>? UntypedValueChanged;
 
         protected Property(string key, Type type)
         {
@@ -22,7 +22,7 @@ namespace Exanite.Core.Properties
             Type = type;
         }
 
-        protected void OnValueChangedUntyped(object previousValue, object newValue)
+        protected void OnValueChangedUntyped(object? previousValue, object? newValue)
         {
             propertyValueChangedEventArgs.PreviousValue = previousValue;
             propertyValueChangedEventArgs.NewValue = newValue;
@@ -33,11 +33,11 @@ namespace Exanite.Core.Properties
 
     public class Property<T> : Property
     {
-        private T value;
+        private T? value;
 
         private readonly PropertyValueChangedEventArgs<T> propertyValueChangedEventArgs;
 
-        public T Value
+        public T? Value
         {
             get => value;
             set
@@ -53,20 +53,20 @@ namespace Exanite.Core.Properties
             }
         }
 
-        public override object UntypedValue
+        public override object? UntypedValue
         {
             get => value;
-            set => this.value = (T)value;
+            set => this.value = (T?)value;
         }
 
-        public event EventHandler<Property, PropertyValueChangedEventArgs<T>> ValueChanged;
+        public event EventHandler<Property, PropertyValueChangedEventArgs<T>>? ValueChanged;
 
         public Property(string key) : base(key, typeof(T))
         {
             propertyValueChangedEventArgs = new PropertyValueChangedEventArgs<T>(this);
         }
 
-        private void OnValueChanged(T previousValue, T newValue)
+        private void OnValueChanged(T? previousValue, T? newValue)
         {
             propertyValueChangedEventArgs.PreviousValue = previousValue;
             propertyValueChangedEventArgs.NewValue = newValue;

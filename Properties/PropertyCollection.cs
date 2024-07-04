@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Exanite.Core.Events;
 
 namespace Exanite.Core.Properties
@@ -10,12 +11,12 @@ namespace Exanite.Core.Properties
 
         public IReadOnlyDictionary<string, Property> PropertiesByKey => properties;
 
-        public event EventHandler<PropertyCollection, Property> PropertyAdded;
-        public event EventHandler<PropertyCollection, Property> PropertyRemoved;
+        public event EventHandler<PropertyCollection, Property>? PropertyAdded;
+        public event EventHandler<PropertyCollection, Property>? PropertyRemoved;
 
-        public event EventHandler<PropertyCollection, PropertyValueChangedEventArgs<object>> PropertyValueChanged;
+        public event EventHandler<PropertyCollection, PropertyValueChangedEventArgs<object>>? PropertyValueChanged;
 
-        public T GetPropertyValue<T>(PropertyDefinition<T> definition, bool addIfDoesNotExist = false)
+        public T? GetPropertyValue<T>(PropertyDefinition<T> definition, bool addIfDoesNotExist = false)
         {
             var property = addIfDoesNotExist ? GetOrAddProperty(definition) : GetProperty(definition);
 
@@ -41,7 +42,7 @@ namespace Exanite.Core.Properties
             }
         }
 
-        public Property GetProperty(string key)
+        public Property? GetProperty(string key)
         {
             if (!properties.TryGetValue(key, out var untypedProperty))
             {
@@ -51,7 +52,7 @@ namespace Exanite.Core.Properties
             return untypedProperty;
         }
 
-        public Property GetProperty(PropertyDefinition definition)
+        public Property? GetProperty(PropertyDefinition definition)
         {
             if (!properties.TryGetValue(definition.Key, out var untypedProperty))
             {
@@ -66,12 +67,12 @@ namespace Exanite.Core.Properties
             return untypedProperty;
         }
 
-        public Property<T> GetProperty<T>(PropertyDefinition<T> definition)
+        public Property<T>? GetProperty<T>(PropertyDefinition<T> definition)
         {
-            return (Property<T>)GetProperty((PropertyDefinition)definition);
+            return (Property<T>?)GetProperty((PropertyDefinition)definition);
         }
 
-        public bool TryGetProperty<T>(PropertyDefinition<T> definition, out Property<T> property)
+        public bool TryGetProperty<T>(PropertyDefinition<T> definition, [NotNullWhen(true)] out Property<T>? property)
         {
             property = GetProperty(definition);
 

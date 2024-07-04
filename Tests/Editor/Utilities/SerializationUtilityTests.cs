@@ -10,7 +10,7 @@ namespace Exanite.Core.Tests.Editor.Utilities
         [Test]
         public void SerializeType_IsReversedBy_DeserializeType()
         {
-            void Test(Type type)
+            void Test(Type? type)
             {
                 Assert.AreEqual(type, SerializationUtility.DeserializeType(SerializationUtility.SerializeType(type)));
             }

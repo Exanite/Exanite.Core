@@ -15,7 +15,7 @@ namespace Exanite.Core.DependencyInjection
 
         [SerializeField] private bool useSceneContext = false;
         [DisableIf(nameof(useSceneContext))] [SerializeField]
-        private Context context = null;
+        private Context? context = null;
 
         private void Awake()
         {
@@ -29,7 +29,7 @@ namespace Exanite.Core.DependencyInjection
                 }
             }
 
-            context.AddNormalInstaller(new DiBindingInstaller(bindings));
+            context!.AddNormalInstaller(new DiBindingInstaller(bindings));
         }
 
         public void Start()
@@ -37,7 +37,7 @@ namespace Exanite.Core.DependencyInjection
             // Define this method so we expose the enabled check box
         }
 
-        private Context FindContext()
+        private Context? FindContext()
         {
             if (useSceneContext)
             {
@@ -53,12 +53,12 @@ namespace Exanite.Core.DependencyInjection
             return FindSceneContext();
         }
 
-        private Context FindContextInParent()
+        private Context? FindContextInParent()
         {
             return GetComponentInParent<Context>();
         }
 
-        private SceneContext FindSceneContext()
+        private SceneContext? FindSceneContext()
         {
             foreach (var rootGameObject in gameObject.scene.GetRootGameObjects())
             {

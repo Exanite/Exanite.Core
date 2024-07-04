@@ -1,3 +1,6 @@
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +10,10 @@ namespace Exanite.Core.Components
     {
         private static readonly string ScaleName = "Project_UiScale";
 
-        public CanvasScaler Scaler;
+#if ODIN_INSPECTOR
+        [Required]
+#endif
+        public CanvasScaler Scaler = null!;
 
         private void Start()
         {

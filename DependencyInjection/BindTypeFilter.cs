@@ -10,7 +10,7 @@ namespace Exanite.Core.DependencyInjection
 
         /// <summary>
         /// Binds the object's implemented interfaces and its inheritance hierarchy,
-        /// stopping once one of the types defined in <see cref=ObjectBindingg.IgnoredTypes"/> are reached.
+        /// stopping once one of the types defined in <see cref="ObjectBinding.IgnoredTypes"/> are reached.
         /// </summary>
         Smart = 1 << 1,
 

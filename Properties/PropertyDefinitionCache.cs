@@ -26,7 +26,7 @@ namespace Exanite.Core.Properties
                 cache[typeof(T)] = new PropertyDefinition<T>($"{keyPrefix}{typeof(T).FullName}");
             }
 
-            return cache[typeof(T)] as PropertyDefinition<T>;
+            return (PropertyDefinition<T>)cache[typeof(T)];
         }
     }
 }

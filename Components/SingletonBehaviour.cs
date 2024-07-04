@@ -6,7 +6,7 @@ namespace Exanite.Core.Components
     [DefaultExecutionOrder(-100)]
     public class SingletonBehaviour<T> : MonoBehaviour where T : SingletonBehaviour<T>
     {
-        private static T instance;
+        private static T? instance;
 
         public bool dontDestroyOnLoad;
 
@@ -16,7 +16,7 @@ namespace Exanite.Core.Components
         {
             get
             {
-                if (instance)
+                if (instance != null)
                 {
                     return instance;
                 }

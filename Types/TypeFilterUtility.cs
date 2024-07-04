@@ -25,7 +25,7 @@ namespace Exanite.Core.Types
             return typeFilter;
         }
 
-        public static TypeFilter InheritanceHierarchy(this TypeFilter typeFilter, Type baseType = null, bool inclusive = false, bool mustExtendBaseType = false)
+        public static TypeFilter InheritanceHierarchy(this TypeFilter typeFilter, Type? baseType = null, bool inclusive = false, bool mustExtendBaseType = false)
         {
             if (baseType == null && inclusive == false && mustExtendBaseType == false)
             {

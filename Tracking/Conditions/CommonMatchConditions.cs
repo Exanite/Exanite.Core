@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 namespace Exanite.Core.Tracking.Conditions
@@ -7,7 +8,7 @@ namespace Exanite.Core.Tracking.Conditions
         /// <summary>
         /// Never automatically register objects. This is useful for manually registering objects.
         /// </summary>
-        public static bool NoOp<T>(GameObject gameObject, out T narrowedValue) where T : class
+        public static bool NoOp<T>(GameObject gameObject, [NotNullWhen(true)] out T? narrowedValue) where T : class
         {
             narrowedValue = default;
             return false;
@@ -16,7 +17,7 @@ namespace Exanite.Core.Tracking.Conditions
         /// <summary>
         /// Automatically register components on a GameObject.
         /// </summary>
-        public static bool ComponentOnGameObject<T>(GameObject gameObject, out T narrowedValue) where T : class
+        public static bool ComponentOnGameObject<T>(GameObject gameObject, [NotNullWhen(true)] out T? narrowedValue) where T : class
         {
             if (gameObject.TryGetComponent(out T display))
             {

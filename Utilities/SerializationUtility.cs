@@ -14,7 +14,7 @@ namespace Exanite.Core.Utilities
         /// <remarks>
         /// This is probably better implemented by using <see cref="Type.AssemblyQualifiedName"/> and stripping the unnecessary information.
         /// </remarks>
-        public static string SerializeType(Type type)
+        public static string SerializeType(Type? type)
         {
             if (type == null)
             {
@@ -27,7 +27,7 @@ namespace Exanite.Core.Utilities
             return builder.ToString();
         }
 
-        public static Type DeserializeType(string value)
+        public static Type? DeserializeType(string value)
         {
             if (value == NullSerializedValue)
             {

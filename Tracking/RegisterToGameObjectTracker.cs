@@ -6,7 +6,7 @@ namespace Exanite.Core.Tracking
 {
     public class RegisterToGameObjectTracker : MonoBehaviour
     {
-        [Inject] private GameObjectTracker tracker;
+        [Inject] private GameObjectTracker tracker = null!;
 
         private void OnEnable()
         {

@@ -7,26 +7,26 @@ namespace Exanite.Core.Tests.Editor.Utilities
     [TestFixture]
     public class GameObjectUtilityTests
     {
-        public GameObject GameObject { get; set; }
+        private GameObject gameObject = null!;
 
         [SetUp]
         public void Setup()
         {
-            GameObject = new GameObject();
+            gameObject = new GameObject();
         }
 
         [TearDown]
         public void TearDown()
         {
-            UnityUtility.UnsafeDestroy(GameObject);
+            UnityUtility.UnsafeDestroy(gameObject);
         }
 
         [Test]
         public void GetRequiredComponent_ComponentExists_ReturnsComponent()
         {
-            GameObject.AddComponent<TestComponent>();
+            gameObject.AddComponent<TestComponent>();
 
-            var component = GameObject.GetRequiredComponent<TestComponent>();
+            var component = gameObject.GetRequiredComponent<TestComponent>();
 
             Assert.NotNull(component);
         }
@@ -34,9 +34,9 @@ namespace Exanite.Core.Tests.Editor.Utilities
         [Test]
         public void GetRequiredComponent_UsingInterfaceAndComponentExists_ReturnsComponent()
         {
-            GameObject.AddComponent<TestComponent>();
+            gameObject.AddComponent<TestComponent>();
 
-            var component = GameObject.GetRequiredComponent<ITestComponent>();
+            var component = gameObject.GetRequiredComponent<ITestComponent>();
 
             Assert.NotNull(component);
         }
@@ -44,7 +44,7 @@ namespace Exanite.Core.Tests.Editor.Utilities
         [Test]
         public void GetRequiredComponent_ComponentDoesNotExist_ThrowsException()
         {
-            TestDelegate action = () => GameObject.GetRequiredComponent<TestComponent>();
+            TestDelegate action = () => gameObject.GetRequiredComponent<TestComponent>();
 
             Assert.Throws<MissingComponentException>(action);
         }
@@ -52,9 +52,9 @@ namespace Exanite.Core.Tests.Editor.Utilities
         [Test]
         public void GetOrAddComponent_ComponentExists_ReturnsComponent()
         {
-            GameObject.AddComponent<TestComponent>();
+            gameObject.AddComponent<TestComponent>();
 
-            var component = GameObject.GetOrAddComponent<TestComponent>();
+            var component = gameObject.GetOrAddComponent<TestComponent>();
 
             Assert.NotNull(component);
         }
@@ -62,7 +62,7 @@ namespace Exanite.Core.Tests.Editor.Utilities
         [Test]
         public void GetOrAddComponent_ComponentDoesNotExist_AddsComponent()
         {
-            var component = GameObject.GetOrAddComponent<TestComponent>();
+            var component = gameObject.GetOrAddComponent<TestComponent>();
 
             Assert.NotNull(component);
         }

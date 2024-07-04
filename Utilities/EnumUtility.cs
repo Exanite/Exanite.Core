@@ -9,7 +9,7 @@ namespace Exanite.Core.Utilities
     /// </summary>
     public static class EnumUtility<T> where T : Enum
     {
-        private static List<string> valuesAsStringList;
+        private static List<string>? valuesAsStringList;
 
         /// <summary>
         /// Array returned by Enum.GetValue(typeof(T)).
@@ -27,7 +27,7 @@ namespace Exanite.Core.Utilities
         public static readonly int Min;
 
         /// <summary>
-        /// <see cref="Values"/> as a <see cref="List"/> of <see langword="string">strings</see>.
+        /// <see cref="Values"/> as a list of strings.
         /// </summary>
         public static IReadOnlyList<string> ValuesAsStringList
         {

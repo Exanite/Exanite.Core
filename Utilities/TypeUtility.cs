@@ -15,7 +15,7 @@ namespace Exanite.Core.Utilities
         /// <summary>
         /// Gets the default value for the provided <see cref="Type"/>.
         /// </summary>
-        public static object GetDefaultValue(this Type type)
+        public static object? GetDefaultValue(this Type type)
         {
             if (type.IsValueType)
             {

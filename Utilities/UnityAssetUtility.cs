@@ -14,7 +14,7 @@ namespace Exanite.Core.Utilities
         /// <remarks>
         /// This is a wrapper around <see cref="AssetDatabase.GetImporterOverride"/> to make it easier to use.
         /// </remarks>
-        public static Type GetOverrideImporter(this Object asset)
+        public static Type? GetOverrideImporter(this Object asset)
         {
             var path = AssetDatabase.GetAssetPath(asset);
             if (string.IsNullOrEmpty(path))

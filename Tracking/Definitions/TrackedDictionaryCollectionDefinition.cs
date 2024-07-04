@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Exanite.Core.Tracking.Conditions;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Exanite.Core.Tracking.Definitions
@@ -10,7 +9,7 @@ namespace Exanite.Core.Tracking.Definitions
     {
         private readonly Func<TValue, TKey> getKey;
 
-        public TrackedDictionaryCollectionDefinition([NotNull] MatchCondition<TValue> matchCondition, [NotNull] Func<TValue, TKey> getKey) : base(matchCondition)
+        public TrackedDictionaryCollectionDefinition(MatchCondition<TValue> matchCondition, Func<TValue, TKey> getKey) : base(matchCondition)
         {
             this.getKey = getKey;
         }

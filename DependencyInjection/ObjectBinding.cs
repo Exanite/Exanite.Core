@@ -117,7 +117,7 @@ namespace Exanite.Core.DependencyInjection
                 types.UnionWith(customTypes);
             }
 
-            types.Remove(null);
+            types.Remove(null!);
 
             return types;
         }
@@ -201,7 +201,7 @@ namespace Exanite.Core.DependencyInjection
             {
                 try
                 {
-                    customTypes.Add(SerializationUtility.DeserializeType(serializedBindType));
+                    customTypes.Add(SerializationUtility.DeserializeType(serializedBindType)!);
                 }
                 catch (Exception e)
                 {

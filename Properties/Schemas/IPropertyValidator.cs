@@ -2,6 +2,6 @@ namespace Exanite.Core.Properties.Schemas
 {
     public interface IPropertyValidator
     {
-        public bool Validate(Property property);
+        public bool Validate(Property? property);
     }
 }
