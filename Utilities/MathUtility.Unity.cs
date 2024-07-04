@@ -1,18 +1,11 @@
 #if UNITY_2021_3_OR_NEWER
 using Exanite.Core.Numerics;
 using UnityEngine;
-#endif
 
 namespace Exanite.Core.Utilities
 {
-    // ReSharper disable once PartialTypeWithSinglePart
-
-    /// <summary>
-    /// Utility and extension methods for Unity Vectors.
-    /// </summary>
-    public static partial class VectorUtility
+    public static partial class MathUtility
     {
-#if UNITY_2021_3_OR_NEWER
         /// <summary>
         /// Swaps the component values of a <see cref="Vector3"/> from XYZ to
         /// the given format.
@@ -102,6 +95,6 @@ namespace Exanite.Core.Utilities
             vector2.x = Mathf.Clamp(vector2.x, min.x, max.x);
             vector2.y = Mathf.Clamp(vector2.y, min.y, max.y);
         }
-#endif
     }
 }
+#endif
