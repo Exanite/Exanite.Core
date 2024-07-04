@@ -1,4 +1,9 @@
-﻿using Exanite.Core.Utilities;
+﻿#if !UNITY_2021_3_OR_NEWER
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
+#endif
+
+using System.Numerics;
+using Exanite.Core.Utilities;
 using NUnit.Framework;
 
 namespace Exanite.Core.Tests.Utilities
@@ -43,7 +48,6 @@ namespace Exanite.Core.Tests.Utilities
             return MathUtility.GetNextPowerOfTwo(value);
         }
 
-#if NETCOREAPP
         [TestCase(0, float.Epsilon, ExpectedResult = true)]
         [TestCase(0, 1, ExpectedResult = false)]
         public bool IsApproximatelyEqual_ReturnsExpectedResult(float a, float b)
@@ -57,6 +61,23 @@ namespace Exanite.Core.Tests.Utilities
         {
             return MathUtility.IsApproximatelyEqual(a, b);
         }
-#endif
+
+        [TestCase]
+        public void CreatePlane_ReturnsExpectedResult1()
+        {
+            var plane = MathUtility.CreatePlane(Vector3.Zero, Vector3.UnitX);
+
+            Assert.IsTrue(MathUtility.IsApproximatelyEqual(0, plane.D));
+            Assert.IsTrue(MathUtility.IsApproximatelyEqual(Vector3.UnitX, plane.Normal));
+        }
+
+        [TestCase]
+        public void CreatePlane_ReturnsExpectedResult2()
+        {
+            var plane = MathUtility.CreatePlane(Vector3.UnitX, Vector3.UnitX);
+
+            Assert.IsTrue(MathUtility.IsApproximatelyEqual(1, plane.D));
+            Assert.IsTrue(MathUtility.IsApproximatelyEqual(Vector3.UnitX, plane.Normal));
+        }
     }
 }

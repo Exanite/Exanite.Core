@@ -1,4 +1,3 @@
-#if NETCOREAPP
 using System;
 using System.Numerics;
 using Exanite.Core.Utilities;
@@ -34,4 +33,3 @@ namespace Exanite.Core.Numerics
         }
     }
 }
-#endif

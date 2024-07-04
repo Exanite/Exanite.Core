@@ -1,4 +1,4 @@
-#if NETCOREAPP && !UNITY_2021_3_OR_NEWER
+#if NETCOREAPP
 using System;
 using System.Numerics;
 
