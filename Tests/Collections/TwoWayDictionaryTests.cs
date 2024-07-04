@@ -36,7 +36,7 @@ namespace Exanite.Core.Tests.Collections
         [TestCase(0, ExpectedResult = 0)]
         [TestCase(5, ExpectedResult = 5)]
         [TestCase(20, ExpectedResult = 20)]
-        public int Count_ReturnsExpectedValue(int entriesToAdd)
+        public int Count_ReturnsExpectedResult(int entriesToAdd)
         {
             var dictionary = new TwoWayDictionary<string, int>();
 
@@ -53,7 +53,7 @@ namespace Exanite.Core.Tests.Collections
         [TestCase(5, 1, ExpectedResult = 4)]
         [TestCase(20, 3, ExpectedResult = 17)]
         [TestCase(20, 6, ExpectedResult = 14)]
-        public int Count_AfterRemoving_ReturnsExpectedValue(int entriesToAdd, int entriesToRemove)
+        public int Count_AfterRemoving_ReturnsExpectedResult(int entriesToAdd, int entriesToRemove)
         {
             var dictionary = new TwoWayDictionary<string, int>();
 
