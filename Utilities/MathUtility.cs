@@ -151,7 +151,7 @@ namespace Exanite.Core.Utilities
             return num % 2 != 0;
         }
 
-                public static bool IsApproximatelyEqual(float a, float b)
+        public static bool IsApproximatelyEqual(float a, float b)
         {
             var maxAb = MathF.Max(MathF.Abs(a), MathF.Abs(b));
 
@@ -173,6 +173,22 @@ namespace Exanite.Core.Utilities
         public static bool IsApproximatelyEqual(Vector3 a, Vector3 b)
         {
             return IsApproximatelyEqual(a.X, b.X) && IsApproximatelyEqual(a.Y, b.Y) && IsApproximatelyEqual(a.Z, b.Z);
+        }
+
+        /// <summary>
+        /// Converts radians to degrees.
+        /// </summary>
+        public static float Rad2Deg(float radians)
+        {
+            return radians * (180f / MathF.PI);
+        }
+
+        /// <summary>
+        /// Converts degrees to radians.
+        /// </summary>
+        public static float Deg2Rad(float degrees)
+        {
+            return degrees * (MathF.PI / 180f);
         }
 
         /// <summary>

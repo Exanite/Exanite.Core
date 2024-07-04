@@ -13,22 +13,6 @@ namespace Exanite.Core.Utilities
 
             return SrgbToLinear(new Vector4(color.R / maxValue, color.G / maxValue, color.B / maxValue, color.A / maxValue));
         }
-
-        /// <summary>
-        /// Converts radians to degrees.
-        /// </summary>
-        public static float Rad2Deg(float radians)
-        {
-            return radians * (180f / float.Pi);
-        }
-
-        /// <summary>
-        /// Converts degrees to radians.
-        /// </summary>
-        public static float Deg2Rad(float degrees)
-        {
-            return degrees * (float.Pi / 180f);
-        }
     }
 }
 #endif

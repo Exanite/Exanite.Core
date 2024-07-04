@@ -1,4 +1,3 @@
-#if NETCOREAPP
 using System;
 using System.Numerics;
 
@@ -103,4 +102,3 @@ namespace Exanite.Core.Numerics
         }
     }
 }
-#endif
