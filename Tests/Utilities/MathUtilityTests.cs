@@ -42,5 +42,19 @@ namespace Exanite.Core.Tests.Utilities
         {
             return MathUtility.GetNextPowerOfTwo(value);
         }
+
+        [TestCase(0, float.Epsilon, ExpectedResult = true)]
+        [TestCase(0, 1, ExpectedResult = false)]
+        public bool IsApproximatelyEqual_ReturnsExpectedValue(float a, float b)
+        {
+            return MathUtility.IsApproximatelyEqual(a, b);
+        }
+
+        [TestCase(0, double.Epsilon, ExpectedResult = true)]
+        [TestCase(0, 1, ExpectedResult = false)]
+        public bool IsApproximatelyEqual_ReturnsExpectedValue(double a, double b)
+        {
+            return MathUtility.IsApproximatelyEqual(a, b);
+        }
     }
 }
