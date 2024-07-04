@@ -1,4 +1,4 @@
-﻿// ReSharper disable once RedundantUsingDirective - Using statements can be unused due to conditional compilation
+﻿// ReSharper disable RedundantUsingDirective - Using statements can be unused due to conditional compilation
 
 using System.Numerics;
 using System;
