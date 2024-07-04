@@ -121,39 +121,6 @@ namespace Exanite.Core.Utilities
             return num % 2 != 0;
         }
 
-#if NETCOREAPP
-        public static float SmoothDamp(float current, float target, float smoothTime, float deltaTime, ref float currentVelocity, float maxSpeed = float.PositiveInfinity)
-        {
-            // From https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Math/Mathf.cs#L309
-            // Based on Game Programming Gems 4 Chapter 1.10
-            smoothTime = MathF.Max(0.0001f, smoothTime);
-            var omega = 2f / smoothTime;
-
-            var x = omega * deltaTime;
-            var exp = 1f / (1f + x + 0.48f * x * x + 0.235f * x * x * x);
-            var change = current - target;
-            var originalTo = target;
-
-            // Clamp maximum speed
-            var maxChange = maxSpeed * smoothTime;
-            change = Math.Clamp(change, -maxChange, maxChange);
-            target = current - change;
-
-            var temp = (currentVelocity + omega * change) * deltaTime;
-            currentVelocity = (currentVelocity - omega * temp) * exp;
-            var output = target + (change + temp) * exp;
-
-            // Prevent overshooting
-            if (originalTo - current > 0.0f == output > originalTo)
-            {
-                output = originalTo;
-                currentVelocity = (output - originalTo) / deltaTime;
-            }
-
-            return output;
-        }
-#endif
-
 #if NETCOREAPP && !UNITY_2021_3_OR_NEWER
         /// <summary>
         /// Creates a plane from a position and a normal.
@@ -187,6 +154,49 @@ namespace Exanite.Core.Utilities
 #endif
 
 #if NETCOREAPP
+        public static bool IsApproximatelyEqual(float a, float b)
+        {
+            var maxAb = MathF.Max(MathF.Abs(a), MathF.Abs(b));
+            return MathF.Abs(a - b) < MathF.Max(0.00000_1f /* 6 digits */ * maxAb, float.Epsilon * 8);
+        }
+
+        public static bool IsApproximatelyEqual(double a, double b)
+        {
+            var maxAb = Math.Max(Math.Abs(a), Math.Abs(b));
+            return Math.Abs(a - b) < Math.Max(0.00000_00000_00000_1 /* 15 digits */ * maxAb, double.Epsilon * 8);
+        }
+
+        public static float SmoothDamp(float current, float target, float smoothTime, float deltaTime, ref float currentVelocity, float maxSpeed = float.PositiveInfinity)
+        {
+            // From https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Math/Mathf.cs#L309
+            // Based on Game Programming Gems 4 Chapter 1.10
+            smoothTime = MathF.Max(0.0001f, smoothTime);
+            var omega = 2f / smoothTime;
+
+            var x = omega * deltaTime;
+            var exp = 1f / (1f + x + 0.48f * x * x + 0.235f * x * x * x);
+            var change = current - target;
+            var originalTo = target;
+
+            // Clamp maximum speed
+            var maxChange = maxSpeed * smoothTime;
+            change = Math.Clamp(change, -maxChange, maxChange);
+            target = current - change;
+
+            var temp = (currentVelocity + omega * change) * deltaTime;
+            currentVelocity = (currentVelocity - omega * temp) * exp;
+            var output = target + (change + temp) * exp;
+
+            // Prevent overshooting
+            if (originalTo - current > 0.0f == output > originalTo)
+            {
+                output = originalTo;
+                currentVelocity = (output - originalTo) / deltaTime;
+            }
+
+            return output;
+        }
+
         // sRGB-Linear conversion formulas are from: https://entropymine.com/imageworsener/srgbformula/
 
         /// <summary>
