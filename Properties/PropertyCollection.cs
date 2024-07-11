@@ -16,6 +16,20 @@ namespace Exanite.Core.Properties
 
         public event EventHandler<PropertyCollection, PropertyValueChangedEventArgs<object>>? PropertyValueChanged;
 
+        public object? this[PropertyDefinition definition]
+        {
+            get
+            {
+                var property = GetOrAddProperty(definition);
+                return property.UntypedValue;
+            }
+            set
+            {
+                var property = GetOrAddProperty(definition);
+                property.UntypedValue = value;
+            }
+        }
+
         public T? GetPropertyValue<T>(PropertyDefinition<T> definition, bool addIfDoesNotExist = false)
         {
             var property = addIfDoesNotExist ? GetOrAddProperty(definition) : GetProperty(definition);
