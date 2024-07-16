@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Exanite.Core.Collections
@@ -27,10 +28,9 @@ namespace Exanite.Core.Collections
             return dictionary.ContainsKey(key);
         }
 
-        public bool TryGetValue(TKey key, out TReadOnlyValue value)
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TReadOnlyValue value)
         {
-            TValue untypedValue;
-            var result = dictionary.TryGetValue(key, out untypedValue);
+            var result = dictionary.TryGetValue(key, out var untypedValue);
             value = untypedValue;
 
             return result;

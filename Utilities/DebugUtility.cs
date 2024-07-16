@@ -81,7 +81,7 @@ namespace Exanite.Core.Utilities
                 return stringBuilder.ToString();
             }
 
-            return value.ToString();
+            return value.ToString() ?? "Null";
         }
 
         private static void FormatEnumerable(IEnumerable enumerable, StringBuilder stringBuilder)

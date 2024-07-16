@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Collections
 {
     public class TwoWayDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyTwoWayDictionary<TKey, TValue>
+        where TKey : notnull
+        where TValue : notnull
     {
         private readonly Dictionary<TKey, TValue> forward;
         private readonly Dictionary<TValue, TKey> backward;
@@ -109,7 +112,7 @@ namespace Exanite.Core.Collections
             Backward.Add(value, key);
         }
 
-        public bool TryGetValue(TKey key, out TValue value)
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             return Forward.TryGetValue(key, out value);
         }

@@ -9,8 +9,14 @@
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
 
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnableTrimAnalzyer>true</EnableTrimAnalzyer>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
     <!-- Disable diagnostics that require using newer NUnit APIs for Unity compatibility -->
-    <NoWarn>NUnit2005</NoWarn>
+    <NoWarn>$(NoWarn);NUnit2005</NoWarn>
+    <NoWarn>$(NoWarn);NUnit2006</NoWarn>
   </PropertyGroup>
 
   <!-- Exclude files that only compile in Unity -->

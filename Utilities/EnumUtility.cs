@@ -34,7 +34,9 @@ namespace Exanite.Core.Utilities
             Values = Enum.GetValues(typeof(T)).Cast<T>().ToList();
             ValuesAsStrings = Values.Select(x => x.ToString()).ToList();
 
+#pragma warning disable CA2021
             var enumerable = Values.Cast<int>();
+#pragma warning restore CA2021
             Max = enumerable.Max();
             Min = enumerable.Min();
         }
