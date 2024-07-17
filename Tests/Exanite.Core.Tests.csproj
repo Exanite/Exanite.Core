@@ -32,7 +32,6 @@
   <PropertyGroup>
     <DefaultItemExcludes>
       $(DefaultItemExcludes);
-
       **/*.meta;
     </DefaultItemExcludes>
   </PropertyGroup>
