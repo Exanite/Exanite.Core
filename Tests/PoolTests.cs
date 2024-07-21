@@ -12,7 +12,7 @@ namespace Exanite.Core.Tests
     public class PoolTests
     {
         [TestCase]
-        public void Acquire_CalledMultipleTimes_ReturnsUniqueInstances()
+        public void Acquire_AcquireMultipleWithoutReleasing_ReturnsUniqueInstances()
         {
             const int acquireCount = 20;
 
@@ -31,7 +31,7 @@ namespace Exanite.Core.Tests
         }
 
         [TestCase]
-        public void Acquire_CalledMultipleTimes_ReusesInstances()
+        public void Acquire_ReusesInstances()
         {
             const int acquireCountA = 20;
             const int acquireCountB = 10;
@@ -67,6 +67,35 @@ namespace Exanite.Core.Tests
             Assert.AreEqual(acquireCountA, pool.CountAll);
             Assert.AreEqual(acquireCountB, pool.CountActive);
             Assert.AreEqual(acquireCountA - acquireCountB, pool.CountInactive);
+        }
+
+        [TestCase]
+        public void Acquire_EnforcesMaxInactiveLimit()
+        {
+            const int acquireCountA = 20;
+            const int maxInactive = 5;
+
+            var pool = new Pool<A>(create: () => new A(), maxInactive: maxInactive);
+            var active = new List<A>();
+
+            Assert.AreEqual(maxInactive, pool.MaxInactive);
+
+            for (var i = 0; i < acquireCountA; i++)
+            {
+                active.Add(pool.Acquire());
+            }
+
+            Assert.AreEqual(acquireCountA, pool.CountAll);
+            Assert.AreEqual(acquireCountA, pool.CountActive);
+            Assert.AreEqual(0, pool.CountInactive);
+
+            foreach (var instance in active)
+            {
+                pool.Release(instance);
+                Assert.IsTrue(pool.CountInactive <= maxInactive);
+            }
+
+            Assert.AreEqual(maxInactive, pool.CountInactive);
         }
 
         public class A {}
