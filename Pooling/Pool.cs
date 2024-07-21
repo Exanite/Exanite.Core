@@ -27,7 +27,7 @@ namespace Exanite.Core.Pooling
             Action<T>? onRelease = null,
             Action<T>? onDestroy = null,
             int defaultCapacity = 10,
-            int maxCapacity = 10000)
+            int maxCapacity = 100)
         {
             if (defaultCapacity <= 0)
             {
