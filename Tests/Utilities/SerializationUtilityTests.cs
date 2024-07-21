@@ -1,10 +1,10 @@
-#if !UNITY_2021_3_OR_NEWER
-using Assert = NUnit.Framework.Legacy.ClassicAssert;
-#endif
-
 using System;
 using Exanite.Core.Utilities;
 using NUnit.Framework;
+
+#if !UNITY_2021_3_OR_NEWER
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
+#endif
 
 namespace Exanite.Core.Tests.Utilities
 {

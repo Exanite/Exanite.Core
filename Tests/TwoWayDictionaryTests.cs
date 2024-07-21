@@ -1,11 +1,11 @@
-﻿#if !UNITY_2021_3_OR_NEWER
+﻿using Exanite.Core.Collections;
+using NUnit.Framework;
+
+#if !UNITY_2021_3_OR_NEWER
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 #endif
 
-using Exanite.Core.Collections;
-using NUnit.Framework;
-
-namespace Exanite.Core.Tests.Collections
+namespace Exanite.Core.Tests
 {
     [TestFixture]
     public class TwoWayDictionaryTests
