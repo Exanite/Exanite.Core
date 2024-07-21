@@ -15,7 +15,7 @@ namespace Exanite.Core.Pooling
         private readonly Action<T>? onRelease;
         private readonly Action<T>? onDestroy;
 
-        public int MaxCapacity { get; private set; }
+        public int MaxInactive { get; private set; }
 
         public int CountAll { get; private set; }
         public int CountActive => CountAll - CountInactive;
@@ -26,21 +26,15 @@ namespace Exanite.Core.Pooling
             Action<T>? onGet = null,
             Action<T>? onRelease = null,
             Action<T>? onDestroy = null,
-            int defaultCapacity = 10,
-            int maxCapacity = 100)
+            int maxInactive = 100)
         {
-            if (defaultCapacity <= 0)
+            if (maxInactive <= 0)
             {
-                throw new ArgumentException("Default capacity must be greater than 0", nameof(defaultCapacity));
+                throw new ArgumentException("Max inactive must be greater than 0", nameof(maxInactive));
             }
 
-            if (maxCapacity <= 0)
-            {
-                throw new ArgumentException("Max capacity must be greater than 0", nameof(maxCapacity));
-            }
-
-            values = new List<T>(defaultCapacity);
-            MaxCapacity = maxCapacity;
+            values = new List<T>();
+            MaxInactive = maxInactive;
 
             this.create = create;
             this.onGet = onGet;
@@ -78,7 +72,7 @@ namespace Exanite.Core.Pooling
                 actionOnRelease(element);
             }
 
-            if (CountInactive < MaxCapacity)
+            if (CountInactive < MaxInactive)
             {
                 values.Add(element);
             }
