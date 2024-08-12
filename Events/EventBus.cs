@@ -66,16 +66,7 @@ namespace Exanite.Core.Events
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Clear();
-            }
+            Clear();
         }
 
         void IAnyEventListener.OnAnyEvent<T>(T e)
