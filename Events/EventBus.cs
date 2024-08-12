@@ -12,65 +12,65 @@ namespace Exanite.Core.Events
     /// <para/>
     /// Structs can be used and will not be boxed.
     /// </remarks>
-    public class EventBus : IAnyEventListener, IDisposable
+    public class EventBus : IAnyEventHandler, IDisposable
     {
-        private readonly List<IAnyEventListener> anyListeners = new();
-        private readonly Dictionary<Type, List<object>> listenerLists = new();
+        private readonly List<IAnyEventHandler> anyHandlers = new();
+        private readonly Dictionary<Type, List<object>> handlerLists = new();
 
-        public void SubscribeAny(IAnyEventListener listener)
+        public void RegisterAny(IAnyEventHandler handler)
         {
-            anyListeners.Add(listener);
+            anyHandlers.Add(handler);
         }
 
-        public bool UnsubscribeAny(IAnyEventListener listener)
+        public bool UnregisterAny(IAnyEventHandler handler)
         {
-            return anyListeners.Remove(listener);
+            return anyHandlers.Remove(handler);
         }
 
-        public void Subscribe<T>(IEventListener<T> listener)
+        public void Register<T>(IEventHandler<T> handler)
         {
             var type = typeof(T);
 
-            if (!listenerLists.ContainsKey(typeof(T)))
+            if (!handlerLists.ContainsKey(typeof(T)))
             {
-                listenerLists.Add(type, new List<object>());
+                handlerLists.Add(type, new List<object>());
             }
 
-            listenerLists[type].Add(listener);
+            handlerLists[type].Add(handler);
         }
 
-        public bool Unsubscribe<T>(IEventListener<T> listener)
+        public bool Unregister<T>(IEventHandler<T> handler)
         {
-            if (!listenerLists.TryGetValue(typeof(T), out var listenerList))
+            if (!handlerLists.TryGetValue(typeof(T), out var handlerList))
             {
                 return false;
             }
 
-            return listenerList.Remove(listener);
+            return handlerList.Remove(handler);
         }
 
         public void Raise<T>(T e)
         {
             var type = typeof(T);
 
-            foreach (var anyListener in anyListeners)
+            foreach (var anyHandler in anyHandlers)
             {
-                anyListener.OnAnyEvent(e);
+                anyHandler.OnAnyEvent(e);
             }
 
-            if (listenerLists.TryGetValue(type, out var listenerList))
+            if (handlerLists.TryGetValue(type, out var handlerList))
             {
-                foreach (var listener in listenerList)
+                foreach (var handler in handlerList)
                 {
-                    ((IEventListener<T>)listener).OnEvent(e);
+                    ((IEventHandler<T>)handler).OnEvent(e);
                 }
             }
         }
 
         public void Clear()
         {
-            anyListeners.Clear();
-            listenerLists.Clear();
+            anyHandlers.Clear();
+            handlerLists.Clear();
         }
 
         public void Dispose()
@@ -78,7 +78,7 @@ namespace Exanite.Core.Events
             Clear();
         }
 
-        void IAnyEventListener.OnAnyEvent<T>(T e)
+        void IAnyEventHandler.OnAnyEvent<T>(T e)
         {
             Raise(e);
         }
