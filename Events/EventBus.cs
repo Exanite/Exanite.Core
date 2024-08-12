@@ -49,7 +49,7 @@ namespace Exanite.Core.Events
             return listenerList.Remove(listener);
         }
 
-        public void Publish<T>(T e)
+        public void Raise<T>(T e)
         {
             var type = typeof(T);
 
@@ -80,7 +80,7 @@ namespace Exanite.Core.Events
 
         void IAnyEventListener.OnAnyEvent<T>(T e)
         {
-            Publish(e);
+            Raise(e);
         }
     }
 }
