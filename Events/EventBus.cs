@@ -3,6 +3,15 @@ using System.Collections.Generic;
 
 namespace Exanite.Core.Events
 {
+    /// <summary>
+    /// Synchronous event bus.
+    /// </summary>
+    /// <remarks>
+    /// Hierarchies of event buses can be made by calling <c>childEventBus.SubscribeAny(parentEventBus)</c>.
+    /// The parent event bus will then receive all events received by the child.
+    /// <para/>
+    /// Structs can be used and will not be boxed.
+    /// </remarks>
     public class EventBus : IAnyEventListener, IDisposable
     {
         private readonly List<IAnyEventListener> anyListeners = new();
