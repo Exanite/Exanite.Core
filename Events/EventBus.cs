@@ -7,7 +7,7 @@ namespace Exanite.Core.Events
     /// Synchronous event bus.
     /// </summary>
     /// <remarks>
-    /// Hierarchies of event buses can be made by calling <c>childEventBus.SubscribeAny(parentEventBus)</c>.
+    /// Hierarchies of event buses can be made by calling <c>childEventBus.RegisterAny(parentEventBus)</c>.
     /// The parent event bus will then receive all events received by the child.
     /// <para/>
     /// Structs can be used and will not be boxed.
