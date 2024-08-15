@@ -29,6 +29,11 @@ namespace Exanite.Core.Events
 
         public void Register<T>(IEventHandler<T> handler)
         {
+            Register<T>(handler.OnEvent);
+        }
+
+        public void Register<T>(Action<T> handler)
+        {
             var type = typeof(T);
 
             if (!handlerLists.ContainsKey(typeof(T)))
@@ -40,6 +45,11 @@ namespace Exanite.Core.Events
         }
 
         public bool Unregister<T>(IEventHandler<T> handler)
+        {
+            return Unregister<T>(handler.OnEvent);
+        }
+
+        public bool Unregister<T>(Action<T> handler)
         {
             if (!handlerLists.TryGetValue(typeof(T), out var handlerList))
             {
@@ -62,7 +72,7 @@ namespace Exanite.Core.Events
             {
                 foreach (var handler in handlerList)
                 {
-                    ((IEventHandler<T>)handler).OnEvent(e);
+                    ((Action<T>)handler).Invoke(e);
                 }
             }
         }
