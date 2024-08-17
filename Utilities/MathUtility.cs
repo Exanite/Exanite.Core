@@ -268,6 +268,26 @@ namespace Exanite.Core.Utilities
             return new Vector3(value.X, value.Y, 1);
         }
 
+        public static Vector2 ClampMagnitude(Vector2 value, float maxLength)
+        {
+            return ClampMagnitude(value, 0, maxLength);
+        }
+
+        public static Vector2 ClampMagnitude(Vector2 value, float minLength, float maxLength)
+        {
+            return value.AsNormalizedSafe() * Math.Clamp(value.Length(), minLength, maxLength);
+        }
+
+        public static Vector3 ClampMagnitude(Vector3 value, float maxLength)
+        {
+            return ClampMagnitude(value, 0, maxLength);
+        }
+
+        public static Vector3 ClampMagnitude(Vector3 value, float minLength, float maxLength)
+        {
+            return value.AsNormalizedSafe() * Math.Clamp(value.Length(), minLength, maxLength);
+        }
+
         #endregion
 
         #region Planes
