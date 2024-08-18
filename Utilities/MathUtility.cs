@@ -77,7 +77,29 @@ namespace Exanite.Core.Utilities
 
         #endregion
 
-        #region Damping
+        #region Floats
+
+        public static float MoveTowards(float current, float target, float maxDelta)
+        {
+            if (Math.Abs(target - current) <= maxDelta)
+            {
+                return target;
+            }
+
+            return current + Math.Sign(target - current) * maxDelta;
+        }
+
+        public static float MoveTowardsAngle(float current, float target, float maxDelta)
+        {
+            var deltaAngle = DeltaAngle(current, target);
+            if (-maxDelta < deltaAngle && deltaAngle < maxDelta)
+            {
+                return target;
+            }
+
+            target = current + deltaAngle;
+            return MoveTowards(current, target, maxDelta);
+        }
 
         public static float SmoothDamp(float current, float target, float smoothTime, float deltaTime, ref float currentVelocity, float maxSpeed = float.PositiveInfinity)
         {
@@ -112,7 +134,7 @@ namespace Exanite.Core.Utilities
 
         #endregion
 
-        #region Integer Math
+        #region Integers
 
         /// <summary>
         /// Gets the nearest multiple to a value.
@@ -159,54 +181,6 @@ namespace Exanite.Core.Utilities
         public static bool IsOdd(this int num)
         {
             return num % 2 != 0;
-        }
-
-        #endregion
-
-        #region IsApproximatelyEqual
-
-        public static bool IsApproximatelyEqual(float a, float b)
-        {
-            var maxAb = MathF.Max(MathF.Abs(a), MathF.Abs(b));
-
-            return MathF.Abs(a - b) < MathF.Max(0.00000_1f /* 6 digits */ * maxAb, float.Epsilon * 8);
-        }
-
-        public static bool IsApproximatelyEqual(double a, double b)
-        {
-            var maxAb = Math.Max(Math.Abs(a), Math.Abs(b));
-
-            return Math.Abs(a - b) < Math.Max(0.00000_00000_00000_1 /* 15 digits */ * maxAb, double.Epsilon * 8);
-        }
-
-        public static bool IsApproximatelyEqual(Vector2 a, Vector2 b)
-        {
-            return IsApproximatelyEqual(a.X, b.X) && IsApproximatelyEqual(a.Y, b.Y);
-        }
-
-        public static bool IsApproximatelyEqual(Vector3 a, Vector3 b)
-        {
-            return IsApproximatelyEqual(a.X, b.X) && IsApproximatelyEqual(a.Y, b.Y) && IsApproximatelyEqual(a.Z, b.Z);
-        }
-
-        #endregion
-
-        #region Trigonometry
-
-        /// <summary>
-        /// Converts radians to degrees.
-        /// </summary>
-        public static float Rad2Deg(float radians)
-        {
-            return radians * (180f / MathF.PI);
-        }
-
-        /// <summary>
-        /// Converts degrees to radians.
-        /// </summary>
-        public static float Deg2Rad(float degrees)
-        {
-            return degrees * (MathF.PI / 180f);
         }
 
         #endregion
@@ -368,6 +342,68 @@ namespace Exanite.Core.Utilities
         public static Vector4 LinearToSrgb(Vector4 srgb)
         {
             return new Vector4(MathUtility.LinearToSrgb(srgb.X), MathUtility.LinearToSrgb(srgb.Y), MathUtility.LinearToSrgb(srgb.Z), srgb.W);
+        }
+
+        #endregion
+
+        #region Trigonometry
+
+        /// <summary>
+        /// Converts radians to degrees.
+        /// </summary>
+        public static float Rad2Deg(float radians)
+        {
+            return radians * (180f / MathF.PI);
+        }
+
+        /// <summary>
+        /// Converts degrees to radians.
+        /// </summary>
+        public static float Deg2Rad(float degrees)
+        {
+            return degrees * (MathF.PI / 180f);
+        }
+
+        /// <remarks>
+        /// All values are in degrees.
+        /// </remarks>
+        public static float DeltaAngle(float current, float target)
+        {
+            var delta = Wrap(target - current, 0, 360);
+            if (delta > 180)
+            {
+                delta -= 360;
+            }
+
+            return delta;
+        }
+
+        #endregion
+
+        #region IsApproximatelyEqual
+
+        public static bool IsApproximatelyEqual(float a, float b)
+        {
+            var maxAb = MathF.Max(MathF.Abs(a), MathF.Abs(b));
+
+            return MathF.Abs(a - b) < MathF.Max(0.00000_1f /* 6 digits */ * maxAb, float.Epsilon * 8);
+        }
+
+        public static bool IsApproximatelyEqual(double a, double b)
+        {
+            var maxAb = Math.Max(Math.Abs(a), Math.Abs(b));
+
+            return Math.Abs(a - b) < Math.Max(0.00000_00000_00000_1 /* 15 digits */ * maxAb, double.Epsilon * 8);
+        }
+
+        public static bool IsApproximatelyEqual(Vector2 a, Vector2 b)
+        {
+            return IsApproximatelyEqual(a.X, b.X) && IsApproximatelyEqual(a.Y, b.Y);
+        }
+
+        public static bool IsApproximatelyEqual(Vector3 a, Vector3 b)
+        {
+            return IsApproximatelyEqual(a.X, b.X) && IsApproximatelyEqual(a.Y, b.Y) && IsApproximatelyEqual(a.Z, b.Z);
         }
 
         #endregion
