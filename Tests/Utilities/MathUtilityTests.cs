@@ -12,6 +12,8 @@ namespace Exanite.Core.Tests.Utilities
     [TestFixture]
     public partial class MathUtilityTests
     {
+        #region Ranges
+
         [TestCase(5, 0, 10, 0, 100, ExpectedResult = 50f)]
         public float RemapFloat_ReturnsExpectedResult(float value, float fromMin, float fromMax, float toMin, float toMax)
         {
@@ -33,6 +35,10 @@ namespace Exanite.Core.Tests.Utilities
             return MathUtility.Modulo(value, divisor);
         }
 
+        #endregion
+
+        #region Integers
+
         [TestCase(45, 11, ExpectedResult = 44)]
         public int GetNearestMultiple_ReturnsExpectedResult(int value, int multiple)
         {
@@ -49,6 +55,10 @@ namespace Exanite.Core.Tests.Utilities
             return MathUtility.GetNextPowerOfTwo(value);
         }
 
+        #endregion
+
+        #region IsApproximatelyEqual
+
         [TestCase(0, float.Epsilon, ExpectedResult = true)]
         [TestCase(0, 1, ExpectedResult = false)]
         public bool IsApproximatelyEqual_ReturnsExpectedResult(float a, float b)
@@ -62,6 +72,10 @@ namespace Exanite.Core.Tests.Utilities
         {
             return MathUtility.IsApproximatelyEqual(a, b);
         }
+
+        #endregion
+
+        #region Planes
 
         [TestCase]
         public void CreatePlane_ReturnsExpectedResult1()
@@ -107,5 +121,7 @@ namespace Exanite.Core.Tests.Utilities
 
             Assert.IsFalse(isHit);
         }
+
+        #endregion
     }
 }
