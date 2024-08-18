@@ -89,6 +89,9 @@ namespace Exanite.Core.Utilities
             return current + Math.Sign(target - current) * maxDelta;
         }
 
+        /// <remarks>
+        /// All values are in degrees.
+        /// </remarks>
         public static float MoveTowardsAngle(float current, float target, float maxDelta)
         {
             var deltaAngle = DeltaAngle(current, target);
