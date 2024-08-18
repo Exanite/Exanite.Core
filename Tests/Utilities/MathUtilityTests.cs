@@ -37,6 +37,41 @@ namespace Exanite.Core.Tests.Utilities
 
         #endregion
 
+        #region Floats
+
+        [TestCase(0, 10, 1, ExpectedResult = 1f)]
+        [TestCase(0, 10, -1, ExpectedResult = -1f)]
+        [TestCase(0, 10, 100, ExpectedResult = 10f)]
+        public float MoveTowards_ReturnsExpectedResult(float current, float target, float maxDelta)
+        {
+            return MathUtility.MoveTowards(current, target, maxDelta);
+        }
+
+        [TestCase(0, 90, 30, 30f)] // Straightforward
+        [TestCase(0, -270, 30, 30f)] // Wrap
+        [TestCase(0, 10, 5, 5f)] // Counter-clockwise
+        [TestCase(0, -10, 5, -5f)] // Clockwise
+        public void MoveTowardsAngleDegrees_ReturnsExpectedResult(float current, float target, float maxDelta, float expectedResult)
+        {
+            var result = MathUtility.MoveTowardsAngleDegrees(current, target, maxDelta);
+            Assert.AreEqual(expectedResult, result, 0.01f);
+        }
+
+        /// <remarks>
+        /// Cases are copied from <see cref="MoveTowardsAngleDegrees_ReturnsExpectedResult"/>.
+        /// </remarks>
+        [TestCase(0, 90, 30, 30f)] // Straightforward
+        [TestCase(0, -270, 30, 30f)] // Wrap
+        [TestCase(0, 10, 5, 5f)] // Counter-clockwise
+        [TestCase(0, -10, 5, -5f)] // Clockwise
+        public void MoveTowardsAngleRadians_ReturnsExpectedResult(float current, float target, float maxDelta, float expectedResult)
+        {
+            var result = MathUtility.Rad2Deg(MathUtility.MoveTowardsAngleRadians(MathUtility.Deg2Rad(current), MathUtility.Deg2Rad(target), MathUtility.Deg2Rad(maxDelta)));
+            Assert.AreEqual(expectedResult, result, 0.01f);
+        }
+
+        #endregion
+
         #region Integers
 
         [TestCase(45, 11, ExpectedResult = 44)]

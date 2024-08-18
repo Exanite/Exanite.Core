@@ -6,9 +6,11 @@ namespace Exanite.Core.Utilities
 {
     public static partial class MathUtility
     {
-        #region Ranges
+        // Note: Order between different value type overloads should go by:
+        // First by: float, double, int, long
+        // Then by: degrees, radians
 
-        // Note: Order between different value type overloads should go by float, double, int, long
+        #region Ranges
 
         /// <summary>
         /// Remaps a value from one range to another.
@@ -89,12 +91,21 @@ namespace Exanite.Core.Utilities
             return current + Math.Sign(target - current) * maxDelta;
         }
 
-        /// <remarks>
-        /// All values are in degrees.
-        /// </remarks>
-        public static float MoveTowardsAngle(float current, float target, float maxDelta)
+        public static float MoveTowardsAngleDegrees(float current, float target, float maxDelta)
         {
-            var deltaAngle = DeltaAngle(current, target);
+            var deltaAngle = DeltaAngleDegrees(current, target);
+            if (-maxDelta < deltaAngle && deltaAngle < maxDelta)
+            {
+                return target;
+            }
+
+            target = current + deltaAngle;
+            return MoveTowards(current, target, maxDelta);
+        }
+
+        public static float MoveTowardsAngleRadians(float current, float target, float maxDelta)
+        {
+            var deltaAngle = DeltaAngleRadians(current, target);
             if (-maxDelta < deltaAngle && deltaAngle < maxDelta)
             {
                 return target;
@@ -367,10 +378,18 @@ namespace Exanite.Core.Utilities
             return degrees * (MathF.PI / 180f);
         }
 
-        /// <remarks>
-        /// All values are in degrees.
-        /// </remarks>
-        public static float DeltaAngle(float current, float target)
+        public static float DeltaAngleRadians(float current, float target)
+        {
+            var delta = Wrap(target - current, 0, 2 * MathF.PI);
+            if (delta > MathF.PI)
+            {
+                delta -= 2 * MathF.PI;
+            }
+
+            return delta;
+        }
+
+        public static float DeltaAngleDegrees(float current, float target)
         {
             var delta = Wrap(target - current, 0, 360);
             if (delta > 180)
