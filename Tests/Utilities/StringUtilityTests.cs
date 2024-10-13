@@ -14,6 +14,7 @@ namespace Exanite.Core.Tests.Utilities
         [TestCase("\r\nabc\nabcdefg\n\r", "\nabc\nabcdefg\n\r", "\n")]
         [TestCase("\r\nabc\nabcdefg\n\r", "\r\nabc\r\nabcdefg\r\n\r", "\r\n")]
         [TestCase("", "", "\r\n")]
+        [TestCase("\r", "\r", "\r\n")]
         [TestCase("\r\n", "\r\n", "\r\n")]
         [TestCase("abc", "abc", "\r\n")]
         public void UpdateNewLines_ReturnsCorrectResult(string input, string expected, string newLine)
