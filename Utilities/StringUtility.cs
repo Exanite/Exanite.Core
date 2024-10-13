@@ -9,9 +9,9 @@ namespace Exanite.Core.Utilities
         /// <summary>
         /// Replaces line endings in the current text with the new line string for the current environment. See <see cref="Environment.NewLine">Environment.NewLine</see>.
         /// </summary>
-        public static void UpdateNewLines(string text)
+        public static string UpdateNewLines(string text)
         {
-            UpdateNewLines(text, Environment.NewLine);
+            return UpdateNewLines(text, Environment.NewLine);
         }
 
         /// <summary>
