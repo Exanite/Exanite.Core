@@ -8,7 +8,7 @@ namespace Exanite.Core.Pooling
     /// </summary>
     public class Pool<T> : IDisposable where T : class
     {
-        private readonly List<T> values;
+        private readonly Queue<T> values;
 
         private readonly Func<T> create;
         private readonly Action<T>? onGet;
@@ -33,7 +33,7 @@ namespace Exanite.Core.Pooling
                 throw new ArgumentException("Max inactive must be greater than 0", nameof(maxInactive));
             }
 
-            values = new List<T>();
+            values = new Queue<T>();
             MaxInactive = maxInactive;
 
             this.create = create;
@@ -51,13 +51,11 @@ namespace Exanite.Core.Pooling
         {
             if (values.Count == 0)
             {
-                values.Add(create());
+                values.Enqueue(create());
                 CountAll++;
             }
 
-            var index = values.Count - 1;
-            var value = values[index];
-            values.RemoveAt(index);
+            var value = values.Dequeue();
 
             onGet?.Invoke(value);
 
@@ -74,7 +72,7 @@ namespace Exanite.Core.Pooling
 
             if (CountInactive < MaxInactive)
             {
-                values.Add(element);
+                values.Enqueue(element);
             }
             else
             {
