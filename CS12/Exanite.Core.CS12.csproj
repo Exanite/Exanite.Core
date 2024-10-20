@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Exanite.Core</AssemblyName>
+    <AssemblyName>Exanite.Core.CS12</AssemblyName>
     <RootNamespace>Exanite.Core</RootNamespace>
     <OutputPath>bin\$(MSBuildProjectName)\$(Configuration)</OutputPath>
 
-    <!-- For Unity compatibility (C# 9) -->
+    <!-- For code incompatible with Unity -->
     <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
-    <LangVersion>9</LangVersion>
+    <LangVersion>12</LangVersion>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
     <AnalysisLevel>latest</AnalysisLevel>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -24,13 +25,9 @@
       $(DefaultItemExcludes);
       **/*.meta;
       Components/**/*;
-      CS12/**/*;
       Editor/**/*;
       Tracking/**/*;
       Tests/**/*;
     </DefaultItemExcludes>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="CS12\Exanite.Core.CS12.csproj" />
-  </ItemGroup>
 </Project>
