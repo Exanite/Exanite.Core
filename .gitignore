@@ -39,3 +39,7 @@ bld/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# --- Custom ---
+
+!*.csproj
