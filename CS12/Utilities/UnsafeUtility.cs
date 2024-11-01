@@ -3,7 +3,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Exanite.Core.Utility
+namespace Exanite.Core.Utilities
 {
     public static class UnsafeUtility
     {
