@@ -1,4 +1,4 @@
-namespace Exanite.Core.HighPerformance
+namespace Exanite.Core.Runtime
 {
     /// <summary>
     /// Stores a value type inside of a reference type.
