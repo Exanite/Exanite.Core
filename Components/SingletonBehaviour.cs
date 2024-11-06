@@ -55,6 +55,8 @@ namespace Exanite.Core.Components
 
             if (dontDestroyOnLoad)
             {
+                transform.parent = null;
+
                 DontDestroyOnLoad(this);
             }
         }

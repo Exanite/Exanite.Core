@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Exanite.Core.Tests.Utilities
 {
     [TestFixture]
-    public class GameObjectUtilityTests
+    public class UnityUtilityTests
     {
         private GameObject gameObject = null!;
 

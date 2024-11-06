@@ -8,14 +8,14 @@ namespace Exanite.Core.Pooling
     /// </summary>
     public class Pool<T> : IDisposable where T : class
     {
-        private readonly List<T> values;
+        private readonly Queue<T> values;
 
         private readonly Func<T> create;
         private readonly Action<T>? onGet;
         private readonly Action<T>? onRelease;
         private readonly Action<T>? onDestroy;
 
-        public int MaxCapacity { get; private set; }
+        public int MaxInactive { get; private set; }
 
         public int CountAll { get; private set; }
         public int CountActive => CountAll - CountInactive;
@@ -26,21 +26,15 @@ namespace Exanite.Core.Pooling
             Action<T>? onGet = null,
             Action<T>? onRelease = null,
             Action<T>? onDestroy = null,
-            int defaultCapacity = 10,
-            int maxCapacity = 10000)
+            int maxInactive = 100)
         {
-            if (defaultCapacity <= 0)
+            if (maxInactive <= 0)
             {
-                throw new ArgumentException("Default capacity must be greater than 0", nameof(defaultCapacity));
+                throw new ArgumentException("Max inactive must be greater than 0", nameof(maxInactive));
             }
 
-            if (maxCapacity <= 0)
-            {
-                throw new ArgumentException("Max capacity must be greater than 0", nameof(maxCapacity));
-            }
-
-            values = new List<T>(defaultCapacity);
-            MaxCapacity = maxCapacity;
+            values = new Queue<T>();
+            MaxInactive = maxInactive;
 
             this.create = create;
             this.onGet = onGet;
@@ -57,13 +51,11 @@ namespace Exanite.Core.Pooling
         {
             if (values.Count == 0)
             {
-                values.Add(create());
+                values.Enqueue(create());
                 CountAll++;
             }
 
-            var index = values.Count - 1;
-            var value = values[index];
-            values.RemoveAt(index);
+            var value = values.Dequeue();
 
             onGet?.Invoke(value);
 
@@ -78,9 +70,9 @@ namespace Exanite.Core.Pooling
                 actionOnRelease(element);
             }
 
-            if (CountInactive < MaxCapacity)
+            if (CountInactive < MaxInactive)
             {
-                values.Add(element);
+                values.Enqueue(element);
             }
             else
             {

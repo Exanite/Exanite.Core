@@ -27,12 +27,12 @@ namespace Exanite.Core.Threading
             TargetThread = targetThread;
         }
 
-        public override void Send(SendOrPostCallback callback, object state)
+        public override void Send(SendOrPostCallback callback, object? state)
         {
             Post(callback, state);
         }
 
-        public override void Post(SendOrPostCallback callback, object state)
+        public override void Post(SendOrPostCallback callback, object? state)
         {
             callbacks.Enqueue(new Callback(callback, state));
         }
@@ -64,9 +64,9 @@ namespace Exanite.Core.Threading
         private readonly struct Callback
         {
             private readonly SendOrPostCallback callback;
-            private readonly object state;
+            private readonly object? state;
 
-            public Callback(SendOrPostCallback callback, object state)
+            public Callback(SendOrPostCallback callback, object? state)
             {
                 this.callback = callback;
                 this.state = state;

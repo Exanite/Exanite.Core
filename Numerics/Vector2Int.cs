@@ -77,7 +77,7 @@ namespace Exanite.Core.Numerics
             return X == other.X && Y == other.Y;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is Vector2Int other && Equals(other);
         }
@@ -87,7 +87,7 @@ namespace Exanite.Core.Numerics
             return HashCode.Combine(X, Y);
         }
 
-        public string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string? format, IFormatProvider? formatProvider)
         {
             return ((Vector2)this).ToString(format, formatProvider);
         }

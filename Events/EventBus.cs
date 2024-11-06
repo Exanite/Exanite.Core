@@ -3,84 +3,94 @@ using System.Collections.Generic;
 
 namespace Exanite.Core.Events
 {
-    public class EventBus : IAnyEventListener, IDisposable
+    /// <summary>
+    /// Synchronous event bus.
+    /// </summary>
+    /// <remarks>
+    /// Hierarchies of event buses can be made by calling <c>childEventBus.RegisterAny(parentEventBus)</c>.
+    /// The parent event bus will then receive all events received by the child.
+    /// <para/>
+    /// Structs can be used and will not be boxed.
+    /// </remarks>
+    public class EventBus : IAnyEventHandler, IDisposable
     {
-        private readonly List<IAnyEventListener> anyListeners = new();
-        private readonly Dictionary<Type, List<object>> listenerLists = new();
+        private readonly List<IAnyEventHandler> anyHandlers = new();
+        private readonly Dictionary<Type, List<object>> handlerLists = new();
 
-        public void SubscribeAny(IAnyEventListener listener)
+        public void RegisterAny(IAnyEventHandler handler)
         {
-            anyListeners.Add(listener);
+            anyHandlers.Add(handler);
         }
 
-        public bool UnsubscribeAny(IAnyEventListener listener)
+        public bool UnregisterAny(IAnyEventHandler handler)
         {
-            return anyListeners.Remove(listener);
+            return anyHandlers.Remove(handler);
         }
 
-        public void Subscribe<T>(IEventListener<T> listener)
+        public void Register<T>(IEventHandler<T> handler)
+        {
+            Register<T>(handler.OnEvent);
+        }
+
+        public void Register<T>(Action<T> handler)
         {
             var type = typeof(T);
 
-            if (!listenerLists.ContainsKey(typeof(T)))
+            if (!handlerLists.ContainsKey(typeof(T)))
             {
-                listenerLists.Add(type, new List<object>());
+                handlerLists.Add(type, new List<object>());
             }
 
-            listenerLists[type].Add(listener);
+            handlerLists[type].Add(handler);
         }
 
-        public bool Unsubscribe<T>(IEventListener<T> listener)
+        public bool Unregister<T>(IEventHandler<T> handler)
         {
-            if (!listenerLists.TryGetValue(typeof(T), out var listenerList))
+            return Unregister<T>(handler.OnEvent);
+        }
+
+        public bool Unregister<T>(Action<T> handler)
+        {
+            if (!handlerLists.TryGetValue(typeof(T), out var handlerList))
             {
                 return false;
             }
 
-            return listenerList.Remove(listener);
+            return handlerList.Remove(handler);
         }
 
-        public void Publish<T>(T e)
+        public void Raise<T>(T e)
         {
             var type = typeof(T);
 
-            foreach (var anyListener in anyListeners)
+            foreach (var anyHandler in anyHandlers)
             {
-                anyListener.OnAnyEvent(e);
+                anyHandler.OnAnyEvent(e);
             }
 
-            if (listenerLists.TryGetValue(type, out var listenerList))
+            if (handlerLists.TryGetValue(type, out var handlerList))
             {
-                foreach (var listener in listenerList)
+                foreach (var handler in handlerList)
                 {
-                    ((IEventListener<T>)listener).OnEvent(e);
+                    ((Action<T>)handler).Invoke(e);
                 }
             }
         }
 
         public void Clear()
         {
-            anyListeners.Clear();
-            listenerLists.Clear();
+            anyHandlers.Clear();
+            handlerLists.Clear();
         }
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            Clear();
         }
 
-        protected virtual void Dispose(bool disposing)
+        void IAnyEventHandler.OnAnyEvent<T>(T e)
         {
-            if (disposing)
-            {
-                Clear();
-            }
-        }
-
-        void IAnyEventListener.OnAnyEvent<T>(T e)
-        {
-            Publish(e);
+            Raise(e);
         }
     }
 }

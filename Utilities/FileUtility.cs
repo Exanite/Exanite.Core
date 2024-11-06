@@ -8,16 +8,16 @@ using UnityEngine;
 namespace Exanite.Core.Utilities
 {
     /// <summary>
-    /// Utility class for managing directories, files and paths
+    /// Utility class for managing folders, files and paths
     /// </summary>
     public static class FileUtility
     {
         /// <summary>
-        /// Returns true if the provided directory is empty
+        /// Returns true if the provided folder is empty
         /// </summary>
-        public static bool IsEmpty(this DirectoryInfo directory)
+        public static bool IsEmpty(this DirectoryInfo folder)
         {
-            return !directory.EnumerateFileSystemInfos().Any();
+            return !folder.EnumerateFileSystemInfos().Any();
         }
 
 #if UNITY_EDITOR

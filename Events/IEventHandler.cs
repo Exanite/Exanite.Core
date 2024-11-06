@@ -1,6 +1,6 @@
 namespace Exanite.Core.Events
 {
-    public interface IEventListener<in T>
+    public interface IEventHandler<in T>
     {
         void OnEvent(T e);
     }

@@ -66,7 +66,7 @@ namespace Exanite.Core.Utilities
         /// <summary>
         /// Formats collections (and IEnumerables) in an array-like format.
         /// </summary>
-        public static string Format(object? value)
+        public static string Format(object? value, string separator = ", ", string prefix = "[", string suffix = "]")
         {
             if (value == null)
             {
@@ -76,17 +76,17 @@ namespace Exanite.Core.Utilities
             if (value is IEnumerable enumerable && value is not string)
             {
                 var stringBuilder = new StringBuilder();
-                FormatEnumerable(enumerable, stringBuilder);
+                FormatEnumerable(enumerable, stringBuilder, separator, prefix, suffix);
 
                 return stringBuilder.ToString();
             }
 
-            return value.ToString();
+            return value.ToString() ?? "Null";
         }
 
-        private static void FormatEnumerable(IEnumerable enumerable, StringBuilder stringBuilder)
+        private static void FormatEnumerable(IEnumerable enumerable, StringBuilder stringBuilder, string separator, string prefix, string suffix)
         {
-            stringBuilder.Append("[");
+            stringBuilder.Append(prefix);
 
             var isFirst = true;
 
@@ -94,12 +94,12 @@ namespace Exanite.Core.Utilities
             {
                 if (!isFirst)
                 {
-                    stringBuilder.Append(", ");
+                    stringBuilder.Append(separator);
                 }
 
                 if (value is IEnumerable nestedEnumerable && value is not string)
                 {
-                    FormatEnumerable(nestedEnumerable, stringBuilder);
+                    FormatEnumerable(nestedEnumerable, stringBuilder, separator, prefix, suffix);
                 }
                 else
                 {
@@ -109,7 +109,7 @@ namespace Exanite.Core.Utilities
                 isFirst = false;
             }
 
-            stringBuilder.Append("]");
+            stringBuilder.Append(suffix);
         }
 
         /// <summary>

@@ -9,29 +9,30 @@
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
 
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnableTrimAnalzyer>true</EnableTrimAnalzyer>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
     <!-- Disable diagnostics that require using newer NUnit APIs for Unity compatibility -->
-    <NoWarn>NUnit2005</NoWarn>
+    <NoWarn>$(NoWarn);NUnit2005</NoWarn>
+    <NoWarn>$(NoWarn);NUnit2006</NoWarn>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="4.2.2"/>
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0"/>
+    <PackageReference Include="NUnit.Analyzers" Version="4.3.0" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Exanite.Core.csproj"/>
+  </ItemGroup>
 
   <!-- Exclude files that only compile in Unity -->
   <PropertyGroup>
     <DefaultItemExcludes>
       $(DefaultItemExcludes);
-
       **/*.meta;
     </DefaultItemExcludes>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="nunit" Version="4.1.0"/>
-    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0"/>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0"/>
-    <PackageReference Include="NUnit.Analyzers" Version="4.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime;build;native;contentfiles;analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Exanite.Core.csproj"/>
-  </ItemGroup>
 </Project>

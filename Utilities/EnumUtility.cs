@@ -9,47 +9,34 @@ namespace Exanite.Core.Utilities
     /// </summary>
     public static class EnumUtility<T> where T : Enum
     {
-        private static List<string>? valuesAsStringList;
-
         /// <summary>
         /// Array returned by Enum.GetValue(typeof(T)).
         /// </summary>
-        public static readonly Array Values;
+        public static IReadOnlyList<T> Values { get; }
 
         /// <summary>
         /// Max value in <typeparamref name="T"/>.
         /// </summary>
-        public static readonly int Max;
+        public static int Max { get; }
 
         /// <summary>
         /// Min value in <typeparamref name="T"/>.
         /// </summary>
-        public static readonly int Min;
+        public static int Min { get; }
 
         /// <summary>
         /// <see cref="Values"/> as a list of strings.
         /// </summary>
-        public static IReadOnlyList<string> ValuesAsStringList
-        {
-            get
-            {
-                if (valuesAsStringList == null)
-                {
-                    valuesAsStringList = new List<string>();
-                    foreach (var item in Values)
-                    {
-                        valuesAsStringList.Add(item.ToString());
-                    }
-                }
-
-                return valuesAsStringList;
-            }
-        }
+        public static IReadOnlyList<string> ValuesAsStrings { get; }
 
         static EnumUtility()
         {
-            Values = Enum.GetValues(typeof(T));
+            Values = Enum.GetValues(typeof(T)).Cast<T>().ToList();
+            ValuesAsStrings = Values.Select(x => x.ToString()).ToList();
+
+#pragma warning disable CA2021
             var enumerable = Values.Cast<int>();
+#pragma warning restore CA2021
             Max = enumerable.Max();
             Min = enumerable.Min();
         }
