@@ -6,8 +6,6 @@ using Exanite.Core.Types;
 using Sirenix.OdinInspector;
 using UniDi;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Object = UnityEngine.Object;
 using SerializationUtility = Exanite.Core.Utilities.SerializationUtility;
 
@@ -16,21 +14,6 @@ namespace Exanite.Core.DependencyInjection
     [Serializable]
     public class ObjectBinding : ISerializationCallbackReceiver
     {
-        /// <summary>
-        /// Types ignored by <see cref="BindTypeFilter.Smart"/>.
-        /// </summary>
-        public static IReadOnlyCollection<Type> IgnoredTypes { get; } = new HashSet<Type>
-        {
-            typeof(MonoBehaviour),
-            typeof(Behaviour),
-            typeof(Component),
-            typeof(ScriptableObject),
-            typeof(Object),
-            typeof(UIBehaviour),
-            typeof(Graphic),
-            typeof(MaskableGraphic),
-        };
-
         [PropertyOrder(0)]
         [LabelText("Object")]
         [SerializeField] private Object instance = new();
@@ -91,8 +74,7 @@ namespace Exanite.Core.DependencyInjection
 
             if ((filter & BindTypeFilter.Smart) != 0)
             {
-                typeFilter.Add(new InheritanceHierarchyTypeFilter(IgnoredTypes, false, false));
-                typeFilter.Interfaces();
+                typeFilter.Add(TypeFilters.UnitySmart);
             }
 
             if ((filter & BindTypeFilter.Self) != 0)
