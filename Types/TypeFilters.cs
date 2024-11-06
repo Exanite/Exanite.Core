@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+#if UNITY_2021_3_OR_NEWER
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
+#endif
 
 namespace Exanite.Core.Types
 {
