@@ -196,8 +196,9 @@ namespace Exanite.Core.Utilities
         /// Gets the next power of two.
         /// </summary>
         /// <example>
-        /// GetNextPowerOfTwo(16) will return 16 GetNextPowerOfTwo(5) will
-        /// return 8.
+        /// GetNextPowerOfTwo(16) will return 16.
+        /// <para/>
+        /// GetNextPowerOfTwo(5) will return 8.
         /// </example>
         public static int GetNextPowerOfTwo(int value)
         {
