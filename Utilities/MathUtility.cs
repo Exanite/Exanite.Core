@@ -161,6 +161,18 @@ namespace Exanite.Core.Utilities
             return (size + alignment - 1) & ~(alignment - 1);
         }
 
+        /// <inheritdoc cref="GetAlignedSize(int,int)"/>
+        public static uint GetAlignedSize(uint size, uint alignment)
+        {
+            return (size + alignment - 1) & ~(alignment - 1);
+        }
+
+        /// <inheritdoc cref="GetAlignedSize(int,int)"/>
+        public static ulong GetAlignedSize(ulong size, ulong alignment)
+        {
+            return (size + alignment - 1) & ~(alignment - 1);
+        }
+
         /// <summary>
         /// Gets the nearest multiple to a value.
         /// </summary>
