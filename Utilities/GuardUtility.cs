@@ -1,14 +1,10 @@
-using System.Diagnostics;
-
 namespace Exanite.Core.Utilities
 {
+    /// <remarks>
+    /// Guards are always enabled. See <see cref="AssertUtility"/>.
+    /// </remarks>
     public static class GuardUtility
     {
-        public static T AssertNotNull<T>(T? value) where T : notnull
-        {
-            Debug.Assert(value != null, "value != null");
 
-            return value;
-        }
     }
 }
