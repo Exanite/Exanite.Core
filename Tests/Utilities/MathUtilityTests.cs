@@ -74,6 +74,17 @@ namespace Exanite.Core.Tests.Utilities
 
         #region Integers
 
+        [TestCase(1, 16, ExpectedResult = 16)]
+        [TestCase(8, 16, ExpectedResult = 16)]
+        [TestCase(16, 16, ExpectedResult = 16)]
+        [TestCase(32, 16, ExpectedResult = 32)]
+        [TestCase(32, 64, ExpectedResult = 64)]
+        [TestCase(127, 64, ExpectedResult = 128)]
+        public int GetAlignedSize_ReturnsExpectedResult(int value, int multiple)
+        {
+            return MathUtility.GetAlignedSize(value, multiple);
+        }
+
         [TestCase(45, 11, ExpectedResult = 44)]
         [TestCase(55, 11, ExpectedResult = 55)]
         [TestCase(54, 11, ExpectedResult = 55)]
