@@ -152,7 +152,7 @@ namespace Exanite.Core.Utilities
 
         // From https://github.com/KhronosGroup/Vulkan-Samples/blob/6f99ebecc383133be4f96c2eb8fb359743864a1d/samples/extensions/descriptor_buffer_basic/descriptor_buffer_basic.cpp#L173
         /// <summary>
-        /// Returns the next multiple of alignment bigger than size.
+        /// Returns the next multiple of alignment greater than or equal to size.
         /// </summary>
         /// <param name="size">Size in bytes.</param>
         /// <param name="alignment">Power of 2 alignment in bytes.</param>
