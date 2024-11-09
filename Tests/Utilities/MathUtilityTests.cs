@@ -75,6 +75,10 @@ namespace Exanite.Core.Tests.Utilities
         #region Integers
 
         [TestCase(45, 11, ExpectedResult = 44)]
+        [TestCase(55, 11, ExpectedResult = 55)]
+        [TestCase(54, 11, ExpectedResult = 55)]
+        [TestCase(49, 11, ExpectedResult = 44)]
+        [TestCase(50, 11, ExpectedResult = 55)]
         public int GetNearestMultiple_ReturnsExpectedResult(int value, int multiple)
         {
             return MathUtility.GetNearestMultiple(value, multiple);
