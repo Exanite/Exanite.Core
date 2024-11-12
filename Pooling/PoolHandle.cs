@@ -2,7 +2,7 @@ using System;
 
 namespace Exanite.Core.Pooling
 {
-    public struct PoolHandle<T> : IDisposable where T : class
+    public struct PoolHandle<T> : IDisposable
     {
         private readonly T value;
         private readonly Pool<T> pool;
