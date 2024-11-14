@@ -5,7 +5,7 @@
     <OutputPath>bin\$(MSBuildProjectName)\$(Configuration)</OutputPath>
 
     <!-- For code incompatible with Unity -->
-    <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net9.0</TargetFrameworks>
     <LangVersion>12</LangVersion>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

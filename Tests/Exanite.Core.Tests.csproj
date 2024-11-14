@@ -5,7 +5,7 @@
     <OutputPath>bin\$(MSBuildProjectName)\$(Configuration)</OutputPath>
 
     <!-- For Unity compatibility (C# 9) -->
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
 
