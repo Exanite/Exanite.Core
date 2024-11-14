@@ -24,13 +24,13 @@
       $(DefaultItemExcludes);
       **/*.meta;
       Components/**/*;
-      CS12/**/*;
+      CsLatest/**/*;
       Editor/**/*;
       Tracking/**/*;
       Tests/**/*;
     </DefaultItemExcludes>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="CS12\Exanite.Core.CS12.csproj" />
+    <ProjectReference Include="CsLatest\Exanite.Core.CsLatest.csproj" />
   </ItemGroup>
 </Project>

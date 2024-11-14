@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Exanite.Core.CS12</AssemblyName>
+    <AssemblyName>Exanite.Core.CsLatest</AssemblyName>
     <RootNamespace>Exanite.Core</RootNamespace>
     <OutputPath>bin\$(MSBuildProjectName)\$(Configuration)</OutputPath>
 
@@ -24,10 +24,6 @@
     <DefaultItemExcludes>
       $(DefaultItemExcludes);
       **/*.meta;
-      Components/**/*;
-      Editor/**/*;
-      Tracking/**/*;
-      Tests/**/*;
     </DefaultItemExcludes>
   </PropertyGroup>
 </Project>
