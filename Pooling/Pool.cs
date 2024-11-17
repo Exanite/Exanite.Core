@@ -44,7 +44,7 @@ namespace Exanite.Core.Pooling
 
         public Handle Acquire(out T value)
         {
-            return new Handle(value = Acquire(), this);
+            return new Handle(this, value = Acquire());
         }
 
         public T Acquire()
@@ -101,13 +101,13 @@ namespace Exanite.Core.Pooling
 
         public struct Handle : IDisposable
         {
-            private readonly T value;
             private readonly Pool<T> pool;
+            private readonly T value;
 
-            public Handle(T value, Pool<T> pool)
+            public Handle(Pool<T> pool, T value)
             {
-                this.value = value;
                 this.pool = pool;
+                this.value = value;
             }
 
             public void Dispose()
