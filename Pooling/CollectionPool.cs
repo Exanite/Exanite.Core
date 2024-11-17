@@ -17,7 +17,7 @@ namespace Exanite.Core.Pooling
                 onRelease: value => value.Clear());
         }
 
-        public static PoolHandle<TCollection> Acquire(out TCollection value)
+        public static Pool<TCollection>.Handle Acquire(out TCollection value)
         {
             lock (Pool)
             {

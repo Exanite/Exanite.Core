@@ -13,7 +13,7 @@ namespace Exanite.Core.Pooling
                 onRelease: value => value.Clear());
         }
 
-        public static PoolHandle<StringBuilder> Acquire(out StringBuilder value)
+        public static Pool<StringBuilder>.Handle Acquire(out StringBuilder value)
         {
             lock (Pool)
             {
