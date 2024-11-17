@@ -101,18 +101,18 @@ namespace Exanite.Core.Pooling
 
         public struct Handle : IDisposable
         {
-            private readonly Pool<T> pool;
-            private readonly T value;
+            public readonly Pool<T> Pool;
+            public readonly T Value;
 
             public Handle(Pool<T> pool, T value)
             {
-                this.pool = pool;
-                this.value = value;
+                Pool = pool;
+                Value = value;
             }
 
             public void Dispose()
             {
-                pool.Release(value);
+                Pool.Release(Value);
             }
         }
     }
