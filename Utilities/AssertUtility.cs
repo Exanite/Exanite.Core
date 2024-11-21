@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Exanite.Core.Utilities
 {
@@ -7,11 +7,18 @@ namespace Exanite.Core.Utilities
     /// </remarks>
     public static class AssertUtility
     {
-        public static T NotNull<T>(T? value) where T : notnull
+        public static void IsTrue([DoesNotReturnIf(false)] bool condition, string? message)
         {
-            Debug.Assert(value != null, "value != null");
+            GuardUtility.IsTrue(condition, message);
+        }
 
-            return value;
+        public static T NotNull<T>(T? value, string? message) where T : notnull
+        {
+#if DEBUG
+            GuardUtility.NotNull(value, message);
+#endif
+
+            return value!;
         }
     }
 }
