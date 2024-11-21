@@ -7,12 +7,12 @@ namespace Exanite.Core.Utilities
     /// </remarks>
     public static class AssertUtility
     {
-        public static void IsTrue([DoesNotReturnIf(false)] bool condition, string? message)
+        public static void IsTrue([DoesNotReturnIf(false)] bool condition, string? message = null)
         {
             GuardUtility.IsTrue(condition, message);
         }
 
-        public static T NotNull<T>(T? value, string? message) where T : notnull
+        public static T NotNull<T>(T? value, string? message = null) where T : notnull
         {
 #if DEBUG
             GuardUtility.NotNull(value, message);
