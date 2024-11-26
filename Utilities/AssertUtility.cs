@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Exanite.Core.Utilities
@@ -7,11 +8,13 @@ namespace Exanite.Core.Utilities
     /// </remarks>
     public static class AssertUtility
     {
+        [Conditional("DEBUG")]
         public static void IsTrue([DoesNotReturnIf(false)] bool condition, string? message = null)
         {
             GuardUtility.IsTrue(condition, message);
         }
 
+        [Conditional("DEBUG")]
         public static void IsFalse([DoesNotReturnIf(true)] bool condition, string? message = null)
         {
             GuardUtility.IsFalse(condition, message);
