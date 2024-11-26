@@ -12,6 +12,11 @@ namespace Exanite.Core.Utilities
             GuardUtility.IsTrue(condition, message);
         }
 
+        public static void IsFalse([DoesNotReturnIf(true)] bool condition, string? message = null)
+        {
+            GuardUtility.IsFalse(condition, message);
+        }
+
         public static T NotNull<T>(T? value, string? message = null) where T : notnull
         {
 #if DEBUG

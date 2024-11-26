@@ -16,6 +16,14 @@ namespace Exanite.Core.Utilities
             }
         }
 
+        public static void IsFalse([DoesNotReturnIf(true)] bool condition, string? message = null)
+        {
+            if (!condition)
+            {
+                throw new GuardException(message ?? "Condition is true");
+            }
+        }
+
         public static T NotNull<T>(T? value, string? message = null) where T : notnull
         {
             IsTrue(value != null, message ?? "Value is null");
