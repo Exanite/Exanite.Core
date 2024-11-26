@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using System.Numerics;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics
 {
@@ -14,8 +14,8 @@ namespace Exanite.Core.Numerics
 
         public Ray(Vector3 origin, Vector3 direction, float length)
         {
-            Debug.Assert(length >= 0);
-            Debug.Assert(!float.IsInfinity(length));
+            AssertUtility.IsTrue(length >= 0);
+            AssertUtility.IsTrue(!float.IsInfinity(length));
 
             Origin = origin;
             Direction = direction;

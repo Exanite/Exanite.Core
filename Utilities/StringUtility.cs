@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using Exanite.Core.Pooling;
 
 namespace Exanite.Core.Utilities
@@ -19,7 +18,7 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static string UpdateNewLines(string text, string newLine)
         {
-            Debug.Assert(newLine == "\n" || newLine == "\r\n");
+            AssertUtility.IsTrue(newLine == "\n" || newLine == "\r\n");
 
             using var _ = StringBuilderPool.Acquire(out var builder);
 
