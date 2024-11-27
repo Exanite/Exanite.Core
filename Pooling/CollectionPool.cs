@@ -8,7 +8,7 @@ namespace Exanite.Core.Pooling
 
     public abstract class CollectionPool<TCollection, TItem> where TCollection : class, ICollection<TItem>, new()
     {
-        private static readonly Pool<TCollection> Pool = Pools.AddStaticPool(Create());
+        private static readonly Pool<TCollection> Pool = Pools.AddPool(Create(), true);
 
         public static Pool<TCollection> Create()
         {

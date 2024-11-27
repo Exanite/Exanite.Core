@@ -83,6 +83,8 @@ namespace Exanite.Core.Pooling
                 usageInfo.DestroyCount++;
                 onDestroy?.Invoke(value);
             };
+
+            Pools.AddPool(this, false);
         }
 
         public Handle Acquire(out T value)
@@ -132,6 +134,8 @@ namespace Exanite.Core.Pooling
         public override void Dispose()
         {
             Clear();
+
+            Pools.RemovePool(this);
         }
 
         public struct Handle : IDisposable
