@@ -22,12 +22,6 @@ namespace Exanite.Core.Pooling
         private readonly Action<T> onRelease;
         private readonly Action<T> onDestroy;
 
-        /// <remarks>
-        /// Not tracked here:
-        /// <see cref="PoolUsageInfo.MaxInactive"/>,
-        /// <see cref="PoolUsageInfo.ActiveCount"/>,
-        /// <see cref="PoolUsageInfo.InactiveCount"/>
-        /// </remarks>
         private PoolUsageInfo usageInfo;
 
         public int MaxInactive { get; private set; }
@@ -36,12 +30,8 @@ namespace Exanite.Core.Pooling
         {
             get
             {
-                var result = usageInfo;
-                result.MaxInactive = MaxInactive;
-                result.ActiveCount = result.TotalCount - result.InactiveCount;
-                result.InactiveCount = values.Count;
-
-                return result;
+                UpdateUsageInfo();
+                return usageInfo;
             }
         }
 
@@ -110,6 +100,7 @@ namespace Exanite.Core.Pooling
         {
             onRelease.Invoke(element);
 
+            UpdateUsageInfo();
             if (usageInfo.InactiveCount < MaxInactive)
             {
                 values.Enqueue(element);
@@ -129,6 +120,13 @@ namespace Exanite.Core.Pooling
             }
 
             values.Clear();
+        }
+
+        private void UpdateUsageInfo()
+        {
+            usageInfo.MaxInactive = MaxInactive;
+            usageInfo.InactiveCount = values.Count;
+            usageInfo.ActiveCount = usageInfo.TotalCount - usageInfo.InactiveCount;
         }
 
         public override void Dispose()
