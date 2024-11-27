@@ -22,9 +22,9 @@ namespace Exanite.Core.Pooling
 
         public int MaxInactive { get; private set; }
 
-        public int CountAll { get; private set; }
-        public int CountActive => CountAll - CountInactive;
-        public int CountInactive => values.Count;
+        public int TotalCount { get; private set; }
+        public int ActiveCount => TotalCount - InactiveCount;
+        public int InactiveCount => values.Count;
 
         public Pool(
             Func<T> create,
@@ -57,7 +57,7 @@ namespace Exanite.Core.Pooling
             if (values.Count == 0)
             {
                 values.Enqueue(create());
-                CountAll++;
+                TotalCount++;
             }
 
             var value = values.Dequeue();
@@ -75,13 +75,13 @@ namespace Exanite.Core.Pooling
                 actionOnRelease(element);
             }
 
-            if (CountInactive < MaxInactive)
+            if (InactiveCount < MaxInactive)
             {
                 values.Enqueue(element);
             }
             else
             {
-                CountAll--;
+                TotalCount--;
                 onDestroy?.Invoke(element);
             }
         }

@@ -25,9 +25,9 @@ namespace Exanite.Core.Tests
             }
 
             Assert.AreEqual(acquireCount, active.Count);
-            Assert.AreEqual(acquireCount, pool.CountAll);
-            Assert.AreEqual(acquireCount, pool.CountActive);
-            Assert.AreEqual(0, pool.CountInactive);
+            Assert.AreEqual(acquireCount, pool.TotalCount);
+            Assert.AreEqual(acquireCount, pool.ActiveCount);
+            Assert.AreEqual(0, pool.InactiveCount);
         }
 
         [TestCase]
@@ -44,9 +44,9 @@ namespace Exanite.Core.Tests
                 active.Add(pool.Acquire());
             }
 
-            Assert.AreEqual(acquireCountA, pool.CountAll);
-            Assert.AreEqual(acquireCountA, pool.CountActive);
-            Assert.AreEqual(0, pool.CountInactive);
+            Assert.AreEqual(acquireCountA, pool.TotalCount);
+            Assert.AreEqual(acquireCountA, pool.ActiveCount);
+            Assert.AreEqual(0, pool.InactiveCount);
 
             foreach (var instance in active)
             {
@@ -55,18 +55,18 @@ namespace Exanite.Core.Tests
 
             active.Clear();
 
-            Assert.AreEqual(acquireCountA, pool.CountAll);
-            Assert.AreEqual(0, pool.CountActive);
-            Assert.AreEqual(acquireCountA, pool.CountInactive);
+            Assert.AreEqual(acquireCountA, pool.TotalCount);
+            Assert.AreEqual(0, pool.ActiveCount);
+            Assert.AreEqual(acquireCountA, pool.InactiveCount);
 
             for (var i = 0; i < acquireCountB; i++)
             {
                 active.Add(pool.Acquire());
             }
 
-            Assert.AreEqual(acquireCountA, pool.CountAll);
-            Assert.AreEqual(acquireCountB, pool.CountActive);
-            Assert.AreEqual(acquireCountA - acquireCountB, pool.CountInactive);
+            Assert.AreEqual(acquireCountA, pool.TotalCount);
+            Assert.AreEqual(acquireCountB, pool.ActiveCount);
+            Assert.AreEqual(acquireCountA - acquireCountB, pool.InactiveCount);
         }
 
         [TestCase]
@@ -85,17 +85,17 @@ namespace Exanite.Core.Tests
                 active.Add(pool.Acquire());
             }
 
-            Assert.AreEqual(acquireCountA, pool.CountAll);
-            Assert.AreEqual(acquireCountA, pool.CountActive);
-            Assert.AreEqual(0, pool.CountInactive);
+            Assert.AreEqual(acquireCountA, pool.TotalCount);
+            Assert.AreEqual(acquireCountA, pool.ActiveCount);
+            Assert.AreEqual(0, pool.InactiveCount);
 
             foreach (var instance in active)
             {
                 pool.Release(instance);
-                Assert.IsTrue(pool.CountInactive <= maxInactive);
+                Assert.IsTrue(pool.InactiveCount <= maxInactive);
             }
 
-            Assert.AreEqual(maxInactive, pool.CountInactive);
+            Assert.AreEqual(maxInactive, pool.InactiveCount);
         }
 
         public class A {}
