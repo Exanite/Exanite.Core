@@ -3,10 +3,15 @@ using System.Collections.Generic;
 
 namespace Exanite.Core.Pooling
 {
+    public abstract class Pool : IDisposable
+    {
+        public abstract void Dispose();
+    }
+
     /// <summary>
     /// Conventional object pool where objects can be acquired and released.
     /// </summary>
-    public class Pool<T> : IDisposable
+    public class Pool<T> : Pool
     {
         private readonly Queue<T> values;
 
@@ -94,7 +99,7 @@ namespace Exanite.Core.Pooling
             values.Clear();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Clear();
         }
