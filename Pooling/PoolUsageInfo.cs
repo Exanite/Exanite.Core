@@ -8,9 +8,9 @@ namespace Exanite.Core.Pooling
         public int ActiveCount;
         public int InactiveCount;
 
-        public int CreateCount;
-        public int AcquireCount;
-        public int ReleaseCount;
-        public int DestroyCount;
+        public ulong CreateCount;
+        public ulong AcquireCount;
+        public ulong ReleaseCount;
+        public ulong DestroyCount;
     }
 }
