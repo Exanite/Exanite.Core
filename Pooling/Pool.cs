@@ -5,6 +5,8 @@ namespace Exanite.Core.Pooling
 {
     public abstract class Pool : IDisposable
     {
+        public abstract PoolUsageInfo UsageInfo { get; }
+
         public abstract void Dispose();
     }
 
@@ -16,15 +18,32 @@ namespace Exanite.Core.Pooling
         private readonly Queue<T> values;
 
         private readonly Func<T> create;
-        private readonly Action<T>? onAcquire;
-        private readonly Action<T>? onRelease;
-        private readonly Action<T>? onDestroy;
+        private readonly Action<T> onAcquire;
+        private readonly Action<T> onRelease;
+        private readonly Action<T> onDestroy;
+
+        /// <remarks>
+        /// Not tracked here:
+        /// <see cref="PoolUsageInfo.MaxInactive"/>,
+        /// <see cref="PoolUsageInfo.ActiveCount"/>,
+        /// <see cref="PoolUsageInfo.InactiveCount"/>
+        /// </remarks>
+        private PoolUsageInfo usageInfo;
 
         public int MaxInactive { get; private set; }
 
-        public int TotalCount { get; private set; }
-        public int ActiveCount => TotalCount - InactiveCount;
-        public int InactiveCount => values.Count;
+        public override PoolUsageInfo UsageInfo
+        {
+            get
+            {
+                var result = usageInfo;
+                result.MaxInactive = MaxInactive;
+                result.ActiveCount = result.TotalCount - result.InactiveCount;
+                result.InactiveCount = values.Count;
+
+                return result;
+            }
+        }
 
         public Pool(
             Func<T> create,
@@ -41,10 +60,29 @@ namespace Exanite.Core.Pooling
             values = new Queue<T>();
             MaxInactive = maxInactive;
 
-            this.create = create;
-            this.onAcquire = onAcquire;
-            this.onRelease = onRelease;
-            this.onDestroy = onDestroy;
+            this.create = () =>
+            {
+                usageInfo.CreateCount++;
+                return create.Invoke();
+            };
+
+            this.onAcquire = (value) =>
+            {
+                usageInfo.AcquireCount++;
+                onAcquire?.Invoke(value);
+            };
+
+            this.onRelease = (value) =>
+            {
+                usageInfo.ReleaseCount++;
+                onRelease?.Invoke(value);
+            };
+
+            this.onDestroy = (value) =>
+            {
+                usageInfo.DestroyCount++;
+                onDestroy?.Invoke(value);
+            };
         }
 
         public Handle Acquire(out T value)
@@ -57,43 +95,35 @@ namespace Exanite.Core.Pooling
             if (values.Count == 0)
             {
                 values.Enqueue(create());
-                TotalCount++;
+                usageInfo.TotalCount++;
             }
 
             var value = values.Dequeue();
-
-            onAcquire?.Invoke(value);
+            onAcquire.Invoke(value);
 
             return value;
         }
 
         public void Release(T element)
         {
-            var actionOnRelease = onRelease;
-            if (actionOnRelease != null)
-            {
-                actionOnRelease(element);
-            }
+            onRelease.Invoke(element);
 
-            if (InactiveCount < MaxInactive)
+            if (usageInfo.InactiveCount < MaxInactive)
             {
                 values.Enqueue(element);
             }
             else
             {
-                TotalCount--;
-                onDestroy?.Invoke(element);
+                usageInfo.TotalCount--;
+                onDestroy.Invoke(element);
             }
         }
 
         public void Clear()
         {
-            if (onDestroy != null)
+            foreach (var value in values)
             {
-                foreach (var value in values)
-                {
-                    onDestroy(value);
-                }
+                onDestroy.Invoke(value);
             }
 
             values.Clear();
