@@ -11,7 +11,7 @@ namespace Exanite.Core.Pooling
         private readonly Queue<T> values;
 
         private readonly Func<T> create;
-        private readonly Action<T>? onGet;
+        private readonly Action<T>? onAcquire;
         private readonly Action<T>? onRelease;
         private readonly Action<T>? onDestroy;
 
@@ -23,7 +23,7 @@ namespace Exanite.Core.Pooling
 
         public Pool(
             Func<T> create,
-            Action<T>? onGet = null,
+            Action<T>? onAcquire = null,
             Action<T>? onRelease = null,
             Action<T>? onDestroy = null,
             int maxInactive = 100)
@@ -37,7 +37,7 @@ namespace Exanite.Core.Pooling
             MaxInactive = maxInactive;
 
             this.create = create;
-            this.onGet = onGet;
+            this.onAcquire = onAcquire;
             this.onRelease = onRelease;
             this.onDestroy = onDestroy;
         }
@@ -57,7 +57,7 @@ namespace Exanite.Core.Pooling
 
             var value = values.Dequeue();
 
-            onGet?.Invoke(value);
+            onAcquire?.Invoke(value);
 
             return value;
         }
