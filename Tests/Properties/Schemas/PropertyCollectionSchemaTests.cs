@@ -1,17 +1,16 @@
-#if !UNITY_2021_3_OR_NEWER
-using Assert = NUnit.Framework.Legacy.ClassicAssert;
-#endif
-
 using Exanite.Core.Properties;
 using Exanite.Core.Properties.Schemas;
 using NUnit.Framework;
+#if !UNITY_2021_3_OR_NEWER
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
+#endif
 
 namespace Exanite.Core.Tests.Properties.Schemas
 {
     [TestFixture]
     public class PropertyCollectionSchemaTests
     {
-        private static readonly PropertyDefinition<string> SharedDefinition = new PropertyDefinition<string>("Shared");
+        private static readonly PropertyDefinition<string> SharedDefinition = new("Shared");
 
         [Test]
         public void Validate_WhenCollectionMissingOptionalProperty_ReturnsTrue()

@@ -74,6 +74,7 @@ namespace Exanite.Core.Utilities
                 }
                 builder.Append("]");
             }
+
             builder.Append(", ");
             builder.Append(type.Assembly.GetName().Name);
         }

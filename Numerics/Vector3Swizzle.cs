@@ -9,7 +9,7 @@ namespace Exanite.Core.Numerics
     public enum Vector3Swizzle
     {
         // ReSharper disable InconsistentNaming
-        
+
         /// <summary>
         /// Keeps the component positions at XYZ.
         /// </summary>

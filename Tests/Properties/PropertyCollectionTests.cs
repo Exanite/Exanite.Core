@@ -1,9 +1,8 @@
+using Exanite.Core.Properties;
+using NUnit.Framework;
 #if !UNITY_2021_3_OR_NEWER
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 #endif
-
-using Exanite.Core.Properties;
-using NUnit.Framework;
 
 namespace Exanite.Core.Tests.Properties
 {
@@ -12,8 +11,8 @@ namespace Exanite.Core.Tests.Properties
     {
         private const string DefaultPropertyName = "Default";
 
-        private static readonly PropertyDefinition<string> StringADefinition = new PropertyDefinition<string>("StringA");
-        private static readonly PropertyDefinition<string> StringBDefinition = new PropertyDefinition<string>("StringB");
+        private static readonly PropertyDefinition<string> StringADefinition = new("StringA");
+        private static readonly PropertyDefinition<string> StringBDefinition = new("StringB");
 
         private PropertyCollection collection = null!;
 

@@ -18,16 +18,16 @@ namespace Exanite.Core.Numerics
         public static Vector3Int Zero => default;
 
         /// <inheritdoc cref="Vector3.One"/>
-        public static Vector3Int One => new Vector3Int(1);
+        public static Vector3Int One => new(1);
 
         /// <inheritdoc cref="Vector3.UnitX"/>
-        public static Vector3Int UnitX => new Vector3Int(1, 0, 0);
+        public static Vector3Int UnitX => new(1, 0, 0);
 
         /// <inheritdoc cref="Vector3.UnitY"/>
-        public static Vector3Int UnitY => new Vector3Int(0, 1, 0);
+        public static Vector3Int UnitY => new(0, 1, 0);
 
         /// <inheritdoc cref="Vector3.UnitZ"/>
-        public static Vector3Int UnitZ => new Vector3Int(0, 0, 1);
+        public static Vector3Int UnitZ => new(0, 0, 1);
 
         public Vector3Int(int value) : this(value, value, value) {}
 

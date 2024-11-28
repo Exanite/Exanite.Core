@@ -15,13 +15,13 @@ namespace Exanite.Core.Numerics
         public static Vector2Int Zero => default;
 
         /// <inheritdoc cref="Vector2.One"/>
-        public static Vector2Int One => new Vector2Int(1);
+        public static Vector2Int One => new(1);
 
         /// <inheritdoc cref="Vector2.UnitX"/>
-        public static Vector2Int UnitX => new Vector2Int(1, 0);
+        public static Vector2Int UnitX => new(1, 0);
 
         /// <inheritdoc cref="Vector2.UnitY"/>
-        public static Vector2Int UnitY => new Vector2Int(0, 1);
+        public static Vector2Int UnitY => new(0, 1);
 
         public Vector2Int(int value) : this(value, value) {}
 

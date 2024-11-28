@@ -56,19 +56,19 @@ namespace Exanite.Core.Pooling
                 return create.Invoke();
             };
 
-            this.onAcquire = (value) =>
+            this.onAcquire = value =>
             {
                 usageInfo.AcquireCount++;
                 onAcquire?.Invoke(value);
             };
 
-            this.onRelease = (value) =>
+            this.onRelease = value =>
             {
                 usageInfo.ReleaseCount++;
                 onRelease?.Invoke(value);
             };
 
-            this.onDestroy = (value) =>
+            this.onDestroy = value =>
             {
                 usageInfo.DestroyCount++;
                 onDestroy?.Invoke(value);

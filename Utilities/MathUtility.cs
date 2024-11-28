@@ -374,12 +374,12 @@ namespace Exanite.Core.Utilities
 
         public static Vector4 SrgbToLinear(Vector4 srgb)
         {
-            return new Vector4(MathUtility.SrgbToLinear(srgb.X), MathUtility.SrgbToLinear(srgb.Y), MathUtility.SrgbToLinear(srgb.Z), srgb.W);
+            return new Vector4(SrgbToLinear(srgb.X), SrgbToLinear(srgb.Y), SrgbToLinear(srgb.Z), srgb.W);
         }
 
         public static Vector4 LinearToSrgb(Vector4 srgb)
         {
-            return new Vector4(MathUtility.LinearToSrgb(srgb.X), MathUtility.LinearToSrgb(srgb.Y), MathUtility.LinearToSrgb(srgb.Z), srgb.W);
+            return new Vector4(LinearToSrgb(srgb.X), LinearToSrgb(srgb.Y), LinearToSrgb(srgb.Z), srgb.W);
         }
 
         #endregion

@@ -2,7 +2,6 @@
 using Exanite.Core.Numerics;
 using Exanite.Core.Utilities;
 using NUnit.Framework;
-
 #if !UNITY_2021_3_OR_NEWER
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 #endif
