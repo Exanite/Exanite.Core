@@ -12,7 +12,7 @@ namespace Exanite.Core.Utilities
         {
             if (!condition)
             {
-                throw new GuardException(message ?? "Condition is false");
+                throw new GuardException(message ?? "Condition was false");
             }
         }
 
@@ -20,13 +20,13 @@ namespace Exanite.Core.Utilities
         {
             if (!condition)
             {
-                throw new GuardException(message ?? "Condition is true");
+                throw new GuardException(message ?? "Condition was true");
             }
         }
 
         public static T NotNull<T>(T? value, string? message = null) where T : notnull
         {
-            IsTrue(value != null, message ?? "Value is null");
+            IsTrue(value != null, message ?? "Value was null");
 
             return value;
         }
