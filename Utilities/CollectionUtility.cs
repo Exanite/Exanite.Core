@@ -2,7 +2,7 @@
 
 namespace Exanite.Core.Utilities
 {
-    public static class CollectionUtility
+    public static partial class CollectionUtility
     {
         public static IEnumerable<T> WithElementAtStart<T>(this IEnumerable<T> collection, T toStart)
         {
