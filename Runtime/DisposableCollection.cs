@@ -3,17 +3,31 @@ using System.Collections.Generic;
 
 namespace Exanite.Core.Runtime
 {
-    public class DisposeList : IDisposable
+    /// <summary>
+    /// Makes it easier to mark objects to be disposed of later. Objects will be disposed in first-in first-out order (stack order).
+    /// </summary>
+    public class DisposableCollection : IDisposable
     {
         // Either IDisposable or Action
         // This is to avoid allocations while keeping things simple
         private readonly Stack<object> queue = new();
 
-        public T Add<T>(T value) where T : IDisposable
+        /// <summary>
+        /// Adds a disposable object for disposal.
+        /// </summary>
+        public T Add<T>(T disposable) where T : IDisposable
         {
-            queue.Push(value);
+            queue.Push(disposable);
 
-            return value;
+            return disposable;
+        }
+
+        /// <summary>
+        /// Adds an action to be invoked.
+        /// </summary>
+        public void Add(Action action)
+        {
+            queue.Push(action);
         }
 
         public void Dispose()
