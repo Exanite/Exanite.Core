@@ -10,14 +10,14 @@ namespace Exanite.Core.Runtime
     {
         // Either IDisposable or Action
         // This is to avoid allocations while keeping things simple
-        private readonly Stack<object> queue = new();
+        private readonly Stack<object> stack = new();
 
         /// <summary>
         /// Adds a disposable object for disposal.
         /// </summary>
         public T Add<T>(T disposable) where T : IDisposable
         {
-            queue.Push(disposable);
+            stack.Push(disposable);
 
             return disposable;
         }
@@ -27,12 +27,12 @@ namespace Exanite.Core.Runtime
         /// </summary>
         public void Add(Action action)
         {
-            queue.Push(action);
+            stack.Push(action);
         }
 
         public void Dispose()
         {
-            while (queue.TryPop(out var value))
+            while (stack.TryPop(out var value))
             {
                 if (value is IDisposable disposable)
                 {
