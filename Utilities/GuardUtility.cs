@@ -18,7 +18,7 @@ namespace Exanite.Core.Utilities
 
         public static void IsFalse([DoesNotReturnIf(true)] bool condition, string? message = null)
         {
-            if (!condition)
+            if (condition)
             {
                 throw new GuardException(message ?? "Condition was true");
             }
