@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Numerics;
 
 namespace Exanite.Core.Numerics
@@ -87,7 +89,26 @@ namespace Exanite.Core.Numerics
             return HashCode.Combine(X, Y);
         }
 
-        public string ToString(string? format, IFormatProvider? formatProvider)
+        public override string ToString()
+        {
+            return ToString("G", CultureInfo.CurrentCulture);
+        }
+
+        public string ToString(
+#if NETCOREAPP
+            [StringSyntax(StringSyntaxAttribute.NumericFormat)]
+#endif
+            string? format)
+        {
+            return ToString(format, CultureInfo.CurrentCulture);
+        }
+
+        public string ToString(
+#if NETCOREAPP
+            [StringSyntax(StringSyntaxAttribute.NumericFormat)]
+#endif
+            string? format,
+            IFormatProvider? formatProvider)
         {
             return ((Vector2)this).ToString(format, formatProvider);
         }
