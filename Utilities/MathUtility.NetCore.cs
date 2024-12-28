@@ -14,11 +14,11 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static Matrix4x4 CreateOrthographic(float width, float height, float nearPlane, float farPlane)
         {
-            var range = 1.0f / (nearPlane - farPlane);
+            var range = 1 / (nearPlane - farPlane);
 
             return new Matrix4x4(
-                2.0f / width, 0, 0, 0,
-                0, 2.0f / height, 0, 0,
+                2 / width, 0, 0, 0,
+                0, 2 / height, 0, 0,
                 0, 0, range, 0,
                 0, 0, range * nearPlane, 1
             );
@@ -29,20 +29,20 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static Matrix4x4 CreatePerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane)
         {
-            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(fieldOfView, 0.0f);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(fieldOfView, 0);
             ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(fieldOfView, float.Pi);
 
-            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(nearPlane, 0.0f);
-            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(farPlane, 0.0f);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(nearPlane, 0);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(farPlane, 0);
 
-            var height = 1.0f / float.Tan(fieldOfView * 0.5f);
+            var height = 1 / float.Tan(fieldOfView * 0.5f);
             var width = height / aspectRatio;
-            var range = float.IsPositiveInfinity(farPlane) ? -1.0f : farPlane / (nearPlane - farPlane);
+            var range = float.IsPositiveInfinity(farPlane) ? -1 : farPlane / (nearPlane - farPlane);
 
             return new Matrix4x4(
                 width, 0, 0, 0,
                 0, height, 0, 0,
-                0, 0, range, -1.0f,
+                0, 0, range, -1,
                 0, 0, range * nearPlane, 0
             );
         }
