@@ -8,25 +8,25 @@ namespace Exanite.Core.Utilities
     /// </remarks>
     public static class GuardUtility
     {
-        public static void IsTrue([DoesNotReturnIf(false)] bool condition, string message)
+        public static void IsTrue([DoesNotReturnIf(false)] bool condition, string errorMessage)
         {
             if (!condition)
             {
-                throw new GuardException(message);
+                throw new GuardException(errorMessage);
             }
         }
 
-        public static void IsFalse([DoesNotReturnIf(true)] bool condition, string message)
+        public static void IsFalse([DoesNotReturnIf(true)] bool condition, string errorMessage)
         {
             if (condition)
             {
-                throw new GuardException(message);
+                throw new GuardException(errorMessage);
             }
         }
 
-        public static T NotNull<T>(T? value, string? message = null) where T : notnull
+        public static T NotNull<T>(T? value, string? errorMessage = null) where T : notnull
         {
-            IsTrue(value != null, message ?? "Value was null");
+            IsTrue(value != null, errorMessage ?? "Value was null");
 
             return value;
         }
