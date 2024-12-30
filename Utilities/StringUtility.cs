@@ -18,7 +18,7 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static string UpdateNewLines(string text, string newLine)
         {
-            AssertUtility.IsTrue(newLine == "\n" || newLine == "\r\n");
+            AssertUtility.IsTrue(newLine == "\n" || newLine == "\r\n", $"{nameof(newLine)} must be either \\n or \\r\\n");
 
             using var _ = StringBuilderPool.Acquire(out var builder);
 

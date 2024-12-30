@@ -14,8 +14,8 @@ namespace Exanite.Core.Numerics
 
         public Ray(Vector3 origin, Vector3 direction, float length)
         {
-            AssertUtility.IsTrue(length >= 0);
-            AssertUtility.IsTrue(!float.IsInfinity(length));
+            AssertUtility.IsTrue(length >= 0, $"{nameof(length)} must be greater than or equal to 0");
+            AssertUtility.IsTrue(!float.IsInfinity(length), $"{nameof(length)} must not be infinity");
 
             Origin = origin;
             Direction = direction;
