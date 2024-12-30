@@ -24,9 +24,9 @@ namespace Exanite.Core.Utilities
             }
         }
 
-        public static T NotNull<T>(T? value, string message) where T : notnull
+        public static T NotNull<T>(T? value, string? message = null) where T : notnull
         {
-            IsTrue(value != null, message);
+            IsTrue(value != null, message ?? "Value was null");
 
             return value;
         }

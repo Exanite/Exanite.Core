@@ -20,7 +20,7 @@ namespace Exanite.Core.Utilities
             GuardUtility.IsFalse(condition, message);
         }
 
-        public static T NotNull<T>(T? value, string message) where T : notnull
+        public static T NotNull<T>(T? value, string? message = null) where T : notnull
         {
 #if DEBUG
             GuardUtility.NotNull(value, message);
