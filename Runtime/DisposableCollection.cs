@@ -12,8 +12,6 @@ namespace Exanite.Core.Runtime
         // This is to avoid allocations while keeping things simple
         private readonly Stack<object> stack = new();
 
-        public int Count => stack.Count;
-
         /// <summary>
         /// Adds a disposable object for disposal.
         /// </summary>
