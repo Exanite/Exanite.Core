@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Collections
@@ -6,7 +8,7 @@ namespace Exanite.Core.Collections
     /// <summary>
     /// Represents a fixed-sized circular queue.
     /// </summary>
-    public class RingBuffer<T>
+    public class RingBuffer<T> : IEnumerable<T>
     {
         private readonly T[] data;
         private readonly int capacityMask;
@@ -145,6 +147,19 @@ namespace Exanite.Core.Collections
 
             value = data[capacityMask & readOffset];
             return true;
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (var i = 0; i < Count; i++)
+            {
+                yield return this[i];
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
