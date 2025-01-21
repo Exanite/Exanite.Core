@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Exanite.Core.Runtime;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Pooling
 {
@@ -84,6 +85,8 @@ namespace Exanite.Core.Pooling
 
         public T Acquire()
         {
+            AssertUtility.IsFalse(IsDisposed, "Pool has been disposed");
+
             if (values.Count == 0)
             {
                 values.Enqueue(create());
@@ -101,7 +104,7 @@ namespace Exanite.Core.Pooling
             onRelease.Invoke(element);
 
             UpdateUsageInfo();
-            if (usageInfo.InactiveCount < usageInfo.MaxInactive)
+            if (!IsDisposed && usageInfo.InactiveCount < usageInfo.MaxInactive)
             {
                 values.Enqueue(element);
             }
