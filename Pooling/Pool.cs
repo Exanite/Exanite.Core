@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Exanite.Core.Runtime;
 
 namespace Exanite.Core.Pooling
 {
-    public abstract class Pool : IDisposable
+    public abstract class Pool : ITrackedDisposable
     {
+        public bool IsDisposed { get; protected set; }
         public abstract PoolUsageInfo UsageInfo { get; }
 
         public abstract void Dispose();
@@ -23,8 +25,6 @@ namespace Exanite.Core.Pooling
         private readonly Action<T> onDestroy;
 
         private PoolUsageInfo usageInfo;
-
-        public int MaxInactive { get; private set; }
 
         public override PoolUsageInfo UsageInfo
         {
@@ -48,7 +48,7 @@ namespace Exanite.Core.Pooling
             }
 
             values = new Queue<T>();
-            MaxInactive = maxInactive;
+            usageInfo.MaxInactive = maxInactive;
 
             this.create = () =>
             {
@@ -101,7 +101,7 @@ namespace Exanite.Core.Pooling
             onRelease.Invoke(element);
 
             UpdateUsageInfo();
-            if (usageInfo.InactiveCount < MaxInactive)
+            if (usageInfo.InactiveCount < usageInfo.MaxInactive)
             {
                 values.Enqueue(element);
             }
@@ -116,6 +116,7 @@ namespace Exanite.Core.Pooling
         {
             foreach (var value in values)
             {
+                usageInfo.TotalCount--;
                 onDestroy.Invoke(value);
             }
 
@@ -124,15 +125,20 @@ namespace Exanite.Core.Pooling
 
         private void UpdateUsageInfo()
         {
-            usageInfo.MaxInactive = MaxInactive;
             usageInfo.InactiveCount = values.Count;
             usageInfo.ActiveCount = usageInfo.TotalCount - usageInfo.InactiveCount;
         }
 
         public override void Dispose()
         {
-            Clear();
+            if (IsDisposed)
+            {
+                return;
+            }
 
+            IsDisposed = true;
+
+            Clear();
             Pools.RemovePool(this);
         }
 
