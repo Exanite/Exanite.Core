@@ -15,5 +15,20 @@ public static class UnsafeUtility
     {
         return (byte*)Unsafe.AsPointer(ref Unsafe.AsRef(in MemoryMarshal.AsRef<byte>(utf8StringLiteral)));
     }
+
+    /// <summary>
+    /// Gets the alignment of an unmanaged type.
+    /// See: https://stackoverflow.com/questions/77212211/how-do-i-find-the-alignment-of-a-struct-in-c
+    /// </summary>
+    public static int AlignmentOf<T>() where T : unmanaged
+    {
+        return (int)Marshal.OffsetOf<AlignmentHelper<T>>(nameof(AlignmentHelper<T>.Target));
+    }
+
+    internal struct AlignmentHelper<T> where T : unmanaged
+    {
+        public byte Padding;
+        public T Target;
+    }
 }
 #endif
