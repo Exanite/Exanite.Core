@@ -77,7 +77,7 @@ namespace Exanite.Core.Tests
             var pool = new Pool<A>(create: () => new A(), maxInactive: maxInactive);
             var active = new List<A>();
 
-            Assert.AreEqual(maxInactive, pool.MaxInactive);
+            Assert.AreEqual(maxInactive, pool.UsageInfo.MaxInactive);
 
             for (var i = 0; i < acquireCountA; i++)
             {
