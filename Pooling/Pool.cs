@@ -41,15 +41,17 @@ namespace Exanite.Core.Pooling
             Action<T>? onAcquire = null,
             Action<T>? onRelease = null,
             Action<T>? onDestroy = null,
-            int maxInactive = 100)
+            int initialMaxInactive = 100,
+            bool allowResizing = true)
         {
-            if (maxInactive <= 0)
+            if (initialMaxInactive <= 0)
             {
-                throw new ArgumentException("Max inactive must be greater than 0", nameof(maxInactive));
+                throw new ArgumentException("initialMaxInactive must be greater than 0", nameof(initialMaxInactive));
             }
 
             values = new Queue<T>();
-            usageInfo.MaxInactive = maxInactive;
+            usageInfo.MaxInactive = initialMaxInactive;
+            usageInfo.AllowResizing = allowResizing;
 
             this.create = () =>
             {
@@ -73,6 +75,12 @@ namespace Exanite.Core.Pooling
             {
                 usageInfo.DestroyCount++;
                 onDestroy?.Invoke(value);
+
+                if (!IsDisposed && usageInfo.AllowResizing && usageInfo.DestroyCount > (ulong)usageInfo.MaxInactive)
+                {
+                    usageInfo.MaxInactive *= 2;
+                    usageInfo.MaxInactiveResizeCount++;
+                }
             };
 
             Pools.AddPool(this, false);

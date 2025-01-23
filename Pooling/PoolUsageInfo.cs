@@ -4,6 +4,9 @@ namespace Exanite.Core.Pooling
     {
         public int MaxInactive;
 
+        public bool AllowResizing;
+        public int MaxInactiveResizeCount;
+
         public int TotalCount;
         public int ActiveCount;
         public int InactiveCount;
