@@ -387,6 +387,16 @@ namespace Exanite.Core.Utilities
             return MathF.Pow(value, 1 / 2.4f) * 1.055f - 0.055f;
         }
 
+        public static Vector3 SrgbToLinear(Vector3 srgb)
+        {
+            return new Vector3(SrgbToLinear(srgb.X), SrgbToLinear(srgb.Y), SrgbToLinear(srgb.Z));
+        }
+
+        public static Vector3 LinearToSrgb(Vector3 srgb)
+        {
+            return new Vector3(LinearToSrgb(srgb.X), LinearToSrgb(srgb.Y), LinearToSrgb(srgb.Z));
+        }
+
         public static Vector4 SrgbToLinear(Vector4 srgb)
         {
             return new Vector4(SrgbToLinear(srgb.X), SrgbToLinear(srgb.Y), SrgbToLinear(srgb.Z), srgb.W);
