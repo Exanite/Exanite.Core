@@ -4,7 +4,7 @@ namespace Exanite.Core.Events
     {
         public bool IsRaised { get; private set; }
 
-        public void OnEventRaised()
+        public void RecordEvent()
         {
             IsRaised = true;
         }

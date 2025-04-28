@@ -37,7 +37,7 @@ namespace Exanite.Core.Tests.Properties
             var valueChangedRecorder = new EventRaisedRecorder();
             property.ValueChanged += (sender, args) =>
             {
-                valueChangedRecorder.OnEventRaised();
+                valueChangedRecorder.RecordEvent();
 
                 Assert.AreEqual(property, args.Property);
                 Assert.AreEqual(previousValue, args.PreviousValue);
@@ -61,7 +61,7 @@ namespace Exanite.Core.Tests.Properties
             var valueChangedRecorder = new EventRaisedRecorder();
             property.UntypedValueChanged += (sender, args) =>
             {
-                valueChangedRecorder.OnEventRaised();
+                valueChangedRecorder.RecordEvent();
 
                 Assert.AreEqual(property, args.Property);
                 Assert.AreEqual(previousValue, args.PreviousValue);
