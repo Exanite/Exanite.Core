@@ -9,14 +9,14 @@
     <LangVersion>12</LangVersion>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-
+  </PropertyGroup>
+  <PropertyGroup>
     <AnalysisLevel>latest</AnalysisLevel>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnableTrimAnalzyer>true</EnableTrimAnalzyer>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
-    <!-- Disable nullability of reference types mismatch in netstandard2.1 -->
-    <NoWarn Condition="$(TargetFramework) == 'netstandard2.1'">$(NoWarn);CS8767</NoWarn>
+    <NoWarn Condition="$(TargetFramework) == 'netstandard2.1'">$(NoWarn);CS8767</NoWarn> <!-- Disable nullability of reference types mismatch in netstandard2.1 -->
   </PropertyGroup>
 
   <!-- Exclude files that only compile in Unity -->

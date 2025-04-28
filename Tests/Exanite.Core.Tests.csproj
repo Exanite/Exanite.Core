@@ -8,15 +8,15 @@
     <TargetFramework>net9.0</TargetFramework>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
-
+  </PropertyGroup>
+  <PropertyGroup>
     <AnalysisLevel>latest</AnalysisLevel>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <EnableTrimAnalzyer>true</EnableTrimAnalzyer>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
-    <!-- Disable diagnostics that require using newer NUnit APIs for Unity compatibility -->
-    <NoWarn>$(NoWarn);NUnit2005</NoWarn>
-    <NoWarn>$(NoWarn);NUnit2006</NoWarn>
+    <NoWarn>$(NoWarn);NUnit2005</NoWarn> <!-- Disable diagnostics that require using newer NUnit APIs for Unity compatibility -->
+    <NoWarn>$(NoWarn);NUnit2006</NoWarn> <!-- Disable diagnostics that require using newer NUnit APIs for Unity compatibility -->
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NUnit" Version="4.2.2"/>
