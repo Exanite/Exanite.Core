@@ -18,6 +18,7 @@
     <NoWarn>$(NoWarn);NUnit2005</NoWarn> <!-- Disable diagnostics that require using newer NUnit APIs for Unity compatibility -->
     <NoWarn>$(NoWarn);NUnit2006</NoWarn> <!-- Disable diagnostics that require using newer NUnit APIs for Unity compatibility -->
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="NUnit" Version="4.2.2"/>
     <PackageReference Include="NUnit3TestAdapter" Version="4.6.0"/>
