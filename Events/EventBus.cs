@@ -4,11 +4,11 @@ using System.Collections.Generic;
 namespace Exanite.Core.Events
 {
     /// <summary>
-    /// Synchronous event bus.
+    /// Simple event bus. Can route events to other event buses.
     /// </summary>
     /// <remarks>
-    /// Hierarchies of event buses can be made by calling <c>childEventBus.RegisterAny(parentEventBus)</c>.
-    /// The parent event bus will then receive all events received by the child.
+    /// A hierarchy of event buses can be made by calling <c>senderEventBus.RegisterAny(receiverEventBus)</c>.
+    /// The receiver event bus will then receive all events received by the sender.
     /// <para/>
     /// Structs can be used and will not be boxed.
     /// </remarks>
