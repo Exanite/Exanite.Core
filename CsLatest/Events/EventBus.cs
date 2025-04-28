@@ -28,11 +28,17 @@ namespace Exanite.Core.Events
         }
 
         public void Register<T>(IEventHandler<T> handler)
+#if NETCOREAPP
+            where T : allows ref struct
+#endif
         {
             Register<T>(handler.OnEvent);
         }
 
         public void Register<T>(Action<T> handler)
+#if NETCOREAPP
+            where T : allows ref struct
+#endif
         {
             var type = typeof(T);
 
@@ -45,11 +51,17 @@ namespace Exanite.Core.Events
         }
 
         public bool Unregister<T>(IEventHandler<T> handler)
+#if NETCOREAPP
+            where T : allows ref struct
+#endif
         {
             return Unregister<T>(handler.OnEvent);
         }
 
         public bool Unregister<T>(Action<T> handler)
+#if NETCOREAPP
+            where T : allows ref struct
+#endif
         {
             if (!handlerLists.TryGetValue(typeof(T), out var handlerList))
             {
@@ -60,6 +72,9 @@ namespace Exanite.Core.Events
         }
 
         public void Raise<T>(T e)
+#if NETCOREAPP
+            where T : allows ref struct
+#endif
         {
             var type = typeof(T);
 
