@@ -1,6 +1,3 @@
-// This is the Unity specific implementation of the EventBus.
-// See Exanite.Core.CsLatest for the general .NET version.
-#if UNITY_2021_3_OR_NEWER
 using System;
 using System.Collections.Generic;
 
@@ -97,4 +94,3 @@ namespace Exanite.Core.Events
         }
     }
 }
-#endif
