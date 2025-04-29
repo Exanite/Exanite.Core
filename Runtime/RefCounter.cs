@@ -12,10 +12,12 @@ namespace Exanite.Core.Runtime
         public bool IsDisposed { get; private set; }
 
         public uint RefCount { get; private set; }
+        public bool IsReusable { get; }
 
-        public RefCounter(uint initialRefCount, Action? onSetup, Action? onTeardown)
+        public RefCounter(uint initialRefCount, bool isReusable, Action? onSetup, Action? onTeardown)
         {
             RefCount = initialRefCount;
+            IsReusable = isReusable;
 
             this.onSetup = onSetup;
             this.onTeardown = onTeardown;
@@ -108,8 +110,12 @@ namespace Exanite.Core.Runtime
 
             onTeardown?.Invoke();
             IsAlive = false;
-            IsDisposed = false;
             RefCount = 0;
+
+            if (!IsReusable)
+            {
+                IsDisposed = true;
+            }
         }
     }
 }
