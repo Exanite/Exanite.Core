@@ -27,8 +27,10 @@ public static class UnsafeUtility
 
     internal struct AlignmentHelper<T> where T : unmanaged
     {
+#pragma warning disable CS0649
         public byte Padding;
         public T Target;
+#pragma warning restore CS0649
     }
 }
 #endif
