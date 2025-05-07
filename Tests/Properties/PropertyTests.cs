@@ -1,4 +1,3 @@
-using Exanite.Core.Events;
 using Exanite.Core.Properties;
 using NUnit.Framework;
 #if !UNITY_2021_3_OR_NEWER
