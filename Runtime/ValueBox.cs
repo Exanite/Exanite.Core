@@ -1,16 +1,14 @@
 namespace Exanite.Core.Runtime
 {
     /// <summary>
-    /// Stores a value type inside of a reference type.
-    /// </summary>
-    /// <remarks>
+    /// Wraps a value inside a heap allocated class.
     /// This is mainly intended to be used as a way to avoid repeated GC allocations when storing value types as objects.
-    /// </remarks>
-    public class BoxedValue<T> where T : struct
+    /// </summary>
+    public class ValueBox<T> where T : struct
     {
         public T Value;
 
-        public BoxedValue(T value)
+        public ValueBox(T value)
         {
             Value = value;
         }
