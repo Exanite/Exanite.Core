@@ -10,6 +10,8 @@ namespace Exanite.Core.Pooling
         public bool IsDisposed { get; protected set; }
         public abstract PoolUsageInfo UsageInfo { get; }
 
+        internal Pool() {}
+
         public abstract void Dispose();
     }
 
