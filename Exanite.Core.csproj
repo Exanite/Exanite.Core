@@ -30,6 +30,7 @@
       Tests/**/*;
     </DefaultItemExcludes>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="CsLatest\Exanite.Core.CsLatest.csproj" />
   </ItemGroup>
