@@ -1,5 +1,4 @@
 using System;
-using Exanite.Core.Runtime;
 
 namespace Exanite.Core.Pooling
 {
@@ -23,14 +22,5 @@ namespace Exanite.Core.Pooling
         public TValue Acquire();
 
         public void Release(TValue element);
-    }
-
-    /// <summary>
-    /// Mainly used to ensure a consistent interface when wrapping <see cref="Pool{T}"/>.
-    /// Users of pools likely want to depend on <see cref="IPool{TValue}"/> or <see cref="IPool{TValue,THandle}"/> instead.
-    /// </summary>
-    public interface IWrappedPool<T> : IPool<T, Pool<T>.Handle>, ITrackedDisposable
-    {
-        public PoolUsageInfo UsageInfo { get; }
     }
 }

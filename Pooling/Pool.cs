@@ -18,7 +18,7 @@ namespace Exanite.Core.Pooling
     /// <summary>
     /// Conventional object pool where objects can be acquired and released.
     /// </summary>
-    public class Pool<T> : Pool, IWrappedPool<T>
+    public class Pool<T> : Pool, IPool<T>
     {
         private readonly Queue<T> values;
 
