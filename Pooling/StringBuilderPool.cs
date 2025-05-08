@@ -2,7 +2,10 @@ using System.Text;
 
 namespace Exanite.Core.Pooling
 {
-    public class StringBuilderPool
+    /// <summary>
+    /// A <see cref="StringBuilder"/> pool. Releasing a <see cref="StringBuilder"/> back to the pool will clear it automatically.
+    /// </summary>
+    public abstract class StringBuilderPool
     {
         private static readonly Pool<StringBuilder> Pool = Pools.AddPool(Create(), true);
 
