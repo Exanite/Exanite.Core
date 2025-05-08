@@ -109,19 +109,19 @@ namespace Exanite.Core.Pooling
             return value;
         }
 
-        public void Release(T element)
+        public void Release(T value)
         {
-            onRelease.Invoke(element);
+            onRelease.Invoke(value);
 
             UpdateUsageInfo();
             if (!IsDisposed && usageInfo.InactiveCount < usageInfo.MaxInactive)
             {
-                values.Enqueue(element);
+                values.Enqueue(value);
             }
             else
             {
                 usageInfo.TotalCount--;
-                onDestroy.Invoke(element);
+                onDestroy.Invoke(value);
             }
         }
 

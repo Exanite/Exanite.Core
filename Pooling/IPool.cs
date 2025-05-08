@@ -21,6 +21,6 @@ namespace Exanite.Core.Pooling
         public THandle Acquire(out TValue value);
         public TValue Acquire();
 
-        public void Release(TValue element);
+        public void Release(TValue value);
     }
 }
