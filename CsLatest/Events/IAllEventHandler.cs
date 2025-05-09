@@ -1,8 +1,8 @@
 namespace Exanite.Core.Events
 {
-    public interface IAnyEventHandler
+    public interface IAllEventHandler
     {
-        void OnAnyEvent<T>(T e)
+        void OnEvent<T>(T e)
 #if NETCOREAPP
             where T : allows ref struct
 #endif

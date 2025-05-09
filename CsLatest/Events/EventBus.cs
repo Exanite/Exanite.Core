@@ -12,19 +12,19 @@ namespace Exanite.Core.Events
     /// <para/>
     /// Structs can be used and will not be boxed.
     /// </remarks>
-    public class EventBus : IAnyEventHandler, IDisposable
+    public class EventBus : IAllEventHandler, IDisposable
     {
-        private readonly List<IAnyEventHandler> anyHandlers = new();
+        private readonly List<IAllEventHandler> allHandlers = new();
         private readonly Dictionary<Type, List<object>> handlerLists = new();
 
-        public void RegisterAny(IAnyEventHandler handler)
+        public void RegisterSendAllTo(IAllEventHandler handler)
         {
-            anyHandlers.Add(handler);
+            allHandlers.Add(handler);
         }
 
-        public bool UnregisterAny(IAnyEventHandler handler)
+        public bool UnregisterSendAllTo(IAllEventHandler handler)
         {
-            return anyHandlers.Remove(handler);
+            return allHandlers.Remove(handler);
         }
 
         public void Register<T>(IEventHandler<T> handler)
@@ -78,9 +78,9 @@ namespace Exanite.Core.Events
         {
             var type = typeof(T);
 
-            foreach (var anyHandler in anyHandlers)
+            foreach (var anyHandler in allHandlers)
             {
-                anyHandler.OnAnyEvent(e);
+                anyHandler.OnEvent(e);
             }
 
             if (handlerLists.TryGetValue(type, out var handlerList))
@@ -94,7 +94,7 @@ namespace Exanite.Core.Events
 
         public void Clear()
         {
-            anyHandlers.Clear();
+            allHandlers.Clear();
             handlerLists.Clear();
         }
 
@@ -103,7 +103,7 @@ namespace Exanite.Core.Events
             Clear();
         }
 
-        void IAnyEventHandler.OnAnyEvent<T>(T e)
+        void IAllEventHandler.OnEvent<T>(T e)
         {
             Raise(e);
         }
