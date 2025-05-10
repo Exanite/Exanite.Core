@@ -9,7 +9,7 @@ namespace Exanite.Core.Runtime
     /// Wraps a value inside a heap allocated class.
     /// This is mainly intended to be used as a way to avoid repeated GC allocations when storing value types as objects.
     /// </summary>
-    public class ValueBox<T> : ValueBox where T : struct
+    public class ValueBox<T> : ValueBox
     {
         public T Value;
 
