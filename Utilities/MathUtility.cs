@@ -265,10 +265,18 @@ namespace Exanite.Core.Utilities
             return value == Vector3.Zero ? fallback : Vector3.Normalize(value);
         }
 
+        // Vector component count conversion
+        // The goal is to keep these conversions minimal
+        // so only the most common cases are handled
+
+        // Vector2 <- Vector3
+
         public static Vector2 Xy(this Vector3 value)
         {
             return new Vector2(value.X, value.Y);
         }
+
+        // Vector2 -> Vector3
 
         public static Vector3 Xy0(this Vector2 value)
         {
@@ -280,10 +288,33 @@ namespace Exanite.Core.Utilities
             return new Vector3(value.X, value.Y, 1);
         }
 
+        // Vector3 <- Vector4
+
+        public static Vector3 Xyz(this Vector4 value)
+        {
+            return new Vector3(value.X, value.Y, value.Z);
+        }
+
+        // Vector3 -> Vector4
+
+        public static Vector4 Xyz0(this Vector3 value)
+        {
+            return new Vector4(value.X, value.Y, value.Z, 0);
+        }
+
+        public static Vector4 Xyz1(this Vector3 value)
+        {
+            return new Vector4(value.X, value.Y, value.Z, 1);
+        }
+
+        // Vector2Int <- Vector3Int
+
         public static Vector2Int Xy(this Vector3Int value)
         {
             return new Vector2Int(value.X, value.Y);
         }
+
+        // Vector2Int -> Vector3Int
 
         public static Vector3Int Xy0(this Vector2Int value)
         {
@@ -294,6 +325,8 @@ namespace Exanite.Core.Utilities
         {
             return new Vector3Int(value.X, value.Y, 1);
         }
+
+        // ClampMagnitude
 
         public static Vector2 ClampMagnitude(Vector2 value, float maxLength)
         {
