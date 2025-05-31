@@ -5,6 +5,8 @@ namespace Exanite.Core.Runtime
 {
     public class RefCounter : IRefCounted, ITrackedDisposable
     {
+        private readonly object sync = new();
+
         private readonly Action? onSetup;
         private readonly Action? onTeardown;
 
@@ -30,58 +32,73 @@ namespace Exanite.Core.Runtime
 
         public void AddRef()
         {
-            GuardUtility.IsFalse(IsDisposed, "Already disposed");
-
-            if (RefCount == 0)
+            lock (sync)
             {
-                Setup();
-            }
+                GuardUtility.IsFalse(IsDisposed, "Already disposed");
 
-            RefCount++;
+                if (RefCount == 0)
+                {
+                    Setup();
+                }
+
+                RefCount++;
+            }
         }
 
         public void RemoveRef()
         {
-            GuardUtility.IsFalse(IsDisposed, "Already disposed");
-            GuardUtility.IsTrue(RefCount != 0, "Ref count is already 0");
-
-            RefCount--;
-
-            if (RefCount == 0)
+            lock (sync)
             {
-                Teardown();
+                GuardUtility.IsFalse(IsDisposed, "Already disposed");
+                GuardUtility.IsTrue(RefCount != 0, "Ref count is already 0");
+
+                RefCount--;
+
+                if (RefCount == 0)
+                {
+                    Teardown();
+                }
             }
         }
 
         public void SetRefCount(uint value)
         {
-            RefCount = value;
+            lock (sync)
+            {
+                RefCount = value;
 
-            if (RefCount == 0)
-            {
-                Teardown();
-            }
-            else
-            {
-                Setup();
+                if (RefCount == 0)
+                {
+                    Teardown();
+                }
+                else
+                {
+                    Setup();
+                }
             }
         }
 
         public void Reset()
         {
-            Teardown();
-            IsDisposed = false;
+            lock (sync)
+            {
+                Teardown();
+                IsDisposed = false;
+            }
         }
 
         public void Dispose()
         {
-            if (IsDisposed)
+            lock (sync)
             {
-                return;
-            }
+                if (IsDisposed)
+                {
+                    return;
+                }
 
-            Teardown();
-            GC.SuppressFinalize(this);
+                Teardown();
+                GC.SuppressFinalize(this);
+            }
         }
 
         // Idempotent
