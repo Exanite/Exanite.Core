@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Runtime
 {
@@ -15,6 +16,9 @@ namespace Exanite.Core.Runtime
         /// <summary>
         /// Adds a disposable object for disposal.
         /// </summary>
+        /// <remarks>
+        /// The extension method <see cref="DisposableCollectionUtility.AddTo{T}"/> can also be used.
+        /// </remarks>
         public T Add<T>(T disposable) where T : IDisposable
         {
             stack.Push(disposable);
@@ -25,9 +29,14 @@ namespace Exanite.Core.Runtime
         /// <summary>
         /// Adds an action to be invoked.
         /// </summary>
-        public void Add(Action action)
+        /// <remarks>
+        /// The extension method <see cref="DisposableCollectionUtility.AddTo"/> can also be used.
+        /// </remarks>
+        public Action Add(Action action)
         {
             stack.Push(action);
+
+            return action;
         }
 
         public void Dispose()
@@ -44,6 +53,29 @@ namespace Exanite.Core.Runtime
                     action.Invoke();
                 }
             }
+        }
+    }
+
+    public static class DisposableCollectionUtility
+    {
+        /// <summary>
+        /// Adds a disposable object for disposal.
+        /// </summary>
+        public static T AddTo<T>(this T disposable, DisposableCollection collection) where T : IDisposable
+        {
+            collection.Add(disposable);
+
+            return disposable;
+        }
+
+        /// <summary>
+        /// Adds an action to be invoked.
+        /// </summary>
+        public static Action AddTo(this Action action, DisposableCollection collection)
+        {
+            collection.Add(action);
+
+            return action;
         }
     }
 }
