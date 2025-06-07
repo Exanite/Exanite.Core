@@ -13,26 +13,14 @@ namespace Exanite.Core.Runtime
         // This is to avoid allocations while keeping things simple
         private readonly Stack<object> stack = new();
 
-        /// <summary>
-        /// Adds a disposable object for disposal.
-        /// </summary>
-        /// <remarks>
-        /// The extension method <see cref="DisposableCollectionUtility.AddTo{T}"/> can also be used.
-        /// </remarks>
-        public T Add<T>(T disposable) where T : IDisposable
+        internal T Add<T>(T disposable) where T : IDisposable
         {
             stack.Push(disposable);
 
             return disposable;
         }
 
-        /// <summary>
-        /// Adds an action to be invoked.
-        /// </summary>
-        /// <remarks>
-        /// The extension method <see cref="DisposableCollectionUtility.AddTo"/> can also be used.
-        /// </remarks>
-        public Action Add(Action action)
+        internal Action Add(Action action)
         {
             stack.Push(action);
 
