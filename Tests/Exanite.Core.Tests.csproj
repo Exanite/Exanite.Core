@@ -2,7 +2,6 @@
   <PropertyGroup>
     <AssemblyName>Exanite.Core.Tests</AssemblyName>
     <RootNamespace>Exanite.Core.Tests</RootNamespace>
-    <OutputPath>bin\$(MSBuildProjectName)\$(Configuration)</OutputPath>
 
     <!-- For Unity compatibility (C# 9) -->
     <TargetFramework>net9.0</TargetFramework>

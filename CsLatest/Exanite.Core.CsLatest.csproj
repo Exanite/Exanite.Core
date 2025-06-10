@@ -2,7 +2,6 @@
   <PropertyGroup>
     <AssemblyName>Exanite.Core.CsLatest</AssemblyName>
     <RootNamespace>Exanite.Core</RootNamespace>
-    <OutputPath>bin\$(MSBuildProjectName)\$(Configuration)</OutputPath>
 
     <!-- For code incompatible with Unity -->
     <TargetFrameworks>netstandard2.1;net9.0</TargetFrameworks>
