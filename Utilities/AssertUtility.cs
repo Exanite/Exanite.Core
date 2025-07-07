@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Exanite.Core.Runtime;
 
 namespace Exanite.Core.Utilities
 {
@@ -11,22 +12,26 @@ namespace Exanite.Core.Utilities
         [Conditional("DEBUG")]
         public static void IsTrue([DoesNotReturnIf(false)] bool condition, string errorMessage)
         {
-            GuardUtility.IsTrue(condition, errorMessage);
+            if (!condition)
+            {
+                throw new AssertException(errorMessage);
+            }
         }
 
         [Conditional("DEBUG")]
         public static void IsFalse([DoesNotReturnIf(true)] bool condition, string errorMessage)
         {
-            GuardUtility.IsFalse(condition, errorMessage);
+            if (condition)
+            {
+                throw new AssertException(errorMessage);
+            }
         }
 
         public static T NotNull<T>(T? value, string? errorMessage = null) where T : notnull
         {
-#if DEBUG
-            GuardUtility.NotNull(value, errorMessage);
-#endif
+            IsTrue(value != null, errorMessage ?? "Value was null");
 
-            return value!;
+            return value;
         }
     }
 }
