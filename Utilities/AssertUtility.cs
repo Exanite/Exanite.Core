@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Exanite.Core.Utilities
 {
     /// <remarks>
-    /// Asserts are disabled in Release mode. See <see cref="GuardUtility"/>.
+    /// Asserts are disabled in Release mode. Also see <see cref="GuardUtility"/>.
     /// </remarks>
     public static class AssertUtility
     {

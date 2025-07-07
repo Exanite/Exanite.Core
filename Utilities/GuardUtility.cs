@@ -4,7 +4,7 @@ using Exanite.Core.Runtime;
 namespace Exanite.Core.Utilities
 {
     /// <remarks>
-    /// Guards are always enabled. See <see cref="AssertUtility"/>.
+    /// Guards are always enabled. Also see <see cref="AssertUtility"/>.
     /// </remarks>
     public static class GuardUtility
     {
