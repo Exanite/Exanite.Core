@@ -14,7 +14,7 @@ namespace Exanite.Core.Runtime
     {
         public bool IsDisposed { get; }
 
-#if NEVER_COMPILE
+#if EXANITE_NEVER_COMPILE
         // Reference ITrackedDisposable implementation
 
         public bool IsDisposed { get; private set; }
