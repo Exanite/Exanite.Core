@@ -19,7 +19,7 @@ namespace Exanite.Core.Runtime
 
         public bool IsDisposed { get; private set; }
 
-        private unsafe void ReleaseUnmanagedResources()
+        private unsafe void ReleaseResources()
         {
 
         }
@@ -33,13 +33,13 @@ namespace Exanite.Core.Runtime
 
             IsDisposed = true;
 
-            ReleaseUnmanagedResources();
+            ReleaseResources();
             GC.SuppressFinalize(this);
         }
 
         ~ITrackedDisposable()
         {
-            ReleaseUnmanagedResources();
+            ReleaseResources();
         }
 #endif
     }
