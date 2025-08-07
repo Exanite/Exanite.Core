@@ -88,11 +88,17 @@ namespace Exanite.Core.Pooling
             Pools.AddPool(this, false);
         }
 
+        /// <summary>
+        /// Acquire a pooled resource from the pool.
+        /// </summary>
         public Handle Acquire(out T value)
         {
             return new Handle(this, value = Acquire());
         }
 
+        /// <summary>
+        /// Acquire a pooled resource from the pool.
+        /// </summary>
         public T Acquire()
         {
             AssertUtility.IsFalse(IsDisposed, "Pool has been disposed");
@@ -109,6 +115,13 @@ namespace Exanite.Core.Pooling
             return value;
         }
 
+        /// <summary>
+        /// Release a pooled resource back to the pool to be reused later.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method after the pool has been disposed is allowed.
+        /// In this case, the resource will be immediately disposed.
+        /// </remarks>
         public void Release(T value)
         {
             onRelease.Invoke(value);
@@ -125,6 +138,9 @@ namespace Exanite.Core.Pooling
             }
         }
 
+        /// <summary>
+        /// Disposes all objects in the pool and clears the pool.
+        /// </summary>
         public void Clear()
         {
             foreach (var value in values)
