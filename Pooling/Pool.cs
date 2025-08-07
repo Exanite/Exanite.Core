@@ -22,7 +22,7 @@ namespace Exanite.Core.Pooling
     /// <inheritdoc cref="Pool"/>
     public class Pool<T> : Pool, IPool<T>
     {
-        private readonly Queue<T> values;
+        private readonly Stack<T> values = new();
 
         private readonly Func<T> create;
         private readonly Action<T> onAcquire;
@@ -53,7 +53,6 @@ namespace Exanite.Core.Pooling
                 throw new ArgumentException("initialMaxInactive must be greater than 0", nameof(initialMaxInactive));
             }
 
-            values = new Queue<T>();
             usageInfo.MaxInactive = initialMaxInactive;
             usageInfo.AllowResizing = allowResizing;
 
@@ -105,13 +104,12 @@ namespace Exanite.Core.Pooling
         {
             AssertUtility.IsFalse(IsDisposed, "Pool has been disposed");
 
-            if (values.Count == 0)
+            if (!values.TryPop(out var value))
             {
-                values.Enqueue(create());
+                value = create.Invoke();
                 usageInfo.TotalCount++;
             }
 
-            var value = values.Dequeue();
             onAcquire.Invoke(value);
 
             return value;
@@ -131,7 +129,7 @@ namespace Exanite.Core.Pooling
             UpdateUsageInfo();
             if (!IsDisposed && usageInfo.InactiveCount < usageInfo.MaxInactive)
             {
-                values.Enqueue(value);
+                values.Push(value);
             }
             else
             {
