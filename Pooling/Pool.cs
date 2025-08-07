@@ -5,6 +5,10 @@ using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Pooling
 {
+    /// <summary>
+    /// Allows for the reuse of objects to minimize the allocation of new objects.
+    /// Objects are acquired from and released back to a shared pool of objects.
+    /// </summary>
     public abstract class Pool : ITrackedDisposable
     {
         public bool IsDisposed { get; protected set; }
@@ -15,9 +19,7 @@ namespace Exanite.Core.Pooling
         public abstract void Dispose();
     }
 
-    /// <summary>
-    /// Conventional object pool where objects can be acquired and released.
-    /// </summary>
+    /// <inheritdoc cref="Pool"/>
     public class Pool<T> : Pool, IPool<T>
     {
         private readonly Queue<T> values;
