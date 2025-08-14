@@ -7,7 +7,7 @@ using Exanite.Core.Utilities;
 namespace Exanite.Core.Threading
 {
     /// <summary>
-    /// Ensures posted callbacks are always ran on a specific thread. Callbacks will be ran when <see cref="Run"/> is called.
+    /// Ensures posted callbacks are always run on a specific thread. Callbacks will be run when <see cref="Run"/> is called.
     /// </summary>
     /// <remarks>
     /// Recommended usage for games is to call <see cref="Run"/> during each update on the main thread.
@@ -51,7 +51,7 @@ namespace Exanite.Core.Threading
         {
             if (Thread.CurrentThread != TargetThread)
             {
-                throw new InvalidOperationException($"{nameof(Run)} must be ran on the target thread.");
+                throw new InvalidOperationException($"{nameof(Run)} must be run on the target thread.");
             }
 
             while (callbacks.TryDequeue(out var callback))
