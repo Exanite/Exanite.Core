@@ -173,6 +173,29 @@ namespace Exanite.Core.Utilities
             return (size + alignment - 1) & ~(alignment - 1);
         }
 
+        /// <remarks>
+        /// Only valid for positive integers.
+        /// </remarks>
+        public static int GreatestCommonDivisor(int a, int b)
+        {
+            while (b != 0)
+            {
+                var temp = b;
+                b = a % b;
+                a = temp;
+            }
+
+            return a;
+        }
+
+        /// <remarks>
+        /// Only valid for positive integers.
+        /// </remarks>
+        public static int LeastCommonMultiple(int a, int b)
+        {
+            return a / GreatestCommonDivisor(a, b) * b;
+        }
+
         /// <summary>
         /// Gets the nearest multiple to a value.
         /// </summary>
