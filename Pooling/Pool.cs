@@ -171,7 +171,7 @@ namespace Exanite.Core.Pooling
             Pools.RemovePool(this);
         }
 
-        public struct Handle : IDisposable
+        public readonly struct Handle : IDisposable
         {
             public readonly Pool<T> Pool;
             public readonly T Value;

@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Exanite.Core.Threading
 {
-    public struct ThreadNameScope : IDisposable
+    public readonly struct ThreadNameScope : IDisposable
     {
         private readonly string? originalName;
 
