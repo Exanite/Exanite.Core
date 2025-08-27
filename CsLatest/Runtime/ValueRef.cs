@@ -13,9 +13,9 @@ public readonly ref struct ValueRef<T>
 {
     public readonly ref T Value;
 
-    public ValueRef(ref T r)
+    public ValueRef(ref T value)
     {
-        Value = ref r;
+        Value = ref value;
     }
 }
 #endif

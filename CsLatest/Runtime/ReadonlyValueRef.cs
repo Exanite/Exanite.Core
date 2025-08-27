@@ -12,9 +12,9 @@ public readonly ref struct ReadOnlyValueRef<T>
 {
     public readonly ref readonly T Value;
 
-    public ReadOnlyValueRef(ref T r)
+    public ReadOnlyValueRef(ref T value)
     {
-        Value = ref r;
+        Value = ref value;
     }
 }
 #endif
