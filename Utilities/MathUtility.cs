@@ -234,14 +234,19 @@ namespace Exanite.Core.Utilities
             return result;
         }
 
-        public static bool IsEven(this int num)
+        public static bool IsEven(this int value)
         {
-            return num % 2 == 0;
+            return value % 2 == 0;
         }
 
-        public static bool IsOdd(this int num)
+        public static bool IsOdd(this int value)
         {
-            return num % 2 != 0;
+            return value % 2 != 0;
+        }
+        
+        public static bool IsPowerOfTwo(int value)
+        {
+            return value > 0 && (value & (value - 1)) == 0;
         }
 
         #endregion
