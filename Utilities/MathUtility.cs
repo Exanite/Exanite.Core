@@ -216,7 +216,7 @@ namespace Exanite.Core.Utilities
         }
 
         /// <summary>
-        /// Gets the next power of two.
+        /// Returns the next power of 2 if <see cref="value"/> is not already a power of 2.
         /// </summary>
         /// <example>
         /// GetNextPowerOfTwo(16) will return 16.
