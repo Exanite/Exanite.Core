@@ -225,6 +225,9 @@ namespace Exanite.Core.Utilities
         /// </example>
         public static int GetNextPowerOfTwo(int value)
         {
+#if NETCOREAPP
+            return 1 << (int)Math.Log2(value - 1) + 1;
+#else
             var result = 2;
             while (result < value)
             {
@@ -232,6 +235,7 @@ namespace Exanite.Core.Utilities
             }
 
             return result;
+#endif
         }
 
         public static bool IsEven(this int value)
