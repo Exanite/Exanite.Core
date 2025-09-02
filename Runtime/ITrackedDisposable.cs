@@ -39,7 +39,7 @@ namespace Exanite.Core.Runtime
 
         ~ITrackedDisposable()
         {
-            ReleaseResources();
+            Dispose();
         }
 #endif
     }
