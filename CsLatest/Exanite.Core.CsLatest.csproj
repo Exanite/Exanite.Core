@@ -10,11 +10,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <EnableTrimAnalzyer>true</EnableTrimAnalzyer>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-
     <NoWarn Condition="$(TargetFramework) == 'netstandard2.1'">$(NoWarn);CS8767</NoWarn> <!-- Disable nullability of reference types mismatch in netstandard2.1 -->
   </PropertyGroup>
 
