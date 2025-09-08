@@ -14,6 +14,24 @@ namespace Exanite.Core.Utilities
         #region Ranges
 
         /// <summary>
+        /// Interpolates from one value to another by <paramref name="t"/>.
+        /// <paramref name="t"/> will be clamped in the range [0, 1]
+        /// </summary>
+        public static float Lerp(float from, float to, float t)
+        {
+            t = Math.Clamp(t, 0, 1);
+            return from + (to - from) * t;
+        }
+
+        /// <summary>
+        /// Interpolates from one value to another by <paramref name="t"/>.
+        /// </summary>
+        public static float LerpUnclamped(float from, float to, float t)
+        {
+            return from + (to - from) * t;
+        }
+
+        /// <summary>
         /// Remaps a value from one range to another.
         /// </summary>
         public static float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)
