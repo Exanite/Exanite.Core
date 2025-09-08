@@ -5,7 +5,14 @@ using Exanite.Core.Numerics;
 
 namespace Exanite.Core.Utilities;
 
-public static class MathUtility
+/// <remarks>
+/// This should be named MathUtility,
+/// but the methods in this class are used extremely commonly.
+/// <br/>
+/// This makes the methods easier to access without
+/// needing to use a static import.
+/// </remarks>
+public static class M
 {
     #region INumbers
 

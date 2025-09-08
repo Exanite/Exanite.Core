@@ -44,7 +44,7 @@ public class RingBuffer<T> : IEnumerable<T>
     /// </param>
     public RingBuffer(int capacity)
     {
-        capacity = MathUtility.GetNextPowerOfTwo(capacity);
+        capacity = M.GetNextPowerOfTwo(capacity);
         capacityMask = capacity - 1;
 
         data = new T[capacity];
