@@ -9,51 +9,6 @@ public static partial class M
     #region Vectors
 
     /// <summary>
-    /// Normalizes the vector.
-    /// <br/>
-    /// This handles the case where the provided vector is Vector2.Zero,
-    /// returning Vector2.Zero rather than NaN.
-    /// </summary>
-    public static Vector2 AsNormalizedSafe(this Vector2 value)
-    {
-        return value.AsNormalizedSafe(Vector2.Zero);
-    }
-
-    /// <summary>
-    /// Normalizes the vector.
-    /// <br/>
-    /// This handles the case where the provided vector is Vector2.Zero,
-    /// returning the provided <see cref="fallback"/> rather than NaN.
-    /// </summary>
-    public static Vector2 AsNormalizedSafe(this Vector2 value, Vector2 fallback)
-    {
-        return value == Vector2.Zero ? fallback : Vector2.Normalize(value);
-    }
-
-    /// <summary>
-    /// Normalizes the vector.
-    /// <br/>
-    /// This handles the case where the provided vector is Vector3.Zero,
-    /// returning Vector3.Zero rather than NaN.
-    /// </summary>
-    public static Vector3 AsNormalizedSafe(this Vector3 value)
-    {
-        return value.AsNormalizedSafe(Vector3.Zero);
-    }
-
-    /// <summary>
-    /// Normalizes the vector.
-    /// <br/>
-    /// This handles the case where the provided vector is Vector3.Zero,
-    /// returning the provided <see cref="fallback"/> rather than NaN.
-    /// </summary>
-    public static Vector3 AsNormalizedSafe(this Vector3 value, Vector3 fallback)
-    {
-        return value == Vector3.Zero ? fallback : Vector3.Normalize(value);
-    }
-
-
-    /// <summary>
     /// Clamps the length of the provided vector to between [0, maxLength].
     /// </summary>
     public static Vector2 ClampMagnitude(Vector2 value, float maxLength)
@@ -106,6 +61,50 @@ public static partial class M
         vector.X = Clamp(vector.X, min.X, max.X);
         vector.Y = Clamp(vector.Y, min.Y, max.Y);
         vector.Z = Clamp(vector.Z, min.Z, max.Z);
+    }
+
+    /// <summary>
+    /// Normalizes the vector.
+    /// <br/>
+    /// This handles the case where the provided vector is Vector2.Zero,
+    /// returning Vector2.Zero rather than NaN.
+    /// </summary>
+    public static Vector2 AsNormalizedSafe(this Vector2 value)
+    {
+        return value.AsNormalizedSafe(Vector2.Zero);
+    }
+
+    /// <summary>
+    /// Normalizes the vector.
+    /// <br/>
+    /// This handles the case where the provided vector is Vector2.Zero,
+    /// returning the provided <see cref="fallback"/> rather than NaN.
+    /// </summary>
+    public static Vector2 AsNormalizedSafe(this Vector2 value, Vector2 fallback)
+    {
+        return value == Vector2.Zero ? fallback : Vector2.Normalize(value);
+    }
+
+    /// <summary>
+    /// Normalizes the vector.
+    /// <br/>
+    /// This handles the case where the provided vector is Vector3.Zero,
+    /// returning Vector3.Zero rather than NaN.
+    /// </summary>
+    public static Vector3 AsNormalizedSafe(this Vector3 value)
+    {
+        return value.AsNormalizedSafe(Vector3.Zero);
+    }
+
+    /// <summary>
+    /// Normalizes the vector.
+    /// <br/>
+    /// This handles the case where the provided vector is Vector3.Zero,
+    /// returning the provided <see cref="fallback"/> rather than NaN.
+    /// </summary>
+    public static Vector3 AsNormalizedSafe(this Vector3 value, Vector3 fallback)
+    {
+        return value == Vector3.Zero ? fallback : Vector3.Normalize(value);
     }
 
     /// <summary>
