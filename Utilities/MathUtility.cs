@@ -10,6 +10,14 @@ namespace Exanite.Core.Utilities
         #region INumbers
 
         /// <summary>
+        /// Returns the sign of the provided value.
+        /// </summary>
+        public static T Sign<T>(T a) where T : INumber<T>
+        {
+            return T.CreateTruncating(T.Sign(a));
+        }
+
+        /// <summary>
         /// Returns the absolute value of the provided value.
         /// </summary>
         public static T Abs<T>(T a) where T : INumber<T>
