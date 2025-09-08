@@ -7,10 +7,6 @@ namespace Exanite.Core.Utilities
 {
     public static class MathUtility
     {
-        // Note: Order between different value type overloads should go by:
-        // First by: float, double, int, long
-        // Then by: degrees, radians
-
         #region INumbers
 
         /// <summary>
@@ -94,6 +90,10 @@ namespace Exanite.Core.Utilities
             return fromRange == T.Zero ? toMin : toRange * ((value - fromMin) / fromRange) + toMin;
         }
 
+        /// <summary>
+        /// Moves the <see cref="current"/> value towards the <see cref="target"/> value by <see cref="maxDelta"/>,
+        /// ensuring that the result doesn't overshoot the <see cref="target"/> value.
+        /// </summary>
         public static float MoveTowards(float current, float target, float maxDelta)
         {
             if (Math.Abs(target - current) <= maxDelta)
@@ -104,6 +104,10 @@ namespace Exanite.Core.Utilities
             return current + Math.Sign(target - current) * maxDelta;
         }
 
+        /// <summary>
+        /// Moves the <see cref="current"/> angle towards the <see cref="target"/> angle by <see cref="maxDelta"/>,
+        /// ensuring that the result doesn't overshoot the <see cref="target"/> angle.
+        /// </summary>
         public static float MoveTowardsAngleDegrees(float current, float target, float maxDelta)
         {
             var deltaAngle = DeltaAngleDegrees(current, target);
@@ -116,6 +120,10 @@ namespace Exanite.Core.Utilities
             return MoveTowards(current, target, maxDelta);
         }
 
+        /// <summary>
+        /// Moves the <see cref="current"/> angle towards the <see cref="target"/> angle by <see cref="maxDelta"/>,
+        /// ensuring that the result doesn't overshoot the <see cref="target"/> angle.
+        /// </summary>
         public static float MoveTowardsAngleRadians(float current, float target, float maxDelta)
         {
             var deltaAngle = DeltaAngleRadians(current, target);
@@ -128,6 +136,20 @@ namespace Exanite.Core.Utilities
             return MoveTowards(current, target, maxDelta);
         }
 
+        /// <summary>
+        /// Moves a value towards the target value over time while smoothing the movement.
+        /// <br/>
+        /// The function uses a critically damped spring model to ensure smooth transitions without overshooting.
+        /// <br/>
+        /// <see cref="currentVelocity"/> is updated to track the rate of change.
+        /// </summary>
+        /// <param name="current">The current value.</param>
+        /// <param name="target">The value to reach.</param>
+        /// <param name="smoothTime">The time it takes to reach the target. Smaller values result in faster movement.</param>
+        /// <param name="deltaTime">The time since the last update.</param>
+        /// <param name="currentVelocity">Reference to the current velocity, modified by the function.</param>
+        /// <param name="maxSpeed">Optional maximum speed. Defaults to <see cref="float.PositiveInfinity"/>.</param>
+        /// <returns>The new value after applying smoothing.</returns>
         public static float SmoothDamp(float current, float target, float smoothTime, float deltaTime, ref float currentVelocity, float maxSpeed = float.PositiveInfinity)
         {
             // From https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Math/Mathf.cs#L309
