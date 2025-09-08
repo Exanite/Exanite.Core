@@ -332,21 +332,33 @@ public static partial class M
         return MathF.Pow(value, 1 / 2.4f) * 1.055f - 0.055f;
     }
 
+    /// <summary>
+    /// Converts the RGB (XYZ) components from sRGB [0, 1] to linear [0, 1].
+    /// </summary>
     public static Vector3 SrgbToLinear(Vector3 srgb)
     {
         return new Vector3(SrgbToLinear(srgb.X), SrgbToLinear(srgb.Y), SrgbToLinear(srgb.Z));
     }
 
+    /// <summary>
+    /// Converts the RGB (XYZ) components from linear [0, 1] to sRGB [0, 1].
+    /// </summary>
     public static Vector3 LinearToSrgb(Vector3 srgb)
     {
         return new Vector3(LinearToSrgb(srgb.X), LinearToSrgb(srgb.Y), LinearToSrgb(srgb.Z));
     }
 
+    /// <summary>
+    /// Converts the RGB (XYZ) components from sRGB [0, 1] to linear [0, 1]. Does not modify the alpha (W) component.
+    /// </summary>
     public static Vector4 SrgbToLinear(Vector4 srgb)
     {
         return new Vector4(SrgbToLinear(srgb.X), SrgbToLinear(srgb.Y), SrgbToLinear(srgb.Z), srgb.W);
     }
 
+    /// <summary>
+    /// Converts the RGB (XYZ) components from linear [0, 1] to sRGB [0, 1]. Does not modify the alpha (W) component.
+    /// </summary>
     public static Vector4 LinearToSrgb(Vector4 srgb)
     {
         return new Vector4(LinearToSrgb(srgb.X), LinearToSrgb(srgb.Y), LinearToSrgb(srgb.Z), srgb.W);
