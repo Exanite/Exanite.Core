@@ -1,5 +1,6 @@
 using System.Numerics;
 using Exanite.Core.Utilities;
+using DrawingColor = System.Drawing.Color;
 
 namespace Exanite.Core.Numerics;
 
@@ -95,6 +96,33 @@ public struct Color
     public static Color FromLinear(Vector4 value)
     {
         return new Color(value, ColorType.Linear);
+    }
+
+    // System.Drawing.Color
+
+    public static Color FromDrawingColor(DrawingColor color)
+    {
+        var value = new Vector4(color.R, color.G, color.B, color.A) / byte.MaxValue;
+        return new Color(value, ColorType.Srgb);
+    }
+
+    public DrawingColor ToDrawingColor()
+    {
+        var value = Srgb.Value * byte.MaxValue;
+        return DrawingColor.FromArgb((byte)value.W, (byte)value.X, (byte)value.Y, (byte)value.Z);
+    }
+
+    // Hex
+
+    public static Color FromHex(string hex)
+    {
+        return new Color(M.HexToSrgb(hex), ColorType.Srgb);
+    }
+
+    public string ToHex()
+    {
+        var drawingColor = ToDrawingColor();
+        return $"#{drawingColor.R:X2}{drawingColor.G:X2}{drawingColor.B:X2}{drawingColor.A:X2}";
     }
 
     // Conversions
