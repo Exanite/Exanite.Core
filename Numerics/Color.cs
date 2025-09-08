@@ -7,6 +7,11 @@ namespace Exanite.Core.Numerics;
 /// General purpose color representation struct.
 /// Allows for easy conversion between different formats.
 /// </summary>
+/// <remarks>
+/// Consider using one of the storage types if you want efficient storage:
+/// <see cref="LinearColor"/>,
+/// <see cref="SrgbColor"/>
+/// </remarks>
 public struct Color
 {
     private Vector4 color;

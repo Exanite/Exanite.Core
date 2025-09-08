@@ -7,6 +7,11 @@ namespace Exanite.Core.Numerics;
 /// General purpose angle representation struct.
 /// Allows for easy conversion between different formats.
 /// </summary>
+/// <remarks>
+/// Consider using one of the storage types if you want efficient storage:
+/// <see cref="Radians"/>,
+/// <see cref="Degrees"/>
+/// </remarks>
 public struct Angle : IEquatable<Angle>, IComparable<Angle>
 {
     public static Angle Zero => FromRadians(0);
