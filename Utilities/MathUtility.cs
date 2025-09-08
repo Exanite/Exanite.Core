@@ -5,7 +5,7 @@ using Exanite.Core.Numerics;
 
 namespace Exanite.Core.Utilities
 {
-    public static partial class MathUtility
+    public static class MathUtility
     {
         // Note: Order between different value type overloads should go by:
         // First by: float, double, int, long
