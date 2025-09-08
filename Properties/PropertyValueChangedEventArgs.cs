@@ -1,16 +1,15 @@
 using System;
 
-namespace Exanite.Core.Properties
-{
-    public class PropertyValueChangedEventArgs<T> : EventArgs
-    {
-        public PropertyValueChangedEventArgs(Property property)
-        {
-            Property = property;
-        }
+namespace Exanite.Core.Properties;
 
-        public Property Property { get; set; }
-        public T? PreviousValue { get; set; }
-        public T? NewValue { get; set; }
+public class PropertyValueChangedEventArgs<T> : EventArgs
+{
+    public PropertyValueChangedEventArgs(Property property)
+    {
+        Property = property;
     }
+
+    public Property Property { get; set; }
+    public T? PreviousValue { get; set; }
+    public T? NewValue { get; set; }
 }

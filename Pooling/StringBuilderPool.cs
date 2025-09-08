@@ -1,43 +1,42 @@
 using System.Text;
 
-namespace Exanite.Core.Pooling
+namespace Exanite.Core.Pooling;
+
+/// <summary>
+/// A <see cref="StringBuilder"/> pool. Releasing a <see cref="StringBuilder"/> back to the pool will clear it automatically.
+/// </summary>
+public abstract class StringBuilderPool
 {
-    /// <summary>
-    /// A <see cref="StringBuilder"/> pool. Releasing a <see cref="StringBuilder"/> back to the pool will clear it automatically.
-    /// </summary>
-    public abstract class StringBuilderPool
+    private static readonly Pool<StringBuilder> Pool = Pools.AddPool(Create(), true);
+
+    public static Pool<StringBuilder> Create()
     {
-        private static readonly Pool<StringBuilder> Pool = Pools.AddPool(Create(), true);
+        return new Pool<StringBuilder>(
+            create: () => new StringBuilder(),
+            onRelease: value => value.Clear());
+    }
 
-        public static Pool<StringBuilder> Create()
+    public static Pool<StringBuilder>.Handle Acquire(out StringBuilder value)
+    {
+        lock (Pool)
         {
-            return new Pool<StringBuilder>(
-                create: () => new StringBuilder(),
-                onRelease: value => value.Clear());
+            return Pool.Acquire(out value);
         }
+    }
 
-        public static Pool<StringBuilder>.Handle Acquire(out StringBuilder value)
+    public static StringBuilder Acquire()
+    {
+        lock (Pool)
         {
-            lock (Pool)
-            {
-                return Pool.Acquire(out value);
-            }
+            return Pool.Acquire();
         }
+    }
 
-        public static StringBuilder Acquire()
+    public static void Release(StringBuilder value)
+    {
+        lock (Pool)
         {
-            lock (Pool)
-            {
-                return Pool.Acquire();
-            }
-        }
-
-        public static void Release(StringBuilder value)
-        {
-            lock (Pool)
-            {
-                Pool.Release(value);
-            }
+            Pool.Release(value);
         }
     }
 }

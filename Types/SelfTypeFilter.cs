@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace Exanite.Core.Types
+namespace Exanite.Core.Types;
+
+public class SelfTypeFilter : ITypeFilter
 {
-    public class SelfTypeFilter : ITypeFilter
+    public IEnumerable<Type> Filter(Type type)
     {
-        public IEnumerable<Type> Filter(Type type)
-        {
-            yield return type;
-        }
+        yield return type;
     }
 }

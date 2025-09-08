@@ -1,21 +1,20 @@
 using System;
 
-namespace Exanite.Core.Properties.Schemas
+namespace Exanite.Core.Properties.Schemas;
+
+public class PropertyTypeValidator : IPropertyValidator
 {
-    public class PropertyTypeValidator : IPropertyValidator
+    public Type? ExpectedType;
+
+    public PropertyTypeValidator() {}
+
+    public PropertyTypeValidator(Type expectedType)
     {
-        public Type? ExpectedType;
+        ExpectedType = expectedType;
+    }
 
-        public PropertyTypeValidator() {}
-
-        public PropertyTypeValidator(Type expectedType)
-        {
-            ExpectedType = expectedType;
-        }
-
-        public bool Validate(Property? property)
-        {
-            return property!.Type == ExpectedType;
-        }
+    public bool Validate(Property? property)
+    {
+        return property!.Type == ExpectedType;
     }
 }

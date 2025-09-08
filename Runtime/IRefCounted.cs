@@ -1,8 +1,7 @@
-namespace Exanite.Core.Runtime
+namespace Exanite.Core.Runtime;
+
+public interface IRefCounted
 {
-    public interface IRefCounted
-    {
-        public void AddRef();
-        public void RemoveRef();
-    }
+    public void AddRef();
+    public void RemoveRef();
 }

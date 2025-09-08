@@ -1,7 +1,6 @@
-namespace Exanite.Core.Events
+namespace Exanite.Core.Events;
+
+public interface IEventHandler<in T> where T : allows ref struct
 {
-    public interface IEventHandler<in T> where T : allows ref struct
-    {
-        void OnEvent(T e);
-    }
+    void OnEvent(T e);
 }

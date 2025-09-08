@@ -1,58 +1,57 @@
 using System;
 using System.Collections.Generic;
 
-namespace Exanite.Core.Types
+namespace Exanite.Core.Types;
+
+public class InheritanceHierarchyTypeFilter : ITypeFilter
 {
-    public class InheritanceHierarchyTypeFilter : ITypeFilter
+    public HashSet<Type?> BaseTypes { get; }
+    public bool Inclusive { get; set; }
+    public bool MustExtendBaseType { get; set; }
+
+    public InheritanceHierarchyTypeFilter(Type? baseType = null, bool inclusive = false, bool mustExtendBaseType = false) : this(new HashSet<Type?>() { baseType }, inclusive, mustExtendBaseType) {}
+
+    public InheritanceHierarchyTypeFilter(IEnumerable<Type?> baseTypes, bool inclusive = false, bool mustExtendBaseType = false) : this(new HashSet<Type?>(baseTypes), inclusive, mustExtendBaseType) {}
+
+    private InheritanceHierarchyTypeFilter(HashSet<Type?> baseTypes, bool inclusive, bool mustExtendBaseType)
     {
-        public HashSet<Type?> BaseTypes { get; }
-        public bool Inclusive { get; set; }
-        public bool MustExtendBaseType { get; set; }
+        BaseTypes = baseTypes;
+        Inclusive = inclusive;
+        MustExtendBaseType = mustExtendBaseType;
 
-        public InheritanceHierarchyTypeFilter(Type? baseType = null, bool inclusive = false, bool mustExtendBaseType = false) : this(new HashSet<Type?>() { baseType }, inclusive, mustExtendBaseType) {}
+        BaseTypes.Remove(null);
+    }
 
-        public InheritanceHierarchyTypeFilter(IEnumerable<Type?> baseTypes, bool inclusive = false, bool mustExtendBaseType = false) : this(new HashSet<Type?>(baseTypes), inclusive, mustExtendBaseType) {}
-
-        private InheritanceHierarchyTypeFilter(HashSet<Type?> baseTypes, bool inclusive, bool mustExtendBaseType)
+    public IEnumerable<Type> Filter(Type type)
+    {
+        var hasReachedBaseType = false;
+        if (BaseTypes.Count == 0)
         {
-            BaseTypes = baseTypes;
-            Inclusive = inclusive;
-            MustExtendBaseType = mustExtendBaseType;
-
-            BaseTypes.Remove(null);
+            hasReachedBaseType = true;
         }
 
-        public IEnumerable<Type> Filter(Type type)
+        var currentType = type;
+        while (currentType != null)
         {
-            var hasReachedBaseType = false;
-            if (BaseTypes.Count == 0)
+            if (BaseTypes.Contains(currentType))
             {
-                hasReachedBaseType = true;
-            }
-
-            var currentType = type;
-            while (currentType != null)
-            {
-                if (BaseTypes.Contains(currentType))
+                if (Inclusive)
                 {
-                    if (Inclusive)
-                    {
-                        yield return currentType;
-                    }
-
-                    hasReachedBaseType = true;
-
-                    break;
+                    yield return currentType;
                 }
 
-                yield return currentType;
-                currentType = currentType.BaseType;
+                hasReachedBaseType = true;
+
+                break;
             }
 
-            if (MustExtendBaseType && !hasReachedBaseType)
-            {
-                throw new ArgumentException($"Type '{type.Name}' does not inherit from any of the specified base types", nameof(type));
-            }
+            yield return currentType;
+            currentType = currentType.BaseType;
+        }
+
+        if (MustExtendBaseType && !hasReachedBaseType)
+        {
+            throw new ArgumentException($"Type '{type.Name}' does not inherit from any of the specified base types", nameof(type));
         }
     }
 }

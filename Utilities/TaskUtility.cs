@@ -1,20 +1,19 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Exanite.Core.Utilities
+namespace Exanite.Core.Utilities;
+
+public static class TaskUtility
 {
-    public static class TaskUtility
+    public static async void Forget(this Task task)
     {
-        public static async void Forget(this Task task)
+        try
         {
-            try
-            {
-                await task;
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine(e);
-            }
+            await task;
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine(e);
         }
     }
 }

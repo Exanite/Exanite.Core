@@ -4,84 +4,83 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Exanite.Core.Utilities;
 
-namespace Exanite.Core.Threading
+namespace Exanite.Core.Threading;
+
+/// <summary>
+/// Ensures posted callbacks are always run on a specific thread. Callbacks will be run when <see cref="Run"/> is called.
+/// </summary>
+/// <remarks>
+/// Recommended usage for games is to call <see cref="Run"/> during each update on the main thread.
+/// </remarks>
+public class ThreadSynchronizationContext : SynchronizationContext
 {
+    private readonly ConcurrentQueue<Callback> callbacks = new();
+
     /// <summary>
-    /// Ensures posted callbacks are always run on a specific thread. Callbacks will be run when <see cref="Run"/> is called.
+    /// The thread callbacks should be executed on.
     /// </summary>
-    /// <remarks>
-    /// Recommended usage for games is to call <see cref="Run"/> during each update on the main thread.
-    /// </remarks>
-    public class ThreadSynchronizationContext : SynchronizationContext
+    public Thread TargetThread { get; set; }
+
+    /// <param name="targetThread">The thread callbacks should be executed on.</param>
+    public ThreadSynchronizationContext(Thread targetThread)
     {
-        private readonly ConcurrentQueue<Callback> callbacks = new();
+        TargetThread = targetThread;
+    }
 
-        /// <summary>
-        /// The thread callbacks should be executed on.
-        /// </summary>
-        public Thread TargetThread { get; set; }
+    public override void Send(SendOrPostCallback callback, object? state)
+    {
+        Post(callback, state);
+    }
 
-        /// <param name="targetThread">The thread callbacks should be executed on.</param>
-        public ThreadSynchronizationContext(Thread targetThread)
+    public override void Post(SendOrPostCallback callback, object? state)
+    {
+        callbacks.Enqueue(new Callback(callback, state));
+    }
+
+    public override SynchronizationContext CreateCopy()
+    {
+        // See https://stackoverflow.com/questions/21062440/the-purpose-of-synchronizationcontext-createcopy
+
+        return this;
+    }
+
+    /// <summary>
+    /// Runs the stored callbacks on the current thread.
+    /// </summary>
+    public void Run()
+    {
+        if (Thread.CurrentThread != TargetThread)
         {
-            TargetThread = targetThread;
+            throw new InvalidOperationException($"{nameof(Run)} must be run on the target thread.");
         }
 
-        public override void Send(SendOrPostCallback callback, object? state)
+        while (callbacks.TryDequeue(out var callback))
         {
-            Post(callback, state);
+            callback.Invoke();
+        }
+    }
+
+    [StructLayout(LayoutKind.Auto)]
+    private readonly struct Callback
+    {
+        private readonly SendOrPostCallback callback;
+        private readonly object? state;
+
+        public Callback(SendOrPostCallback callback, object? state)
+        {
+            this.callback = callback;
+            this.state = state;
         }
 
-        public override void Post(SendOrPostCallback callback, object? state)
+        public void Invoke()
         {
-            callbacks.Enqueue(new Callback(callback, state));
-        }
-
-        public override SynchronizationContext CreateCopy()
-        {
-            // See https://stackoverflow.com/questions/21062440/the-purpose-of-synchronizationcontext-createcopy
-
-            return this;
-        }
-
-        /// <summary>
-        /// Runs the stored callbacks on the current thread.
-        /// </summary>
-        public void Run()
-        {
-            if (Thread.CurrentThread != TargetThread)
+            try
             {
-                throw new InvalidOperationException($"{nameof(Run)} must be run on the target thread.");
+                callback(state);
             }
-
-            while (callbacks.TryDequeue(out var callback))
+            catch (Exception e)
             {
-                callback.Invoke();
-            }
-        }
-
-        [StructLayout(LayoutKind.Auto)]
-        private readonly struct Callback
-        {
-            private readonly SendOrPostCallback callback;
-            private readonly object? state;
-
-            public Callback(SendOrPostCallback callback, object? state)
-            {
-                this.callback = callback;
-                this.state = state;
-            }
-
-            public void Invoke()
-            {
-                try
-                {
-                    callback(state);
-                }
-                catch (Exception e)
-                {
-                    DebugUtility.Log(e);
-                }
+                DebugUtility.Log(e);
             }
         }
     }

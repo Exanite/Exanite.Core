@@ -1,28 +1,27 @@
 using System.Collections.Generic;
 
-namespace Exanite.Core.Properties.Schemas
+namespace Exanite.Core.Properties.Schemas;
+
+public class PropertyCollectionSchemaBuilder
 {
-    public class PropertyCollectionSchemaBuilder
+    private readonly List<PropertyCollectionSchemaEntryBuilder> entryBuilders = new();
+
+    public PropertyCollectionSchemaBuilder Add(PropertyCollectionSchemaEntryBuilder entryBuilder)
     {
-        private readonly List<PropertyCollectionSchemaEntryBuilder> entryBuilders = new();
+        entryBuilders.Add(entryBuilder);
 
-        public PropertyCollectionSchemaBuilder Add(PropertyCollectionSchemaEntryBuilder entryBuilder)
+        return this;
+    }
+
+    public PropertyCollectionSchema Build()
+    {
+        var entries = new List<PropertyCollectionSchemaEntry>();
+
+        foreach (var entryBuilder in entryBuilders)
         {
-            entryBuilders.Add(entryBuilder);
-
-            return this;
+            entries.Add(entryBuilder.Build());
         }
 
-        public PropertyCollectionSchema Build()
-        {
-            var entries = new List<PropertyCollectionSchemaEntry>();
-
-            foreach (var entryBuilder in entryBuilders)
-            {
-                entries.Add(entryBuilder.Build());
-            }
-
-            return new PropertyCollectionSchema(entries);
-        }
+        return new PropertyCollectionSchema(entries);
     }
 }

@@ -1,41 +1,40 @@
 using System.Collections.Generic;
 
-namespace Exanite.Core.Properties.Schemas
+namespace Exanite.Core.Properties.Schemas;
+
+public class PropertyCollectionSchemaEntryBuilder
 {
-    public class PropertyCollectionSchemaEntryBuilder
+    private readonly PropertyDefinition definition;
+    private bool isRequired = true;
+
+    private readonly List<IPropertyValidator> propertyValidators = new();
+
+    public PropertyCollectionSchemaEntryBuilder(PropertyDefinition definition)
     {
-        private readonly PropertyDefinition definition;
-        private bool isRequired = true;
+        this.definition = definition;
+    }
 
-        private readonly List<IPropertyValidator> propertyValidators = new();
+    public PropertyCollectionSchemaEntryBuilder AsOptional()
+    {
+        isRequired = false;
 
-        public PropertyCollectionSchemaEntryBuilder(PropertyDefinition definition)
-        {
-            this.definition = definition;
-        }
+        return this;
+    }
 
-        public PropertyCollectionSchemaEntryBuilder AsOptional()
-        {
-            isRequired = false;
+    public PropertyCollectionSchemaEntryBuilder WithValueNotNull()
+    {
+        return WithValidator(new PropertyValueNotNullValidator());
+    }
 
-            return this;
-        }
+    public PropertyCollectionSchemaEntryBuilder WithValidator(IPropertyValidator validator)
+    {
+        propertyValidators.Add(validator);
 
-        public PropertyCollectionSchemaEntryBuilder WithValueNotNull()
-        {
-            return WithValidator(new PropertyValueNotNullValidator());
-        }
+        return this;
+    }
 
-        public PropertyCollectionSchemaEntryBuilder WithValidator(IPropertyValidator validator)
-        {
-            propertyValidators.Add(validator);
-
-            return this;
-        }
-
-        public PropertyCollectionSchemaEntry Build()
-        {
-            return new PropertyCollectionSchemaEntry(definition, isRequired, propertyValidators);
-        }
+    public PropertyCollectionSchemaEntry Build()
+    {
+        return new PropertyCollectionSchemaEntry(definition, isRequired, propertyValidators);
     }
 }

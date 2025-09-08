@@ -1,10 +1,9 @@
-namespace Exanite.Core.Properties.Schemas
+namespace Exanite.Core.Properties.Schemas;
+
+public class PropertyValueNotNullValidator : IPropertyValidator
 {
-    public class PropertyValueNotNullValidator : IPropertyValidator
+    public bool Validate(Property? property)
     {
-        public bool Validate(Property? property)
-        {
-            return property!.UntypedValue != null;
-        }
+        return property!.UntypedValue != null;
     }
 }

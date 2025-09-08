@@ -1,56 +1,55 @@
 using System;
 using Exanite.Core.Pooling;
 
-namespace Exanite.Core.Utilities
+namespace Exanite.Core.Utilities;
+
+public static class StringUtility
 {
-    public static class StringUtility
+    /// <summary>
+    /// Replaces line endings in the current text with the new line string for the current environment. See <see cref="Environment.NewLine">Environment.NewLine</see>.
+    /// </summary>
+    public static string UpdateNewLines(string text)
     {
-        /// <summary>
-        /// Replaces line endings in the current text with the new line string for the current environment. See <see cref="Environment.NewLine">Environment.NewLine</see>.
-        /// </summary>
-        public static string UpdateNewLines(string text)
+        return UpdateNewLines(text, Environment.NewLine);
+    }
+
+    /// <summary>
+    /// Replaces line endings in the current text with the specified new line string.
+    /// </summary>
+    public static string UpdateNewLines(string text, string newLine)
+    {
+        AssertUtility.IsTrue(newLine == "\n" || newLine == "\r\n", $"{nameof(newLine)} must be either \\n or \\r\\n");
+
+        using var _ = StringBuilderPool.Acquire(out var builder);
+
+        var lastLineEnding = -1;
+        for (var i = 0; i < text.Length; i++)
         {
-            return UpdateNewLines(text, Environment.NewLine);
-        }
-
-        /// <summary>
-        /// Replaces line endings in the current text with the specified new line string.
-        /// </summary>
-        public static string UpdateNewLines(string text, string newLine)
-        {
-            AssertUtility.IsTrue(newLine == "\n" || newLine == "\r\n", $"{nameof(newLine)} must be either \\n or \\r\\n");
-
-            using var _ = StringBuilderPool.Acquire(out var builder);
-
-            var lastLineEnding = -1;
-            for (var i = 0; i < text.Length; i++)
+            if (text[i] == '\n')
             {
-                if (text[i] == '\n')
+                var currentIndex = i - 1;
+                if (i - 1 >= 0 && text[i - 1] == '\r')
                 {
-                    var currentIndex = i - 1;
-                    if (i - 1 >= 0 && text[i - 1] == '\r')
-                    {
-                        currentIndex -= 2;
-                    }
-
-                    var length = currentIndex - lastLineEnding;
-                    if (length > 0)
-                    {
-                        builder.Append(text.AsSpan().Slice(lastLineEnding + 1, length));
-                    }
-
-                    builder.Append(newLine);
-
-                    lastLineEnding = i;
+                    currentIndex -= 2;
                 }
-            }
 
-            if (lastLineEnding != text.Length - 1)
-            {
-                builder.Append(text.AsSpan(lastLineEnding + 1));
-            }
+                var length = currentIndex - lastLineEnding;
+                if (length > 0)
+                {
+                    builder.Append(text.AsSpan().Slice(lastLineEnding + 1, length));
+                }
 
-            return builder.ToString();
+                builder.Append(newLine);
+
+                lastLineEnding = i;
+            }
         }
+
+        if (lastLineEnding != text.Length - 1)
+        {
+            builder.Append(text.AsSpan(lastLineEnding + 1));
+        }
+
+        return builder.ToString();
     }
 }

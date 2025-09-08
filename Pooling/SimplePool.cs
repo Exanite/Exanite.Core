@@ -1,50 +1,49 @@
-namespace Exanite.Core.Pooling
+namespace Exanite.Core.Pooling;
+
+/// <inheritdoc cref="SimplePool{T}"/>>
+public abstract class SimplePool
 {
-    /// <inheritdoc cref="SimplePool{T}"/>>
-    public abstract class SimplePool
+    public static void Release<T>(T value) where T : new()
     {
-        public static void Release<T>(T value) where T : new()
+        SimplePool<T>.Release(value);
+    }
+}
+
+/// <summary>
+/// Pools trivially constructible objects.
+/// <br/>
+/// Warning: Does not handle cleanup such as object disposal or clearing.
+/// </summary>
+public abstract class SimplePool<T> where T : new()
+{
+    private static readonly Pool<T> Pool = Pools.AddPool(Create(), true);
+
+    public static Pool<T> Create()
+    {
+        return new Pool<T>(create: () => new T());
+    }
+
+    public static Pool<T>.Handle Acquire(out T value)
+    {
+        lock (Pool)
         {
-            SimplePool<T>.Release(value);
+            return Pool.Acquire(out value);
         }
     }
 
-    /// <summary>
-    /// Pools trivially constructible objects.
-    /// <br/>
-    /// Warning: Does not handle cleanup such as object disposal or clearing.
-    /// </summary>
-    public abstract class SimplePool<T> where T : new()
+    public static T Acquire()
     {
-        private static readonly Pool<T> Pool = Pools.AddPool(Create(), true);
-
-        public static Pool<T> Create()
+        lock (Pool)
         {
-            return new Pool<T>(create: () => new T());
+            return Pool.Acquire();
         }
+    }
 
-        public static Pool<T>.Handle Acquire(out T value)
+    public static void Release(T value)
+    {
+        lock (Pool)
         {
-            lock (Pool)
-            {
-                return Pool.Acquire(out value);
-            }
-        }
-
-        public static T Acquire()
-        {
-            lock (Pool)
-            {
-                return Pool.Acquire();
-            }
-        }
-
-        public static void Release(T value)
-        {
-            lock (Pool)
-            {
-                Pool.Release(value);
-            }
+            Pool.Release(value);
         }
     }
 }

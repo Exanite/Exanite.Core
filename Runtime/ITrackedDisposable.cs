@@ -1,18 +1,18 @@
 using System;
 
-namespace Exanite.Core.Runtime
+namespace Exanite.Core.Runtime;
+
+/// <summary>
+/// Same as <see cref="IDisposable"/>, but with an extra <see cref="IsDisposed"/> property.
+/// </summary>
+/// <remarks>
+/// This is mainly used to ensure <see cref="IDisposable"/> APIs are implemented consistently.
+/// <para/>
+/// Only use for classes that can only be disposed once.
+/// </remarks>
+public interface ITrackedDisposable : IDisposable
 {
-    /// <summary>
-    /// Same as <see cref="IDisposable"/>, but with an extra <see cref="IsDisposed"/> property.
-    /// </summary>
-    /// <remarks>
-    /// This is mainly used to ensure <see cref="IDisposable"/> APIs are implemented consistently.
-    /// <para/>
-    /// Only use for classes that can only be disposed once.
-    /// </remarks>
-    public interface ITrackedDisposable : IDisposable
-    {
-        public bool IsDisposed { get; }
+    public bool IsDisposed { get; }
 
 #if EXANITE_NEVER_COMPILE
         // Reference ITrackedDisposable implementation
@@ -42,5 +42,4 @@ namespace Exanite.Core.Runtime
             Dispose();
         }
 #endif
-    }
 }

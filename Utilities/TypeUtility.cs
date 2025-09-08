@@ -1,28 +1,27 @@
 ﻿using System;
 
-namespace Exanite.Core.Utilities
+namespace Exanite.Core.Utilities;
+
+public static class TypeUtility
 {
-    public static class TypeUtility
+    /// <summary>
+    /// Returns true if the type is not abstract or generic.
+    /// </summary>
+    public static bool IsConcrete(this Type type)
     {
-        /// <summary>
-        /// Returns true if the type is not abstract or generic.
-        /// </summary>
-        public static bool IsConcrete(this Type type)
+        return !(type.IsAbstract || type.IsGenericType);
+    }
+
+    /// <summary>
+    /// Gets the default value for the provided <see cref="Type"/>.
+    /// </summary>
+    public static object? GetDefaultValue(this Type type)
+    {
+        if (type.IsValueType)
         {
-            return !(type.IsAbstract || type.IsGenericType);
+            return Activator.CreateInstance(type);
         }
 
-        /// <summary>
-        /// Gets the default value for the provided <see cref="Type"/>.
-        /// </summary>
-        public static object? GetDefaultValue(this Type type)
-        {
-            if (type.IsValueType)
-            {
-                return Activator.CreateInstance(type);
-            }
-
-            return null;
-        }
+        return null;
     }
 }

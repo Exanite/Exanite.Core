@@ -2,308 +2,307 @@
 using System.Globalization;
 using Exanite.Core.Utilities;
 
-namespace Exanite.Core.Numerics
+namespace Exanite.Core.Numerics;
+
+/// <summary>
+/// Used to store very large numbers (up to 999.999999x(10^(2^63)))
+/// <para/>
+/// Actual value = <see cref="Value"/> * (10 ^ (
+/// <see cref="Multiplier"/> * 3))
+/// </summary>
+[Serializable]
+public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
 {
+    private double value;
+    private long multiplier;
+
     /// <summary>
-    /// Used to store very large numbers (up to 999.999999x(10^(2^63)))
-    /// <para/>
-    /// Actual value = <see cref="Value"/> * (10 ^ (
-    /// <see cref="Multiplier"/> * 3))
+    /// Value of this <see cref="LargeNumber"/> Formatted as xxx.yyyyyy
+    /// where x = significant digits and y = trailing digits
     /// </summary>
-    [Serializable]
-    public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
+    public double Value
     {
-        private double value;
-        private long multiplier;
-
-        /// <summary>
-        /// Value of this <see cref="LargeNumber"/> Formatted as xxx.yyyyyy
-        /// where x = significant digits and y = trailing digits
-        /// </summary>
-        public double Value
+        get
         {
-            get
-            {
-                ShiftPlaces();
+            ShiftPlaces();
 
-                return value;
-            }
-
-            set
-            {
-                this.value = value;
-                ShiftPlaces();
-            }
+            return value;
         }
 
-        /// <summary>
-        /// Multiplier of this <see cref="LargeNumber"/>
-        /// </summary>
-        public long Multiplier
-        {
-            get
-            {
-                ShiftPlaces();
-
-                return multiplier;
-            }
-
-            set => multiplier = value;
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="LargeNumber"/>
-        /// </summary>
-        public LargeNumber(double value = 0, long multiplier = 0)
+        set
         {
             this.value = value;
-            this.multiplier = multiplier;
-
             ShiftPlaces();
         }
+    }
 
-        /// <summary>
-        /// Shifts the value and multiplier of this <see cref="LargeNumber"/>
-        /// </summary>
-        private void ShiftPlaces()
+    /// <summary>
+    /// Multiplier of this <see cref="LargeNumber"/>
+    /// </summary>
+    public long Multiplier
+    {
+        get
         {
-            while (Math.Abs(value) >= 1000) // More than 1000 or less than -1000
-            {
-                value /= 1000;
-                multiplier++;
-            }
+            ShiftPlaces();
 
-            while (Math.Abs(value) < 1) // Between -1 and 1
-            {
-                value *= 1000;
-                multiplier--;
-            }
-
-            if (value == 0)
-            {
-                multiplier = 0;
-            }
+            return multiplier;
         }
 
-        /// <summary>
-        /// Converts this LargeNumber into a string
-        /// </summary>
-        public override string ToString()
+        set => multiplier = value;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="LargeNumber"/>
+    /// </summary>
+    public LargeNumber(double value = 0, long multiplier = 0)
+    {
+        this.value = value;
+        this.multiplier = multiplier;
+
+        ShiftPlaces();
+    }
+
+    /// <summary>
+    /// Shifts the value and multiplier of this <see cref="LargeNumber"/>
+    /// </summary>
+    private void ShiftPlaces()
+    {
+        while (Math.Abs(value) >= 1000) // More than 1000 or less than -1000
         {
-            return ToString(NumDisplayFormat.Scientific);
+            value /= 1000;
+            multiplier++;
         }
 
-        /// <summary>
-        /// Converts this LargeNumber into a string
-        /// </summary>
-        public string ToString(NumDisplayFormat displayFormat, int placesToRound = 0)
+        while (Math.Abs(value) < 1) // Between -1 and 1
         {
-            placesToRound = Math.Clamp(placesToRound, 0, 15);
+            value *= 1000;
+            multiplier--;
+        }
 
-            var rounded = Math.Round(Value, placesToRound);
+        if (value == 0)
+        {
+            multiplier = 0;
+        }
+    }
 
-            if (Multiplier == 0)
+    /// <summary>
+    /// Converts this LargeNumber into a string
+    /// </summary>
+    public override string ToString()
+    {
+        return ToString(NumDisplayFormat.Scientific);
+    }
+
+    /// <summary>
+    /// Converts this LargeNumber into a string
+    /// </summary>
+    public string ToString(NumDisplayFormat displayFormat, int placesToRound = 0)
+    {
+        placesToRound = Math.Clamp(placesToRound, 0, 15);
+
+        var rounded = Math.Round(Value, placesToRound);
+
+        if (Multiplier == 0)
+        {
+            return rounded.ToString(CultureInfo.CurrentCulture);
+        }
+
+        switch (displayFormat)
+        {
+            case NumDisplayFormat.Scientific:
             {
-                return rounded.ToString(CultureInfo.CurrentCulture);
-            }
+                var extraDigits = 0;
 
-            switch (displayFormat)
-            {
-                case NumDisplayFormat.Scientific:
+                while (rounded >= 10) // Limit to one leading digit
                 {
-                    var extraDigits = 0;
+                    extraDigits++;
+                    rounded /= 10;
+                }
 
-                    while (rounded >= 10) // Limit to one leading digit
+                while (rounded <= -10) // Limit to one leading digit
+                {
+                    extraDigits--;
+                    rounded /= 10;
+                }
+
+                rounded = Math.Round(rounded, placesToRound); // Round the result again because the decimal place shifted in the while loop
+
+                if (Math.Abs(Multiplier) > long.MaxValue / 3)
+                {
+                    var isNegative = false;
+
+                    if (Multiplier < 0)
                     {
-                        extraDigits++;
-                        rounded /= 10;
+                        return "0";
                     }
 
-                    while (rounded <= -10) // Limit to one leading digit
+                    if (Value < 0)
                     {
-                        extraDigits--;
-                        rounded /= 10;
+                        isNegative = true;
                     }
 
-                    rounded = Math.Round(rounded, placesToRound); // Round the result again because the decimal place shifted in the while loop
-
-                    if (Math.Abs(Multiplier) > long.MaxValue / 3)
-                    {
-                        var isNegative = false;
-
-                        if (Multiplier < 0)
-                        {
-                            return "0";
-                        }
-
-                        if (Value < 0)
-                        {
-                            isNegative = true;
-                        }
-
-                        return $"{(isNegative ? "-" : string.Empty)}Infinity";
-                    }
-
-                    return $"{rounded.ToString($"N{placesToRound}")} E{Multiplier * 3 + extraDigits}";
+                    return $"{(isNegative ? "-" : string.Empty)}Infinity";
                 }
-                case NumDisplayFormat.Short:
-                {
-                    if (Multiplier > EnumUtility<NumScalesShort>.Max || Multiplier < EnumUtility<NumScalesShort>.Min)
-                    {
-                        return ToString(NumDisplayFormat.Scientific);
-                    }
 
-                    return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesShort)Multiplier}";
-                }
-                case NumDisplayFormat.Long:
-                {
-                    if (Math.Abs(Multiplier) > EnumUtility<NumScalesLong>.Max || Math.Abs(Multiplier) < EnumUtility<NumScalesLong>.Min)
-                    {
-                        return ToString(NumDisplayFormat.Short);
-                    }
-
-                    return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesLong)Math.Abs(Multiplier)}{(Multiplier < 0 ? "th" : string.Empty)}";
-                }
-                default:
-                {
-                    throw ExceptionUtility.NotSupportedEnumValue(displayFormat);
-                }
+                return $"{rounded.ToString($"N{placesToRound}")} E{Multiplier * 3 + extraDigits}";
             }
-        }
-
-        public static implicit operator LargeNumber(double value)
-        {
-            return new LargeNumber(value);
-        }
-
-        public static LargeNumber operator *(LargeNumber a, LargeNumber b)
-        {
-            return new LargeNumber(a.Value * b.Value, a.Multiplier + b.Multiplier);
-        }
-
-        public static LargeNumber operator /(LargeNumber a, LargeNumber b)
-        {
-            return new LargeNumber(a.Value / b.Value, a.Multiplier - b.Multiplier);
-        }
-
-        public static LargeNumber operator +(LargeNumber a, LargeNumber b)
-        {
-            var multAIsLarger = a.Multiplier > b.Multiplier;
-            var difference = Math.Abs(a.Multiplier - b.Multiplier);
-
-            if (multAIsLarger)
+            case NumDisplayFormat.Short:
             {
-                for (var i = 0; i < difference; i++)
+                if (Multiplier > EnumUtility<NumScalesShort>.Max || Multiplier < EnumUtility<NumScalesShort>.Min)
                 {
-                    b.value /= 1000;
-                    b.multiplier++;
+                    return ToString(NumDisplayFormat.Scientific);
                 }
+
+                return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesShort)Multiplier}";
             }
-            else
+            case NumDisplayFormat.Long:
             {
-                for (var i = 0; i < difference; i++)
+                if (Math.Abs(Multiplier) > EnumUtility<NumScalesLong>.Max || Math.Abs(Multiplier) < EnumUtility<NumScalesLong>.Min)
                 {
-                    a.value /= 1000;
-                    a.multiplier++;
+                    return ToString(NumDisplayFormat.Short);
                 }
+
+                return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesLong)Math.Abs(Multiplier)}{(Multiplier < 0 ? "th" : string.Empty)}";
             }
-
-            return new LargeNumber(a.value + b.value, a.multiplier);
-        }
-
-        public static LargeNumber operator -(LargeNumber a, LargeNumber b)
-        {
-            var multAIsLarger = a.Multiplier > b.Multiplier;
-            var difference = Math.Abs(a.Multiplier - b.Multiplier);
-
-            if (multAIsLarger)
+            default:
             {
-                for (var i = 0; i < difference; i++)
-                {
-                    b.value /= 1000;
-                    b.multiplier++;
-                }
+                throw ExceptionUtility.NotSupportedEnumValue(displayFormat);
             }
-            else
+        }
+    }
+
+    public static implicit operator LargeNumber(double value)
+    {
+        return new LargeNumber(value);
+    }
+
+    public static LargeNumber operator *(LargeNumber a, LargeNumber b)
+    {
+        return new LargeNumber(a.Value * b.Value, a.Multiplier + b.Multiplier);
+    }
+
+    public static LargeNumber operator /(LargeNumber a, LargeNumber b)
+    {
+        return new LargeNumber(a.Value / b.Value, a.Multiplier - b.Multiplier);
+    }
+
+    public static LargeNumber operator +(LargeNumber a, LargeNumber b)
+    {
+        var multAIsLarger = a.Multiplier > b.Multiplier;
+        var difference = Math.Abs(a.Multiplier - b.Multiplier);
+
+        if (multAIsLarger)
+        {
+            for (var i = 0; i < difference; i++)
             {
-                for (var i = 0; i < difference; i++)
-                {
-                    a.value /= 1000;
-                    a.multiplier++;
-                }
+                b.value /= 1000;
+                b.multiplier++;
             }
-
-            return new LargeNumber(a.value - b.value, a.multiplier);
         }
-
-        public static LargeNumber operator ++(LargeNumber a)
+        else
         {
-            return new LargeNumber(a.Value + 1, a.Multiplier);
-        }
-
-        public static LargeNumber operator --(LargeNumber a)
-        {
-            return new LargeNumber(a.Value - 1, a.Multiplier);
-        }
-
-        public static bool operator ==(LargeNumber lhs, LargeNumber rhs)
-        {
-            return lhs.Equals(rhs);
-        }
-
-        public static bool operator !=(LargeNumber lhs, LargeNumber rhs)
-        {
-            return !lhs.Equals(rhs);
-        }
-
-        public static bool operator >(LargeNumber lhs, LargeNumber rhs)
-        {
-            return lhs.CompareTo(rhs) > 0;
-        }
-
-        public static bool operator <(LargeNumber lhs, LargeNumber rhs)
-        {
-            return lhs.CompareTo(rhs) < 0;
-        }
-
-        public static bool operator >=(LargeNumber lhs, LargeNumber rhs)
-        {
-            return lhs.CompareTo(rhs) >= 0;
-        }
-
-        public static bool operator <=(LargeNumber lhs, LargeNumber rhs)
-        {
-            return lhs.CompareTo(rhs) <= 0;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is LargeNumber largeNumber)
+            for (var i = 0; i < difference; i++)
             {
-                return Equals(largeNumber);
+                a.value /= 1000;
+                a.multiplier++;
             }
-
-            return false;
         }
 
-        public override int GetHashCode()
-        {
-            return (Value, Multiplier).GetHashCode();
-        }
+        return new LargeNumber(a.value + b.value, a.multiplier);
+    }
 
-        public bool Equals(LargeNumber other)
-        {
-            return Math.Abs(Value - other.Value) < float.Epsilon && Multiplier == other.Multiplier;
-        }
+    public static LargeNumber operator -(LargeNumber a, LargeNumber b)
+    {
+        var multAIsLarger = a.Multiplier > b.Multiplier;
+        var difference = Math.Abs(a.Multiplier - b.Multiplier);
 
-        public int CompareTo(LargeNumber other)
+        if (multAIsLarger)
         {
-            if (Multiplier == other.Multiplier)
+            for (var i = 0; i < difference; i++)
             {
-                return Value.CompareTo(other.Value);
+                b.value /= 1000;
+                b.multiplier++;
             }
-
-            return Multiplier.CompareTo(other.Multiplier);
         }
+        else
+        {
+            for (var i = 0; i < difference; i++)
+            {
+                a.value /= 1000;
+                a.multiplier++;
+            }
+        }
+
+        return new LargeNumber(a.value - b.value, a.multiplier);
+    }
+
+    public static LargeNumber operator ++(LargeNumber a)
+    {
+        return new LargeNumber(a.Value + 1, a.Multiplier);
+    }
+
+    public static LargeNumber operator --(LargeNumber a)
+    {
+        return new LargeNumber(a.Value - 1, a.Multiplier);
+    }
+
+    public static bool operator ==(LargeNumber lhs, LargeNumber rhs)
+    {
+        return lhs.Equals(rhs);
+    }
+
+    public static bool operator !=(LargeNumber lhs, LargeNumber rhs)
+    {
+        return !lhs.Equals(rhs);
+    }
+
+    public static bool operator >(LargeNumber lhs, LargeNumber rhs)
+    {
+        return lhs.CompareTo(rhs) > 0;
+    }
+
+    public static bool operator <(LargeNumber lhs, LargeNumber rhs)
+    {
+        return lhs.CompareTo(rhs) < 0;
+    }
+
+    public static bool operator >=(LargeNumber lhs, LargeNumber rhs)
+    {
+        return lhs.CompareTo(rhs) >= 0;
+    }
+
+    public static bool operator <=(LargeNumber lhs, LargeNumber rhs)
+    {
+        return lhs.CompareTo(rhs) <= 0;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is LargeNumber largeNumber)
+        {
+            return Equals(largeNumber);
+        }
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return (Value, Multiplier).GetHashCode();
+    }
+
+    public bool Equals(LargeNumber other)
+    {
+        return Math.Abs(Value - other.Value) < float.Epsilon && Multiplier == other.Multiplier;
+    }
+
+    public int CompareTo(LargeNumber other)
+    {
+        if (Multiplier == other.Multiplier)
+        {
+            return Value.CompareTo(other.Value);
+        }
+
+        return Multiplier.CompareTo(other.Multiplier);
     }
 }

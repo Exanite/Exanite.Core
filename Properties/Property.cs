@@ -1,78 +1,77 @@
 using System;
 using Exanite.Core.Events;
 
-namespace Exanite.Core.Properties
+namespace Exanite.Core.Properties;
+
+public abstract class Property
 {
-    public abstract class Property
+    private readonly PropertyValueChangedEventArgs<object> propertyValueChangedEventArgs;
+
+    public string Key { get; }
+    public Type Type { get; }
+
+    public abstract object? UntypedValue { get; set; }
+
+    public event EventHandler<Property, PropertyValueChangedEventArgs<object>>? UntypedValueChanged;
+
+    protected Property(string key, Type type)
     {
-        private readonly PropertyValueChangedEventArgs<object> propertyValueChangedEventArgs;
+        propertyValueChangedEventArgs = new PropertyValueChangedEventArgs<object>(this);
 
-        public string Key { get; }
-        public Type Type { get; }
+        Key = key;
+        Type = type;
+    }
 
-        public abstract object? UntypedValue { get; set; }
+    protected void OnValueChangedUntyped(object? previousValue, object? newValue)
+    {
+        propertyValueChangedEventArgs.PreviousValue = previousValue;
+        propertyValueChangedEventArgs.NewValue = newValue;
 
-        public event EventHandler<Property, PropertyValueChangedEventArgs<object>>? UntypedValueChanged;
+        UntypedValueChanged?.Invoke(this, propertyValueChangedEventArgs);
+    }
+}
 
-        protected Property(string key, Type type)
+public class Property<T> : Property
+{
+    private T? value;
+
+    private readonly PropertyValueChangedEventArgs<T> propertyValueChangedEventArgs;
+
+    public T? Value
+    {
+        get => value;
+        set
         {
-            propertyValueChangedEventArgs = new PropertyValueChangedEventArgs<object>(this);
+            if (Equals(this.value, value))
+            {
+                return;
+            }
 
-            Key = key;
-            Type = type;
-        }
-
-        protected void OnValueChangedUntyped(object? previousValue, object? newValue)
-        {
-            propertyValueChangedEventArgs.PreviousValue = previousValue;
-            propertyValueChangedEventArgs.NewValue = newValue;
-
-            UntypedValueChanged?.Invoke(this, propertyValueChangedEventArgs);
+            var previousValue = this.value;
+            this.value = value;
+            OnValueChanged(previousValue, value);
         }
     }
 
-    public class Property<T> : Property
+    public override object? UntypedValue
     {
-        private T? value;
+        get => value;
+        set => this.value = (T?)value;
+    }
 
-        private readonly PropertyValueChangedEventArgs<T> propertyValueChangedEventArgs;
+    public event EventHandler<Property, PropertyValueChangedEventArgs<T>>? ValueChanged;
 
-        public T? Value
-        {
-            get => value;
-            set
-            {
-                if (Equals(this.value, value))
-                {
-                    return;
-                }
+    public Property(string key) : base(key, typeof(T))
+    {
+        propertyValueChangedEventArgs = new PropertyValueChangedEventArgs<T>(this);
+    }
 
-                var previousValue = this.value;
-                this.value = value;
-                OnValueChanged(previousValue, value);
-            }
-        }
+    private void OnValueChanged(T? previousValue, T? newValue)
+    {
+        propertyValueChangedEventArgs.PreviousValue = previousValue;
+        propertyValueChangedEventArgs.NewValue = newValue;
 
-        public override object? UntypedValue
-        {
-            get => value;
-            set => this.value = (T?)value;
-        }
-
-        public event EventHandler<Property, PropertyValueChangedEventArgs<T>>? ValueChanged;
-
-        public Property(string key) : base(key, typeof(T))
-        {
-            propertyValueChangedEventArgs = new PropertyValueChangedEventArgs<T>(this);
-        }
-
-        private void OnValueChanged(T? previousValue, T? newValue)
-        {
-            propertyValueChangedEventArgs.PreviousValue = previousValue;
-            propertyValueChangedEventArgs.NewValue = newValue;
-
-            ValueChanged?.Invoke(this, propertyValueChangedEventArgs);
-            OnValueChangedUntyped(previousValue, newValue);
-        }
+        ValueChanged?.Invoke(this, propertyValueChangedEventArgs);
+        OnValueChangedUntyped(previousValue, newValue);
     }
 }

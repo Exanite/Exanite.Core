@@ -1,138 +1,137 @@
 using System;
 using Exanite.Core.Utilities;
 
-namespace Exanite.Core.Runtime
+namespace Exanite.Core.Runtime;
+
+public class RefCounter : IRefCounted, ITrackedDisposable
 {
-    public class RefCounter : IRefCounted, ITrackedDisposable
+    private readonly object sync = new();
+
+    private readonly Action? onSetup;
+    private readonly Action? onTeardown;
+
+    public bool IsAlive { get; private set; }
+    public bool IsDisposed { get; private set; }
+
+    public uint RefCount { get; private set; }
+    public bool IsReusable { get; }
+
+    public RefCounter(uint initialRefCount, bool isReusable, Action? onSetup, Action? onTeardown)
     {
-        private readonly object sync = new();
+        RefCount = initialRefCount;
+        IsReusable = isReusable;
 
-        private readonly Action? onSetup;
-        private readonly Action? onTeardown;
+        this.onSetup = onSetup;
+        this.onTeardown = onTeardown;
 
-        public bool IsAlive { get; private set; }
-        public bool IsDisposed { get; private set; }
-
-        public uint RefCount { get; private set; }
-        public bool IsReusable { get; }
-
-        public RefCounter(uint initialRefCount, bool isReusable, Action? onSetup, Action? onTeardown)
+        if (initialRefCount > 0)
         {
-            RefCount = initialRefCount;
-            IsReusable = isReusable;
+            Setup();
+        }
+    }
 
-            this.onSetup = onSetup;
-            this.onTeardown = onTeardown;
+    public void AddRef()
+    {
+        lock (sync)
+        {
+            GuardUtility.IsFalse(IsDisposed, "Already disposed");
 
-            if (initialRefCount > 0)
+            if (RefCount == 0)
+            {
+                Setup();
+            }
+
+            RefCount++;
+        }
+    }
+
+    public void RemoveRef()
+    {
+        lock (sync)
+        {
+            GuardUtility.IsFalse(IsDisposed, "Already disposed");
+            GuardUtility.IsTrue(RefCount != 0, "Ref count is already 0");
+
+            RefCount--;
+
+            if (RefCount == 0)
+            {
+                Teardown();
+            }
+        }
+    }
+
+    public void SetRefCount(uint value)
+    {
+        lock (sync)
+        {
+            RefCount = value;
+
+            if (RefCount == 0)
+            {
+                Teardown();
+            }
+            else
             {
                 Setup();
             }
         }
+    }
 
-        public void AddRef()
+    public void Reset()
+    {
+        lock (sync)
         {
-            lock (sync)
-            {
-                GuardUtility.IsFalse(IsDisposed, "Already disposed");
-
-                if (RefCount == 0)
-                {
-                    Setup();
-                }
-
-                RefCount++;
-            }
+            Teardown();
+            IsDisposed = false;
         }
+    }
 
-        public void RemoveRef()
+    public void Dispose()
+    {
+        lock (sync)
         {
-            lock (sync)
-            {
-                GuardUtility.IsFalse(IsDisposed, "Already disposed");
-                GuardUtility.IsTrue(RefCount != 0, "Ref count is already 0");
-
-                RefCount--;
-
-                if (RefCount == 0)
-                {
-                    Teardown();
-                }
-            }
-        }
-
-        public void SetRefCount(uint value)
-        {
-            lock (sync)
-            {
-                RefCount = value;
-
-                if (RefCount == 0)
-                {
-                    Teardown();
-                }
-                else
-                {
-                    Setup();
-                }
-            }
-        }
-
-        public void Reset()
-        {
-            lock (sync)
-            {
-                Teardown();
-                IsDisposed = false;
-            }
-        }
-
-        public void Dispose()
-        {
-            lock (sync)
-            {
-                if (IsDisposed)
-                {
-                    return;
-                }
-
-                Teardown();
-                GC.SuppressFinalize(this);
-            }
-        }
-
-        // Idempotent
-        private void Setup()
-        {
-            GuardUtility.IsFalse(IsDisposed, "Already disposed");
-
-            if (IsAlive)
+            if (IsDisposed)
             {
                 return;
             }
 
-            IsAlive = true;
-            onSetup?.Invoke();
+            Teardown();
+            GC.SuppressFinalize(this);
+        }
+    }
+
+    // Idempotent
+    private void Setup()
+    {
+        GuardUtility.IsFalse(IsDisposed, "Already disposed");
+
+        if (IsAlive)
+        {
+            return;
         }
 
-        // Idempotent
-        private void Teardown()
+        IsAlive = true;
+        onSetup?.Invoke();
+    }
+
+    // Idempotent
+    private void Teardown()
+    {
+        GuardUtility.IsFalse(IsDisposed, "Already disposed");
+
+        if (!IsAlive)
         {
-            GuardUtility.IsFalse(IsDisposed, "Already disposed");
+            return;
+        }
 
-            if (!IsAlive)
-            {
-                return;
-            }
+        onTeardown?.Invoke();
+        IsAlive = false;
+        RefCount = 0;
 
-            onTeardown?.Invoke();
-            IsAlive = false;
-            RefCount = 0;
-
-            if (!IsReusable)
-            {
-                IsDisposed = true;
-            }
+        if (!IsReusable)
+        {
+            IsDisposed = true;
         }
     }
 }
