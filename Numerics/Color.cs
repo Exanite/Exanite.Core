@@ -1,0 +1,124 @@
+using System.Numerics;
+using Exanite.Core.Utilities;
+
+namespace Exanite.Core.Numerics;
+
+public struct Color
+{
+    private Vector4 color;
+    private ColorType type;
+
+    public ColorType Type
+    {
+        get => type;
+        set => type = value;
+    }
+
+    public Vector4 Value
+    {
+        readonly get => color;
+        set => color = value;
+    }
+
+    public float X
+    {
+        readonly get => color.X;
+        set => color.X = value;
+    }
+
+    public float Y
+    {
+        readonly get => color.Y;
+        set => color.Y = value;
+    }
+
+    public float Z
+    {
+        readonly get => color.Z;
+        set => color.Z = value;
+    }
+
+    public float W
+    {
+        readonly get => color.W;
+        set => color.W = value;
+    }
+
+    public Color(Vector4 color, ColorType type)
+    {
+        this.color = color;
+        this.type = type;
+    }
+
+    // Srgb
+
+    public static implicit operator Color(SrgbColor color)
+    {
+        return new Color(color.Value, ColorType.Srgb);
+    }
+
+    public static implicit operator SrgbColor(Color color)
+    {
+        return new SrgbColor(color.As(ColorType.Srgb).Value);
+    }
+
+    // Linear
+
+    public static implicit operator Color(LinearColor color)
+    {
+        return new Color(color.Value, ColorType.Linear);
+    }
+
+    public static implicit operator LinearColor(Color color)
+    {
+        return new LinearColor(color.As(ColorType.Linear).Value);
+    }
+
+    // Conversions
+
+    public Color As(ColorType type)
+    {
+        if (Type == type)
+        {
+            return this;
+        }
+
+        // Convert to linear first
+        switch (Type)
+        {
+            case ColorType.Srgb:
+            {
+                Value = M.SrgbToLinear(Value);
+                break;
+            }
+            case ColorType.Linear:
+            {
+                break;
+            }
+            default:
+            {
+                throw ExceptionUtility.NotSupportedEnumValue(Type);
+            }
+        }
+
+        // Convert to output type
+        switch (type)
+        {
+            case ColorType.Srgb:
+            {
+                Value = M.LinearToSrgb(Value);
+                break;
+            }
+            case ColorType.Linear:
+            {
+                break;
+            }
+            default:
+            {
+                throw ExceptionUtility.NotSupportedEnumValue(Type);
+            }
+        }
+
+        return new Color(Value, type);
+    }
+}
