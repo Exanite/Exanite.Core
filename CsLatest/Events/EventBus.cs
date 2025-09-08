@@ -15,7 +15,8 @@ namespace Exanite.Core.Events
     public class EventBus : IAllEventHandler, IDisposable
     {
         private readonly List<IAllEventHandler> allHandlers = new();
-        private readonly Dictionary<Type, List<object>> handlerLists = new();
+        private readonly Dictionary<Type, List<IAllEventHandler>> specificHandlersByType = new();
+        private readonly Dictionary<Type, List<object>> handlersByType = new();
 
         /// <summary>
         /// Configures all events received by this event bus to be sent to the provided handler.
@@ -31,6 +32,35 @@ namespace Exanite.Core.Events
         public bool UnregisterForwardAllTo(IAllEventHandler handler)
         {
             return allHandlers.Remove(handler);
+        }
+
+        /// <summary>
+        /// Configures events of the specified type to be sent to the provided handler.
+        /// </summary>
+        public void RegisterForwardSpecificTo<T>(IAllEventHandler handler)
+        {
+            var type = typeof(T);
+
+            if (!specificHandlersByType.ContainsKey(typeof(T)))
+            {
+                specificHandlersByType.Add(type, new List<IAllEventHandler>());
+            }
+
+            specificHandlersByType[type].Add(handler);
+        }
+
+        /// <summary>
+        /// Removes a handler registered by <see cref="RegisterForwardSpecificTo{T}(IAllEventHandler)"/>.
+        /// </summary>
+        /// <returns>True if the handler was successfully removed.</returns>
+        public bool UnregisterForwardSpecificTo<T>(IAllEventHandler handler)
+        {
+            if (!specificHandlersByType.TryGetValue(typeof(T), out var handlerList))
+            {
+                return false;
+            }
+
+            return handlerList.Remove(handler);
         }
 
         /// <summary>
@@ -54,17 +84,18 @@ namespace Exanite.Core.Events
         {
             var type = typeof(T);
 
-            if (!handlerLists.ContainsKey(typeof(T)))
+            if (!handlersByType.ContainsKey(typeof(T)))
             {
-                handlerLists.Add(type, new List<object>());
+                handlersByType.Add(type, new List<object>());
             }
 
-            handlerLists[type].Add(handler);
+            handlersByType[type].Add(handler);
         }
 
         /// <summary>
         /// Removes a handler registered by <see cref="Register{T}(IEventHandler{T})"/>.
         /// </summary>
+        /// <returns>True if the handler was successfully removed.</returns>
         public bool Unregister<T>(IEventHandler<T> handler)
 #if NETCOREAPP
             where T : allows ref struct
@@ -76,12 +107,13 @@ namespace Exanite.Core.Events
         /// <summary>
         /// Removes a handler registered by <see cref="Register{T}(Action{T})"/>.
         /// </summary>
+        /// <returns>True if the handler was successfully removed.</returns>
         public bool Unregister<T>(Action<T> handler)
 #if NETCOREAPP
             where T : allows ref struct
 #endif
         {
-            if (!handlerLists.TryGetValue(typeof(T), out var handlerList))
+            if (!handlersByType.TryGetValue(typeof(T), out var handlerList))
             {
                 return false;
             }
@@ -104,7 +136,15 @@ namespace Exanite.Core.Events
                 anyHandler.OnEvent(e);
             }
 
-            if (handlerLists.TryGetValue(type, out var handlerList))
+            if (specificHandlersByType.TryGetValue(type, out var specificHandlerList))
+            {
+                foreach (var handler in specificHandlerList)
+                {
+                    handler.OnEvent(e);
+                }
+            }
+
+            if (handlersByType.TryGetValue(type, out var handlerList))
             {
                 foreach (var handler in handlerList)
                 {
@@ -119,7 +159,8 @@ namespace Exanite.Core.Events
         public void Clear()
         {
             allHandlers.Clear();
-            handlerLists.Clear();
+            specificHandlersByType.Clear();
+            handlersByType.Clear();
         }
 
         public void Dispose()
