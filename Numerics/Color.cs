@@ -135,6 +135,26 @@ public struct Color
         return $"#{drawingColor.R:X2}{drawingColor.G:X2}{drawingColor.B:X2}{drawingColor.A:X2}";
     }
 
+    // Ansi
+
+    public string ToAnsi()
+    {
+        var drawingColor = ToDrawingColor();
+        var value = (drawingColor.R << 16) | (drawingColor.G << 8) | (drawingColor.B << 0);
+
+        return AnsiUtility.HexColorToAnsi(value);
+    }
+
+    public string ToAnsiForeground()
+    {
+        return AnsiUtility.AnsiForeground(ToAnsi());
+    }
+
+    public string ToAnsiBackground()
+    {
+        return AnsiUtility.AnsiBackground(ToAnsi());
+    }
+
     // Conversions
 
     public Color As(ColorType type)

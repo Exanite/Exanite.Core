@@ -17,9 +17,25 @@ public static class AnsiUtility
     /// <summary>
     /// Creates an ansi foreground escape code for the specified color.
     /// </summary>
+    public static string AnsiForeground(string ansiColor)
+    {
+        return $"\u001B[38;2;{ansiColor}m";
+    }
+
+    /// <summary>
+    /// Creates an ansi foreground escape code for the specified color.
+    /// </summary>
     public static string AnsiForeground(int color)
     {
-        return $"\u001B[38;2;{HexColorToAnsi(color)}m";
+        return AnsiForeground(HexColorToAnsi(color));
+    }
+
+    /// <summary>
+    /// Creates an ansi background escape code for the specified color.
+    /// </summary>
+    public static string AnsiBackground(string ansiColor)
+    {
+        return $"\u001B[48;2;{ansiColor}m";
     }
 
     /// <summary>
@@ -27,7 +43,7 @@ public static class AnsiUtility
     /// </summary>
     public static string AnsiBackground(int color)
     {
-        return $"\u001B[48;2;{HexColorToAnsi(color)}m";
+        return AnsiBackground(HexColorToAnsi(color));
     }
 
     /// <summary>
