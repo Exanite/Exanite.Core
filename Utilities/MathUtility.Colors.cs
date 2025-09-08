@@ -72,10 +72,9 @@ public static partial class M
     /// </summary>
     public static Vector4 HexToSrgb(string hex)
     {
-        var maxValue = (float)byte.MaxValue;
         var color = ColorTranslator.FromHtml(hex); // TODO: Don't use FromHtml
 
-        return new Vector4(color.R / maxValue, color.G / maxValue, color.B / maxValue, color.A / maxValue);
+        return new Vector4(color.R, color.G, color.B, color.A) / byte.MaxValue;
     }
 
     /// <summary>
