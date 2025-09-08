@@ -1,12 +1,8 @@
 # Exanite.Core
 
-Collection of miscellaneous code I use for my C# and Unity projects.
+Collection of miscellaneous code I use for my C# projects.
 
 Note: This package is intended for personal use. Things can change without warning.
-
-## Compilation Symbols
-
-- `EXANITE_CORE_DISABLE_MENU_ITEMS` - Prevents the menu items in Tools/Exanite.Core from being registered.
 
 ## License
 
