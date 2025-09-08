@@ -52,21 +52,36 @@ public static partial class M
         return value == Vector3.Zero ? fallback : Vector3.Normalize(value);
     }
 
+
+    /// <summary>
+    /// Clamps the length of the provided vector to between [0, maxLength].
+    /// </summary>
     public static Vector2 ClampMagnitude(Vector2 value, float maxLength)
     {
         return ClampMagnitude(value, 0, maxLength);
     }
 
+    /// <summary>
+    /// Clamps the length of the provided vector to between [minLength, maxLength].
+    /// If a zero vector is provided, then the result is a zero vector.
+    /// </summary>
     public static Vector2 ClampMagnitude(Vector2 value, float minLength, float maxLength)
     {
         return value.AsNormalizedSafe() * Clamp(value.Length(), minLength, maxLength);
     }
 
+    /// <summary>
+    /// Clamps the length of the provided vector to between [0, maxLength].
+    /// </summary>
     public static Vector3 ClampMagnitude(Vector3 value, float maxLength)
     {
         return ClampMagnitude(value, 0, maxLength);
     }
 
+    /// <summary>
+    /// Clamps the length of the provided vector to between [minLength, maxLength].
+    /// If a zero vector is provided, then the result is a zero vector.
+    /// </summary>
     public static Vector3 ClampMagnitude(Vector3 value, float minLength, float maxLength)
     {
         return value.AsNormalizedSafe() * Clamp(value.Length(), minLength, maxLength);
@@ -139,6 +154,9 @@ public static partial class M
 
     // Vector2 <- Vector3
 
+    /// <summary>
+    /// Converts a Vector3 into a Vector2 by dropping the Z component.
+    /// </summary>
     public static Vector2 Xy(this Vector3 value)
     {
         return new Vector2(value.X, value.Y);
@@ -146,11 +164,17 @@ public static partial class M
 
     // Vector2 -> Vector3
 
+    /// <summary>
+    /// Converts a Vector2 into a Vector3 using 0 for the Z component.
+    /// </summary>
     public static Vector3 Xy0(this Vector2 value)
     {
         return new Vector3(value.X, value.Y, 0);
     }
 
+    /// <summary>
+    /// Converts a Vector2 into a Vector3 using 1 for the Z component.
+    /// </summary>
     public static Vector3 Xy1(this Vector2 value)
     {
         return new Vector3(value.X, value.Y, 1);
@@ -158,6 +182,9 @@ public static partial class M
 
     // Vector3 <- Vector4
 
+    /// <summary>
+    /// Converts a Vector4 into a Vector3 by dropping the W component.
+    /// </summary>
     public static Vector3 Xyz(this Vector4 value)
     {
         return new Vector3(value.X, value.Y, value.Z);
@@ -165,11 +192,17 @@ public static partial class M
 
     // Vector3 -> Vector4
 
+    /// <summary>
+    /// Converts a Vector3 into a Vector4 using 0 for the Z component.
+    /// </summary>
     public static Vector4 Xyz0(this Vector3 value)
     {
         return new Vector4(value.X, value.Y, value.Z, 0);
     }
 
+    /// <summary>
+    /// Converts a Vector3 into a Vector4 using 1 for the Z component.
+    /// </summary>
     public static Vector4 Xyz1(this Vector3 value)
     {
         return new Vector4(value.X, value.Y, value.Z, 1);
@@ -177,6 +210,9 @@ public static partial class M
 
     // Vector2Int <- Vector3Int
 
+    /// <summary>
+    /// Converts a Vector3Int into a Vector2Int by dropping the Z component.
+    /// </summary>
     public static Vector2Int Xy(this Vector3Int value)
     {
         return new Vector2Int(value.X, value.Y);
@@ -184,11 +220,17 @@ public static partial class M
 
     // Vector2Int -> Vector3Int
 
+    /// <summary>
+    /// Converts a Vector2Int into a Vector3Int using 0 for the Z component.
+    /// </summary>
     public static Vector3Int Xy0(this Vector2Int value)
     {
         return new Vector3Int(value.X, value.Y, 0);
     }
 
+    /// <summary>
+    /// Converts a Vector2Int into a Vector3Int using 1 for the Z component.
+    /// </summary>
     public static Vector3Int Xy1(this Vector2Int value)
     {
         return new Vector3Int(value.X, value.Y, 1);
