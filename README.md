@@ -1,6 +1,7 @@
 # Exanite.Core
 
-Collection of miscellaneous code I use for my C# projects.
+Collection of miscellaneous code I use for my C# projects. \
+See the `unity` branch for Unity support (no longer maintained).
 
 Note: This package is intended for personal use. Things can change without warning.
 
