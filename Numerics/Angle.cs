@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
@@ -122,6 +123,78 @@ public struct Color
         readonly get => color.W;
         set => color.W = value;
     }
+
+    public Color(Vector4 color, ColorType type)
+    {
+        this.color = color;
+        this.type = type;
+    }
+
+    public static implicit operator Color(SrgbColor color)
+    {
+        return new Color(color.Value, ColorType.Srgb);
+    }
+
+    public static implicit operator Color(LinearColor color)
+    {
+        return new Color(color.Value, ColorType.Linear);
+    }
+
+    public static implicit operator SrgbColor(Color color)
+    {
+        return new SrgbColor(color.As(ColorType.Srgb).Value);
+    }
+
+    public static implicit operator LinearColor(Color color)
+    {
+        return new LinearColor(color.As(ColorType.Linear).Value);
+    }
+
+    public Color As(ColorType type)
+    {
+        if (Type == type)
+        {
+            return this;
+        }
+
+        // Convert to linear first
+        switch (Type)
+        {
+            case ColorType.Srgb:
+            {
+                Value = M.SrgbToLinear(Value);
+                break;
+            }
+            case ColorType.Linear:
+            {
+                break;
+            }
+            default:
+            {
+                throw ExceptionUtility.NotSupportedEnumValue(Type);
+            }
+        }
+
+        // Convert to output type
+        switch (type)
+        {
+            case ColorType.Srgb:
+            {
+                Value = M.LinearToSrgb(Value);
+                break;
+            }
+            case ColorType.Linear:
+            {
+                break;
+            }
+            default:
+            {
+                throw ExceptionUtility.NotSupportedEnumValue(Type);
+            }
+        }
+
+        return new Color(Value, type);
+    }
 }
 
 [StructLayout(LayoutKind.Sequential)]
@@ -158,6 +231,11 @@ public struct LinearColor
         readonly get => color.W;
         set => color.W = value;
     }
+
+    public LinearColor(Vector4 color)
+    {
+        this.color = color;
+    }
 }
 
 [StructLayout(LayoutKind.Sequential)]
@@ -193,5 +271,10 @@ public struct SrgbColor
     {
         readonly get => color.W;
         set => color.W = value;
+    }
+
+    public SrgbColor(Vector4 color)
+    {
+        this.color = color;
     }
 }
