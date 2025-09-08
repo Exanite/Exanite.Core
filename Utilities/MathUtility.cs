@@ -14,17 +14,37 @@ namespace Exanite.Core.Utilities
         #region Ranges
 
         /// <summary>
-        /// Interpolates from one value to another by <paramref name="t"/>.
-        /// <paramref name="t"/> will be clamped in the range [0, 1]
+        /// Clamps <see cref="value"/> to be in the range [<see cref="min"/>, <see cref="max"/>].
         /// </summary>
-        public static float Lerp(float from, float to, float t)
+        public static T Clamp<T>(T value, T min, T max) where T : INumber<T>
         {
-            t = Math.Clamp(t, 0, 1);
+            AssertUtility.IsTrue(min <= max, "min must be less than or equal to max");
+
+            if (value < min)
+            {
+                return min;
+            }
+
+            if (value > max)
+            {
+                return max;
+            }
+
+            return value;
+        }
+
+        /// <summary>
+        /// Interpolates from one value to another by <see cref="t"/>.
+        /// <see cref="t"/> will be clamped in the range [0, 1]
+        /// </summary>
+        public static T Lerp<T>(T from, T to, T t) where T : INumber<T>
+        {
+            t = Clamp(t, T.Zero, T.One);
             return from + (to - from) * t;
         }
 
         /// <summary>
-        /// Interpolates from one value to another by <paramref name="t"/>.
+        /// Interpolates from one value to another by <see cref="t"/>.
         /// </summary>
         public static float LerpUnclamped(float from, float to, float t)
         {
@@ -431,7 +451,7 @@ namespace Exanite.Core.Utilities
 
         /// <summary>
         /// Clamps the <see cref="Vector3"/> to the bounds given by
-        /// <paramref name="min"/> and <paramref name="max"/>.
+        /// <see cref="min"/> and <see cref="max"/>.
         /// </summary>
         public static void Clamp(ref this Vector3 vector, Vector3 min, Vector3 max)
         {
@@ -442,7 +462,7 @@ namespace Exanite.Core.Utilities
 
         /// <summary>
         /// Clamps the <see cref="Vector2"/> to the bounds given by
-        /// <paramref name="min"/> and <paramref name="max"/>.
+        /// <see cref="min"/> and <see cref="max"/>.
         /// </summary>
         public static void Clamp(ref this Vector2 vector, Vector2 min, Vector2 max)
         {
