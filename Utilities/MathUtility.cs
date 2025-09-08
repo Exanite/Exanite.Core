@@ -328,6 +328,87 @@ namespace Exanite.Core.Utilities
             return value == Vector3.Zero ? fallback : Vector3.Normalize(value);
         }
 
+        public static Vector2 ClampMagnitude(Vector2 value, float maxLength)
+        {
+            return ClampMagnitude(value, 0, maxLength);
+        }
+
+        public static Vector2 ClampMagnitude(Vector2 value, float minLength, float maxLength)
+        {
+            return value.AsNormalizedSafe() * Math.Clamp(value.Length(), minLength, maxLength);
+        }
+
+        public static Vector3 ClampMagnitude(Vector3 value, float maxLength)
+        {
+            return ClampMagnitude(value, 0, maxLength);
+        }
+
+        public static Vector3 ClampMagnitude(Vector3 value, float minLength, float maxLength)
+        {
+            return value.AsNormalizedSafe() * Math.Clamp(value.Length(), minLength, maxLength);
+        }
+
+        /// <summary>
+        /// Swaps the component values of a <see cref="Vector3"/> from XYZ to
+        /// the given format.
+        /// </summary>
+        public static Vector3 Swizzle(this Vector3 vector, Vector3Swizzle swizzle)
+        {
+            return swizzle switch
+            {
+                Vector3Swizzle.XYZ => vector,
+                Vector3Swizzle.XZY => new Vector3(vector.X, vector.Z, vector.Y),
+                Vector3Swizzle.YXZ => new Vector3(vector.Y, vector.X, vector.Z),
+                Vector3Swizzle.YZX => new Vector3(vector.Y, vector.Z, vector.X),
+                Vector3Swizzle.ZXY => new Vector3(vector.Z, vector.X, vector.Y),
+                Vector3Swizzle.ZYX => new Vector3(vector.Z, vector.Y, vector.X),
+                _ => throw ExceptionUtility.NotSupportedEnumValue(swizzle),
+            };
+        }
+
+        /// <summary>
+        /// Opposite of Swizzle. Swaps the component values of a
+        /// <see cref="Vector3"/> in the given format back to XYZ.
+        /// </summary>
+        public static Vector3 InverseSwizzle(this Vector3 vector, Vector3Swizzle swizzle)
+        {
+            return swizzle switch
+            {
+                Vector3Swizzle.XYZ => vector,
+                Vector3Swizzle.XZY => new Vector3(vector.X, vector.Z, vector.Y),
+                Vector3Swizzle.YXZ => new Vector3(vector.Y, vector.X, vector.Z),
+                Vector3Swizzle.YZX => new Vector3(vector.Z, vector.X, vector.Y),
+                Vector3Swizzle.ZXY => new Vector3(vector.Y, vector.Z, vector.X),
+                Vector3Swizzle.ZYX => new Vector3(vector.Z, vector.Y, vector.X),
+                _ => throw ExceptionUtility.NotSupportedEnumValue(swizzle),
+            };
+        }
+
+        /// <summary>
+        /// Clamps the <see cref="Vector2"/> to the bounds given by
+        /// <see cref="min"/> and <see cref="max"/>.
+        /// </summary>
+        public static void Clamp(ref this Vector2 vector, Vector2 min, Vector2 max)
+        {
+            vector.X = Math.Clamp(vector.X, min.X, max.X);
+            vector.Y = Math.Clamp(vector.Y, min.Y, max.Y);
+        }
+
+        /// <summary>
+        /// Clamps the <see cref="Vector3"/> to the bounds given by
+        /// <see cref="min"/> and <see cref="max"/>.
+        /// </summary>
+        public static void Clamp(ref this Vector3 vector, Vector3 min, Vector3 max)
+        {
+            vector.X = Math.Clamp(vector.X, min.X, max.X);
+            vector.Y = Math.Clamp(vector.Y, min.Y, max.Y);
+            vector.Z = Math.Clamp(vector.Z, min.Z, max.Z);
+        }
+
+        #endregion
+
+        #region Vector Conversion
+
         // Vector component count conversion
         // The goal is to keep these conversions minimal
         // so only the most common cases are handled
@@ -387,89 +468,6 @@ namespace Exanite.Core.Utilities
         public static Vector3Int Xy1(this Vector2Int value)
         {
             return new Vector3Int(value.X, value.Y, 1);
-        }
-
-        // ClampMagnitude
-
-        public static Vector2 ClampMagnitude(Vector2 value, float maxLength)
-        {
-            return ClampMagnitude(value, 0, maxLength);
-        }
-
-        public static Vector2 ClampMagnitude(Vector2 value, float minLength, float maxLength)
-        {
-            return value.AsNormalizedSafe() * Math.Clamp(value.Length(), minLength, maxLength);
-        }
-
-        public static Vector3 ClampMagnitude(Vector3 value, float maxLength)
-        {
-            return ClampMagnitude(value, 0, maxLength);
-        }
-
-        public static Vector3 ClampMagnitude(Vector3 value, float minLength, float maxLength)
-        {
-            return value.AsNormalizedSafe() * Math.Clamp(value.Length(), minLength, maxLength);
-        }
-
-        // Swizzle
-
-        /// <summary>
-        /// Swaps the component values of a <see cref="Vector3"/> from XYZ to
-        /// the given format.
-        /// </summary>
-        public static Vector3 Swizzle(this Vector3 vector, Vector3Swizzle swizzle)
-        {
-            return swizzle switch
-            {
-                Vector3Swizzle.XYZ => vector,
-                Vector3Swizzle.XZY => new Vector3(vector.X, vector.Z, vector.Y),
-                Vector3Swizzle.YXZ => new Vector3(vector.Y, vector.X, vector.Z),
-                Vector3Swizzle.YZX => new Vector3(vector.Y, vector.Z, vector.X),
-                Vector3Swizzle.ZXY => new Vector3(vector.Z, vector.X, vector.Y),
-                Vector3Swizzle.ZYX => new Vector3(vector.Z, vector.Y, vector.X),
-                _ => throw ExceptionUtility.NotSupportedEnumValue(swizzle),
-            };
-        }
-
-        /// <summary>
-        /// Opposite of Swizzle. Swaps the component values of a
-        /// <see cref="Vector3"/> in the given format back to XYZ.
-        /// </summary>
-        public static Vector3 InverseSwizzle(this Vector3 vector, Vector3Swizzle swizzle)
-        {
-            return swizzle switch
-            {
-                Vector3Swizzle.XYZ => vector,
-                Vector3Swizzle.XZY => new Vector3(vector.X, vector.Z, vector.Y),
-                Vector3Swizzle.YXZ => new Vector3(vector.Y, vector.X, vector.Z),
-                Vector3Swizzle.YZX => new Vector3(vector.Z, vector.X, vector.Y),
-                Vector3Swizzle.ZXY => new Vector3(vector.Y, vector.Z, vector.X),
-                Vector3Swizzle.ZYX => new Vector3(vector.Z, vector.Y, vector.X),
-                _ => throw ExceptionUtility.NotSupportedEnumValue(swizzle),
-            };
-        }
-
-        // Clamp
-
-        /// <summary>
-        /// Clamps the <see cref="Vector3"/> to the bounds given by
-        /// <see cref="min"/> and <see cref="max"/>.
-        /// </summary>
-        public static void Clamp(ref this Vector3 vector, Vector3 min, Vector3 max)
-        {
-            vector.X = Math.Clamp(vector.X, min.X, max.X);
-            vector.Y = Math.Clamp(vector.Y, min.Y, max.Y);
-            vector.Z = Math.Clamp(vector.Z, min.Z, max.Z);
-        }
-
-        /// <summary>
-        /// Clamps the <see cref="Vector2"/> to the bounds given by
-        /// <see cref="min"/> and <see cref="max"/>.
-        /// </summary>
-        public static void Clamp(ref this Vector2 vector, Vector2 min, Vector2 max)
-        {
-            vector.X = Math.Clamp(vector.X, min.X, max.X);
-            vector.Y = Math.Clamp(vector.Y, min.Y, max.Y);
         }
 
         #endregion
