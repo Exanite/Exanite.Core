@@ -79,6 +79,16 @@ public struct Color
         return new Color(value, ColorType.Srgb);
     }
 
+    public static Color FromSrgb(float r, float g, float b, float a = 1)
+    {
+        return new Color(new Vector4(r, g, b, a), ColorType.Srgb);
+    }
+
+    public static Color FromBytesSrgb(byte r, byte g, byte b, byte a = 1)
+    {
+        return new Color(new Vector4(r, g, b, a) / byte.MaxValue, ColorType.Srgb);
+    }
+
     // Linear
 
     public Color Linear => As(ColorType.Linear);
@@ -96,6 +106,11 @@ public struct Color
     public static Color FromLinear(Vector4 value)
     {
         return new Color(value, ColorType.Linear);
+    }
+
+    public static Color FromLinear(float r, float g, float b, float a = 1)
+    {
+        return new Color(new Vector4(r, g, b, a), ColorType.Linear);
     }
 
     // System.Drawing.Color
