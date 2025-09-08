@@ -48,4 +48,14 @@ public struct LinearColor
     {
         this.color = color;
     }
+
+    public static implicit operator LinearColor(Vector4 angle)
+    {
+        return new LinearColor(angle);
+    }
+
+    public static implicit operator Vector4(LinearColor angle)
+    {
+        return angle.Value;
+    }
 }

@@ -23,4 +23,14 @@ public struct Degrees
     {
         this.value = value;
     }
+
+    public static implicit operator Degrees(float angle)
+    {
+        return new Degrees(angle);
+    }
+
+    public static implicit operator float(Degrees angle)
+    {
+        return angle.Value;
+    }
 }

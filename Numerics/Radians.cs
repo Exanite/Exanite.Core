@@ -23,4 +23,14 @@ public struct Radians
     {
         this.value = value;
     }
+
+    public static implicit operator Radians(float angle)
+    {
+        return new Radians(angle);
+    }
+
+    public static implicit operator float(Radians angle)
+    {
+        return angle.Value;
+    }
 }
