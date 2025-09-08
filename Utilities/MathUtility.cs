@@ -436,6 +436,22 @@ public static partial class M
         return delta;
     }
 
+    /// <summary>
+    /// Gets the smallest positive difference between two angles, while taking the wrap-around point into account.
+    /// </summary>
+    public static T AngleBetweenRadians<T>(T current, T target) where T : IFloatingPoint<T>
+    {
+        return AngleDifferenceRadians(current, target);
+    }
+
+    /// <summary>
+    /// Gets the smallest positive difference between two angles, while taking the wrap-around point into account.
+    /// </summary>
+    public static T AngleBetweenDegrees<T>(T current, T target) where T : INumber<T>
+    {
+        return AngleDifferenceDegrees(current, target);
+    }
+
     #endregion
 
     #region IsApproximatelyEqual
