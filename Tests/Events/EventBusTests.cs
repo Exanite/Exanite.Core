@@ -16,16 +16,16 @@ namespace Exanite.Core.Tests.Events
             eventBus.Register(eventHandler);
             eventBus.Raise(new Event());
 
-            Assert.That(eventHandler.ReceiveCount == 1, Is.True);
+            Assert.That(eventHandler.ReceiveCount, Is.EqualTo(1));
 
             // Should not receive when unregistered
             eventBus.Unregister(eventHandler);
             eventBus.Raise(new Event());
 
-            Assert.That(eventHandler.ReceiveCount == 1, Is.True);
+            Assert.That(eventHandler.ReceiveCount, Is.EqualTo(1));
         }
 
-        private struct Event {}
+        private struct Event;
 
         private class EventHandler<T> : IEventHandler<T>
         {
