@@ -151,12 +151,12 @@ public static partial class M
     {
         return swizzle switch
         {
-            Vector3Swizzle.XYZ => vector,
-            Vector3Swizzle.XZY => new Vector3(vector.X, vector.Z, vector.Y),
-            Vector3Swizzle.YXZ => new Vector3(vector.Y, vector.X, vector.Z),
-            Vector3Swizzle.YZX => new Vector3(vector.Y, vector.Z, vector.X),
-            Vector3Swizzle.ZXY => new Vector3(vector.Z, vector.X, vector.Y),
-            Vector3Swizzle.ZYX => new Vector3(vector.Z, vector.Y, vector.X),
+            Vector3Swizzle.Xyz => vector,
+            Vector3Swizzle.Xzy => new Vector3(vector.X, vector.Z, vector.Y),
+            Vector3Swizzle.Yxz => new Vector3(vector.Y, vector.X, vector.Z),
+            Vector3Swizzle.Yzx => new Vector3(vector.Y, vector.Z, vector.X),
+            Vector3Swizzle.Zxy => new Vector3(vector.Z, vector.X, vector.Y),
+            Vector3Swizzle.Zyx => new Vector3(vector.Z, vector.Y, vector.X),
             _ => throw ExceptionUtility.NotSupportedEnumValue(swizzle),
         };
     }
@@ -169,12 +169,12 @@ public static partial class M
     {
         return swizzle switch
         {
-            Vector3Swizzle.XYZ => vector,
-            Vector3Swizzle.XZY => new Vector3(vector.X, vector.Z, vector.Y),
-            Vector3Swizzle.YXZ => new Vector3(vector.Y, vector.X, vector.Z),
-            Vector3Swizzle.YZX => new Vector3(vector.Z, vector.X, vector.Y),
-            Vector3Swizzle.ZXY => new Vector3(vector.Y, vector.Z, vector.X),
-            Vector3Swizzle.ZYX => new Vector3(vector.Z, vector.Y, vector.X),
+            Vector3Swizzle.Xyz => vector,
+            Vector3Swizzle.Xzy => new Vector3(vector.X, vector.Z, vector.Y),
+            Vector3Swizzle.Yxz => new Vector3(vector.Y, vector.X, vector.Z),
+            Vector3Swizzle.Yzx => new Vector3(vector.Z, vector.X, vector.Y),
+            Vector3Swizzle.Zxy => new Vector3(vector.Y, vector.Z, vector.X),
+            Vector3Swizzle.Zyx => new Vector3(vector.Z, vector.Y, vector.X),
             _ => throw ExceptionUtility.NotSupportedEnumValue(swizzle),
         };
     }
