@@ -16,27 +16,11 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts radians to degrees.
-    /// </summary>
-    public static TOut Rad2Deg<TIn, TOut>(TIn radians) where TIn : INumber<TIn> where TOut : IFloatingPoint<TOut>
-    {
-        return TOut.CreateChecked(radians) * (TOut.CreateTruncating(180) / TOut.Pi);
-    }
-
-    /// <summary>
     /// Converts degrees to radians.
     /// </summary>
     public static float Deg2Rad<T>(T degrees) where T : INumber<T>
     {
         return float.CreateChecked(degrees) * (float.Pi / 180);
-    }
-
-    /// <summary>
-    /// Converts degrees to radians.
-    /// </summary>
-    public static TOut Deg2Rad<TIn, TOut>(TIn degrees) where TIn : INumber<TIn> where TOut : IFloatingPoint<TOut>
-    {
-        return TOut.CreateChecked(degrees) * (TOut.Pi / TOut.CreateChecked(180));
     }
 
     /// <summary>
