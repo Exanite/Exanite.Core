@@ -15,14 +15,14 @@ namespace Exanite.Core.Numerics;
 /// </remarks>
 public struct Color
 {
-    public Color White => FromSrgb(1, 1, 1);
-    public Color Black => FromSrgb(1, 1, 1);
-    public Color Red => FromSrgb(1, 0, 0);
-    public Color Green => FromSrgb(0, 1, 0);
-    public Color Blue => FromSrgb(0, 0, 1);
-    public Color Yellow => FromSrgb(1, 1, 0);
-    public Color Cyan => FromSrgb(0, 1, 1);
-    public Color Magenta => FromSrgb(1, 0, 1);
+    public static Color White => FromSrgb(1, 1, 1);
+    public static Color Black => FromSrgb(1, 1, 1);
+    public static Color Red => FromSrgb(1, 0, 0);
+    public static Color Green => FromSrgb(0, 1, 0);
+    public static Color Blue => FromSrgb(0, 0, 1);
+    public static Color Yellow => FromSrgb(1, 1, 0);
+    public static Color Cyan => FromSrgb(0, 1, 1);
+    public static Color Magenta => FromSrgb(1, 0, 1);
 
     private Vector4 color;
     private ColorType type;
