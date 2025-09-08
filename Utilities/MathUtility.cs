@@ -253,6 +253,7 @@ namespace Exanite.Core.Utilities
 
         /// <summary>
         /// Returns the next power of 2 if <see cref="value"/> is not already a power of 2.
+        /// The minimum value this method will return is 2.
         /// </summary>
         /// <example>
         /// GetNextPowerOfTwo(16) will return 16.
@@ -261,11 +262,6 @@ namespace Exanite.Core.Utilities
         /// </example>
         public static T GetNextPowerOfTwo<T>(T value) where T : IBinaryInteger<T>
         {
-            if (value <= T.One)
-            {
-                return T.One;
-            }
-
             return T.One << ((int)Math.Log2(double.CreateTruncating(value - T.One)) + 1);
         }
 
@@ -662,7 +658,7 @@ namespace Exanite.Core.Utilities
         }
 
         /// <summary>
-        /// Gets the difference between two angles, while taking the wrap-around point into account.
+        /// Gets the signed difference between two angles, while taking the wrap-around point into account.
         /// </summary>
         public static T DeltaAngleRadians<T>(T current, T target) where T : IFloatingPoint<T>
         {
@@ -672,12 +668,11 @@ namespace Exanite.Core.Utilities
                 delta -= T.Pi + T.Pi;
             }
 
-            AssertUtility.IsTrue(delta >= T.Zero, "Internal: Expected delta to be non-negative");
             return delta;
         }
 
         /// <summary>
-        /// Gets the difference between two angles, while taking the wrap-around point into account.
+        /// Gets the signed difference between two angles, while taking the wrap-around point into account.
         /// </summary>
         public static T DeltaAngleDegrees<T>(T current, T target) where T : INumber<T>
         {
