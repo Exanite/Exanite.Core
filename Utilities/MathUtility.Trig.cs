@@ -1,4 +1,5 @@
 using System.Numerics;
+using Exanite.Core.Numerics;
 
 namespace Exanite.Core.Utilities;
 
@@ -80,6 +81,50 @@ public static partial class M
     public static T AngleBetweenDegrees<T>(T current, T target) where T : INumber<T>
     {
         return AngleDifferenceDegrees(current, target);
+    }
+
+    #endregion
+
+    #region Angle struct
+
+    /// <summary>
+    /// Returns the absolute value of the provided angle.
+    /// </summary>
+    public static Angle Abs(this Angle value)
+    {
+        return Angle.FromRadians(Abs(value.Radians.Value));
+    }
+
+    /// <summary>
+    /// Gets the smallest signed difference between two angles, while taking the wrap-around point into account.
+    /// </summary>
+    public static Angle AngleDifference(Angle a, Angle b)
+    {
+        return Angle.FromRadians(AngleBetweenRadians(a.Radians.Value, b.Radians.Value));
+    }
+
+    /// <summary>
+    /// Gets the smallest positive difference between two angles, while taking the wrap-around point into account.
+    /// </summary>
+    public static Angle AngleBetween(Angle a, Angle b)
+    {
+        return Angle.FromRadians(AngleBetweenRadians(a.Radians.Value, b.Radians.Value));
+    }
+
+    /// <summary>
+    /// Normalizes the angle to be in the range [0, 360] degrees or [0, 2pi] radians.
+    /// </summary>
+    public static Angle Normalize360(this Angle a)
+    {
+        return Angle.FromRadians(Wrap(a.Radians.Value, 0, 2 * float.Pi));
+    }
+
+    /// <summary>
+    /// Normalizes the angle to be in the range [-180, 180] degrees or [-pi, pi] radians.
+    /// </summary>
+    public static Angle Normalize180(this Angle a)
+    {
+        return Angle.FromRadians(Wrap(a.Radians.Value, -float.Pi, float.Pi));
     }
 
     #endregion
