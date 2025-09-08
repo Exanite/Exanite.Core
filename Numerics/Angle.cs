@@ -41,6 +41,11 @@ public struct Angle
         return new Degrees(angle.As(AngleType.Degrees).Value);
     }
 
+    public static Angle FromDegrees(float value)
+    {
+        return new Angle(value, AngleType.Degrees);
+    }
+
     // Radians
 
     public static implicit operator Angle(Radians angle)
@@ -51,6 +56,11 @@ public struct Angle
     public static implicit operator Radians(Angle angle)
     {
         return new Radians(angle.As(AngleType.Radians).Value);
+    }
+
+    public static Angle FromRadians(float value)
+    {
+        return new Angle(value, AngleType.Radians);
     }
 
     // Conversions
