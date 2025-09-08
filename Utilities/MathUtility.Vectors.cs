@@ -30,6 +30,16 @@ public static partial class M
 
     /// <summary>
     /// Interpolates from one vector to another by <see cref="t"/>.
+    /// <see cref="t"/> will be clamped in the range [0, 1]
+    /// </summary>
+    public static Vector4 Lerp(Vector4 from, Vector4 to, float t)
+    {
+        t = Clamp(t, 0, 1);
+        return from + (to - from) * t;
+    }
+
+    /// <summary>
+    /// Interpolates from one vector to another by <see cref="t"/>.
     /// </summary>
     public static Vector2 LerpUnclamped(Vector2 from, Vector2 to, float t)
     {
@@ -40,6 +50,14 @@ public static partial class M
     /// Interpolates from one vector to another by <see cref="t"/>.
     /// </summary>
     public static Vector3 LerpUnclamped(Vector3 from, Vector3 to, float t)
+    {
+        return from + (to - from) * t;
+    }
+
+    /// <summary>
+    /// Interpolates from one vector to another by <see cref="t"/>.
+    /// </summary>
+    public static Vector4 LerpUnclamped(Vector4 from, Vector4 to, float t)
     {
         return from + (to - from) * t;
     }
