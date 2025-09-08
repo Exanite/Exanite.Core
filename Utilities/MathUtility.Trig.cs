@@ -188,7 +188,7 @@ public static partial class M
     /// </summary>
     public static Angle AngleDifference(Angle a, Angle b)
     {
-        return Angle.FromRadians(AngleBetweenRadians(a.Radians.Value, b.Radians.Value));
+        return Angle.FromRadians(AngleDifferenceRadians(a.Radians.Value, b.Radians.Value));
     }
 
     /// <summary>
