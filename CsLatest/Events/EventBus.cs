@@ -17,12 +17,12 @@ namespace Exanite.Core.Events
         private readonly List<IAllEventHandler> allHandlers = new();
         private readonly Dictionary<Type, List<object>> handlerLists = new();
 
-        public void RegisterSendAllTo(IAllEventHandler handler)
+        public void RegisterForwardAllTo(IAllEventHandler handler)
         {
             allHandlers.Add(handler);
         }
 
-        public bool UnregisterSendAllTo(IAllEventHandler handler)
+        public bool UnregisterForwardAllTo(IAllEventHandler handler)
         {
             return allHandlers.Remove(handler);
         }
