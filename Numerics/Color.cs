@@ -15,6 +15,15 @@ namespace Exanite.Core.Numerics;
 /// </remarks>
 public struct Color
 {
+    public Color White => FromSrgb(1, 1, 1);
+    public Color Black => FromSrgb(1, 1, 1);
+    public Color Red => FromSrgb(1, 0, 0);
+    public Color Green => FromSrgb(0, 1, 0);
+    public Color Blue => FromSrgb(0, 0, 1);
+    public Color Yellow => FromSrgb(1, 1, 0);
+    public Color Cyan => FromSrgb(0, 1, 1);
+    public Color Magenta => FromSrgb(1, 0, 1);
+
     private Vector4 color;
     private ColorType type;
 
@@ -216,5 +225,32 @@ public struct Color
         }
 
         return new Color(Value, type);
+    }
+
+    // Predefined palettes
+    // These palettes are mainly for debugging or placeholder purposes
+
+    /// <summary>
+    /// Color palette based on Minecraft 1.12 dye colors.
+    /// See https://minecraft.fandom.com/wiki/Dye
+    /// </summary>
+    public static class Dyes
+    {
+        public static Color White => FromHex("#F9FFFE");
+        public static Color LightGray => FromHex("#9D9D97");
+        public static Color Gray => FromHex("#474F52");
+        public static Color Black => FromHex("#1D1D21");
+        public static Color Brown => FromHex("#835432");
+        public static Color Red => FromHex("#B02E26");
+        public static Color Orange => FromHex("#F9801D");
+        public static Color Yellow => FromHex("#FED83D");
+        public static Color Lime => FromHex("#80C71F");
+        public static Color Green => FromHex("#5E7C16");
+        public static Color Cyan => FromHex("#169C9C");
+        public static Color LightBlue => FromHex("#3AB3DA");
+        public static Color Blue => FromHex("#3C44AA");
+        public static Color Purple => FromHex("#8932B8");
+        public static Color Magenta => FromHex("#C74EBD");
+        public static Color Pink => FromHex("#F38BAA");
     }
 }
