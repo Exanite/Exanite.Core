@@ -83,6 +83,11 @@ public struct Color
         return new SrgbColor(color.As(ColorType.Srgb).Value);
     }
 
+    public static Color FromSrgb(Vector3 value)
+    {
+        return new Color(value.Xyz1(), ColorType.Srgb);
+    }
+
     public static Color FromSrgb(Vector4 value)
     {
         return new Color(value, ColorType.Srgb);
@@ -110,6 +115,11 @@ public struct Color
     public static implicit operator LinearColor(Color color)
     {
         return new LinearColor(color.As(ColorType.Linear).Value);
+    }
+
+    public static Color FromLinear(Vector3 value)
+    {
+        return new Color(value.Xyz1(), ColorType.Linear);
     }
 
     public static Color FromLinear(Vector4 value)
