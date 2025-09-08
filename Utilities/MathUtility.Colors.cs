@@ -67,12 +67,23 @@ public static partial class M
         return new Vector4(LinearToSrgb(srgb.X), LinearToSrgb(srgb.Y), LinearToSrgb(srgb.Z), srgb.W);
     }
 
-    public static Vector4 SrgbToLinear(string htmlColor)
+    /// <summary>
+    /// Converts a hex color code to sRGB [0, 1].
+    /// </summary>
+    public static Vector4 HexToSrgb(string hex)
     {
         var maxValue = (float)byte.MaxValue;
-        var color = ColorTranslator.FromHtml(htmlColor);
+        var color = ColorTranslator.FromHtml(hex); // TODO: Don't use FromHtml
 
-        return SrgbToLinear(new Vector4(color.R / maxValue, color.G / maxValue, color.B / maxValue, color.A / maxValue));
+        return new Vector4(color.R / maxValue, color.G / maxValue, color.B / maxValue, color.A / maxValue);
+    }
+
+    /// <summary>
+    /// Converts a hex color code to linear [0, 1].
+    /// </summary>
+    public static Vector4 HexToLinear(string hex)
+    {
+        return SrgbToLinear(HexToSrgb(hex));
     }
 
     #endregion
