@@ -1,3 +1,4 @@
+using System;
 using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
@@ -6,7 +7,7 @@ namespace Exanite.Core.Numerics;
 /// General purpose angle representation struct.
 /// Allows for easy conversion between different formats.
 /// </summary>
-public struct Angle
+public struct Angle : IEquatable<Angle>, IComparable<Angle>
 {
     private float angle;
     private AngleType type;
@@ -113,5 +114,93 @@ public struct Angle
         }
 
         return new Angle(Value, type);
+    }
+
+    // Comparisons
+
+    public static bool operator ==(Angle a, Angle b)
+    {
+        b = b.As(a.Type);
+        return M.IsApproximatelyEqual(a.Value, b.Value);
+    }
+
+    public static bool operator !=(Angle a, Angle b)
+    {
+        b = b.As(a.Type);
+        return !M.IsApproximatelyEqual(a.Value, b.Value);
+    }
+
+    public static bool operator <(Angle a, Angle b)
+    {
+        b = b.As(a.Type);
+        return a.Value < b.Value;
+    }
+
+    public static bool operator >(Angle a, Angle b)
+    {
+        b = b.As(a.Type);
+        return a.Value > b.Value;
+    }
+
+    public bool Equals(Angle other)
+    {
+        return this == other;
+    }
+
+    public int CompareTo(Angle other)
+    {
+        other = other.As(Type);
+        
+        if (M.IsApproximatelyEqual(Value, other.Value))
+        {
+            return 0;
+        }
+
+        return Value < other.Value ? -1 : 1;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Angle other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        var radians = As(AngleType.Radians);
+        return radians.Value.GetHashCode();
+    }
+
+    // Operators
+
+    public static Angle operator +(Angle a, Angle b)
+    {
+        b = b.As(a.Type);
+        return new Angle(a.Value + b.Value, a.Type);
+    }
+
+    public static Angle operator -(Angle a, Angle b)
+    {
+        b = b.As(a.Type);
+        return new Angle(a.Value - b.Value, a.Type);
+    }
+
+    public static Angle operator -(Angle a)
+    {
+        return new Angle(-a.Value, a.Type);
+    }
+
+    public static Angle operator *(Angle a, float scalar)
+    {
+        return new Angle(a.Value * scalar, a.Type);
+    }
+
+    public static Angle operator *(float scalar, Angle a)
+    {
+        return new Angle(a.Value * scalar, a.Type);
+    }
+
+    public static Angle operator /(Angle a, float scalar)
+    {
+        return new Angle(a.Value / scalar, a.Type);
     }
 }
