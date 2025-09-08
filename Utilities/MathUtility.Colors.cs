@@ -1,11 +1,12 @@
 using System;
 using System.Numerics;
+using Exanite.Core.Numerics;
 
 namespace Exanite.Core.Utilities;
 
 public static partial class M
 {
-    #region Colors
+    #region Color conversion
 
     // sRGB-Linear conversion formulas are from: https://entropymine.com/imageworsener/srgbformula/
 
@@ -115,6 +116,33 @@ public static partial class M
     public static Vector4 HexToLinear(string hex)
     {
         return SrgbToLinear(HexToSrgb(hex));
+    }
+
+    #endregion
+
+    #region Color struct
+
+    /// <summary>
+    /// Interpolates from one value to another by <see cref="t"/>.
+    /// <see cref="t"/> will be clamped in the range [0, 1]
+    /// </summary>
+    public static Color Lerp(Color from, Color to, float t, ColorType mixingSpace)
+    {
+        from = from.As(mixingSpace);
+        to = to.As(mixingSpace);
+
+        return new Color(Lerp(from.Value, to.Value, t), mixingSpace);
+    }
+
+    /// <summary>
+    /// Interpolates from one value to another by <see cref="t"/>.
+    /// </summary>
+    public static Color LerpUnclamped(Color from, Color to, float t, ColorType mixingSpace)
+    {
+        from = from.As(mixingSpace);
+        to = to.As(mixingSpace);
+
+        return new Color(LerpUnclamped(from.Value, to.Value, t), mixingSpace);
     }
 
     #endregion
