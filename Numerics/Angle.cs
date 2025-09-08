@@ -41,7 +41,7 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
 
     public static implicit operator Degrees(Angle angle)
     {
-        return new Degrees(angle.As(AngleType.Degrees).Value);
+        return new Degrees(angle.Degrees.Value);
     }
 
     public static Angle FromDegrees(float value)
@@ -60,7 +60,7 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
 
     public static implicit operator Radians(Angle angle)
     {
-        return new Radians(angle.As(AngleType.Radians).Value);
+        return new Radians(angle.Radians.Value);
     }
 
     public static Angle FromRadians(float value)
@@ -166,8 +166,7 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
 
     public override int GetHashCode()
     {
-        var radians = As(AngleType.Radians);
-        return radians.Value.GetHashCode();
+        return Radians.Value.GetHashCode();
     }
 
     // Operators
