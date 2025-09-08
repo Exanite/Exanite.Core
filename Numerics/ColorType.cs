@@ -6,14 +6,14 @@ namespace Exanite.Core.Numerics;
 public enum ColorType
 {
     /// <summary>
-    /// Standard RGB color space (sRGB).
-    /// Commonly used for UI and images.
-    /// </summary>
-    Srgb = 0,
-
-    /// <summary>
     /// Linear sRGB color space.
     /// Commonly used in rendering and lighting calculations.
     /// </summary>
-    Linear,
+    Linear = 0,
+
+    /// <summary>
+    /// Standard RGB color space (sRGB).
+    /// Commonly used for UI and images.
+    /// </summary>
+    Srgb,
 }
