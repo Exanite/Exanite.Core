@@ -9,6 +9,9 @@ namespace Exanite.Core.Numerics;
 /// </summary>
 public struct Angle : IEquatable<Angle>, IComparable<Angle>
 {
+    public static Angle Zero => FromRadians(0);
+    public static Angle Pi => FromRadians(float.Pi);
+
     private float angle;
     private AngleType type;
 
