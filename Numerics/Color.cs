@@ -98,7 +98,7 @@ public struct Color
         return new Color(new Vector4(r, g, b, a), ColorType.Srgb);
     }
 
-    public static Color FromBytesSrgb(byte r, byte g, byte b, byte a = 1)
+    public static Color FromBytesSrgb(byte r, byte g, byte b, byte a = byte.MaxValue)
     {
         return new Color(new Vector4(r, g, b, a) / byte.MaxValue, ColorType.Srgb);
     }
