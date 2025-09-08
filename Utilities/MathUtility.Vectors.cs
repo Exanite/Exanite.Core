@@ -73,6 +73,27 @@ public static partial class M
     }
 
     /// <summary>
+    /// Clamps the <see cref="Vector2"/> to the bounds given by
+    /// <see cref="min"/> and <see cref="max"/>.
+    /// </summary>
+    public static void Clamp(ref this Vector2 vector, Vector2 min, Vector2 max)
+    {
+        vector.X = Clamp(vector.X, min.X, max.X);
+        vector.Y = Clamp(vector.Y, min.Y, max.Y);
+    }
+
+    /// <summary>
+    /// Clamps the <see cref="Vector3"/> to the bounds given by
+    /// <see cref="min"/> and <see cref="max"/>.
+    /// </summary>
+    public static void Clamp(ref this Vector3 vector, Vector3 min, Vector3 max)
+    {
+        vector.X = Clamp(vector.X, min.X, max.X);
+        vector.Y = Clamp(vector.Y, min.Y, max.Y);
+        vector.Z = Clamp(vector.Z, min.Z, max.Z);
+    }
+
+    /// <summary>
     /// Swaps the component values of a <see cref="Vector3"/> from XYZ to
     /// the given format.
     /// </summary>
@@ -106,27 +127,6 @@ public static partial class M
             Vector3Swizzle.ZYX => new Vector3(vector.Z, vector.Y, vector.X),
             _ => throw ExceptionUtility.NotSupportedEnumValue(swizzle),
         };
-    }
-
-    /// <summary>
-    /// Clamps the <see cref="Vector2"/> to the bounds given by
-    /// <see cref="min"/> and <see cref="max"/>.
-    /// </summary>
-    public static void Clamp(ref this Vector2 vector, Vector2 min, Vector2 max)
-    {
-        vector.X = Clamp(vector.X, min.X, max.X);
-        vector.Y = Clamp(vector.Y, min.Y, max.Y);
-    }
-
-    /// <summary>
-    /// Clamps the <see cref="Vector3"/> to the bounds given by
-    /// <see cref="min"/> and <see cref="max"/>.
-    /// </summary>
-    public static void Clamp(ref this Vector3 vector, Vector3 min, Vector3 max)
-    {
-        vector.X = Clamp(vector.X, min.X, max.X);
-        vector.Y = Clamp(vector.Y, min.Y, max.Y);
-        vector.Z = Clamp(vector.Z, min.Z, max.Z);
     }
 
     #endregion
