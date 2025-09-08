@@ -2,6 +2,10 @@ using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
+/// <summary>
+/// General purpose angle representation struct.
+/// Allows for easy conversion between different formats.
+/// </summary>
 public struct Angle
 {
     private float value;

@@ -3,6 +3,10 @@ using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
+/// <summary>
+/// General purpose color representation struct.
+/// Allows for easy conversion between different formats.
+/// </summary>
 public struct Color
 {
     private Vector4 color;
