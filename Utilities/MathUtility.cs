@@ -11,26 +11,38 @@ namespace Exanite.Core.Utilities
         // First by: float, double, int, long
         // Then by: degrees, radians
 
-        #region Ranges
+        #region INumbers
+
+        /// <summary>
+        /// Returns the absolute value of the provided value.
+        /// </summary>
+        public static T Abs<T>(T a) where T : INumber<T>
+        {
+            return T.Abs(a);
+        }
+
+        /// <summary>
+        /// Returns the minimum of the two provided values.
+        /// </summary>
+        public static T Min<T>(T a, T b) where T : INumber<T>
+        {
+            return T.Min(a, b);
+        }
+
+        /// <summary>
+        /// Returns the maximum of the two provided values.
+        /// </summary>
+        public static T Max<T>(T a, T b) where T : INumber<T>
+        {
+            return T.Max(a, b);
+        }
 
         /// <summary>
         /// Clamps <see cref="value"/> to be in the range [<see cref="min"/>, <see cref="max"/>].
         /// </summary>
         public static T Clamp<T>(T value, T min, T max) where T : INumber<T>
         {
-            AssertUtility.IsTrue(min <= max, "min must be less than or equal to max");
-
-            if (value < min)
-            {
-                return min;
-            }
-
-            if (value > max)
-            {
-                return max;
-            }
-
-            return value;
+            return T.Clamp(value, min, max);
         }
 
         /// <summary>
@@ -52,17 +64,6 @@ namespace Exanite.Core.Utilities
         }
 
         /// <summary>
-        /// Remaps a value from one range to another.
-        /// </summary>
-        public static T Remap<T>(T value, T fromMin, T fromMax, T toMin, T toMax) where T : IFloatingPoint<T>
-        {
-            var fromRange = fromMax - fromMin;
-            var toRange = toMax - toMin;
-
-            return fromRange == T.Zero ? toMin : toRange * ((value - fromMin) / fromRange) + toMin;
-        }
-
-        /// <summary>
         /// Wraps a value between min and max values.
         /// </summary>
         public static T Wrap<T>(T value, T min, T max) where T : INumber<T>
@@ -80,7 +81,18 @@ namespace Exanite.Core.Utilities
 
         #endregion
 
-        #region Floats
+        #region IFloatingPoint
+
+        /// <summary>
+        /// Remaps a value from one range to another.
+        /// </summary>
+        public static T Remap<T>(T value, T fromMin, T fromMax, T toMin, T toMax) where T : IFloatingPoint<T>
+        {
+            var fromRange = fromMax - fromMin;
+            var toRange = toMax - toMin;
+
+            return fromRange == T.Zero ? toMin : toRange * ((value - fromMin) / fromRange) + toMin;
+        }
 
         public static float MoveTowards(float current, float target, float maxDelta)
         {
