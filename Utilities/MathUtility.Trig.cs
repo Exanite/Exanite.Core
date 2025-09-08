@@ -8,6 +8,62 @@ public static partial class M
     #region Trigonometry
 
     /// <summary>
+    /// Returns the sine of an angle.
+    /// </summary>
+    public static float Sin<T>(T radians) where T : INumber<T>
+    {
+        return float.Sin(float.CreateChecked(radians));
+    }
+
+    /// <summary>
+    /// Returns the cosine of an angle.
+    /// </summary>
+    public static float Cos<T>(T radians) where T : INumber<T>
+    {
+        return float.Cos(float.CreateChecked(radians));
+    }
+
+    /// <summary>
+    /// Returns the tangent of an angle.
+    /// </summary>
+    public static float Tan<T>(T radians) where T : INumber<T>
+    {
+        return float.Tan(float.CreateChecked(radians));
+    }
+
+    /// <summary>
+    /// Returns the arc-sine of an angle.
+    /// </summary>
+    public static float Asin<T>(T radians) where T : INumber<T>
+    {
+        return float.Asin(float.CreateChecked(radians));
+    }
+
+    /// <summary>
+    /// Returns the arc-cosine of an angle.
+    /// </summary>
+    public static float Acos<T>(T radians) where T : INumber<T>
+    {
+        return float.Acos(float.CreateChecked(radians));
+    }
+
+    /// <summary>
+    /// Returns the arc-tangent of an angle.
+    /// </summary>
+    public static float Atan<T>(T radians) where T : INumber<T>
+    {
+        return float.Atan(float.CreateChecked(radians));
+    }
+
+    /// <summary>
+    /// Returns the arc-tangent of the quotient of two values.
+    /// </summary>
+    public static float Atan2<T>(T y, T x) where T : INumber<T>
+    {
+        return float.Atan2(float.CreateChecked(y), float.CreateChecked(x));
+    }
+
+    /// <summary>
     /// Converts radians to degrees.
     /// </summary>
     public static float Rad2Deg<T>(T radians) where T : INumber<T>
@@ -70,6 +126,54 @@ public static partial class M
     #endregion
 
     #region Angle struct
+
+    /// <summary>
+    /// Returns the sine of an angle.
+    /// </summary>
+    public static float Sin(Angle angle)
+    {
+        return float.Sin(angle.Radians.Value);
+    }
+
+    /// <summary>
+    /// Returns the cosine of an angle.
+    /// </summary>
+    public static float Cos(Angle angle)
+    {
+        return float.Cos(angle.Radians.Value);
+    }
+
+    /// <summary>
+    /// Returns the tangent of an angle.
+    /// </summary>
+    public static float Tan(Angle angle)
+    {
+        return float.Tan(angle.Radians.Value);
+    }
+
+    /// <summary>
+    /// Returns the arc-sine of an angle.
+    /// </summary>
+    public static float Asin(Angle angle)
+    {
+        return float.Asin(angle.Radians.Value);
+    }
+
+    /// <summary>
+    /// Returns the arc-cosine of an angle.
+    /// </summary>
+    public static float Acos(Angle angle)
+    {
+        return float.Acos(angle.Radians.Value);
+    }
+
+    /// <summary>
+    /// Returns the arc-tangent of an angle.
+    /// </summary>
+    public static float Atan(Angle angle)
+    {
+        return float.Atan(angle.Radians.Value);
+    }
 
     /// <summary>
     /// Returns the absolute value of the provided angle.
