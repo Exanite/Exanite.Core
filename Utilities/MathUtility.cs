@@ -269,7 +269,12 @@ public static class M
     /// </example>
     public static T GetNextPowerOfTwo<T>(T value) where T : IBinaryInteger<T>
     {
-        return T.One << ((int)Math.Log2(double.CreateTruncating(value - T.One)) + 1);
+        if (value <= T.CreateTruncating(2))
+        {
+            return T.CreateTruncating(2);
+        }
+
+        return T.One << int.CreateTruncating(T.Log2(value - T.One) + T.One);
     }
 
     /// <summary>
