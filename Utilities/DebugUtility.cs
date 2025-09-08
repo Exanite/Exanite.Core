@@ -1,10 +1,6 @@
 using System;
 using System.Collections;
 using System.Text;
-#if UNITY_2021_3_OR_NEWER
-using UnityEngine;
-using Object = UnityEngine.Object;
-#endif
 
 namespace Exanite.Core.Utilities
 {
@@ -15,7 +11,7 @@ namespace Exanite.Core.Utilities
         /// <para/>
         /// This can be replaced to allow custom logging implementations to be used.
         /// </summary>
-        public static Action<object?> LogAction = DefaultLogAction;
+        public static Action<object?> LogAction { get; set; } = DefaultLogAction;
 
         /// <summary>
         /// Logs the value using the current <see cref="LogAction"/>. Defaults to <see cref="DefaultLogAction"/>.
@@ -117,19 +113,7 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static void DefaultLogAction(object? value)
         {
-#if UNITY_2021_3_OR_NEWER
-            if (value is Object context)
-            {
-                // If provided a context object, clicking on the log message will select that object
-                Debug.Log(value, context);
-            }
-            else
-            {
-                Debug.Log(value);
-            }
-#else
             Console.WriteLine(value);
-#endif
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿#if NETCOREAPP
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -18,4 +17,3 @@ namespace Exanite.Core.Utilities
         }
     }
 }
-#endif

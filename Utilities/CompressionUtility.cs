@@ -1,4 +1,3 @@
-#if NETCOREAPP || UNITY_2021_3_OR_NEWER
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -35,4 +34,3 @@ namespace Exanite.Core.Utilities
         }
     }
 }
-#endif

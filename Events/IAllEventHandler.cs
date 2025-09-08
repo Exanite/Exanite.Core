@@ -10,10 +10,6 @@ namespace Exanite.Core.Events
         /// <br/>
         /// Because of this, it's best to treat <see cref="e"/> as an opaque value.
         /// </remarks>
-        void OnEvent<T>(T e)
-#if NETCOREAPP
-            where T : allows ref struct
-#endif
-        ;
+        void OnEvent<T>(T e) where T : allows ref struct;
     }
 }

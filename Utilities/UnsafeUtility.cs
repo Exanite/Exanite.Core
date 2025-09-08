@@ -1,4 +1,3 @@
-#if NETCOREAPP
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -33,4 +32,3 @@ public static class UnsafeUtility
 #pragma warning restore CS0649
     }
 }
-#endif

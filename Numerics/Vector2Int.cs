@@ -94,21 +94,12 @@ namespace Exanite.Core.Numerics
             return ToString("G", CultureInfo.CurrentCulture);
         }
 
-        public string ToString(
-#if NETCOREAPP
-            [StringSyntax(StringSyntaxAttribute.NumericFormat)]
-#endif
-            string? format)
+        public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format)
         {
             return ToString(format, CultureInfo.CurrentCulture);
         }
 
-        public string ToString(
-#if NETCOREAPP
-            [StringSyntax(StringSyntaxAttribute.NumericFormat)]
-#endif
-            string? format,
-            IFormatProvider? formatProvider)
+        public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format, IFormatProvider? formatProvider)
         {
             return ((Vector2)this).ToString(format, formatProvider);
         }

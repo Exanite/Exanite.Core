@@ -1,10 +1,6 @@
-﻿#if NETCOREAPP || UNITY_2021_3_OR_NEWER
-using System;
+﻿using System;
 using System.Globalization;
 using Exanite.Core.Utilities;
-#if UNITY_2021_3_OR_NEWER
-using UnityEngine;
-#endif
 
 namespace Exanite.Core.Numerics
 {
@@ -17,15 +13,7 @@ namespace Exanite.Core.Numerics
     [Serializable]
     public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
     {
-#if UNITY_2021_3_OR_NEWER
-        [SerializeField]
-        [HideInInspector]
-#endif
         private double value;
-#if UNITY_2021_3_OR_NEWER
-        [SerializeField]
-        [HideInInspector]
-#endif
         private long multiplier;
 
         /// <summary>
@@ -319,4 +307,3 @@ namespace Exanite.Core.Numerics
         }
     }
 }
-#endif

@@ -1,4 +1,3 @@
-#if NETCOREAPP
 namespace Exanite.Core.Runtime;
 
 /// <summary>
@@ -18,4 +17,3 @@ public readonly ref struct ValueRef<T>
         Value = ref value;
     }
 }
-#endif

@@ -66,10 +66,7 @@ namespace Exanite.Core.Events
         /// <summary>
         /// Configures events of the specified type to be sent to the provided handler.
         /// </summary>
-        public void Register<T>(IEventHandler<T> handler)
-#if NETCOREAPP
-            where T : allows ref struct
-#endif
+        public void Register<T>(IEventHandler<T> handler) where T : allows ref struct
         {
             Register<T>(handler.OnEvent);
         }
@@ -77,10 +74,7 @@ namespace Exanite.Core.Events
         /// <summary>
         /// Configures events of the specified type to be sent to the provided handler.
         /// </summary>
-        public void Register<T>(Action<T> handler)
-#if NETCOREAPP
-            where T : allows ref struct
-#endif
+        public void Register<T>(Action<T> handler) where T : allows ref struct
         {
             var type = typeof(T);
 
@@ -96,10 +90,7 @@ namespace Exanite.Core.Events
         /// Removes a handler registered by <see cref="Register{T}(IEventHandler{T})"/>.
         /// </summary>
         /// <returns>True if the handler was successfully removed.</returns>
-        public bool Unregister<T>(IEventHandler<T> handler)
-#if NETCOREAPP
-            where T : allows ref struct
-#endif
+        public bool Unregister<T>(IEventHandler<T> handler) where T : allows ref struct
         {
             return Unregister<T>(handler.OnEvent);
         }
@@ -108,10 +99,7 @@ namespace Exanite.Core.Events
         /// Removes a handler registered by <see cref="Register{T}(Action{T})"/>.
         /// </summary>
         /// <returns>True if the handler was successfully removed.</returns>
-        public bool Unregister<T>(Action<T> handler)
-#if NETCOREAPP
-            where T : allows ref struct
-#endif
+        public bool Unregister<T>(Action<T> handler) where T : allows ref struct
         {
             if (!handlersByType.TryGetValue(typeof(T), out var handlerList))
             {
@@ -124,10 +112,7 @@ namespace Exanite.Core.Events
         /// <summary>
         /// Raises an event.
         /// </summary>
-        public void Raise<T>(T e)
-#if NETCOREAPP
-            where T : allows ref struct
-#endif
+        public void Raise<T>(T e) where T : allows ref struct
         {
             var type = typeof(T);
 
