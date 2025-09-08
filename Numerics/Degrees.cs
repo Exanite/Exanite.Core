@@ -19,16 +19,12 @@ public struct Degrees
         set => angle = value;
     }
 
+    public Angle Color => new(angle, AngleType.Degrees);
+
     public Degrees(float angle)
     {
         this.angle = angle;
     }
-
-    // Angle
-
-    public Angle Color => new(angle, AngleType.Degrees);
-
-    // float
 
     public static implicit operator Degrees(float angle)
     {

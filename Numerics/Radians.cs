@@ -19,16 +19,12 @@ public struct Radians
         set => angle = value;
     }
 
+    public Angle Color => new(angle, AngleType.Radians);
+
     public Radians(float angle)
     {
         this.angle = angle;
     }
-
-    // Angle
-
-    public Angle Color => new(angle, AngleType.Radians);
-
-    // float
 
     public static implicit operator Radians(float angle)
     {
