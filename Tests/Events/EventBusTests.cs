@@ -1,4 +1,3 @@
-using System;
 using Exanite.Core.Events;
 using NUnit.Framework;
 #if !UNITY_2021_3_OR_NEWER
@@ -14,41 +13,30 @@ namespace Exanite.Core.Tests.Events
         public void Unregister_Works_WhenUsingInterface()
         {
             var eventBus = new EventBus();
-
-            var didReceiveEvent = false;
-            var eventHandler = new EventHandler<Event>(_ =>
-            {
-                didReceiveEvent = true;
-            });
+            var eventHandler = new EventHandler<Event>();
 
             // Should receive event when registered
             eventBus.Register(eventHandler);
             eventBus.Raise(new Event());
 
-            Assert.IsTrue(didReceiveEvent);
+            Assert.IsTrue(eventHandler.ReceiveCount == 1);
 
             // Should not receive when unregistered
-            didReceiveEvent = false;
             eventBus.Unregister(eventHandler);
             eventBus.Raise(new Event());
 
-            Assert.IsFalse(didReceiveEvent);
+            Assert.IsTrue(eventHandler.ReceiveCount == 1);
         }
 
-        public struct Event {}
+        private struct Event {}
 
-        public class EventHandler<T> : IEventHandler<T>
+        private class EventHandler<T> : IEventHandler<T>
         {
-            private readonly Action<T> handleEvent;
-
-            public EventHandler(Action<T> handleEvent)
-            {
-                this.handleEvent = handleEvent;
-            }
+            public int ReceiveCount { get; private set; }
 
             public void OnEvent(T e)
             {
-                handleEvent(e);
+                ReceiveCount++;
             }
         }
     }
