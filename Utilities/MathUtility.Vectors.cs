@@ -256,8 +256,6 @@ public static partial class M
 
     /// <summary>
     /// Casts a ray against the specified plane.
-    /// <para/>
-    /// The ray's length is ignored during this check.
     /// </summary>
     public static bool Raycast(this Plane plane, Ray ray, out float distance)
     {
@@ -273,7 +271,7 @@ public static partial class M
 
         distance = ndot / vdot;
 
-        return distance > 0f;
+        return distance >= 0 && distance <= ray.Length;
     }
 
     #endregion

@@ -148,7 +148,7 @@ namespace Exanite.Core.Tests.Utilities
             var expectedPosition = new Vector2(1, 2);
 
             var plane = M.CreatePlane(Vector3.UnitZ, Vector3.Zero);
-            var ray = new Ray(new Vector3(expectedPosition.X, expectedPosition.Y, -expectedDistance), Vector3.UnitZ, 0);
+            var ray = new Ray(new Vector3(expectedPosition.X, expectedPosition.Y, -expectedDistance), Vector3.UnitZ);
 
             var isHit = plane.Raycast(ray, out var distance);
 
@@ -161,7 +161,7 @@ namespace Exanite.Core.Tests.Utilities
         public void PlaneRaycast_ReturnsExpectedResult2()
         {
             var plane = M.CreatePlane(Vector3.UnitZ, Vector3.Zero);
-            var ray = new Ray(new Vector3(1, 2, -10), -Vector3.UnitZ, 0);
+            var ray = new Ray(new Vector3(1, 2, -10), -Vector3.UnitZ);
 
             var isHit = plane.Raycast(ray, out _);
 
