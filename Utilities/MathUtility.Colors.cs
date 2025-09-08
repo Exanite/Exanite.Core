@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Numerics;
 
@@ -72,9 +73,41 @@ public static partial class M
     /// </summary>
     public static Vector4 HexToSrgb(string hex)
     {
-        var color = ColorTranslator.FromHtml(hex); // TODO: Don't use FromHtml
+        AssertUtility.IsTrue(hex.Length > 0, "Color code is empty");
 
-        return new Vector4(color.R, color.G, color.B, color.A) / byte.MaxValue;
+        // Remove leading '#'
+        if (hex.StartsWith('#'))
+        {
+            hex = hex.Substring(1);
+        }
+
+        // Expand shorthand (#fff or #ffff)
+        if (hex.Length == 3 || hex.Length == 4)
+        {
+            var temp = "";
+            foreach (var c in hex)
+            {
+                temp += new string(c, 2);
+            }
+            hex = temp;
+        }
+
+        // Add default alpha if missing
+        if (hex.Length == 6)
+        {
+            hex += "ff";
+        }
+
+        AssertUtility.IsTrue(hex.Length == 8, "Invalid length for input color code");
+
+        // Parse components
+        var result = new Vector4();
+        for (var i = 0; i < 4; ++i)
+        {
+            result[i] = Convert.ToInt32(hex.Substring(i * 2, 2), 16);
+        }
+
+        return result / byte.MaxValue;
     }
 
     /// <summary>
