@@ -158,7 +158,7 @@ public static class MathUtility
     /// <param name="currentVelocity">Reference to the current velocity, modified by the function.</param>
     /// <param name="maxSpeed">Optional maximum speed. Defaults to PositiveInfinity.</param>
     /// <returns>The new value after applying smoothing.</returns>
-    public static T SmoothDamp<T>(T current, T target, T smoothTime, T deltaTime, ref T currentVelocity, T maxSpeed = default) where T : IFloatingPointIeee754<T>
+    public static T SmoothDamp<T>(T current, T target, T smoothTime, T deltaTime, ref T currentVelocity, T maxSpeed) where T : struct, IFloatingPointIeee754<T>
     {
         // From https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Math/Mathf.cs#L309
         // Based on Game Programming Gems 4 Chapter 1.10
