@@ -124,7 +124,7 @@ public static partial class M
     /// </summary>
     public static T MoveTowardsAngleDegrees<T>(T current, T target, T maxDelta) where T : IFloatingPoint<T>
     {
-        var deltaAngle = DeltaAngleDegrees(current, target);
+        var deltaAngle = AngleDifferenceDegrees(current, target);
         if (-maxDelta < deltaAngle && deltaAngle < maxDelta)
         {
             return target;
@@ -140,7 +140,7 @@ public static partial class M
     /// </summary>
     public static T MoveTowardsAngleRadians<T>(T current, T target, T maxDelta) where T : IFloatingPoint<T>
     {
-        var deltaAngle = DeltaAngleRadians(current, target);
+        var deltaAngle = AngleDifferenceRadians(current, target);
         if (-maxDelta < deltaAngle && deltaAngle < maxDelta)
         {
             return target;
@@ -409,9 +409,9 @@ public static partial class M
     }
 
     /// <summary>
-    /// Gets the signed difference between two angles, while taking the wrap-around point into account.
+    /// Gets the smallest signed difference between two angles, while taking the wrap-around point into account.
     /// </summary>
-    public static T DeltaAngleRadians<T>(T current, T target) where T : IFloatingPoint<T>
+    public static T AngleDifferenceRadians<T>(T current, T target) where T : IFloatingPoint<T>
     {
         var delta = Wrap(target - current, T.Zero, T.Pi + T.Pi);
         if (delta > T.Pi)
@@ -423,9 +423,9 @@ public static partial class M
     }
 
     /// <summary>
-    /// Gets the signed difference between two angles, while taking the wrap-around point into account.
+    /// Gets the smallest signed difference between two angles, while taking the wrap-around point into account.
     /// </summary>
-    public static T DeltaAngleDegrees<T>(T current, T target) where T : INumber<T>
+    public static T AngleDifferenceDegrees<T>(T current, T target) where T : INumber<T>
     {
         var delta = Wrap(target - current, T.Zero, T.CreateTruncating(360));
         if (delta > T.CreateTruncating(180))
