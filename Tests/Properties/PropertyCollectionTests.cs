@@ -54,7 +54,7 @@ namespace Exanite.Core.Tests.Properties
             var propertyA = collection.GetOrAddProperty(StringADefinition);
             var propertyB = collection.GetOrAddProperty(StringADefinition);
 
-            Assert.AreEqual(propertyA, propertyB);
+            Assert.That(propertyB, Is.EqualTo(propertyA));
         }
 
         [Test]

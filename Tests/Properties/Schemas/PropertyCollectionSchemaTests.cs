@@ -22,7 +22,7 @@ namespace Exanite.Core.Tests.Properties.Schemas
 
             var collection = new PropertyCollection();
 
-            Assert.IsTrue(schema.Validate(collection));
+            Assert.That(schema.Validate(collection), Is.True);
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace Exanite.Core.Tests.Properties.Schemas
             var collection = new PropertyCollection();
             collection.AddProperty(SharedDefinition);
 
-            Assert.IsTrue(schema.Validate(collection));
+            Assert.That(schema.Validate(collection), Is.True);
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace Exanite.Core.Tests.Properties.Schemas
             var collection = new PropertyCollection();
             collection.AddProperty(SharedDefinition);
 
-            Assert.IsTrue(schema.Validate(collection));
+            Assert.That(schema.Validate(collection), Is.True);
         }
 
         [Test]

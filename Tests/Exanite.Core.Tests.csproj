@@ -6,6 +6,9 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);NUnit2045</NoWarn> <!-- Don't care about Assert.Multiple -->
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NUnit" Version="4.2.2"/>

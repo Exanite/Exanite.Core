@@ -1,9 +1,6 @@
 using System;
 using Exanite.Core.Utilities;
 using NUnit.Framework;
-#if !UNITY_2021_3_OR_NEWER
-using Assert = NUnit.Framework.Legacy.ClassicAssert;
-#endif
 
 namespace Exanite.Core.Tests.Utilities
 {
@@ -15,7 +12,7 @@ namespace Exanite.Core.Tests.Utilities
         {
             void Test(Type? type)
             {
-                Assert.AreEqual(type, SerializationUtility.DeserializeType(SerializationUtility.SerializeType(type)));
+                Assert.That(SerializationUtility.DeserializeType(SerializationUtility.SerializeType(type)), Is.EqualTo(type));
             }
 
             Test(null);

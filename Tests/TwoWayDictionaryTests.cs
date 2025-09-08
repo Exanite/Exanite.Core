@@ -17,7 +17,7 @@ namespace Exanite.Core.Tests
                 ["id"] = 5,
             };
 
-            Assert.AreEqual(5, dictionary["id"]);
+            Assert.That(dictionary["id"], Is.EqualTo(5));
         }
 
         [Test]
@@ -28,7 +28,7 @@ namespace Exanite.Core.Tests
                 ["id"] = 5,
             };
 
-            Assert.AreEqual("id", dictionary.Inverse[5]);
+            Assert.That(dictionary.Inverse[5], Is.EqualTo("id"));
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace Exanite.Core.Tests
         {
             var dictionary = new TwoWayDictionary<string, int>();
 
-            Assert.AreEqual(dictionary, dictionary.Inverse.Inverse);
+            Assert.That(dictionary.Inverse.Inverse, Is.EqualTo(dictionary));
         }
     }
 }

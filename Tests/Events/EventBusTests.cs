@@ -1,8 +1,5 @@
 using Exanite.Core.Events;
 using NUnit.Framework;
-#if !UNITY_2021_3_OR_NEWER
-using Assert = NUnit.Framework.Legacy.ClassicAssert;
-#endif
 
 namespace Exanite.Core.Tests.Events
 {
@@ -19,13 +16,13 @@ namespace Exanite.Core.Tests.Events
             eventBus.Register(eventHandler);
             eventBus.Raise(new Event());
 
-            Assert.IsTrue(eventHandler.ReceiveCount == 1);
+            Assert.That(eventHandler.ReceiveCount == 1, Is.True);
 
             // Should not receive when unregistered
             eventBus.Unregister(eventHandler);
             eventBus.Raise(new Event());
 
-            Assert.IsTrue(eventHandler.ReceiveCount == 1);
+            Assert.That(eventHandler.ReceiveCount == 1, Is.True);
         }
 
         private struct Event {}

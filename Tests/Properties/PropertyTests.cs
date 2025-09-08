@@ -17,11 +17,11 @@ namespace Exanite.Core.Tests.Properties
             var property = new Property<string>(DefaultPropertyName);
             property.Value = "A";
 
-            Assert.AreEqual(property.UntypedValue, property.Value);
+            Assert.That(property.Value, Is.EqualTo(property.UntypedValue));
 
             property.Value = "B";
 
-            Assert.AreEqual(property.UntypedValue, property.Value);
+            Assert.That(property.Value, Is.EqualTo(property.UntypedValue));
         }
 
         [Test]
@@ -38,14 +38,14 @@ namespace Exanite.Core.Tests.Properties
             {
                 wasEventRaised = true;
 
-                Assert.AreEqual(property, args.Property);
-                Assert.AreEqual(previousValue, args.PreviousValue);
-                Assert.AreEqual(newValue, args.NewValue);
+                Assert.That(args.Property, Is.EqualTo(property));
+                Assert.That(args.PreviousValue, Is.EqualTo(previousValue));
+                Assert.That(args.NewValue, Is.EqualTo(newValue));
             };
 
             property.Value = newValue;
 
-            Assert.IsTrue(wasEventRaised);
+            Assert.That(wasEventRaised, Is.True);
         }
 
         [Test]
@@ -62,14 +62,14 @@ namespace Exanite.Core.Tests.Properties
             {
                 wasEventRaised = true;
 
-                Assert.AreEqual(property, args.Property);
-                Assert.AreEqual(previousValue, args.PreviousValue);
-                Assert.AreEqual(newValue, args.NewValue);
+                Assert.That(args.Property, Is.EqualTo(property));
+                Assert.That(args.PreviousValue, Is.EqualTo(previousValue));
+                Assert.That(args.NewValue, Is.EqualTo(newValue));
             };
 
             property.Value = newValue;
 
-            Assert.IsTrue(wasEventRaised);
+            Assert.That(wasEventRaised, Is.True);
         }
     }
 }

@@ -2,9 +2,6 @@
 using Exanite.Core.Numerics;
 using Exanite.Core.Utilities;
 using NUnit.Framework;
-#if !UNITY_2021_3_OR_NEWER
-using Assert = NUnit.Framework.Legacy.ClassicAssert;
-#endif
 
 namespace Exanite.Core.Tests.Utilities
 {
@@ -53,7 +50,7 @@ namespace Exanite.Core.Tests.Utilities
         public void MoveTowardsAngleDegrees_ReturnsExpectedResult(float current, float target, float maxDelta, float expectedResult)
         {
             var result = MathUtility.MoveTowardsAngleDegrees(current, target, maxDelta);
-            Assert.AreEqual(expectedResult, result, 0.01f);
+            Assert.That(result, Is.EqualTo(expectedResult).Within(0.01f));
         }
 
         /// <remarks>
@@ -66,7 +63,7 @@ namespace Exanite.Core.Tests.Utilities
         public void MoveTowardsAngleRadians_ReturnsExpectedResult(float current, float target, float maxDelta, float expectedResult)
         {
             var result = MathUtility.Rad2Deg(MathUtility.MoveTowardsAngleRadians(MathUtility.Deg2Rad(current), MathUtility.Deg2Rad(target), MathUtility.Deg2Rad(maxDelta)));
-            Assert.AreEqual(expectedResult, result, 0.01f);
+            Assert.That(result, Is.EqualTo(expectedResult).Within(0.01f));
         }
 
         #endregion
@@ -131,8 +128,8 @@ namespace Exanite.Core.Tests.Utilities
         {
             var plane = MathUtility.CreatePlane(Vector3.UnitX, Vector3.Zero);
 
-            Assert.IsTrue(MathUtility.IsApproximatelyEqual(0, plane.D));
-            Assert.IsTrue(MathUtility.IsApproximatelyEqual(Vector3.UnitX, plane.Normal));
+            Assert.That(MathUtility.IsApproximatelyEqual(0, plane.D), Is.True);
+            Assert.That(MathUtility.IsApproximatelyEqual(Vector3.UnitX, plane.Normal), Is.True);
         }
 
         [TestCase]
@@ -140,8 +137,8 @@ namespace Exanite.Core.Tests.Utilities
         {
             var plane = MathUtility.CreatePlane(Vector3.UnitX, Vector3.UnitX);
 
-            Assert.IsTrue(MathUtility.IsApproximatelyEqual(-1, plane.D));
-            Assert.IsTrue(MathUtility.IsApproximatelyEqual(Vector3.UnitX, plane.Normal));
+            Assert.That(MathUtility.IsApproximatelyEqual(-1, plane.D), Is.True);
+            Assert.That(MathUtility.IsApproximatelyEqual(Vector3.UnitX, plane.Normal), Is.True);
         }
 
         [TestCase]
@@ -155,9 +152,9 @@ namespace Exanite.Core.Tests.Utilities
 
             var isHit = plane.Raycast(ray, out var distance);
 
-            Assert.IsTrue(isHit);
-            Assert.IsTrue(MathUtility.IsApproximatelyEqual(expectedDistance, distance));
-            Assert.IsTrue(MathUtility.IsApproximatelyEqual(expectedPosition.Xy0(), ray.GetPoint(distance)));
+            Assert.That(isHit, Is.True);
+            Assert.That(MathUtility.IsApproximatelyEqual(expectedDistance, distance), Is.True);
+            Assert.That(MathUtility.IsApproximatelyEqual(expectedPosition.Xy0(), ray.GetPoint(distance)), Is.True);
         }
 
         [TestCase]
@@ -168,7 +165,7 @@ namespace Exanite.Core.Tests.Utilities
 
             var isHit = plane.Raycast(ray, out _);
 
-            Assert.IsFalse(isHit);
+            Assert.That(isHit, Is.False);
         }
 
         #endregion
