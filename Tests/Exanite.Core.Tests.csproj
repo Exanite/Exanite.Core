@@ -3,14 +3,8 @@
     <AssemblyName>Exanite.Core.Tests</AssemblyName>
     <RootNamespace>Exanite.Core.Tests</RootNamespace>
 
-    <!-- For Unity compatibility (C# 9) -->
     <TargetFramework>net9.0</TargetFramework>
-    <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
-  <PropertyGroup>
-    <NoWarn>$(NoWarn);NUnit2005</NoWarn> <!-- Disable diagnostics that require using newer NUnit APIs for Unity compatibility -->
-    <NoWarn>$(NoWarn);NUnit2006</NoWarn> <!-- Disable diagnostics that require using newer NUnit APIs for Unity compatibility -->
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,12 +16,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Exanite.Core.csproj"/>
   </ItemGroup>
-
-  <!-- Exclude files that only compile in Unity -->
-  <PropertyGroup>
-    <DefaultItemExcludes>
-      $(DefaultItemExcludes);
-      **/*.meta;
-    </DefaultItemExcludes>
-  </PropertyGroup>
 </Project>

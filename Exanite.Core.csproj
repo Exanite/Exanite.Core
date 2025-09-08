@@ -3,29 +3,16 @@
     <AssemblyName>Exanite.Core</AssemblyName>
     <RootNamespace>Exanite.Core</RootNamespace>
 
-    <!-- For Unity compatibility (C# 9) -->
-    <TargetFrameworks>netstandard2.1;net9.0</TargetFrameworks>
-    <LangVersion>9</LangVersion>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
-  <PropertyGroup>
-    <NoWarn Condition="$(TargetFramework) == 'netstandard2.1'">$(NoWarn);CS8767</NoWarn> <!-- Disable nullability of reference types mismatch in netstandard2.1 -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <!-- Exclude files that only compile in Unity -->
+  <!-- Exclude Tests project -->
   <PropertyGroup>
     <DefaultItemExcludes>
       $(DefaultItemExcludes);
-      **/*.meta;
-      Components/**/*;
-      CsLatest/**/*;
-      Editor/**/*;
-      Tracking/**/*;
       Tests/**/*;
     </DefaultItemExcludes>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="CsLatest\Exanite.Core.CsLatest.csproj" />
-  </ItemGroup>
 </Project>
