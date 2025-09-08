@@ -689,28 +689,36 @@ namespace Exanite.Core.Utilities
 
         #region IsApproximatelyEqual
 
-        public static bool IsApproximatelyEqual(float a, float b)
+        /// <summary>
+        /// Checks if two floating point values are approximately the same value based on the provided <see cref="tolerance"/>.
+        /// </summary>
+        public static bool IsApproximatelyEqual<T>(T a, T b, float tolerance = 0.000001f) where T : IFloatingPoint<T>
         {
-            var maxAb = Max(Abs(a), Abs(b));
-
-            return Abs(a - b) < Max(0.00000_1f /* 6 digits */ * maxAb, float.Epsilon * 8);
+            return IsApproximatelyEqual(a, b, T.CreateTruncating(tolerance));
         }
 
-        public static bool IsApproximatelyEqual(double a, double b)
+        /// <summary>
+        /// Checks if two floating point values are approximately the same value based on the provided <see cref="tolerance"/>.
+        /// </summary>
+        public static bool IsApproximatelyEqual<T>(T a, T b, T tolerance) where T : IFloatingPoint<T>
         {
-            var maxAb = Max(Abs(a), Abs(b));
-
-            return Abs(a - b) < Max(0.00000_00000_00000_1 /* 15 digits */ * maxAb, double.Epsilon * 8);
+            return Abs(a - b) <= tolerance;
         }
 
-        public static bool IsApproximatelyEqual(Vector2 a, Vector2 b)
+        /// <summary>
+        /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
+        /// </summary>
+        public static bool IsApproximatelyEqual(Vector2 a, Vector2 b, float tolerance = 0.000001f)
         {
-            return IsApproximatelyEqual(a.X, b.X) && IsApproximatelyEqual(a.Y, b.Y);
+            return IsApproximatelyEqual(a.X, b.X, tolerance) && IsApproximatelyEqual(a.Y, b.Y, tolerance);
         }
 
-        public static bool IsApproximatelyEqual(Vector3 a, Vector3 b)
+        /// <summary>
+        /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
+        /// </summary>
+        public static bool IsApproximatelyEqual(Vector3 a, Vector3 b, float tolerance = 0.000001f)
         {
-            return IsApproximatelyEqual(a.X, b.X) && IsApproximatelyEqual(a.Y, b.Y) && IsApproximatelyEqual(a.Z, b.Z);
+            return IsApproximatelyEqual(a.X, b.X, tolerance) && IsApproximatelyEqual(a.Y, b.Y, tolerance) && IsApproximatelyEqual(a.Z, b.Z, tolerance);
         }
 
         #endregion
