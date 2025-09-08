@@ -11,3 +11,4 @@ public record struct Rect2Int
         Offset = offset;
     }
 }
+
