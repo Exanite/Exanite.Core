@@ -2,9 +2,11 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace Exanite.Core.Numerics;
 
+[StructLayout(LayoutKind.Sequential)]
 public struct Vector3Int : IEquatable<Vector3Int>, IFormattable
 {
     /// <inheritdoc cref="Vector3.X"/>
