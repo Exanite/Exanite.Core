@@ -17,16 +17,25 @@ namespace Exanite.Core.Events
         private readonly List<IAllEventHandler> allHandlers = new();
         private readonly Dictionary<Type, List<object>> handlerLists = new();
 
+        /// <summary>
+        /// Configures all events received by this event bus to be sent to the provided handler.
+        /// </summary>
         public void RegisterForwardAllTo(IAllEventHandler handler)
         {
             allHandlers.Add(handler);
         }
 
+        /// <summary>
+        /// Removes a handler registered by <see cref="RegisterForwardAllTo"/>.
+        /// </summary>
         public bool UnregisterForwardAllTo(IAllEventHandler handler)
         {
             return allHandlers.Remove(handler);
         }
 
+        /// <summary>
+        /// Configures events of the specified type to be sent to the provided handler.
+        /// </summary>
         public void Register<T>(IEventHandler<T> handler)
 #if NETCOREAPP
             where T : allows ref struct
@@ -35,6 +44,9 @@ namespace Exanite.Core.Events
             Register<T>(handler.OnEvent);
         }
 
+        /// <summary>
+        /// Configures events of the specified type to be sent to the provided handler.
+        /// </summary>
         public void Register<T>(Action<T> handler)
 #if NETCOREAPP
             where T : allows ref struct
@@ -50,6 +62,9 @@ namespace Exanite.Core.Events
             handlerLists[type].Add(handler);
         }
 
+        /// <summary>
+        /// Removes a handler registered by <see cref="Register{T}(IEventHandler{T})"/>.
+        /// </summary>
         public bool Unregister<T>(IEventHandler<T> handler)
 #if NETCOREAPP
             where T : allows ref struct
@@ -58,6 +73,9 @@ namespace Exanite.Core.Events
             return Unregister<T>(handler.OnEvent);
         }
 
+        /// <summary>
+        /// Removes a handler registered by <see cref="Register{T}(Action{T})"/>.
+        /// </summary>
         public bool Unregister<T>(Action<T> handler)
 #if NETCOREAPP
             where T : allows ref struct
@@ -71,6 +89,9 @@ namespace Exanite.Core.Events
             return handlerList.Remove(handler);
         }
 
+        /// <summary>
+        /// Raises an event.
+        /// </summary>
         public void Raise<T>(T e)
 #if NETCOREAPP
             where T : allows ref struct
@@ -92,6 +113,9 @@ namespace Exanite.Core.Events
             }
         }
 
+        /// <summary>
+        /// Clears all registered event handlers.
+        /// </summary>
         public void Clear()
         {
             allHandlers.Clear();
