@@ -102,21 +102,21 @@ namespace Exanite.Core.Utilities
         /// Moves the <see cref="current"/> value towards the <see cref="target"/> value by <see cref="maxDelta"/>,
         /// ensuring that the result doesn't overshoot the <see cref="target"/> value.
         /// </summary>
-        public static float MoveTowards(float current, float target, float maxDelta)
+        public static T MoveTowards<T>(T current, T target, T maxDelta) where T : IFloatingPoint<T>
         {
-            if (Math.Abs(target - current) <= maxDelta)
+            if (Abs(target - current) <= maxDelta)
             {
                 return target;
             }
 
-            return current + Math.Sign(target - current) * maxDelta;
+            return current + Sign(target - current) * maxDelta;
         }
 
         /// <summary>
         /// Moves the <see cref="current"/> angle towards the <see cref="target"/> angle by <see cref="maxDelta"/>,
         /// ensuring that the result doesn't overshoot the <see cref="target"/> angle.
         /// </summary>
-        public static float MoveTowardsAngleDegrees(float current, float target, float maxDelta)
+        public static T MoveTowardsAngleDegrees<T>(T current, T target, T maxDelta) where T : IFloatingPoint<T>
         {
             var deltaAngle = DeltaAngleDegrees(current, target);
             if (-maxDelta < deltaAngle && deltaAngle < maxDelta)
@@ -132,7 +132,7 @@ namespace Exanite.Core.Utilities
         /// Moves the <see cref="current"/> angle towards the <see cref="target"/> angle by <see cref="maxDelta"/>,
         /// ensuring that the result doesn't overshoot the <see cref="target"/> angle.
         /// </summary>
-        public static float MoveTowardsAngleRadians(float current, float target, float maxDelta)
+        public static T MoveTowardsAngleRadians<T>(T current, T target, T maxDelta) where T : IFloatingPoint<T>
         {
             var deltaAngle = DeltaAngleRadians(current, target);
             if (-maxDelta < deltaAngle && deltaAngle < maxDelta)
@@ -156,23 +156,28 @@ namespace Exanite.Core.Utilities
         /// <param name="smoothTime">The time it takes to reach the target. Smaller values result in faster movement.</param>
         /// <param name="deltaTime">The time since the last update.</param>
         /// <param name="currentVelocity">Reference to the current velocity, modified by the function.</param>
-        /// <param name="maxSpeed">Optional maximum speed. Defaults to <see cref="float.PositiveInfinity"/>.</param>
+        /// <param name="maxSpeed">Optional maximum speed. Defaults to PositiveInfinity.</param>
         /// <returns>The new value after applying smoothing.</returns>
-        public static float SmoothDamp(float current, float target, float smoothTime, float deltaTime, ref float currentVelocity, float maxSpeed = float.PositiveInfinity)
+        public static T SmoothDamp<T>(T current, T target, T smoothTime, T deltaTime, ref T currentVelocity, T maxSpeed = default) where T : IFloatingPointIeee754<T>
         {
             // From https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Math/Mathf.cs#L309
             // Based on Game Programming Gems 4 Chapter 1.10
-            smoothTime = MathF.Max(0.0001f, smoothTime);
-            var omega = 2f / smoothTime;
+            if (maxSpeed == T.Zero)
+            {
+                maxSpeed = T.PositiveInfinity;
+            }
+
+            smoothTime = Max(T.CreateTruncating(0.0001f), smoothTime);
+            var omega = T.CreateTruncating(2) / smoothTime;
 
             var x = omega * deltaTime;
-            var exp = 1f / (1f + x + 0.48f * x * x + 0.235f * x * x * x);
+            var exp = T.One / (T.One + x + T.CreateTruncating(0.48f) * x * x + T.CreateTruncating(0.235f) * x * x * x);
             var change = current - target;
             var originalTo = target;
 
             // Clamp maximum speed
             var maxChange = maxSpeed * smoothTime;
-            change = Math.Clamp(change, -maxChange, maxChange);
+            change = Clamp(change, -maxChange, maxChange);
             target = current - change;
 
             var temp = (currentVelocity + omega * change) * deltaTime;
@@ -180,7 +185,7 @@ namespace Exanite.Core.Utilities
             var output = target + (change + temp) * exp;
 
             // Prevent overshooting
-            if (originalTo - current > 0.0f == output > originalTo)
+            if (originalTo - current > T.Zero == output > originalTo)
             {
                 output = originalTo;
                 currentVelocity = (output - originalTo) / deltaTime;
@@ -343,7 +348,7 @@ namespace Exanite.Core.Utilities
 
         public static Vector2 ClampMagnitude(Vector2 value, float minLength, float maxLength)
         {
-            return value.AsNormalizedSafe() * Math.Clamp(value.Length(), minLength, maxLength);
+            return value.AsNormalizedSafe() * Clamp(value.Length(), minLength, maxLength);
         }
 
         public static Vector3 ClampMagnitude(Vector3 value, float maxLength)
@@ -353,7 +358,7 @@ namespace Exanite.Core.Utilities
 
         public static Vector3 ClampMagnitude(Vector3 value, float minLength, float maxLength)
         {
-            return value.AsNormalizedSafe() * Math.Clamp(value.Length(), minLength, maxLength);
+            return value.AsNormalizedSafe() * Clamp(value.Length(), minLength, maxLength);
         }
 
         /// <summary>
@@ -398,8 +403,8 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static void Clamp(ref this Vector2 vector, Vector2 min, Vector2 max)
         {
-            vector.X = Math.Clamp(vector.X, min.X, max.X);
-            vector.Y = Math.Clamp(vector.Y, min.Y, max.Y);
+            vector.X = Clamp(vector.X, min.X, max.X);
+            vector.Y = Clamp(vector.Y, min.Y, max.Y);
         }
 
         /// <summary>
@@ -408,9 +413,9 @@ namespace Exanite.Core.Utilities
         /// </summary>
         public static void Clamp(ref this Vector3 vector, Vector3 min, Vector3 max)
         {
-            vector.X = Math.Clamp(vector.X, min.X, max.X);
-            vector.Y = Math.Clamp(vector.Y, min.Y, max.Y);
-            vector.Z = Math.Clamp(vector.Z, min.Z, max.Z);
+            vector.X = Clamp(vector.X, min.X, max.X);
+            vector.Y = Clamp(vector.Y, min.Y, max.Y);
+            vector.Z = Clamp(vector.Z, min.Z, max.Z);
         }
 
         #endregion
@@ -627,36 +632,59 @@ namespace Exanite.Core.Utilities
         /// <summary>
         /// Converts radians to degrees.
         /// </summary>
-        public static float Rad2Deg(float radians)
+        public static float Rad2Deg<T>(T radians) where T : INumber<T>
         {
-            return radians * (180f / MathF.PI);
+            return float.CreateChecked(radians) * (180 / float.Pi);
+        }
+
+        /// <summary>
+        /// Converts radians to degrees.
+        /// </summary>
+        public static TOut Rad2Deg<TIn, TOut>(TIn radians) where TIn : INumber<TIn> where TOut : IFloatingPoint<TOut>
+        {
+            return TOut.CreateChecked(radians) * (TOut.CreateTruncating(180) / TOut.Pi);
         }
 
         /// <summary>
         /// Converts degrees to radians.
         /// </summary>
-        public static float Deg2Rad(float degrees)
+        public static float Deg2Rad<T>(T degrees) where T : INumber<T>
         {
-            return degrees * (MathF.PI / 180f);
+            return float.CreateChecked(degrees) * (float.Pi / 180);
         }
 
-        public static float DeltaAngleRadians(float current, float target)
+        /// <summary>
+        /// Converts degrees to radians.
+        /// </summary>
+        public static TOut Deg2Rad<TIn, TOut>(TIn degrees) where TIn : INumber<TIn> where TOut : IFloatingPoint<TOut>
         {
-            var delta = Wrap(target - current, 0, 2 * MathF.PI);
-            if (delta > MathF.PI)
+            return TOut.CreateChecked(degrees) * (TOut.Pi / TOut.CreateChecked(180));
+        }
+
+        /// <summary>
+        /// Gets the difference between two angles, while taking the wrap-around point into account.
+        /// </summary>
+        public static T DeltaAngleRadians<T>(T current, T target) where T : IFloatingPoint<T>
+        {
+            var delta = Wrap(target - current, T.Zero, T.Pi + T.Pi);
+            if (delta > T.Pi)
             {
-                delta -= 2 * MathF.PI;
+                delta -= T.Pi + T.Pi;
             }
 
+            AssertUtility.IsTrue(delta >= T.Zero, "Internal: Expected delta to be non-negative");
             return delta;
         }
 
-        public static float DeltaAngleDegrees(float current, float target)
+        /// <summary>
+        /// Gets the difference between two angles, while taking the wrap-around point into account.
+        /// </summary>
+        public static T DeltaAngleDegrees<T>(T current, T target) where T : INumber<T>
         {
-            var delta = Wrap(target - current, 0, 360);
-            if (delta > 180)
+            var delta = Wrap(target - current, T.Zero, T.CreateTruncating(360));
+            if (delta > T.CreateTruncating(180))
             {
-                delta -= 360;
+                delta -= T.CreateTruncating(360);
             }
 
             return delta;
@@ -668,16 +696,16 @@ namespace Exanite.Core.Utilities
 
         public static bool IsApproximatelyEqual(float a, float b)
         {
-            var maxAb = MathF.Max(MathF.Abs(a), MathF.Abs(b));
+            var maxAb = Max(Abs(a), Abs(b));
 
-            return MathF.Abs(a - b) < MathF.Max(0.00000_1f /* 6 digits */ * maxAb, float.Epsilon * 8);
+            return Abs(a - b) < Max(0.00000_1f /* 6 digits */ * maxAb, float.Epsilon * 8);
         }
 
         public static bool IsApproximatelyEqual(double a, double b)
         {
-            var maxAb = Math.Max(Math.Abs(a), Math.Abs(b));
+            var maxAb = Max(Abs(a), Abs(b));
 
-            return Math.Abs(a - b) < Math.Max(0.00000_00000_00000_1 /* 15 digits */ * maxAb, double.Epsilon * 8);
+            return Abs(a - b) < Max(0.00000_00000_00000_1 /* 15 digits */ * maxAb, double.Epsilon * 8);
         }
 
         public static bool IsApproximatelyEqual(Vector2 a, Vector2 b)
