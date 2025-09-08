@@ -200,11 +200,27 @@ public static partial class M
     }
 
     /// <summary>
+    /// Clamps the <see cref="value"/> to be in the range [<see cref="min"/>, <see cref="max"/>].
+    /// </summary>
+    public static Angle Clamp(Angle value, Angle min, Angle max)
+    {
+        return Angle.FromRadians(Clamp(value.Radians.Value, min.Radians.Value, max.Radians.Value));
+    }
+
+    /// <summary>
+    /// Wraps the angle between min and max angles.
+    /// </summary>
+    public static Angle Wrap(Angle value, Angle min, Angle max)
+    {
+        return Angle.FromRadians(Wrap(value.Radians.Value, min.Radians.Value, max.Radians.Value));
+    }
+
+    /// <summary>
     /// Normalizes the angle to be in the range [0, 360] degrees or [0, 2pi] radians.
     /// </summary>
     public static Angle Normalize360(this Angle a)
     {
-        return Angle.FromRadians(Wrap(a.Radians.Value, 0, 2 * float.Pi));
+        return Wrap(a, Angle.Zero, 2 * Angle.Pi);
     }
 
     /// <summary>
@@ -212,7 +228,7 @@ public static partial class M
     /// </summary>
     public static Angle Normalize180(this Angle a)
     {
-        return Angle.FromRadians(Wrap(a.Radians.Value, -float.Pi, float.Pi));
+        return Wrap(a, -Angle.Pi, Angle.Pi);
     }
 
     #endregion

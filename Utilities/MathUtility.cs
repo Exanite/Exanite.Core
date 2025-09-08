@@ -46,7 +46,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Clamps <see cref="value"/> to be in the range [<see cref="min"/>, <see cref="max"/>].
+    /// Clamps the <see cref="value"/> to be in the range [<see cref="min"/>, <see cref="max"/>].
     /// </summary>
     public static T Clamp<T>(T value, T min, T max) where T : INumber<T>
     {
@@ -72,7 +72,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Wraps a value between min and max values.
+    /// Wraps the value between min and max values.
     /// </summary>
     public static T Wrap<T>(T value, T min, T max) where T : INumber<T>
     {
