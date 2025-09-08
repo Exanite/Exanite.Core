@@ -144,6 +144,22 @@ public static partial class M
     }
 
     /// <summary>
+    /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
+    /// </summary>
+    public static bool IsApproximatelyEqual(Vector2 a, Vector2 b, float tolerance = 0.000001f)
+    {
+        return IsApproximatelyEqual(a.X, b.X, tolerance) && IsApproximatelyEqual(a.Y, b.Y, tolerance);
+    }
+
+    /// <summary>
+    /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
+    /// </summary>
+    public static bool IsApproximatelyEqual(Vector3 a, Vector3 b, float tolerance = 0.000001f)
+    {
+        return IsApproximatelyEqual(a.X, b.X, tolerance) && IsApproximatelyEqual(a.Y, b.Y, tolerance) && IsApproximatelyEqual(a.Z, b.Z, tolerance);
+    }
+
+    /// <summary>
     /// Swaps the component values of a <see cref="Vector3"/> from XYZ to
     /// the given format.
     /// </summary>

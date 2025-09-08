@@ -200,6 +200,22 @@ public static partial class M
         return output;
     }
 
+    /// <summary>
+    /// Checks if two floating point values are approximately the same value based on the provided <see cref="tolerance"/>.
+    /// </summary>
+    public static bool IsApproximatelyEqual<T>(T a, T b, float tolerance = 0.000001f) where T : IFloatingPoint<T>
+    {
+        return IsApproximatelyEqual(a, b, T.CreateTruncating(tolerance));
+    }
+
+    /// <summary>
+    /// Checks if two floating point values are approximately the same value based on the provided <see cref="tolerance"/>.
+    /// </summary>
+    public static bool IsApproximatelyEqual<T>(T a, T b, T tolerance) where T : IFloatingPoint<T>
+    {
+        return Abs(a - b) <= tolerance;
+    }
+
     #endregion
 
     #region Integers
@@ -298,194 +314,6 @@ public static partial class M
     public static bool IsPowerOfTwo<T>(this T value) where T : IBinaryInteger<T>
     {
         return value > T.Zero && (value & (value - T.One)) == T.Zero;
-    }
-
-    #endregion
-
-    #region Colors
-
-    // sRGB-Linear conversion formulas are from: https://entropymine.com/imageworsener/srgbformula/
-
-    /// <summary>
-    /// Converts a sRGB [0, 1] color value to linear [0, 1].
-    /// </summary>
-    public static float SrgbToLinear(float value)
-    {
-        if (value <= 0.04045f)
-        {
-            return value / 12.92f;
-        }
-
-        return MathF.Pow((value + 0.055f) / 1.055f, 2.4f);
-    }
-
-    /// <summary>
-    /// Converts a linear [0, 1] color value to sRGB [0, 1].
-    /// </summary>
-    public static float LinearToSrgb(float value)
-    {
-        if (value <= 0.0031308f)
-        {
-            return value * 12.92f;
-        }
-
-        return MathF.Pow(value, 1 / 2.4f) * 1.055f - 0.055f;
-    }
-
-    /// <summary>
-    /// Converts the RGB (XYZ) components from sRGB [0, 1] to linear [0, 1].
-    /// </summary>
-    public static Vector3 SrgbToLinear(Vector3 srgb)
-    {
-        return new Vector3(SrgbToLinear(srgb.X), SrgbToLinear(srgb.Y), SrgbToLinear(srgb.Z));
-    }
-
-    /// <summary>
-    /// Converts the RGB (XYZ) components from linear [0, 1] to sRGB [0, 1].
-    /// </summary>
-    public static Vector3 LinearToSrgb(Vector3 srgb)
-    {
-        return new Vector3(LinearToSrgb(srgb.X), LinearToSrgb(srgb.Y), LinearToSrgb(srgb.Z));
-    }
-
-    /// <summary>
-    /// Converts the RGB (XYZ) components from sRGB [0, 1] to linear [0, 1]. Does not modify the alpha (W) component.
-    /// </summary>
-    public static Vector4 SrgbToLinear(Vector4 srgb)
-    {
-        return new Vector4(SrgbToLinear(srgb.X), SrgbToLinear(srgb.Y), SrgbToLinear(srgb.Z), srgb.W);
-    }
-
-    /// <summary>
-    /// Converts the RGB (XYZ) components from linear [0, 1] to sRGB [0, 1]. Does not modify the alpha (W) component.
-    /// </summary>
-    public static Vector4 LinearToSrgb(Vector4 srgb)
-    {
-        return new Vector4(LinearToSrgb(srgb.X), LinearToSrgb(srgb.Y), LinearToSrgb(srgb.Z), srgb.W);
-    }
-
-    public static Vector4 SrgbToLinear(string htmlColor)
-    {
-        var maxValue = (float)byte.MaxValue;
-        var color = ColorTranslator.FromHtml(htmlColor);
-
-        return SrgbToLinear(new Vector4(color.R / maxValue, color.G / maxValue, color.B / maxValue, color.A / maxValue));
-    }
-
-    #endregion
-
-    #region Trigonometry
-
-    /// <summary>
-    /// Converts radians to degrees.
-    /// </summary>
-    public static float Rad2Deg<T>(T radians) where T : INumber<T>
-    {
-        return float.CreateChecked(radians) * (180 / float.Pi);
-    }
-
-    /// <summary>
-    /// Converts radians to degrees.
-    /// </summary>
-    public static TOut Rad2Deg<TIn, TOut>(TIn radians) where TIn : INumber<TIn> where TOut : IFloatingPoint<TOut>
-    {
-        return TOut.CreateChecked(radians) * (TOut.CreateTruncating(180) / TOut.Pi);
-    }
-
-    /// <summary>
-    /// Converts degrees to radians.
-    /// </summary>
-    public static float Deg2Rad<T>(T degrees) where T : INumber<T>
-    {
-        return float.CreateChecked(degrees) * (float.Pi / 180);
-    }
-
-    /// <summary>
-    /// Converts degrees to radians.
-    /// </summary>
-    public static TOut Deg2Rad<TIn, TOut>(TIn degrees) where TIn : INumber<TIn> where TOut : IFloatingPoint<TOut>
-    {
-        return TOut.CreateChecked(degrees) * (TOut.Pi / TOut.CreateChecked(180));
-    }
-
-    /// <summary>
-    /// Gets the smallest signed difference between two angles, while taking the wrap-around point into account.
-    /// </summary>
-    public static T AngleDifferenceRadians<T>(T current, T target) where T : IFloatingPoint<T>
-    {
-        var delta = Wrap(target - current, T.Zero, T.Pi + T.Pi);
-        if (delta > T.Pi)
-        {
-            delta -= T.Pi + T.Pi;
-        }
-
-        return delta;
-    }
-
-    /// <summary>
-    /// Gets the smallest signed difference between two angles, while taking the wrap-around point into account.
-    /// </summary>
-    public static T AngleDifferenceDegrees<T>(T current, T target) where T : INumber<T>
-    {
-        var delta = Wrap(target - current, T.Zero, T.CreateTruncating(360));
-        if (delta > T.CreateTruncating(180))
-        {
-            delta -= T.CreateTruncating(360);
-        }
-
-        return delta;
-    }
-
-    /// <summary>
-    /// Gets the smallest positive difference between two angles, while taking the wrap-around point into account.
-    /// </summary>
-    public static T AngleBetweenRadians<T>(T current, T target) where T : IFloatingPoint<T>
-    {
-        return AngleDifferenceRadians(current, target);
-    }
-
-    /// <summary>
-    /// Gets the smallest positive difference between two angles, while taking the wrap-around point into account.
-    /// </summary>
-    public static T AngleBetweenDegrees<T>(T current, T target) where T : INumber<T>
-    {
-        return AngleDifferenceDegrees(current, target);
-    }
-
-    #endregion
-
-    #region IsApproximatelyEqual
-
-    /// <summary>
-    /// Checks if two floating point values are approximately the same value based on the provided <see cref="tolerance"/>.
-    /// </summary>
-    public static bool IsApproximatelyEqual<T>(T a, T b, float tolerance = 0.000001f) where T : IFloatingPoint<T>
-    {
-        return IsApproximatelyEqual(a, b, T.CreateTruncating(tolerance));
-    }
-
-    /// <summary>
-    /// Checks if two floating point values are approximately the same value based on the provided <see cref="tolerance"/>.
-    /// </summary>
-    public static bool IsApproximatelyEqual<T>(T a, T b, T tolerance) where T : IFloatingPoint<T>
-    {
-        return Abs(a - b) <= tolerance;
-    }
-
-    /// <summary>
-    /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
-    /// </summary>
-    public static bool IsApproximatelyEqual(Vector2 a, Vector2 b, float tolerance = 0.000001f)
-    {
-        return IsApproximatelyEqual(a.X, b.X, tolerance) && IsApproximatelyEqual(a.Y, b.Y, tolerance);
-    }
-
-    /// <summary>
-    /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
-    /// </summary>
-    public static bool IsApproximatelyEqual(Vector3 a, Vector3 b, float tolerance = 0.000001f)
-    {
-        return IsApproximatelyEqual(a.X, b.X, tolerance) && IsApproximatelyEqual(a.Y, b.Y, tolerance) && IsApproximatelyEqual(a.Z, b.Z, tolerance);
     }
 
     #endregion
