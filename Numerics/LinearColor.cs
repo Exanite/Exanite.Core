@@ -49,6 +49,12 @@ public struct LinearColor
         this.color = color;
     }
 
+    // Color
+
+    public Color Color => new(color, ColorType.Linear);
+
+    // Vector4
+
     public static implicit operator LinearColor(Vector4 angle)
     {
         return new LinearColor(angle);

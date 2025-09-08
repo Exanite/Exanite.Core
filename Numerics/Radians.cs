@@ -11,18 +11,24 @@ namespace Exanite.Core.Numerics;
 [StructLayout(LayoutKind.Sequential)]
 public struct Radians
 {
-    private float value;
+    private float angle;
 
     public float Value
     {
-        get => value;
-        set => this.value = value;
+        get => angle;
+        set => angle = value;
     }
 
-    public Radians(float value)
+    public Radians(float angle)
     {
-        this.value = value;
+        this.angle = angle;
     }
+
+    // Angle
+
+    public Angle Color => new(angle, AngleType.Radians);
+
+    // float
 
     public static implicit operator Radians(float angle)
     {

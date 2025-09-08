@@ -49,6 +49,12 @@ public struct SrgbColor
         this.color = color;
     }
 
+    // Color
+
+    public Color Color => new(color, ColorType.Srgb);
+
+    // Vector4
+
     public static implicit operator SrgbColor(Vector4 angle)
     {
         return new SrgbColor(angle);

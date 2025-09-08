@@ -8,7 +8,7 @@ namespace Exanite.Core.Numerics;
 /// </summary>
 public struct Angle
 {
-    private float value;
+    private float angle;
     private AngleType type;
 
     public AngleType Type
@@ -19,17 +19,19 @@ public struct Angle
 
     public float Value
     {
-        get => value;
-        set => this.value = value;
+        get => angle;
+        set => angle = value;
     }
 
-    public Angle(float value, AngleType type)
+    public Angle(float angle, AngleType type)
     {
-        this.value = value;
+        this.angle = angle;
         this.type = type;
     }
 
     // Degrees
+
+    public Angle Degrees => As(AngleType.Degrees);
 
     public static implicit operator Angle(Degrees angle)
     {
@@ -47,6 +49,8 @@ public struct Angle
     }
 
     // Radians
+
+    public Angle Radians => As(AngleType.Radians);
 
     public static implicit operator Angle(Radians angle)
     {

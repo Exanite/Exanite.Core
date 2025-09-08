@@ -56,6 +56,8 @@ public struct Color
 
     // Srgb
 
+    public Color Srgb => As(ColorType.Srgb);
+
     public static implicit operator Color(SrgbColor color)
     {
         return new Color(color.Value, ColorType.Srgb);
@@ -72,6 +74,8 @@ public struct Color
     }
 
     // Linear
+
+    public Color Linear => As(ColorType.Linear);
 
     public static implicit operator Color(LinearColor color)
     {

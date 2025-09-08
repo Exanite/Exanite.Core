@@ -11,18 +11,24 @@ namespace Exanite.Core.Numerics;
 [StructLayout(LayoutKind.Sequential)]
 public struct Degrees
 {
-    private float value;
+    private float angle;
 
     public float Value
     {
-        get => value;
-        set => this.value = value;
+        get => angle;
+        set => angle = value;
     }
 
-    public Degrees(float value)
+    public Degrees(float angle)
     {
-        this.value = value;
+        this.angle = angle;
     }
+
+    // Angle
+
+    public Angle Color => new(angle, AngleType.Degrees);
+
+    // float
 
     public static implicit operator Degrees(float angle)
     {
