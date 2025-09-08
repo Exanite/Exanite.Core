@@ -100,6 +100,16 @@ public struct Color
 
     // System.Drawing.Color
 
+    public static implicit operator Color(DrawingColor color)
+    {
+        return FromDrawingColor(color);
+    }
+
+    public static implicit operator DrawingColor(Color color)
+    {
+        return color.ToDrawingColor();
+    }
+
     public static Color FromDrawingColor(DrawingColor color)
     {
         var value = new Vector4(color.R, color.G, color.B, color.A) / byte.MaxValue;
