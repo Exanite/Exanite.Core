@@ -37,7 +37,7 @@ public class EventBus : IAllEventHandler, IDisposable
     /// <summary>
     /// Configures events of the specified type to be sent to the provided handler.
     /// </summary>
-    public void RegisterForwardSpecificTo<T>(IAllEventHandler handler)
+    public void RegisterForwardTo<T>(IAllEventHandler handler)
     {
         var type = typeof(T);
 
@@ -50,10 +50,10 @@ public class EventBus : IAllEventHandler, IDisposable
     }
 
     /// <summary>
-    /// Removes a handler registered by <see cref="RegisterForwardSpecificTo{T}(IAllEventHandler)"/>.
+    /// Removes a handler registered by <see cref="RegisterForwardTo{T}"/>.
     /// </summary>
     /// <returns>True if the handler was successfully removed.</returns>
-    public bool UnregisterForwardSpecificTo<T>(IAllEventHandler handler)
+    public bool UnregisterForwardTo<T>(IAllEventHandler handler)
     {
         if (!specificHandlersByType.TryGetValue(typeof(T), out var handlerList))
         {
