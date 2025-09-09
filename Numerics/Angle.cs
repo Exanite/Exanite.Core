@@ -152,7 +152,8 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
 
     public bool Equals(Angle other)
     {
-        return this == other;
+        return Value.Equals(other.Value)
+               && Type == other.Type;
     }
 
     public int CompareTo(Angle other)
