@@ -3,7 +3,7 @@
     <AssemblyName>Exanite.Core</AssemblyName>
     <RootNamespace>Exanite.Core</RootNamespace>
 
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>

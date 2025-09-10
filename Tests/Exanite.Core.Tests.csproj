@@ -3,7 +3,7 @@
     <AssemblyName>Exanite.Core.Tests</AssemblyName>
     <RootNamespace>Exanite.Core.Tests</RootNamespace>
 
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup>
