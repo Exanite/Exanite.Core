@@ -4,6 +4,7 @@
     <RootNamespace>Exanite.Core.Tests</RootNamespace>
 
     <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>14</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup>
