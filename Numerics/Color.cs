@@ -240,6 +240,13 @@ public struct Color
         return new Color(Value, type);
     }
 
+    // ToString
+
+    public override string ToString()
+    {
+        return $"{Value} ({Type})";
+    }
+
     // Predefined palettes
     // These palettes are mainly for debugging or placeholder purposes
 
