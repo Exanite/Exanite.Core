@@ -162,6 +162,28 @@ public static partial class M
     }
 
     /// <summary>
+    /// Normalizes the vector.
+    /// <br/>
+    /// This handles the case where the provided vector is Vector4.Zero,
+    /// returning Vector4.Zero rather than NaN.
+    /// </summary>
+    public static Vector4 AsNormalizedSafe(this Vector4 value)
+    {
+        return value.AsNormalizedSafe(Vector4.Zero);
+    }
+
+    /// <summary>
+    /// Normalizes the vector.
+    /// <br/>
+    /// This handles the case where the provided vector is Vector4.Zero,
+    /// returning the provided <see cref="fallback"/> rather than NaN.
+    /// </summary>
+    public static Vector4 AsNormalizedSafe(this Vector4 value, Vector4 fallback)
+    {
+        return value == Vector4.Zero ? fallback : Vector4.Normalize(value);
+    }
+
+    /// <summary>
     /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
     /// </summary>
     public static bool IsApproximatelyEqual(Vector2 a, Vector2 b, float tolerance = 0.000001f)
@@ -175,6 +197,14 @@ public static partial class M
     public static bool IsApproximatelyEqual(Vector3 a, Vector3 b, float tolerance = 0.000001f)
     {
         return IsApproximatelyEqual(a.X, b.X, tolerance) && IsApproximatelyEqual(a.Y, b.Y, tolerance) && IsApproximatelyEqual(a.Z, b.Z, tolerance);
+    }
+
+    /// <summary>
+    /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
+    /// </summary>
+    public static bool IsApproximatelyEqual(Vector4 a, Vector4 b, float tolerance = 0.000001f)
+    {
+        return IsApproximatelyEqual(a.X, b.X, tolerance) && IsApproximatelyEqual(a.Y, b.Y, tolerance) && IsApproximatelyEqual(a.Z, b.Z, tolerance) && IsApproximatelyEqual(a.W, b.W, tolerance);
     }
 
     /// <summary>
