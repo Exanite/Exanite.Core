@@ -16,7 +16,7 @@ namespace Exanite.Core.Numerics;
 public struct Color
 {
     public static Color White => FromSrgb(1, 1, 1);
-    public static Color Black => FromSrgb(1, 1, 1);
+    public static Color Black => FromSrgb(0, 0, 0);
     public static Color Red => FromSrgb(1, 0, 0);
     public static Color Green => FromSrgb(0, 1, 0);
     public static Color Blue => FromSrgb(0, 0, 1);
