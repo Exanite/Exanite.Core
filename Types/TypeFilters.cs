@@ -1,6 +1,6 @@
 namespace Exanite.Core.Types;
 
-public static partial class TypeFilters
+public static class TypeFilters
 {
     public static ITypeFilter Self { get; } = new SelfTypeFilter();
     public static ITypeFilter Interface { get; } = new InterfaceTypeFilter();
