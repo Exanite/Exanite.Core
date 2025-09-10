@@ -126,7 +126,7 @@ public static partial class M
     /// Interpolates from one value to another by <see cref="t"/>.
     /// <see cref="t"/> will be clamped in the range [0, 1]
     /// </summary>
-    public static Color Lerp(Color from, Color to, float t, ColorType mixingSpace)
+    public static Color Lerp(Color from, Color to, float t, ColorType mixingSpace = ColorType.Srgb)
     {
         from = from.As(mixingSpace);
         to = to.As(mixingSpace);
@@ -137,7 +137,7 @@ public static partial class M
     /// <summary>
     /// Interpolates from one value to another by <see cref="t"/>.
     /// </summary>
-    public static Color LerpUnclamped(Color from, Color to, float t, ColorType mixingSpace)
+    public static Color LerpUnclamped(Color from, Color to, float t, ColorType mixingSpace = ColorType.Srgb)
     {
         from = from.As(mixingSpace);
         to = to.As(mixingSpace);
