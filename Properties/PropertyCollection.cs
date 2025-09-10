@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Exanite.Core.Events;
 
 namespace Exanite.Core.Properties;
 

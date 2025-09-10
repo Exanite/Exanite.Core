@@ -1,5 +1,4 @@
 using System;
-using Exanite.Core.Events;
 
 namespace Exanite.Core.Properties;
 
