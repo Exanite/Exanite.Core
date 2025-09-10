@@ -1,11 +1,12 @@
 using System;
+using System.Threading;
 using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Runtime;
 
 public class RefCounter : IRefCounted, ITrackedDisposable
 {
-    private readonly object sync = new();
+    private readonly Lock sync = new();
 
     private readonly Action? onSetup;
     private readonly Action? onTeardown;
