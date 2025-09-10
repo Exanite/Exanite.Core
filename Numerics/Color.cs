@@ -24,6 +24,9 @@ public struct Color
     public static Color Cyan => FromSrgb(0, 1, 1);
     public static Color Magenta => FromSrgb(1, 0, 1);
 
+    public static Color TransparentWhite => FromSrgb(1, 1, 1, 0);
+    public static Color TransparentBlack => FromSrgb(0, 0, 0, 0);
+
     private Vector4 color;
     private ColorType type;
 
