@@ -159,7 +159,7 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
     public int CompareTo(Angle other)
     {
         other = other.As(Type);
-        
+
         if (M.IsApproximatelyEqual(Value, other.Value))
         {
             return 0;
@@ -175,7 +175,7 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
 
     public override int GetHashCode()
     {
-        return Radians.Value.GetHashCode();
+        return HashCode.Combine(Value, Type);
     }
 
     // Operators
