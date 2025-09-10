@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using Exanite.Core.Utilities;
 using DrawingColor = System.Drawing.Color;
@@ -13,7 +14,7 @@ namespace Exanite.Core.Numerics;
 /// <see cref="LinearColor4"/>,
 /// <see cref="SrgbColor4"/>
 /// </remarks>
-public struct Color
+public struct Color : IEquatable<Color>
 {
     public static Color White => FromSrgb(1, 1, 1);
     public static Color Black => FromSrgb(0, 0, 0);
@@ -238,6 +239,34 @@ public struct Color
         }
 
         return new Color(Value, type);
+    }
+
+    public static bool operator ==(Color a, Color b)
+    {
+        b = b.As(a.Type);
+        return M.IsApproximatelyEqual(a.Value, b.Value);
+    }
+
+    public static bool operator !=(Color a, Color b)
+    {
+        b = b.As(a.Type);
+        return !M.IsApproximatelyEqual(a.Value, b.Value);
+    }
+
+    public bool Equals(Color other)
+    {
+        return Value.Equals(other.Value)
+               && Type == other.Type;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Angle other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Value, Type);
     }
 
     // ToString
