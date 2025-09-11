@@ -55,6 +55,9 @@ public readonly struct RelativePath
         AssertUtility.IsTrue(!string.IsNullOrEmpty(path), "Relative path cannot be a null or empty string");
     }
 
+    /// <summary>
+    /// Splits the path into path segments.
+    /// </summary>
     public RelativePath[] Split()
     {
         return [..PathUtility.TrimSeparators(path).Split(Path.DirectorySeparatorChar)];

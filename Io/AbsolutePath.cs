@@ -81,11 +81,17 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
         AssertUtility.IsTrue(!string.IsNullOrEmpty(path), "Absolute path cannot be a null or empty string");
     }
 
+    /// <summary>
+    /// Gets a relative path from this path to another path.
+    /// </summary>
     public RelativePath GetRelativePathTo(AbsolutePath other)
     {
         return Path.GetRelativePath(this, other);
     }
-    
+
+    /// <summary>
+    /// Splits the path into path segments.
+    /// </summary>
     public RelativePath[] Split()
     {
         return [..PathUtility.TrimSeparators(path).Split(Path.DirectorySeparatorChar)];
