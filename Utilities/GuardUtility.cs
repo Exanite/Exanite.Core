@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Exanite.Core.Runtime;
 
@@ -29,5 +30,12 @@ public static class GuardUtility
         IsTrue(value != null, errorMessage ?? "Value was null");
 
         return value;
+    }
+
+    public static T NotNull<T>(T? value, string? errorMessage = null) where T : struct
+    {
+        IsTrue(value != null, errorMessage ?? "Value was null");
+
+        return value.Value;
     }
 }

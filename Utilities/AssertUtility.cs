@@ -33,4 +33,11 @@ public static class AssertUtility
 
         return value;
     }
+
+    public static T NotNull<T>(T? value, string? errorMessage = null) where T : struct
+    {
+        IsTrue(value != null, errorMessage ?? "Value was null");
+
+        return value.Value;
+    }
 }
