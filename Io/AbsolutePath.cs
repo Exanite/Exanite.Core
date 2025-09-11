@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Exanite.Core.Utilities;
+using Microsoft.Extensions.FileSystemGlobbing;
+using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
 
 namespace Exanite.Core.Io;
 
@@ -53,7 +57,18 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
         return new AbsolutePath(path);
     }
 
-    public static AbsolutePath operator /(AbsolutePath a, RelativePath[] paths)
+    public static AbsolutePath operator /(AbsolutePath a, ReadOnlySpan<RelativePath> paths)
+    {
+        var result = a;
+        foreach (var path in paths)
+        {
+            result /= path;
+        }
+
+        return result;
+    }
+
+    public static AbsolutePath operator /(AbsolutePath a, IEnumerable<RelativePath> paths)
     {
         var result = a;
         foreach (var path in paths)
@@ -116,6 +131,31 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     public RelativePath[] Split()
     {
         return [..PathUtility.TrimSeparators(path).Split(Path.DirectorySeparatorChar)];
+    }
+
+    /// <summary>
+    /// Matches files using a list of glob patterns using this path as the root path.
+    /// Patterns are case-sensitive (for cross-platform consistency) and are applied in order.
+    /// </summary>
+    public AbsolutePath[] Glob(ReadOnlySpan<string> patterns)
+    {
+        var matcher = new Matcher(StringComparison.Ordinal, true);
+        foreach (var pattern in patterns)
+        {
+            if (pattern.StartsWith("!"))
+            {
+                matcher.AddExclude(pattern[1..]);
+            }
+            else
+            {
+                matcher.AddInclude(pattern);
+            }
+        }
+
+        var root = this;
+        var results = matcher.Execute(new DirectoryInfoWrapper(new DirectoryInfo(path)));
+
+        return results.Files.Select(f => root / f.Path).ToArray();
     }
 
     public override string ToString()

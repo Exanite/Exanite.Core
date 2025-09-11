@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using Exanite.Core.Utilities;
 
@@ -48,7 +50,18 @@ public readonly struct RelativePath
         return Path.Join(a, b);
     }
 
-    public static RelativePath operator /(RelativePath a, RelativePath[] paths)
+    public static RelativePath operator /(RelativePath a, ReadOnlySpan<RelativePath> paths)
+    {
+        var result = a;
+        foreach (var path in paths)
+        {
+            result /= path;
+        }
+
+        return result;
+    }
+
+    public static RelativePath operator /(RelativePath a, IEnumerable<RelativePath> paths)
     {
         var result = a;
         foreach (var path in paths)
