@@ -92,13 +92,27 @@ public class PathTests
 
         Assert.That(path.IsFolder, Is.True);
     }
-    
+
     [Test]
     public void AbsolutePath_CanBeReconstructed_AfterSplitting()
     {
         var path = new AbsolutePath(".");
 
         Assert.That(AbsolutePath.Root / path.Split(), Is.EqualTo(path));
+    }
+
+    [Test]
+    public void AbsolutePath_Parent_EventuallyThrows()
+    {
+        var path = new AbsolutePath(".");
+
+        Assert.Throws(Is.AssignableTo<Exception>(), () =>
+        {
+            for (var i = 0; i < 1000; i++)
+            {
+                path = path.Parent;
+            }
+        });
     }
 
     [Test]

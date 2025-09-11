@@ -21,6 +21,17 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     public bool IsFile => File.Exists(path);
     public bool IsFolder => Directory.Exists(path);
 
+    public bool IsRoot => this == Root;
+
+    public AbsolutePath Parent
+    {
+        get
+        {
+            GuardUtility.IsTrue(!IsRoot, "Already a root path");
+            return this / "..";
+        }
+    }
+
     /// <summary>
     /// Creates an absolute path.
     /// </summary>
