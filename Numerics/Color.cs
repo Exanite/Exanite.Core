@@ -241,6 +241,13 @@ public struct Color : IEquatable<Color>
         return new Color(Value, type);
     }
 
+    public Color WithTypeOverride(ColorType type)
+    {
+        return new Color(Value, type);
+    }
+
+    // Comparisons
+
     public static bool operator ==(Color a, Color b)
     {
         b = b.As(a.Type);

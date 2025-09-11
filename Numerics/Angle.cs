@@ -124,6 +124,11 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
         return new Angle(Value, type);
     }
 
+    public Angle WithTypeOverride(AngleType type)
+    {
+        return new Angle(Value, type);
+    }
+
     // Comparisons
 
     public static bool operator ==(Angle a, Angle b)
