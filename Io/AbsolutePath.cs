@@ -21,7 +21,15 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     /// <param name="path">An absolute or relative path. Relative paths will be joined with the working directory.</param>
     public AbsolutePath(string path)
     {
-        this.path = PathUtility.TrimEndSeparators(PathUtility.Normalize(Path.GetFullPath(path)));
+        path = Path.GetFullPath(path);
+        path = PathUtility.Normalize(path);
+        if (path != "/")
+        {
+            path = PathUtility.TrimEndSeparators(path);
+        }
+
+        this.path = path;
+
         AssertIsValid();
     }
 

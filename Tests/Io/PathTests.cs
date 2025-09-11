@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Exanite.Core.Io;
+using Exanite.Core.Utilities;
 using NUnit.Framework;
 
 namespace Exanite.Core.Tests.Io;
@@ -79,6 +80,18 @@ public class PathTests
         {
             _ = new AbsolutePath(new RelativePath("."));
         });
+    }
+
+    [Test]
+    public void AbsolutePaths_CanBeCreatedFrom_Slash()
+    {
+        AbsolutePath path = default;
+        Assert.DoesNotThrow(() =>
+        {
+            path = new AbsolutePath("/");
+        });
+
+        Assert.That(path.IsFolder, Is.True);
     }
 
     [Test]
