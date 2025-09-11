@@ -134,7 +134,16 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     }
 
     /// <summary>
-    /// Matches files using a list of glob patterns using this path as the root path.
+    /// Finds files matching a glob pattern using this path as the root path.
+    /// Patterns are case-sensitive (for cross-platform consistency).
+    /// </summary>
+    public AbsolutePath[] Glob(string pattern)
+    {
+        return Glob([pattern]);
+    }
+
+    /// <summary>
+    /// Finds files matching a list of glob patterns using this path as the root path.
     /// Patterns are case-sensitive (for cross-platform consistency) and are applied in order.
     /// </summary>
     public AbsolutePath[] Glob(ReadOnlySpan<string> patterns)
