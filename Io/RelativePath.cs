@@ -1,4 +1,5 @@
 using System.IO;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Io;
 
@@ -12,8 +13,11 @@ public readonly struct RelativePath
 
     public RelativePath(string path)
     {
-        this.path = path;
+        this.path = PathUtility.TrimEndSeparators(PathUtility.Normalize(path));
+        AssertIsValid();
     }
+
+    // Conversions
 
     public static implicit operator string(RelativePath path)
     {
@@ -25,14 +29,30 @@ public readonly struct RelativePath
         return new RelativePath(path);
     }
 
-    public static RelativePath operator /(RelativePath a, RelativePath b)
-    {
-        return Path.Join(a, b);
-    }
+    // Operators
 
     public static RelativePath operator /(RelativePath a, string b)
     {
+        return a / new RelativePath(b);
+    }
+
+    public static RelativePath operator /(RelativePath a, RelativePath b)
+    {
+        a.AssertIsValid();
+        b.AssertIsValid();
         return Path.Join(a, b);
+    }
+
+    // Operations
+
+    internal void AssertIsValid()
+    {
+        AssertUtility.IsTrue(!string.IsNullOrEmpty(path), "Relative path cannot be a null or empty string");
+    }
+
+    public RelativePath[] Split()
+    {
+        return [..PathUtility.TrimSeparators(path).Split(Path.DirectorySeparatorChar)];
     }
 
     public override string ToString()
