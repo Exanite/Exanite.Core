@@ -76,7 +76,7 @@ public readonly struct RelativePath
 
     internal void AssertIsValid()
     {
-        AssertUtility.IsTrue(!string.IsNullOrEmpty(path), "Relative path cannot be a null or empty string");
+        GuardUtility.IsTrue(!string.IsNullOrEmpty(path), "Relative path cannot be a null or empty string");
     }
 
     /// <summary>

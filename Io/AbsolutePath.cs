@@ -114,7 +114,7 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
 
     internal void AssertIsValid()
     {
-        AssertUtility.IsTrue(!string.IsNullOrEmpty(path), "Absolute path cannot be a null or empty string");
+        GuardUtility.IsTrue(!string.IsNullOrEmpty(path), "Absolute path cannot be a null or empty string");
     }
 
     /// <summary>

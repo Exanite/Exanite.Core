@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using Exanite.Core.Io;
-using Exanite.Core.Utilities;
 using NUnit.Framework;
 
 namespace Exanite.Core.Tests.Io;
