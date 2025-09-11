@@ -9,6 +9,8 @@ namespace Exanite.Core.Io;
 /// </summary>
 public readonly struct AbsolutePath : IEquatable<AbsolutePath>
 {
+    public static AbsolutePath Root => new("/");
+
     private readonly string path;
 
     public bool Exists => Path.Exists(path);
