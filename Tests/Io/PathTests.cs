@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using Exanite.Core.Io;
-using Exanite.Core.Utilities;
 using NUnit.Framework;
 
 namespace Exanite.Core.Tests.Io;
@@ -80,5 +79,22 @@ public class PathTests
         {
             _ = new AbsolutePath(new RelativePath("."));
         });
+    }
+
+    [Test]
+    public void GetRelativePathTo_ReturnsCorrectRelativePath()
+    {
+        var basePath = new AbsolutePath("Path");
+        var pathInsideBase = basePath / "A";
+
+        {
+            var expected = (RelativePath[])["A"];
+            Assert.That(basePath.GetRelativePathTo(pathInsideBase).Split(), Is.EquivalentTo(expected));
+        }
+
+        {
+            var expected = (RelativePath[])[".."];
+            Assert.That(pathInsideBase.GetRelativePathTo(basePath).Split(), Is.EquivalentTo(expected));
+        }
     }
 }
