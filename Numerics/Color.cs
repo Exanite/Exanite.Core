@@ -276,7 +276,7 @@ public struct Color : IEquatable<Color>
         return HashCode.Combine(Value, Type);
     }
 
-    // ToString
+    // Operations
 
     public override string ToString()
     {

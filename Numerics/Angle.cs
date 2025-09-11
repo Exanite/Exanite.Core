@@ -217,7 +217,7 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
         return new Angle(a.Value / scalar, a.Type);
     }
 
-    // ToString
+    // Operations
 
     public override string ToString()
     {
