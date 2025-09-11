@@ -48,6 +48,17 @@ public readonly struct RelativePath
         return Path.Join(a, b);
     }
 
+    public static RelativePath operator /(RelativePath a, RelativePath[] paths)
+    {
+        var result = a;
+        foreach (var path in paths)
+        {
+            result /= path;
+        }
+
+        return result;
+    }
+
     // Operations
 
     internal void AssertIsValid()

@@ -34,7 +34,7 @@ public class PathTests
     }
 
     [Test]
-    public void RelativePaths_CanBeJoined_WithAbsolutePaths()
+    public void RelativePaths_CanBeJoined_WithAbsolutePath()
     {
         var path = new AbsolutePath("Absolute") / new RelativePath("A") / "B" / "C";
 
@@ -42,7 +42,7 @@ public class PathTests
     }
 
     [Test]
-    public void AbsolutePaths_ThrowsException_WhenJoined_WhenEmpty()
+    public void AbsolutePath_ThrowsException_WhenJoined_WhenEmpty()
     {
         Assert.Throws(Is.AssignableTo<Exception>(), () =>
         {
@@ -51,7 +51,7 @@ public class PathTests
     }
 
     [Test]
-    public void AbsolutePaths_ThrowsException_WhenJoined_WhenDefault()
+    public void AbsolutePath_ThrowsException_WhenJoined_WhenDefault()
     {
         Assert.Throws(Is.AssignableTo<Exception>(), () =>
         {
@@ -60,7 +60,7 @@ public class PathTests
     }
 
     [Test]
-    public void AbsolutePaths_ThrowsException_WhenCreated_WithEmptyString()
+    public void AbsolutePath_ThrowsException_WhenCreated_WithEmptyString()
     {
         Assert.Throws(Is.AssignableTo<Exception>(), () =>
         {
@@ -69,7 +69,7 @@ public class PathTests
     }
 
     [Test]
-    public void AbsolutePaths_CanBeCreatedFrom_RelativePath()
+    public void AbsolutePath_CanBeCreatedFrom_RelativePath()
     {
         Assert.DoesNotThrow(() =>
         {
@@ -83,7 +83,7 @@ public class PathTests
     }
 
     [Test]
-    public void AbsolutePaths_CanBeCreatedFrom_Slash()
+    public void AbsolutePath_CanBeCreatedFrom_Slash()
     {
         AbsolutePath path = default;
         Assert.DoesNotThrow(() =>
@@ -92,6 +92,14 @@ public class PathTests
         });
 
         Assert.That(path.IsFolder, Is.True);
+    }
+    
+    [Test]
+    public void AbsolutePath_CanBeReconstructed_AfterSplitting()
+    {
+        var path = new AbsolutePath(".");
+
+        Assert.That(AbsolutePath.Root / path.Split(), Is.EqualTo(path));
     }
 
     [Test]

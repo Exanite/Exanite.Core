@@ -53,6 +53,17 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
         return new AbsolutePath(path);
     }
 
+    public static AbsolutePath operator /(AbsolutePath a, RelativePath[] paths)
+    {
+        var result = a;
+        foreach (var path in paths)
+        {
+            result /= path;
+        }
+
+        return result;
+    }
+
     // Comparisons
 
     public bool Equals(AbsolutePath other)
