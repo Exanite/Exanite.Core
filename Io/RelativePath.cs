@@ -29,6 +29,11 @@ public readonly struct RelativePath
         return new RelativePath(path);
     }
 
+    public AbsolutePath ToAbsolutePath()
+    {
+        return new AbsolutePath(this);
+    }
+
     // Operators
 
     public static RelativePath operator /(RelativePath a, string b)
