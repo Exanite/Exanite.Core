@@ -9,7 +9,7 @@ namespace Exanite.Core.Io;
 /// Represents a relative path.
 /// Relative paths must be joined with an absolute path before being used to access a file or folder in a file system.
 /// </summary>
-public readonly struct RelativePath
+public readonly struct RelativePath : IEquatable<RelativePath>
 {
     private readonly string path;
 
@@ -34,6 +34,33 @@ public readonly struct RelativePath
     public AbsolutePath ToAbsolutePath()
     {
         return new AbsolutePath(this);
+    }
+
+    // Comparisons
+
+    public static bool operator ==(RelativePath left, RelativePath right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(RelativePath left, RelativePath right)
+    {
+        return !left.Equals(right);
+    }
+
+    public bool Equals(RelativePath other)
+    {
+        return path == other.path;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is RelativePath other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return path.GetHashCode();
     }
 
     // Operators
