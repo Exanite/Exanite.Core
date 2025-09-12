@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using Exanite.Core.Utilities;
 using Microsoft.Extensions.FileSystemGlobbing;
@@ -195,6 +196,47 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     {
         GuardUtility.IsTrue(IsFile, "No file exists at the current path");
         File.Move(this, target, overwrite);
+    }
+
+    /// <summary>
+    /// Creates a zip archive at the specified path with the contents of the folder at this path.
+    /// </summary>
+    /// <param name="archiveFile">The path of the archive file.</param>
+    /// <param name="includeFolderInArchive">Should the origin folder be included in the zip archive?</param>
+    /// <param name="filter">Used to select which files should be included.</param>
+    /// <param name="compressionLevel">The compression level to use.</param>
+    /// <param name="archiveCreateMode">Whether to update the existing archive or create a new archive.</param>
+    public void ZipTo(
+        AbsolutePath archiveFile,
+        bool includeFolderInArchive = false,
+        Func<RelativePath, bool>? filter = null,
+        CompressionLevel compressionLevel = CompressionLevel.Optimal,
+        FileMode archiveCreateMode = FileMode.CreateNew)
+    {
+        filter ??= _ => true;
+
+        archiveFile.Parent.CreateFolder();
+
+        using var fileStream = File.Open(archiveFile, archiveCreateMode, FileAccess.ReadWrite);
+        using var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Create);
+
+        foreach (var file in GetAllFilesRecursive())
+        {
+            var relativePath = GetRelativePathTo(file);
+            if (!filter.Invoke(relativePath))
+            {
+                continue;
+            }
+
+            var entryName = relativePath;
+            if (includeFolderInArchive)
+            {
+                // Include the folder in the archive if requested
+                entryName = Name / relativePath;
+            }
+
+            zipArchive.CreateEntryFromFile(file, entryName, compressionLevel);
+        }
     }
 
     /// <summary>
