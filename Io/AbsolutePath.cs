@@ -191,7 +191,10 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     /// </summary>
     public void DeleteFile()
     {
-        File.Delete(path);
+        if (Exists)
+        {
+            File.Delete(path);
+        }
     }
 
     /// <summary>
@@ -199,7 +202,10 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     /// </summary>
     public void DeleteFolder()
     {
-        Directory.Delete(path, true);
+        if (Exists)
+        {
+            Directory.Delete(path, true);
+        }
     }
 
     /// <summary>
