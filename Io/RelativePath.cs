@@ -13,6 +13,11 @@ public readonly struct RelativePath : IEquatable<RelativePath>
 {
     private readonly string path;
 
+    /// <summary>
+    /// The length of the path in characters.
+    /// </summary>
+    public int Length => path.Length;
+
     public RelativePath(string path)
     {
         this.path = PathUtility.TrimEndSeparators(PathUtility.Normalize(path));
