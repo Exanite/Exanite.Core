@@ -212,7 +212,7 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     {
         var originFolder = this;
 
-        GuardUtility.IsTrue(originFolder.ToDirectoryInfo().Exists, "Origin folder does not exist");
+        GuardUtility.IsTrue(originFolder.IsFolder, "Origin folder does not exist");
         targetFolder.CreateFolder();
 
         // Copy files
