@@ -15,6 +15,7 @@ namespace Exanite.Core.Io;
 public readonly struct AbsolutePath : IEquatable<AbsolutePath>
 {
     public static AbsolutePath Root => new("/");
+    public static AbsolutePath WorkingDirectory => new(".");
 
     private readonly string path;
 
