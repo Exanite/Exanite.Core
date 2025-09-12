@@ -124,6 +124,16 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
 
     // Comparisons
 
+    public static bool operator ==(AbsolutePath left, AbsolutePath right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(AbsolutePath left, AbsolutePath right)
+    {
+        return !left.Equals(right);
+    }
+
     public bool Equals(AbsolutePath other)
     {
         return path == other.path;
