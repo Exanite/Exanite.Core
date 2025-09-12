@@ -247,8 +247,8 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
         targetFolder.CreateFolder();
 
         // Copy files
-        var relativeOriginFiles = new HashSet<AbsolutePath>(originFolder.GetAllFilesRecursive().Select(path => originFolder.GetRelativePathTo(path).ToAbsolutePath()));
-        var relativeTargetFiles = new HashSet<AbsolutePath>(targetFolder.GetAllFilesRecursive().Select(path => targetFolder.GetRelativePathTo(path).ToAbsolutePath()));
+        var relativeOriginFiles = new HashSet<RelativePath>(originFolder.GetAllFilesRecursive().Select(path => originFolder.GetRelativePathTo(path)));
+        var relativeTargetFiles = new HashSet<RelativePath>(targetFolder.GetAllFilesRecursive().Select(path => targetFolder.GetRelativePathTo(path)));
         foreach (var relativeOriginFile in relativeOriginFiles)
         {
             var origin = originFolder / relativeOriginFile;
@@ -287,8 +287,8 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
         }
 
         // Copy folders
-        var relativeOriginFolders = new HashSet<AbsolutePath>(originFolder.GetAllFoldersRecursive().Select(path => originFolder.GetRelativePathTo(path).ToAbsolutePath()));
-        var relativeTargetFolders = new HashSet<AbsolutePath>(targetFolder.GetAllFoldersRecursive().Select(path => targetFolder.GetRelativePathTo(path).ToAbsolutePath()));
+        var relativeOriginFolders = new HashSet<RelativePath>(originFolder.GetAllFoldersRecursive().Select(path => originFolder.GetRelativePathTo(path)));
+        var relativeTargetFolders = new HashSet<RelativePath>(targetFolder.GetAllFoldersRecursive().Select(path => targetFolder.GetRelativePathTo(path)));
         foreach (var relativeOriginFolder in relativeOriginFolders)
         {
             var target = targetFolder / relativeOriginFolder;
