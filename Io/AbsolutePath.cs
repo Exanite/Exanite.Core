@@ -23,6 +23,8 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     public bool IsFile => File.Exists(path);
     public bool IsFolder => Directory.Exists(path);
 
+    public bool IsFolderEmpty => ToDirectoryInfo().IsEmpty();
+
     public bool IsRoot => this == Root;
 
     /// <summary>
@@ -49,6 +51,11 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
             return path[(lastSlash + 1)..];
         }
     }
+
+    /// <summary>
+    /// The length of the path in characters.
+    /// </summary>
+    public int Length => path.Length;
 
     /// <summary>
     /// Creates an absolute path.
@@ -199,6 +206,93 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     }
 
     /// <summary>
+    /// Copies the folder at this path to the target path.
+    /// </summary>
+    public void CopyFolderTo(AbsolutePath targetFolder, bool overwrite = true, bool deleteMismatches = false)
+    {
+        var originFolder = this;
+
+        GuardUtility.IsTrue(originFolder.ToDirectoryInfo().Exists, "Origin folder does not exist");
+        targetFolder.CreateFolder();
+
+        // Copy files
+        var relativeOriginFiles = new HashSet<AbsolutePath>(originFolder.GetAllFilesRecursive().Select(path => originFolder.GetRelativePathTo(path).ToAbsolutePath()));
+        var relativeTargetFiles = new HashSet<AbsolutePath>(targetFolder.GetAllFilesRecursive().Select(path => targetFolder.GetRelativePathTo(path).ToAbsolutePath()));
+        foreach (var relativeOriginFile in relativeOriginFiles)
+        {
+            var origin = originFolder / relativeOriginFile;
+            var target = targetFolder / relativeOriginFile;
+
+            relativeTargetFiles.Remove(relativeOriginFile);
+
+            if (!target.Exists)
+            {
+                // Output does not exist - Copy to output
+                target.Parent.CreateFolder();
+                origin.CopyFileTo(target);
+
+                continue;
+            }
+
+            if (overwrite && !FileUtility.AreFilesEqual(origin, target))
+            {
+                // Output is outdated - Copy to output
+                origin.CopyFileTo(target, true);
+
+                continue;
+            }
+
+            // Output is up to date - Skip
+        }
+
+        if (deleteMismatches)
+        {
+            foreach (var relativeTargetFile in relativeTargetFiles)
+            {
+                var targetFile = targetFolder / relativeTargetFile;
+
+                targetFile.DeleteFile();
+            }
+        }
+
+        // Copy folders
+        var relativeOriginFolders = new HashSet<AbsolutePath>(originFolder.GetAllFoldersRecursive().Select(path => originFolder.GetRelativePathTo(path).ToAbsolutePath()));
+        var relativeTargetFolders = new HashSet<AbsolutePath>(targetFolder.GetAllFoldersRecursive().Select(path => targetFolder.GetRelativePathTo(path).ToAbsolutePath()));
+        foreach (var relativeOriginFolder in relativeOriginFolders)
+        {
+            var target = targetFolder / relativeOriginFolder;
+            relativeTargetFolders.Remove(relativeOriginFolder);
+
+            if (!target.Exists)
+            {
+                // Output does not exist - Create
+                target.CreateFolder();
+            }
+        }
+
+        if (deleteMismatches)
+        {
+            foreach (var relativeTargetFolder in relativeTargetFolders.OrderByDescending(path => path.Length))
+            {
+                var target = targetFolder / relativeTargetFolder;
+
+                // Original does not exist
+                GuardUtility.IsTrue(target.IsFolderEmpty, "Expected folder to be empty");
+                target.DeleteFolder();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Moves the folder at this path to the target path.
+    /// </summary>
+    public void MoveFolderTo(AbsolutePath targetFolder, bool overwrite = true, bool deleteMismatches = false)
+    {
+        CopyFolderTo(targetFolder, overwrite, deleteMismatches);
+        DeleteFolder();
+    }
+
+    /// <summary>
     /// Creates a zip archive at the specified path with the contents of the folder at this path.
     /// </summary>
     /// <param name="archiveFile">The path of the archive file.</param>
@@ -213,6 +307,8 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
         CompressionLevel compressionLevel = CompressionLevel.Optimal,
         FileMode archiveCreateMode = FileMode.CreateNew)
     {
+        var originFolder = this;
+
         filter ??= _ => true;
 
         archiveFile.Parent.CreateFolder();
@@ -220,9 +316,9 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
         using var fileStream = File.Open(archiveFile, archiveCreateMode, FileAccess.ReadWrite);
         using var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Create);
 
-        foreach (var file in GetAllFilesRecursive())
+        foreach (var file in originFolder.GetAllFilesRecursive())
         {
-            var relativePath = GetRelativePathTo(file);
+            var relativePath = originFolder.GetRelativePathTo(file);
             if (!filter.Invoke(relativePath))
             {
                 continue;
@@ -232,7 +328,7 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
             if (includeFolderInArchive)
             {
                 // Include the folder in the archive if requested
-                entryName = Name / relativePath;
+                entryName = originFolder.Name / relativePath;
             }
 
             zipArchive.CreateEntryFromFile(file, entryName, compressionLevel);
