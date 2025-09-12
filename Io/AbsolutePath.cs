@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Exanite.Core.Utilities;
@@ -23,12 +24,28 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
 
     public bool IsRoot => this == Root;
 
+    /// <summary>
+    /// Gets the parent folder of this path.
+    /// Throws an error if <see cref="IsRoot"/> is true.
+    /// </summary>
     public AbsolutePath Parent
     {
         get
         {
             GuardUtility.IsTrue(!IsRoot, "Already a root path");
             return this / "..";
+        }
+    }
+
+    /// <summary>
+    /// The name of the folder or file, including any extensions.
+    /// </summary>
+    public RelativePath Name
+    {
+        get
+        {
+            var lastSlash = path.LastIndexOf(Path.DirectorySeparatorChar);
+            return path[(lastSlash + 1)..];
         }
     }
 

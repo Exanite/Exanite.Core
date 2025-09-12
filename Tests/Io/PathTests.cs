@@ -116,6 +116,23 @@ public class PathTests
     }
 
     [Test]
+    public void AbsolutePath_Name_ReturnsLastSegmentOfSplit()
+    {
+        var path = new AbsolutePath(".") / "A";
+        Assert.That(path.Name, Is.EqualTo(new RelativePath("A")));
+    }
+
+    [Test]
+    public void AbsolutePath_Name_ThrowWhen_IsRoot()
+    {
+        var path = new AbsolutePath("/");
+        Assert.Throws(Is.AssignableTo<Exception>(), () =>
+        {
+            _ = path.Name;
+        });
+    }
+
+    [Test]
     public void GetRelativePathTo_ReturnsCorrectRelativePath()
     {
         var basePath = new AbsolutePath("Path");
