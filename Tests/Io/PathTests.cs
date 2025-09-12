@@ -94,14 +94,6 @@ public class PathTests
     }
 
     [Test]
-    public void AbsolutePath_CanBeReconstructed_AfterSplitting()
-    {
-        var path = new AbsolutePath(".");
-
-        Assert.That(AbsolutePath.Root / path.Split(), Is.EqualTo(path));
-    }
-
-    [Test]
     public void AbsolutePath_Parent_EventuallyThrows()
     {
         var path = new AbsolutePath(".");

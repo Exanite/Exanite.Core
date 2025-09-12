@@ -14,7 +14,6 @@ namespace Exanite.Core.Io;
 /// </summary>
 public readonly struct AbsolutePath : IEquatable<AbsolutePath>
 {
-    public static AbsolutePath Root => new("/");
     public static AbsolutePath WorkingDirectory => new(".");
 
     private readonly string path;
@@ -25,18 +24,16 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
 
     public bool IsFolderEmpty => ToDirectoryInfo().IsEmpty();
 
-    public bool IsRoot => this == Root;
-
     /// <summary>
     /// Gets the parent folder of this path.
-    /// Throws an error if <see cref="IsRoot"/> is true.
     /// </summary>
     public AbsolutePath Parent
     {
         get
         {
-            GuardUtility.IsTrue(!IsRoot, "Already a root path");
-            return this / "..";
+            var parent = this / "..";
+            GuardUtility.IsTrue(parent != this, "Already a root path");
+            return parent;
         }
     }
 
