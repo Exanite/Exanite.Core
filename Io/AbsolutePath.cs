@@ -155,6 +155,14 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     }
 
     /// <summary>
+    /// Creates the folder at this path if it does not exist.
+    /// </summary>
+    public void CreateFolder()
+    {
+        Directory.CreateDirectory(path);
+    }
+
+    /// <summary>
     /// Gets a relative path from this path to another path.
     /// </summary>
     public RelativePath GetRelativePathTo(AbsolutePath other)
