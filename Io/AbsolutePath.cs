@@ -90,6 +90,16 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
         return result;
     }
 
+    public FileInfo ToFileInfo()
+    {
+        return new FileInfo(path);
+    }
+
+    public DirectoryInfo ToDirectoryInfo()
+    {
+        return new DirectoryInfo(path);
+    }
+
     // Comparisons
 
     public bool Equals(AbsolutePath other)
