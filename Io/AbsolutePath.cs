@@ -129,6 +129,22 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     }
 
     /// <summary>
+    /// Deletes the file at this path if it exists
+    /// </summary>
+    public void DeleteFile()
+    {
+        File.Delete(path);
+    }
+
+    /// <summary>
+    /// Deletes the folder at this path if it exists
+    /// </summary>
+    public void DeleteFolder()
+    {
+        Directory.Delete(path, true);
+    }
+
+    /// <summary>
     /// Gets a relative path from this path to another path.
     /// </summary>
     public RelativePath GetRelativePathTo(AbsolutePath other)
