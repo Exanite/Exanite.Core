@@ -169,6 +169,24 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     }
 
     /// <summary>
+    /// Writes the specified text to a new file at this path.
+    /// If the file already exists, it is overwritten.
+    /// </summary>
+    public void WriteAllText(ReadOnlySpan<char> text)
+    {
+        File.WriteAllText(path, text);
+    }
+
+    /// <summary>
+    /// Writes the specified bytes to a new file at this path.
+    /// If the file already exists, it is overwritten.
+    /// </summary>
+    public void WriteAllBytes(ReadOnlySpan<byte> text)
+    {
+        File.WriteAllBytes(path, text);
+    }
+
+    /// <summary>
     /// Deletes the file at this path if it exists
     /// </summary>
     public void DeleteFile()
