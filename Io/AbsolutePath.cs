@@ -214,6 +214,38 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     }
 
     /// <summary>
+    /// Gets all files immediately under this path.
+    /// </summary>
+    public AbsolutePath[] GetAllFilesImmediate()
+    {
+        return [..Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly).Select(f => new AbsolutePath(f))];
+    }
+
+    /// <summary>
+    /// Gets all files recursively under this path.
+    /// </summary>
+    public AbsolutePath[] GetAllFilesRecursive()
+    {
+        return [..Directory.GetFiles(path, "*", SearchOption.AllDirectories).Select(f => new AbsolutePath(f))];
+    }
+
+    /// <summary>
+    /// Gets all folders immediately under this path.
+    /// </summary>
+    public AbsolutePath[] GetAllFoldersImmediate()
+    {
+        return [..Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly).Select(f => new AbsolutePath(f))];
+    }
+
+    /// <summary>
+    /// Gets all folders recursively under this path.
+    /// </summary>
+    public AbsolutePath[] GetAllFoldersRecursive()
+    {
+        return [..Directory.GetDirectories(path, "*", SearchOption.AllDirectories).Select(f => new AbsolutePath(f))];
+    }
+
+    /// <summary>
     /// Finds files matching a glob pattern using this path as the root path.
     /// Patterns are case-sensitive (for cross-platform consistency).
     /// </summary>
