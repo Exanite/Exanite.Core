@@ -208,7 +208,7 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     /// <summary>
     /// Copies the folder at this path to the target path.
     /// </summary>
-    public void CopyFolderTo(AbsolutePath targetFolder, bool overwrite = true, bool deleteMismatches = false)
+    public void CopyFolderTo(AbsolutePath targetFolder, bool overwrite = false, bool deleteMismatches = false)
     {
         var originFolder = this;
 
@@ -286,7 +286,7 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     /// <summary>
     /// Moves the folder at this path to the target path.
     /// </summary>
-    public void MoveFolderTo(AbsolutePath targetFolder, bool overwrite = true, bool deleteMismatches = false)
+    public void MoveFolderTo(AbsolutePath targetFolder, bool overwrite = false, bool deleteMismatches = false)
     {
         CopyFolderTo(targetFolder, overwrite, deleteMismatches);
         DeleteFolder();
