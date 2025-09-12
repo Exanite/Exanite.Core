@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Exanite.Core.Utilities;
@@ -157,6 +156,14 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     }
 
     /// <summary>
+    /// Creates the folder at this path if it does not exist.
+    /// </summary>
+    public void CreateFolder()
+    {
+        Directory.CreateDirectory(path);
+    }
+
+    /// <summary>
     /// Deletes the file at this path if it exists
     /// </summary>
     public void DeleteFile()
@@ -173,11 +180,21 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     }
 
     /// <summary>
-    /// Creates the folder at this path if it does not exist.
+    /// Copies the file at this path to the target path.
     /// </summary>
-    public void CreateFolder()
+    public void CopyFileTo(AbsolutePath target, bool overwrite = false)
     {
-        Directory.CreateDirectory(path);
+        GuardUtility.IsTrue(Exists, "No file exists at the current path");
+        File.Copy(this, target, overwrite);
+    }
+
+    /// <summary>
+    /// Moves the file at this path to the target path.
+    /// </summary>
+    public void MoveFileTo(AbsolutePath target, bool overwrite = false)
+    {
+        GuardUtility.IsTrue(IsFile, "No file exists at the current path");
+        File.Move(this, target, overwrite);
     }
 
     /// <summary>
