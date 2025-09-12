@@ -163,6 +163,11 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
         return Path.Join(a, b);
     }
 
+    public static AbsolutePath operator /(AbsolutePath a, AbsolutePath b)
+    {
+        throw new InvalidOperationException("Cannot join two absolute paths. This is a runtime exception rather than a compile error because there is no way to type check this while allowing implicit casts from AbsolutePath to string");
+    }
+
     // Operations
 
     internal void AssertIsValid()
