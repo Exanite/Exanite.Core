@@ -4,7 +4,7 @@ using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Runtime;
 
-public class RefCounter : IRefCounted, ITrackedDisposable
+public class RefCounter : IRefCountable, ITrackedDisposable
 {
     private readonly Lock sync = new();
 
