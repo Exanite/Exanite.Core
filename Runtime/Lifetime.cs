@@ -4,12 +4,13 @@ using System.Collections.Generic;
 namespace Exanite.Core.Runtime;
 
 /// <summary>
-/// Makes it easier to mark objects to be disposed of later. Objects will be disposed in first-in first-out order (stack order).
+/// Represents the lifetime of a collection of objects.
+/// When this lifetime is disposed, all objects managed by this lifetime will also be disposed.
+/// Objects are disposed in last-in first-out order (stack order).
 /// </summary>
-public class DisposableCollection : IDisposable
+public class Lifetime : IDisposable
 {
     // Either IDisposable or Action
-    // This is to avoid allocations while keeping things simple
     private readonly Stack<object> stack = new();
 
     internal T Add<T>(T disposable) where T : IDisposable
