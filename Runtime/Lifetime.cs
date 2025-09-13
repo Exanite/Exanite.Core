@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Runtime;
 
@@ -10,35 +11,68 @@ namespace Exanite.Core.Runtime;
 /// </summary>
 public class Lifetime : IDisposable
 {
-    // Either IDisposable or Action
-    private readonly Stack<object> stack = new();
-
-    internal T Add<T>(T disposable) where T : IDisposable
+    private enum RegistrationType : byte
     {
-        stack.Push(disposable);
+        Disposable,
+        RefCountable,
+        Action,
+    }
+
+    private readonly Stack<RegistrationType> registrations = new();
+
+    private readonly Stack<IDisposable> disposables = new();
+    private readonly Stack<IRefCountable> refCountables = new();
+    private readonly Stack<Action> actions = new();
+
+    internal T DisposeWith<T>(T disposable) where T : IDisposable
+    {
+        registrations.Push(RegistrationType.Disposable);
+        disposables.Push(disposable);
 
         return disposable;
     }
 
-    internal Action Add(Action action)
+    internal T RemoveRefWith<T>(T refCountable) where T : IRefCountable
     {
-        stack.Push(action);
+        registrations.Push(RegistrationType.RefCountable);
+        refCountables.Push(refCountable);
+
+        return refCountable;
+    }
+
+    internal Action InvokeWith(Action action)
+    {
+        registrations.Push(RegistrationType.Action);
+        actions.Push(action);
 
         return action;
     }
 
     public void Dispose()
     {
-        while (stack.TryPop(out var value))
+        while (registrations.TryPop(out var registrationType))
         {
-            if (value is IDisposable disposable)
+            switch (registrationType)
             {
-                disposable.Dispose();
-            }
-
-            if (value is Action action)
-            {
-                action.Invoke();
+                case RegistrationType.Disposable:
+                {
+                    disposables.Pop().Dispose();
+                    break;
+                }
+                case RegistrationType.RefCountable:
+                {
+                    refCountables.Pop().RemoveRef();
+                    break;
+                }
+                case RegistrationType.Action:
+                {
+                    actions.Pop().Invoke();
+                    break;
+                }
+                default:
+                {
+                    throw ExceptionUtility.NotSupportedEnumValue(registrationType);
+                }
             }
         }
     }
