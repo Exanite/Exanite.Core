@@ -108,7 +108,7 @@ public class PathTests
     }
 
     [Test]
-    public void AbsolutePath_Name_ReturnsLastSegmentOfSplit()
+    public void AbsolutePath_Name_ReturnsLastSegment()
     {
         var path = new AbsolutePath(".") / "A";
         Assert.That(path.Name, Is.EqualTo(new RelativePath("A")));
