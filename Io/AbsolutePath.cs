@@ -115,28 +115,6 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
         return new AbsolutePath(path);
     }
 
-    public static AbsolutePath operator /(AbsolutePath a, ReadOnlySpan<RelativePath> paths)
-    {
-        var result = a;
-        foreach (var path in paths)
-        {
-            result /= path;
-        }
-
-        return result;
-    }
-
-    public static AbsolutePath operator /(AbsolutePath a, IEnumerable<RelativePath> paths)
-    {
-        var result = a;
-        foreach (var path in paths)
-        {
-            result /= path;
-        }
-
-        return result;
-    }
-
     public FileInfo ToFileInfo()
     {
         return new FileInfo(path);
@@ -176,11 +154,6 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
 
     // Operators
 
-    public static AbsolutePath operator /(AbsolutePath a, string b)
-    {
-        return a / new RelativePath(b);
-    }
-
     public static AbsolutePath operator /(AbsolutePath a, RelativePath b)
     {
         a.AssertIsValid();
@@ -188,9 +161,26 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
         return Path.Join(a, b);
     }
 
-    public static AbsolutePath operator /(AbsolutePath a, AbsolutePath b)
+    public static AbsolutePath operator /(AbsolutePath a, ReadOnlySpan<RelativePath> paths)
     {
-        throw new InvalidOperationException("Cannot join two absolute paths. This is a runtime exception rather than a compile error because there is no way to type check this while allowing implicit casts from AbsolutePath to string");
+        var result = a;
+        foreach (var path in paths)
+        {
+            result /= path;
+        }
+
+        return result;
+    }
+
+    public static AbsolutePath operator /(AbsolutePath a, IEnumerable<RelativePath> paths)
+    {
+        var result = a;
+        foreach (var path in paths)
+        {
+            result /= path;
+        }
+
+        return result;
     }
 
     // Operations

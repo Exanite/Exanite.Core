@@ -70,11 +70,6 @@ public readonly struct RelativePath : IEquatable<RelativePath>
 
     // Operators
 
-    public static RelativePath operator /(RelativePath a, string b)
-    {
-        return a / new RelativePath(b);
-    }
-
     public static RelativePath operator /(RelativePath a, RelativePath b)
     {
         a.AssertIsValid();
