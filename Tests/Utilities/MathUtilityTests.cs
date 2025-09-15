@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Exanite.Core.Tests.Utilities
 {
     [TestFixture]
-    public partial class MathUtilityTests
+    public class MathUtilityTests
     {
         #region Ranges
 
