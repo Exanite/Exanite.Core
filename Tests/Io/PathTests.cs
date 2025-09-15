@@ -125,6 +125,13 @@ public class PathTests
     }
 
     [Test]
+    public void AbsolutePath_IsRoot_IsTrue_WhenIsRoot()
+    {
+        var path = new AbsolutePath("/");
+        Assert.That(path.IsRoot, Is.True);
+    }
+
+    [Test]
     public void GetRelativePathTo_ReturnsCorrectRelativePath()
     {
         var basePath = new AbsolutePath("Path");

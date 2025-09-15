@@ -25,6 +25,18 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     public bool IsFolderEmpty => ToDirectoryInfo().IsEmpty();
 
     /// <summary>
+    /// Returns whether the path is a root path or not.
+    /// </summary>
+    public bool IsRoot
+    {
+        get
+        {
+            var parent = this / "..";
+            return parent == this;
+        }
+    }
+
+    /// <summary>
     /// Gets the parent folder of this path.
     /// </summary>
     public AbsolutePath Parent
@@ -45,6 +57,8 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
         get
         {
             var lastSlash = path.LastIndexOf(Path.DirectorySeparatorChar);
+            GuardUtility.IsTrue(lastSlash != -1, "Cannot get name of a root path");
+
             return path[(lastSlash + 1)..];
         }
     }
