@@ -56,7 +56,7 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     {
         get
         {
-            var lastSlash = path.LastIndexOf(Path.DirectorySeparatorChar);
+            var lastSlash = path.LastIndexOf(Path.AltDirectorySeparatorChar);
             GuardUtility.IsTrue(lastSlash != -1, "Cannot get name of a root path");
 
             return path[(lastSlash + 1)..];
@@ -76,9 +76,20 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     {
         path = Path.GetFullPath(path);
         path = PathUtility.Normalize(path);
-        if (path != "/")
+
+        path = PathUtility.TrimEndSeparators(path);
+        var slashCount = 0;
+        foreach (var c in path)
         {
-            path = PathUtility.TrimEndSeparators(path);
+            if (c == Path.AltDirectorySeparatorChar)
+            {
+                slashCount++;
+            }
+        }
+
+        if (slashCount == 0)
+        {
+            path += Path.AltDirectorySeparatorChar;
         }
 
         this.path = path;
@@ -398,7 +409,7 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     /// </summary>
     public RelativePath[] Split()
     {
-        return [..PathUtility.TrimSeparators(path).Split(Path.DirectorySeparatorChar)];
+        return [..PathUtility.TrimSeparators(path).Split(Path.AltDirectorySeparatorChar)];
     }
 
     /// <summary>

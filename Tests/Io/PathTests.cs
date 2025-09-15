@@ -132,6 +132,24 @@ public class PathTests
     }
 
     [Test]
+    [Platform("win")]
+    public void AbsolutePath_HandlesWindowsRootPaths_Correctly()
+    {
+        string[] paths = ["C:/", "D:/"];
+
+        foreach (var path in paths)
+        {
+            var absolutePath = new AbsolutePath(path);
+            Assert.That(absolutePath.ToString(), Is.EqualTo(path));
+            Assert.That(absolutePath.IsRoot, Is.True);
+            Assert.Throws(Is.AssignableTo<Exception>(), () =>
+            {
+                _ = absolutePath.Name;
+            });
+        }
+    }
+
+    [Test]
     public void GetRelativePathTo_ReturnsCorrectRelativePath()
     {
         var basePath = new AbsolutePath("Path");

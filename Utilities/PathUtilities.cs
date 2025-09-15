@@ -5,11 +5,15 @@ namespace Exanite.Core.Utilities;
 public static class PathUtility
 {
     /// <summary>
-    /// Normalizes the path, replacing all directory separators with <see cref="Path.DirectorySeparatorChar"/>.
+    /// Normalizes the path, replacing all directory separators with <see cref="Path.AltDirectorySeparatorChar"/>.
     /// </summary>
+    /// <remarks>
+    /// <see cref="Path.AltDirectorySeparatorChar"/> is a forward slash on Windows, Linux, and Mac
+    /// so this ensures consistency on all platforms.
+    /// </remarks>
     public static string Normalize(string path)
     {
-        return path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+        return path.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
     }
 
     /// <summary>

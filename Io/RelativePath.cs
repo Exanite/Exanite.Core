@@ -116,7 +116,7 @@ public readonly struct RelativePath : IEquatable<RelativePath>
     /// </summary>
     public RelativePath[] Split()
     {
-        return [..PathUtility.TrimSeparators(path).Split(Path.DirectorySeparatorChar)];
+        return [..PathUtility.TrimSeparators(path).Split(Path.AltDirectorySeparatorChar)];
     }
 
     public override string ToString()
