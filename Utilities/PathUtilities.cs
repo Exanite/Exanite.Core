@@ -9,7 +9,7 @@ public static class PathUtility
     /// </summary>
     public static string Normalize(string path)
     {
-        return path.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        return path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
     }
 
     /// <summary>
