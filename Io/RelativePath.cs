@@ -74,7 +74,7 @@ public readonly struct RelativePath : IEquatable<RelativePath>
     {
         a.AssertIsValid();
         b.AssertIsValid();
-        return Path.Join(a, b);
+        return $"{a}{Path.AltDirectorySeparatorChar}{b}";
     }
 
     public static RelativePath operator /(RelativePath a, ReadOnlySpan<RelativePath> paths)
