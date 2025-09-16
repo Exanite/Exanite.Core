@@ -20,7 +20,7 @@ public readonly struct RelativePath : IEquatable<RelativePath>
 
     public RelativePath(string path)
     {
-        this.path = PathUtility.TrimEndSeparators(PathUtility.Normalize(path));
+        this.path = PathUtility.Normalize(path);
         AssertIsValid();
     }
 
@@ -104,6 +104,7 @@ public readonly struct RelativePath : IEquatable<RelativePath>
     internal void AssertIsValid()
     {
         GuardUtility.IsTrue(!string.IsNullOrEmpty(path), "Relative path cannot be a null or empty string");
+        GuardUtility.IsTrue(!path.StartsWith(Path.AltDirectorySeparatorChar) && !path.EndsWith(Path.AltDirectorySeparatorChar), "Relative path cannot start or end with slashes");
     }
 
     /// <summary>
