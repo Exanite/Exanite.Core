@@ -158,7 +158,7 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     {
         a.AssertIsValid();
         b.AssertIsValid();
-        return Path.Join(a, b);
+        return $"{a}{Path.AltDirectorySeparatorChar}{b}";
     }
 
     public static AbsolutePath operator /(AbsolutePath a, ReadOnlySpan<RelativePath> paths)
