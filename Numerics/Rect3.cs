@@ -28,4 +28,14 @@ public record struct Rect3
             new Vector3Int((int)(size.X * Size.X), (int)(size.Y * Size.Y), (int)(size.Z * Size.Z)),
             new Vector3Int((int)(size.X * Offset.X), (int)(size.Y * Offset.Y), (int)(size.Z * Offset.Z)));
     }
+
+    public readonly bool Contains(Vector3 position)
+    {
+        return position.X >= Offset.X
+               && position.Y >= Offset.Y
+               && position.Z >= Offset.Z
+               && position.X < Offset.X + Size.X
+               && position.Y < Offset.Y + Size.Y
+               && position.Z < Offset.Z + Size.Z;
+    }
 }

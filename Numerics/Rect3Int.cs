@@ -23,5 +23,14 @@ public record struct Rect3Int
         return new Rect2(new Vector2(value.Size.X, value.Size.Y), new Vector2(value.Offset.X, value.Offset.Y));
     }
 
+    public readonly bool Contains(Vector3 position)
+    {
+        return position.X >= Offset.X
+               && position.Y >= Offset.Y
+               && position.Z >= Offset.Z
+               && position.X < Offset.X + Size.X
+               && position.Y < Offset.Y + Size.Y
+               && position.Z < Offset.Z + Size.Z;
+    }
 }
 

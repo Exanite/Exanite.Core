@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace Exanite.Core.Numerics;
 
 public record struct Rect2Int
@@ -19,6 +21,14 @@ public record struct Rect2Int
     public static implicit operator Rect2(Rect2Int value)
     {
         return new Rect2(value.Size, value.Offset);
+    }
+
+    public readonly bool Contains(Vector2 position)
+    {
+        return position.X >= Offset.X
+               && position.Y >= Offset.Y
+               && position.X < Offset.X + Size.X
+               && position.Y < Offset.Y + Size.Y;
     }
 }
 

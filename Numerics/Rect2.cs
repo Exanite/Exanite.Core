@@ -28,4 +28,12 @@ public record struct Rect2
             new Vector2Int((int)(size.X * Size.X), (int)(size.Y * Size.Y)),
             new Vector2Int((int)(size.X * Offset.X), (int)(size.Y * Offset.Y)));
     }
+
+    public readonly bool Contains(Vector2 position)
+    {
+        return position.X >= Offset.X
+               && position.Y >= Offset.Y
+               && position.X < Offset.X + Size.X
+               && position.Y < Offset.Y + Size.Y;
+    }
 }
