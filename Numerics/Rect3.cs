@@ -14,4 +14,18 @@ public record struct Rect3
         Size = size;
         Offset = offset;
     }
+
+    public Rect3 Scale(Vector3 size)
+    {
+        return new Rect3(
+            new Vector3(size.X * Size.X, size.Y * Size.Y, size.Z * Size.Z),
+            new Vector3(size.X * Offset.X, size.Y * Offset.Y, size.Z * Offset.Z));
+    }
+
+    public Rect3Int ScaleToInt(Vector3Int size)
+    {
+        return new Rect3Int(
+            new Vector3Int((int)(size.X * Size.X), (int)(size.Y * Size.Y), (int)(size.Z * Size.Z)),
+            new Vector3Int((int)(size.X * Offset.X), (int)(size.Y * Offset.Y), (int)(size.Z * Offset.Z)));
+    }
 }
