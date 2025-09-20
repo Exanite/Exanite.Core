@@ -15,14 +15,14 @@ public record struct Rect2
         Offset = offset;
     }
 
-    public Rect2 Scale(Vector2 size)
+    public readonly Rect2 Scale(Vector2 size)
     {
         return new Rect2(
             new Vector2(size.X * Size.X, size.Y * Size.Y),
             new Vector2(size.X * Offset.X, size.Y * Offset.Y));
     }
 
-    public Rect2Int ScaleToInt(Vector2Int size)
+    public readonly Rect2Int ScaleToInt(Vector2Int size)
     {
         return new Rect2Int(
             new Vector2Int((int)(size.X * Size.X), (int)(size.Y * Size.Y)),
