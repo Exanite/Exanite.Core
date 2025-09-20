@@ -24,4 +24,50 @@ public static class TypeUtility
 
         return null;
     }
+
+    /// <summary>
+    /// Returns a value in the format: Type&lt;GenericType&gt;
+    /// <br/>
+    /// Namespaces will be omitted.
+    /// Generics will use the name of their type, instead of the default backtick format.
+    /// </summary>
+    public static string FormatConciseName<T>()
+    {
+        return FormatConciseName(typeof(T));
+    }
+
+    /// <summary>
+    /// Returns C# code representing the global qualified name of a type.
+    /// </summary>
+    public static string FormatConciseName(Type type)
+    {
+        var result = "";
+
+        // Format the type name
+        var backtickIndex = type.Name.IndexOf('`');
+        result += backtickIndex >= 0 ? type.Name.Substring(0, backtickIndex) : type.Name;
+
+        // Format the generic type parameters
+        var generics = type.GetGenericArguments();
+        if (generics.Length != 0)
+        {
+            result += "<";
+
+            var isFirst = true;
+            foreach (var generic in generics)
+            {
+                if (!isFirst)
+                {
+                    result += ", ";
+                }
+
+                isFirst = false;
+                result += FormatConciseName(generic);
+            }
+
+            result += ">";
+        }
+
+        return result;
+    }
 }
