@@ -22,13 +22,13 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
 
     public AngleType Type
     {
-        get => type;
+        readonly get => type;
         set => type = value;
     }
 
     public float Value
     {
-        get => angle;
+        readonly get => angle;
         set => angle = value;
     }
 
@@ -40,7 +40,7 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
 
     // Degrees
 
-    public Angle Degrees => As(AngleType.Degrees);
+    public readonly Angle Degrees => As(AngleType.Degrees);
 
     public static implicit operator Angle(Degrees angle)
     {
@@ -59,7 +59,7 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
 
     // Radians
 
-    public Angle Radians => As(AngleType.Radians);
+    public readonly Angle Radians => As(AngleType.Radians);
 
     public static implicit operator Angle(Radians angle)
     {
@@ -78,7 +78,7 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
 
     // Conversions
 
-    public Angle As(AngleType type)
+    public readonly Angle As(AngleType type)
     {
         if (Type == type)
         {
@@ -86,11 +86,12 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
         }
 
         // Convert to radians first
+        var value = Value;
         switch (Type)
         {
             case AngleType.Degrees:
             {
-                Value = M.Deg2Rad(Value);
+                value = M.Deg2Rad(value);
                 break;
             }
             case AngleType.Radians:
@@ -108,7 +109,7 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
         {
             case AngleType.Degrees:
             {
-                Value = M.Rad2Deg(Value);
+                value = M.Rad2Deg(value);
                 break;
             }
             case AngleType.Radians:
@@ -121,10 +122,10 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
             }
         }
 
-        return new Angle(Value, type);
+        return new Angle(value, type);
     }
 
-    public Angle WithTypeOverride(AngleType type)
+    public readonly Angle WithTypeOverride(AngleType type)
     {
         return new Angle(Value, type);
     }
@@ -155,13 +156,13 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
         return a.Value > b.Value;
     }
 
-    public bool Equals(Angle other)
+    public readonly bool Equals(Angle other)
     {
         return Value.Equals(other.Value)
                && Type == other.Type;
     }
 
-    public int CompareTo(Angle other)
+    public readonly int CompareTo(Angle other)
     {
         other = other.As(Type);
 
@@ -173,12 +174,12 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
         return Value < other.Value ? -1 : 1;
     }
 
-    public override bool Equals(object? obj)
+    public readonly override bool Equals(object? obj)
     {
         return obj is Angle other && Equals(other);
     }
 
-    public override int GetHashCode()
+    public readonly override int GetHashCode()
     {
         return HashCode.Combine(Value, Type);
     }
@@ -219,7 +220,7 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
 
     // Operations
 
-    public override string ToString()
+    public readonly override string ToString()
     {
         return $"{Value} {Type}";
     }

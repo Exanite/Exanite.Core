@@ -33,7 +33,7 @@ public struct Color : IEquatable<Color>
 
     public ColorType Type
     {
-        get => type;
+        readonly get => type;
         set => type = value;
     }
 
@@ -75,7 +75,7 @@ public struct Color : IEquatable<Color>
 
     // Srgb
 
-    public Color Srgb => As(ColorType.Srgb);
+    public readonly Color Srgb => As(ColorType.Srgb);
 
     public static implicit operator Color(SrgbColor4 color)
     {
@@ -109,7 +109,7 @@ public struct Color : IEquatable<Color>
 
     // Linear
 
-    public Color Linear => As(ColorType.Linear);
+    public readonly Color Linear => As(ColorType.Linear);
 
     public static implicit operator Color(LinearColor4 color)
     {
@@ -154,7 +154,7 @@ public struct Color : IEquatable<Color>
         return new Color(value, ColorType.Srgb);
     }
 
-    public DrawingColor ToDrawingColor()
+    public readonly DrawingColor ToDrawingColor()
     {
         var value = Srgb.Value * byte.MaxValue;
         return DrawingColor.FromArgb((byte)value.W, (byte)value.X, (byte)value.Y, (byte)value.Z);
@@ -167,7 +167,7 @@ public struct Color : IEquatable<Color>
         return new Color(M.HexToSrgb(hex), ColorType.Srgb);
     }
 
-    public string ToHex()
+    public readonly string ToHex()
     {
         var drawingColor = ToDrawingColor();
         return $"#{drawingColor.R:X2}{drawingColor.G:X2}{drawingColor.B:X2}{drawingColor.A:X2}";
@@ -175,7 +175,7 @@ public struct Color : IEquatable<Color>
 
     // Ansi
 
-    public string ToAnsi()
+    public readonly string ToAnsi()
     {
         var drawingColor = ToDrawingColor();
         var value = (drawingColor.R << 16) | (drawingColor.G << 8) | (drawingColor.B << 0);
@@ -183,19 +183,19 @@ public struct Color : IEquatable<Color>
         return AnsiUtility.HexColorToAnsi(value);
     }
 
-    public string ToAnsiForeground()
+    public readonly string ToAnsiForeground()
     {
         return AnsiUtility.AnsiForeground(ToAnsi());
     }
 
-    public string ToAnsiBackground()
+    public readonly string ToAnsiBackground()
     {
         return AnsiUtility.AnsiBackground(ToAnsi());
     }
 
     // Conversions
 
-    public Color As(ColorType type)
+    public readonly Color As(ColorType type)
     {
         if (Type == type)
         {
@@ -203,11 +203,12 @@ public struct Color : IEquatable<Color>
         }
 
         // Convert to linear first
+        var value = Value;
         switch (Type)
         {
             case ColorType.Srgb:
             {
-                Value = M.SrgbToLinear(Value);
+                value = M.SrgbToLinear(value);
                 break;
             }
             case ColorType.Linear:
@@ -225,7 +226,7 @@ public struct Color : IEquatable<Color>
         {
             case ColorType.Srgb:
             {
-                Value = M.LinearToSrgb(Value);
+                value = M.LinearToSrgb(value);
                 break;
             }
             case ColorType.Linear:
@@ -238,10 +239,10 @@ public struct Color : IEquatable<Color>
             }
         }
 
-        return new Color(Value, type);
+        return new Color(value, type);
     }
 
-    public Color WithTypeOverride(ColorType type)
+    public readonly Color WithTypeOverride(ColorType type)
     {
         return new Color(Value, type);
     }
@@ -260,25 +261,25 @@ public struct Color : IEquatable<Color>
         return !M.IsApproximatelyEqual(a.Value, b.Value);
     }
 
-    public bool Equals(Color other)
+    public readonly bool Equals(Color other)
     {
         return Value.Equals(other.Value)
                && Type == other.Type;
     }
 
-    public override bool Equals(object? obj)
+    public readonly override bool Equals(object? obj)
     {
         return obj is Angle other && Equals(other);
     }
 
-    public override int GetHashCode()
+    public readonly override int GetHashCode()
     {
         return HashCode.Combine(Value, Type);
     }
 
     // Operations
 
-    public override string ToString()
+    public readonly override string ToString()
     {
         return $"{Value} ({Type})";
     }
