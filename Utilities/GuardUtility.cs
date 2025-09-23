@@ -8,11 +8,17 @@ namespace Exanite.Core.Utilities;
 /// </remarks>
 public static class GuardUtility
 {
+    [DoesNotReturn]
+    public static void Throw(string errorMessage)
+    {
+        throw new GuardException(errorMessage);
+    }
+
     public static void IsTrue([DoesNotReturnIf(false)] bool condition, string errorMessage)
     {
         if (!condition)
         {
-            throw new GuardException(errorMessage);
+            Throw(errorMessage);
         }
     }
 
@@ -20,7 +26,7 @@ public static class GuardUtility
     {
         if (condition)
         {
-            throw new GuardException(errorMessage);
+            Throw(errorMessage);
         }
     }
 

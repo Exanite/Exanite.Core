@@ -9,12 +9,18 @@ namespace Exanite.Core.Utilities;
 /// </remarks>
 public static class AssertUtility
 {
+    [DoesNotReturn]
+    private static void Throw(string errorMessage)
+    {
+        throw new AssertException(errorMessage);
+    }
+
     [Conditional("DEBUG")]
     public static void IsTrue([DoesNotReturnIf(false)] bool condition, string errorMessage)
     {
         if (!condition)
         {
-            throw new AssertException(errorMessage);
+            Throw(errorMessage);
         }
     }
 
@@ -23,7 +29,7 @@ public static class AssertUtility
     {
         if (condition)
         {
-            throw new AssertException(errorMessage);
+            Throw(errorMessage);
         }
     }
 
