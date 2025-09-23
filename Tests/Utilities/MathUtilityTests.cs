@@ -121,6 +121,22 @@ namespace Exanite.Core.Tests.Utilities
 
         #endregion
 
+        #region Colors
+
+        [TestCase]
+        public void HexToSrgb_ReturnsExpectedResult()
+        {
+            Assert.That(M.HexToSrgb("fff"), Is.EqualTo(new Vector4(1, 1, 1, 1)));
+            Assert.That(M.HexToSrgb("ffff"), Is.EqualTo(new Vector4(1, 1, 1, 1)));
+            Assert.That(M.HexToSrgb("#fff"), Is.EqualTo(new Vector4(1, 1, 1, 1)));
+            Assert.That(M.HexToSrgb("#ffff"), Is.EqualTo(new Vector4(1, 1, 1, 1)));
+            Assert.That(M.HexToSrgb("#FFFF"), Is.EqualTo(new Vector4(1, 1, 1, 1)));
+
+            Assert.That(M.HexToSrgb("#1f8ec2"), Is.EqualTo(new Vector4(0x1f / 255f, 0x8e / 255f, 0xc2 / 255f, 1)));
+        }
+
+        #endregion
+
         #region Planes
 
         [TestCase]

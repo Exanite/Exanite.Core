@@ -1,6 +1,8 @@
 using System;
 using System.Numerics;
+using System.Text;
 using Exanite.Core.Numerics;
+using Exanite.Core.Pooling;
 
 namespace Exanite.Core.Utilities;
 
@@ -75,39 +77,60 @@ public static partial class M
     {
         AssertUtility.IsTrue(hex.Length > 0, "Color code is empty");
 
+        using var _ = StringBuilderPool.Acquire(out var builder);
+
+        builder.EnsureCapacity(8);
+        builder.Append(hex);
+
         // Remove leading '#'
-        if (hex.StartsWith('#'))
+        if (builder[0] == '#')
         {
-            hex = hex.Substring(1);
+            builder.Remove(0, 1);
         }
 
         // Expand shorthand (#fff or #ffff)
-        if (hex.Length == 3 || hex.Length == 4)
+        if (builder.Length is 3 or 4)
         {
-            var temp = "";
-            foreach (var c in hex)
+            var originalLength = builder.Length;
+            builder.Length = originalLength * 2;
+
+            for (var i = originalLength - 1; i >= 0; i--)
             {
-                temp += new string(c, 2);
+                var value = builder[i];
+                builder[i * 2] = value;
+                builder[i * 2 + 1] = value;
             }
-            hex = temp;
         }
 
         // Add default alpha if missing
-        if (hex.Length == 6)
+        if (builder.Length == 6)
         {
-            hex += "ff";
+            builder.Append("ff");
         }
 
-        AssertUtility.IsTrue(hex.Length == 8, "Invalid length for input color code");
+        AssertUtility.IsTrue(builder.Length == 8, "Invalid length for input color code");
 
         // Parse components
         var result = new Vector4();
         for (var i = 0; i < 4; ++i)
         {
-            result[i] = Convert.ToInt32(hex.Substring(i * 2, 2), 16);
+            var high = HexCharToInt(builder[i * 2]);
+            var low = HexCharToInt(builder[i * 2 + 1]);
+            result[i] = (high << 4) | low;
         }
 
         return result / byte.MaxValue;
+
+        int HexCharToInt(char c)
+        {
+            return c switch
+            {
+                >= '0' and <= '9' => c - '0',
+                >= 'A' and <= 'F' => c - 'A' + 10,
+                >= 'a' and <= 'f' => c - 'a' + 10,
+                _ => throw new ArgumentException("Invalid hex char"),
+            };
+        }
     }
 
     /// <summary>
