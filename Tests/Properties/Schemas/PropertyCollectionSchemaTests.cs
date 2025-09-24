@@ -5,80 +5,79 @@ using NUnit.Framework;
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 #endif
 
-namespace Exanite.Core.Tests.Properties.Schemas
+namespace Exanite.Core.Tests.Properties.Schemas;
+
+[TestFixture]
+public class PropertyCollectionSchemaTests
 {
-    [TestFixture]
-    public class PropertyCollectionSchemaTests
+    private static readonly PropertyDefinition<string> SharedDefinition = new("Shared");
+
+    [Test]
+    public void Validate_WhenCollectionMissingOptionalProperty_ReturnsTrue()
     {
-        private static readonly PropertyDefinition<string> SharedDefinition = new("Shared");
+        var schema = new PropertyCollectionSchemaBuilder()
+            .Add(new PropertyCollectionSchemaEntryBuilder(SharedDefinition)
+                .AsOptional())
+            .Build();
 
-        [Test]
-        public void Validate_WhenCollectionMissingOptionalProperty_ReturnsTrue()
-        {
-            var schema = new PropertyCollectionSchemaBuilder()
-                .Add(new PropertyCollectionSchemaEntryBuilder(SharedDefinition)
-                    .AsOptional())
-                .Build();
+        var collection = new PropertyCollection();
 
-            var collection = new PropertyCollection();
+        Assert.That(schema.Validate(collection), Is.True);
+    }
 
-            Assert.That(schema.Validate(collection), Is.True);
-        }
+    [Test]
+    public void Validate_WhenCollectionHasOptionalProperty_ReturnsTrue()
+    {
+        var schema = new PropertyCollectionSchemaBuilder()
+            .Add(new PropertyCollectionSchemaEntryBuilder(SharedDefinition)
+                .AsOptional())
+            .Build();
 
-        [Test]
-        public void Validate_WhenCollectionHasOptionalProperty_ReturnsTrue()
-        {
-            var schema = new PropertyCollectionSchemaBuilder()
-                .Add(new PropertyCollectionSchemaEntryBuilder(SharedDefinition)
-                    .AsOptional())
-                .Build();
+        var collection = new PropertyCollection();
+        collection.AddProperty(SharedDefinition);
 
-            var collection = new PropertyCollection();
-            collection.AddProperty(SharedDefinition);
+        Assert.That(schema.Validate(collection), Is.True);
+    }
 
-            Assert.That(schema.Validate(collection), Is.True);
-        }
+    [Test]
+    public void Validate_WhenCollectionMissingRequiredProperty_ReturnsFalse()
+    {
+        var schema = new PropertyCollectionSchemaBuilder()
+            .Add(new PropertyCollectionSchemaEntryBuilder(SharedDefinition))
+            .Build();
 
-        [Test]
-        public void Validate_WhenCollectionMissingRequiredProperty_ReturnsFalse()
-        {
-            var schema = new PropertyCollectionSchemaBuilder()
-                .Add(new PropertyCollectionSchemaEntryBuilder(SharedDefinition))
-                .Build();
+        var collection = new PropertyCollection();
 
-            var collection = new PropertyCollection();
+        Assert.IsFalse(schema.Validate(collection));
+    }
 
-            Assert.IsFalse(schema.Validate(collection));
-        }
+    [Test]
+    public void Validate_WhenCollectionHasRequiredProperty_ReturnsTrue()
+    {
+        var schema = new PropertyCollectionSchemaBuilder()
+            .Add(new PropertyCollectionSchemaEntryBuilder(SharedDefinition))
+            .Build();
 
-        [Test]
-        public void Validate_WhenCollectionHasRequiredProperty_ReturnsTrue()
-        {
-            var schema = new PropertyCollectionSchemaBuilder()
-                .Add(new PropertyCollectionSchemaEntryBuilder(SharedDefinition))
-                .Build();
+        var collection = new PropertyCollection();
+        collection.AddProperty(SharedDefinition);
 
-            var collection = new PropertyCollection();
-            collection.AddProperty(SharedDefinition);
+        Assert.That(schema.Validate(collection), Is.True);
+    }
 
-            Assert.That(schema.Validate(collection), Is.True);
-        }
+    [Test]
+    public void Validate_WhenCollectionHasPropertyOfWrongType_ReturnsFalse()
+    {
+        var sharedName = "ConflictingProperty";
 
-        [Test]
-        public void Validate_WhenCollectionHasPropertyOfWrongType_ReturnsFalse()
-        {
-            var sharedName = "ConflictingProperty";
+        var existingDefinition = new PropertyDefinition<string>(sharedName);
+        var schemaDefinition = new PropertyDefinition<int>(sharedName);
+        var schema = new PropertyCollectionSchemaBuilder()
+            .Add(new PropertyCollectionSchemaEntryBuilder(schemaDefinition))
+            .Build();
 
-            var existingDefinition = new PropertyDefinition<string>(sharedName);
-            var schemaDefinition = new PropertyDefinition<int>(sharedName);
-            var schema = new PropertyCollectionSchemaBuilder()
-                .Add(new PropertyCollectionSchemaEntryBuilder(schemaDefinition))
-                .Build();
+        var collection = new PropertyCollection();
+        collection.AddProperty(existingDefinition);
 
-            var collection = new PropertyCollection();
-            collection.AddProperty(existingDefinition);
-
-            Assert.IsFalse(schema.Validate(collection));
-        }
+        Assert.IsFalse(schema.Validate(collection));
     }
 }

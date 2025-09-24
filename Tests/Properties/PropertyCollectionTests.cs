@@ -4,76 +4,75 @@ using NUnit.Framework;
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 #endif
 
-namespace Exanite.Core.Tests.Properties
+namespace Exanite.Core.Tests.Properties;
+
+[TestFixture]
+public class PropertyCollectionTests
 {
-    [TestFixture]
-    public class PropertyCollectionTests
+    private const string DefaultPropertyName = "Default";
+
+    private static readonly PropertyDefinition<string> StringADefinition = new("StringA");
+    private static readonly PropertyDefinition<string> StringBDefinition = new("StringB");
+
+    private PropertyCollection collection = null!;
+
+    [SetUp]
+    public void SetUp()
     {
-        private const string DefaultPropertyName = "Default";
+        collection = new PropertyCollection();
+    }
 
-        private static readonly PropertyDefinition<string> StringADefinition = new("StringA");
-        private static readonly PropertyDefinition<string> StringBDefinition = new("StringB");
+    [Test]
+    public void GetProperty_WhenPropertyDoesNotExist_ReturnsNull()
+    {
+        var property = collection.GetProperty(StringADefinition);
 
-        private PropertyCollection collection = null!;
+        Assert.IsNull(property);
+    }
 
-        [SetUp]
-        public void SetUp()
+    [Test]
+    public void GetPropertyValue_WhenPropertyDoesNotExist_ThrowsException()
+    {
+        Assert.Throws<PropertyNotFoundException>(() =>
         {
-            collection = new PropertyCollection();
-        }
+            collection.GetPropertyValue(StringADefinition);
+        });
+    }
 
-        [Test]
-        public void GetProperty_WhenPropertyDoesNotExist_ReturnsNull()
+    [Test]
+    public void SetPropertyValue_WhenPropertyDoesNotExist_ThrowsException()
+    {
+        Assert.Throws<PropertyNotFoundException>(() =>
         {
-            var property = collection.GetProperty(StringADefinition);
+            collection.SetPropertyValue(StringADefinition, "");
+        });
+    }
 
-            Assert.IsNull(property);
-        }
+    [Test]
+    public void GetOrAddProperty_WhenCalledTwice_ReturnsSameProperty()
+    {
+        var propertyA = collection.GetOrAddProperty(StringADefinition);
+        var propertyB = collection.GetOrAddProperty(StringADefinition);
 
-        [Test]
-        public void GetPropertyValue_WhenPropertyDoesNotExist_ThrowsException()
+        Assert.That(propertyB, Is.EqualTo(propertyA));
+    }
+
+    [Test]
+    public void GetOrAddProperty_WhenProvidedDifferentStringDefinitions_ReturnsDifferentProperties()
+    {
+        var propertyA = collection.GetOrAddProperty(StringADefinition);
+        var propertyB = collection.GetOrAddProperty(StringBDefinition);
+
+        Assert.AreNotEqual(propertyA, propertyB);
+    }
+
+    [Test]
+    public void GetOrAddProperty_WhenCalledTwiceWithDifferentTypes_ThrowsException()
+    {
+        Assert.Throws<PropertyTypeMismatchException>(() =>
         {
-            Assert.Throws<PropertyNotFoundException>(() =>
-            {
-                collection.GetPropertyValue(StringADefinition);
-            });
-        }
-
-        [Test]
-        public void SetPropertyValue_WhenPropertyDoesNotExist_ThrowsException()
-        {
-            Assert.Throws<PropertyNotFoundException>(() =>
-            {
-                collection.SetPropertyValue(StringADefinition, "");
-            });
-        }
-
-        [Test]
-        public void GetOrAddProperty_WhenCalledTwice_ReturnsSameProperty()
-        {
-            var propertyA = collection.GetOrAddProperty(StringADefinition);
-            var propertyB = collection.GetOrAddProperty(StringADefinition);
-
-            Assert.That(propertyB, Is.EqualTo(propertyA));
-        }
-
-        [Test]
-        public void GetOrAddProperty_WhenProvidedDifferentStringDefinitions_ReturnsDifferentProperties()
-        {
-            var propertyA = collection.GetOrAddProperty(StringADefinition);
-            var propertyB = collection.GetOrAddProperty(StringBDefinition);
-
-            Assert.AreNotEqual(propertyA, propertyB);
-        }
-
-        [Test]
-        public void GetOrAddProperty_WhenCalledTwiceWithDifferentTypes_ThrowsException()
-        {
-            Assert.Throws<PropertyTypeMismatchException>(() =>
-            {
-                collection.GetOrAddProperty(new PropertyDefinition<string>(DefaultPropertyName));
-                collection.GetOrAddProperty(new PropertyDefinition<int>(DefaultPropertyName));
-            });
-        }
+            collection.GetOrAddProperty(new PropertyDefinition<string>(DefaultPropertyName));
+            collection.GetOrAddProperty(new PropertyDefinition<int>(DefaultPropertyName));
+        });
     }
 }

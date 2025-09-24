@@ -2,43 +2,42 @@ using System;
 using Exanite.Core.Utilities;
 using NUnit.Framework;
 
-namespace Exanite.Core.Tests.Utilities
+namespace Exanite.Core.Tests.Utilities;
+
+[TestFixture]
+public class SerializationUtilityTests
 {
-    [TestFixture]
-    public class SerializationUtilityTests
+    [Test]
+    public void SerializeType_IsReversedBy_DeserializeType()
     {
-        [Test]
-        public void SerializeType_IsReversedBy_DeserializeType()
+        void Test(Type? type)
         {
-            void Test(Type? type)
-            {
-                Assert.That(SerializationUtility.DeserializeType(SerializationUtility.SerializeType(type)), Is.EqualTo(type));
-            }
-
-            Test(null);
-            Test(typeof(int));
-            Test(typeof(object));
-            Test(typeof(NestedClass));
-            Test(typeof(NestedClass.DoubleNestedClass));
-            Test(typeof(GenericClass<>));
-            Test(typeof(GenericClass<int>));
-            Test(typeof(GenericClass<NestedClass>));
-            Test(typeof(GenericClass<int, NestedClass>));
-            Test(typeof(GenericClass<GenericClass<int, string>, NestedClass>));
-            Test(typeof(GenericClass<GenericClass<int, string>, NestedClass.DoubleNestedClass>));
-            Test(typeof(GenericClass<GenericClass<int, string>.NestedClassInGenericClass, NestedClass.DoubleNestedClass>));
+            Assert.That(SerializationUtility.DeserializeType(SerializationUtility.SerializeType(type)), Is.EqualTo(type));
         }
 
-        public class NestedClass
-        {
-            public class DoubleNestedClass {}
-        }
+        Test(null);
+        Test(typeof(int));
+        Test(typeof(object));
+        Test(typeof(NestedClass));
+        Test(typeof(NestedClass.DoubleNestedClass));
+        Test(typeof(GenericClass<>));
+        Test(typeof(GenericClass<int>));
+        Test(typeof(GenericClass<NestedClass>));
+        Test(typeof(GenericClass<int, NestedClass>));
+        Test(typeof(GenericClass<GenericClass<int, string>, NestedClass>));
+        Test(typeof(GenericClass<GenericClass<int, string>, NestedClass.DoubleNestedClass>));
+        Test(typeof(GenericClass<GenericClass<int, string>.NestedClassInGenericClass, NestedClass.DoubleNestedClass>));
+    }
 
-        public class GenericClass<T1> {}
+    public class NestedClass
+    {
+        public class DoubleNestedClass {}
+    }
 
-        public class GenericClass<T1, T2>
-        {
-            public class NestedClassInGenericClass {}
-        }
+    public class GenericClass<T1> {}
+
+    public class GenericClass<T1, T2>
+    {
+        public class NestedClassInGenericClass {}
     }
 }
