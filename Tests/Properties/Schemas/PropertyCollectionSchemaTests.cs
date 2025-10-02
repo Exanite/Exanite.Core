@@ -1,9 +1,6 @@
 using Exanite.Core.Properties;
 using Exanite.Core.Properties.Schemas;
 using NUnit.Framework;
-#if !UNITY_2021_3_OR_NEWER
-using Assert = NUnit.Framework.Legacy.ClassicAssert;
-#endif
 
 namespace Exanite.Core.Tests.Properties.Schemas;
 
@@ -48,7 +45,7 @@ public class PropertyCollectionSchemaTests
 
         var collection = new PropertyCollection();
 
-        Assert.IsFalse(schema.Validate(collection));
+        Assert.That(schema.Validate(collection), Is.False);
     }
 
     [Test]
@@ -78,6 +75,6 @@ public class PropertyCollectionSchemaTests
         var collection = new PropertyCollection();
         collection.AddProperty(existingDefinition);
 
-        Assert.IsFalse(schema.Validate(collection));
+        Assert.That(schema.Validate(collection), Is.False);
     }
 }

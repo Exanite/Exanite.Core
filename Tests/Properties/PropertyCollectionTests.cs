@@ -1,8 +1,5 @@
 using Exanite.Core.Properties;
 using NUnit.Framework;
-#if !UNITY_2021_3_OR_NEWER
-using Assert = NUnit.Framework.Legacy.ClassicAssert;
-#endif
 
 namespace Exanite.Core.Tests.Properties;
 
@@ -27,7 +24,7 @@ public class PropertyCollectionTests
     {
         var property = collection.GetProperty(StringADefinition);
 
-        Assert.IsNull(property);
+        Assert.That(property, Is.Null);
     }
 
     [Test]
@@ -63,7 +60,7 @@ public class PropertyCollectionTests
         var propertyA = collection.GetOrAddProperty(StringADefinition);
         var propertyB = collection.GetOrAddProperty(StringBDefinition);
 
-        Assert.AreNotEqual(propertyA, propertyB);
+        Assert.That(propertyB, Is.Not.EqualTo(propertyA));
     }
 
     [Test]

@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using Exanite.Core.Pooling;
 using NUnit.Framework;
-#if !UNITY_2021_3_OR_NEWER
-using Assert = NUnit.Framework.Legacy.ClassicAssert;
-#endif
 
 namespace Exanite.Core.Tests;
 
