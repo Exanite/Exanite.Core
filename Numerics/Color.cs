@@ -136,6 +136,25 @@ public struct Color : IEquatable<Color>
         return new Color(new Vector4(r, g, b, a), ColorType.Linear);
     }
 
+    // Hsl
+
+    public readonly Color Hsl => As(ColorType.Hsl);
+
+    public static Color FromHsl(Vector3 value)
+    {
+        return new Color(value.Xyz1(), ColorType.Hsl);
+    }
+
+    public static Color FromHsl(Vector4 value)
+    {
+        return new Color(value, ColorType.Hsl);
+    }
+
+    public static Color FromHsl(float h, float s, float l, float a = 1)
+    {
+        return new Color(new Vector4(h, s, l, a), ColorType.Hsl);
+    }
+
     // System.Drawing.Color
 
     public static implicit operator Color(DrawingColor color)
@@ -202,17 +221,51 @@ public struct Color : IEquatable<Color>
             return this;
         }
 
+        // Implementation note:
+        // All conversions go through linear to keep things simple, but does lead to some inefficiencies
+
         // Convert to linear first
         var value = Value;
         switch (Type)
         {
+            case ColorType.Linear:
+            {
+                break;
+            }
             case ColorType.Srgb:
             {
                 value = M.SrgbToLinear(value);
                 break;
             }
-            case ColorType.Linear:
+            case ColorType.Hsl:
             {
+                // Based on https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_RGB
+                var h = M.Wrap(X, 0, 360); // [0, 360)
+                var s = Y; // [0, 1]
+                var l = Z; // [0, 1]
+                var a = W;
+
+                var section = h / 60;
+                var c = (1 - M.Abs(2 * l)) * s;
+                var x = c * (1 - M.Abs((section % 2) - 1));
+                var m = l - (c / 2);
+
+                var srgb = (int)section switch
+                {
+                    0 => new Vector4(c, x, 0, a),
+                    1 => new Vector4(x, c, 0, a),
+                    2 => new Vector4(0, c, x, a),
+                    3 => new Vector4(0, x, c, a),
+                    4 => new Vector4(x, 0, c, a),
+                    5 => new Vector4(c, 0, x, a),
+                    _ => throw new InvalidOperationException("Section value is out of range. This indicates an implementation error"),
+                };
+
+                srgb += new Vector4(m, m, m, 0);
+
+                // This is inefficient if the requested type is Srgb
+                value = M.SrgbToLinear(srgb);
+
                 break;
             }
             default:
@@ -224,13 +277,19 @@ public struct Color : IEquatable<Color>
         // Convert to output type
         switch (type)
         {
+            case ColorType.Linear:
+            {
+                break;
+            }
             case ColorType.Srgb:
             {
                 value = M.LinearToSrgb(value);
                 break;
             }
-            case ColorType.Linear:
+            case ColorType.Hsl:
             {
+                // TODO
+
                 break;
             }
             default:

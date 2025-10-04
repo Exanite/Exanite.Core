@@ -16,4 +16,10 @@ public enum ColorType
     /// Commonly used for UI and images.
     /// </summary>
     Srgb,
+
+    /// <summary>
+    /// HSL color space (hue, saturation, lightness).
+    /// Commonly used for color manipulation.
+    /// </summary>
+    Hsl,
 }
