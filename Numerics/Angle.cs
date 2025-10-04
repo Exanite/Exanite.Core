@@ -12,7 +12,7 @@ namespace Exanite.Core.Numerics;
 /// <see cref="Radians"/>,
 /// <see cref="Degrees"/>
 /// </remarks>
-public struct Angle
+public record struct Angle
 {
     public static Angle Zero => FromRadians(0);
     public static Angle Pi => FromRadians(float.Pi);

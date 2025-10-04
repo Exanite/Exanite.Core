@@ -14,7 +14,7 @@ namespace Exanite.Core.Numerics;
 /// <see cref="LinearColor4"/>,
 /// <see cref="SrgbColor4"/>
 /// </remarks>
-public struct Color
+public record struct Color
 {
     public static Color White => FromSrgb(1, 1, 1);
     public static Color Black => FromSrgb(0, 0, 0);
