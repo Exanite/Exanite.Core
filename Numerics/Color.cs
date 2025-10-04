@@ -221,17 +221,22 @@ public struct Color
 
     public readonly Color As(ColorType type)
     {
-        if (Type == type)
+        return Convert(this, type);
+    }
+
+    private static Color Convert(Color color, ColorType targetType)
+    {
+        if (color.Type == targetType)
         {
-            return this;
+            return color;
         }
 
         // Implementation note:
         // All conversions go through linear to keep things simple, but does lead to some inefficiencies
 
         // Convert to linear first
-        var value = Value;
-        switch (Type)
+        var value = color.Value;
+        switch (color.Type)
         {
             case ColorType.Linear:
             {
@@ -245,10 +250,10 @@ public struct Color
             case ColorType.Hsl:
             {
                 // Based on https://en.wikipedia.org/wiki/HSL_and_HSV#HSL_to_RGB
-                var h = M.Wrap(X, 0, 360); // [0, 360)
-                var s = Y; // [0, 1]
-                var l = Z; // [0, 1]
-                var a = W; // [0, 1]
+                var h = M.Wrap(value.X, 0, 360); // [0, 360)
+                var s = value.Y; // [0, 1]
+                var l = value.Z; // [0, 1]
+                var a = value.W; // [0, 1]
 
                 var section = h / 60;
                 var c = (1 - M.Abs(2 * l - 1)) * s;
@@ -275,12 +280,12 @@ public struct Color
             }
             default:
             {
-                throw ExceptionUtility.NotSupportedEnumValue(Type);
+                throw ExceptionUtility.NotSupportedEnumValue(color.Type);
             }
         }
 
         // Convert to output type
-        switch (type)
+        switch (targetType)
         {
             case ColorType.Linear:
             {
@@ -293,16 +298,50 @@ public struct Color
             }
             case ColorType.Hsl:
             {
-                throw new NotImplementedException();
+                value = M.LinearToSrgb(value);
+
+                var r = value.X;
+                var g = value.Y;
+                var b = value.Z;
+                var a = value.W;
+
+                var xMax = M.Max(M.Max(r, g), b);
+                var xMin = M.Min(M.Min(r, g), b);
+
+                var c = xMax - xMin;
+                var l = (xMax + xMin) / 2;
+
+                var h = 0f;
+                if (xMax.Equals(r))
+                {
+                    h = 60 * (((g - b) / c) % 6);
+                }
+                else if (xMax.Equals(g))
+                {
+                    h = 60 * (((b - r) / c) + 2);
+                }
+                else if (xMax.Equals(b))
+                {
+                    h = 60 * (((r - g) / c) + 4);
+                }
+
+                var s = 0f;
+                if (!l.Equals(0) || !l.Equals(1))
+                {
+                    s = (xMax - l) / M.Min(l, 1 - l);
+                }
+
+                value = new Vector4(h, s, l, a);
+
                 break;
             }
             default:
             {
-                throw ExceptionUtility.NotSupportedEnumValue(Type);
+                throw ExceptionUtility.NotSupportedEnumValue(targetType);
             }
         }
 
-        return new Color(value, type);
+        return new Color(value, targetType);
     }
 
     public readonly Color WithTypeOverride(ColorType type)
