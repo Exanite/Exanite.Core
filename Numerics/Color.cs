@@ -176,6 +176,8 @@ public struct Color
     public readonly DrawingColor ToDrawingColor()
     {
         var value = Srgb.Value * byte.MaxValue;
+        value = new Vector4(float.Round(value.X), float.Round(value.Y), float.Round(value.Z), float.Round(value.W));
+
         return DrawingColor.FromArgb((byte)value.W, (byte)value.X, (byte)value.Y, (byte)value.Z);
     }
 
