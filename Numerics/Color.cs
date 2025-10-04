@@ -288,8 +288,7 @@ public struct Color : IEquatable<Color>
             }
             case ColorType.Hsl:
             {
-                // TODO
-
+                throw new NotImplementedException();
                 break;
             }
             default:
