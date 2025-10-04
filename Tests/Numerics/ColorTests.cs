@@ -7,7 +7,7 @@ namespace Exanite.Core.Tests.Numerics;
 public class ColorTests
 {
     [Test]
-    public void Conversion_FromHsl_ToSrgb_ReturnsExpectedResult()
+    public void Conversion_FromHsl_ReturnsExpectedResult()
     {
         Assert.Multiple(() =>
         {
