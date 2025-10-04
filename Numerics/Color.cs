@@ -251,7 +251,7 @@ public struct Color
                 var a = W; // [0, 1]
 
                 var section = h / 60;
-                var c = (1 - M.Abs(2 * l)) * s;
+                var c = (1 - M.Abs(2 * l - 1)) * s;
                 var x = c * (1 - M.Abs((section % 2) - 1));
                 var m = l - (c / 2);
 
