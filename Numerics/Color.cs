@@ -186,10 +186,13 @@ public struct Color
         return new Color(M.HexToSrgb(hex), ColorType.Srgb);
     }
 
-    public readonly string ToHex()
+    public readonly string ToHex(bool includeAlpha = true)
     {
         var drawingColor = ToDrawingColor();
-        return $"#{drawingColor.R:X2}{drawingColor.G:X2}{drawingColor.B:X2}{drawingColor.A:X2}";
+
+        return includeAlpha
+            ? $"#{drawingColor.R:X2}{drawingColor.G:X2}{drawingColor.B:X2}{drawingColor.A:X2}"
+            : $"#{drawingColor.R:X2}{drawingColor.G:X2}{drawingColor.B:X2}";
     }
 
     // Ansi
