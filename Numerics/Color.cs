@@ -14,7 +14,7 @@ namespace Exanite.Core.Numerics;
 /// <see cref="LinearColor4"/>,
 /// <see cref="SrgbColor4"/>
 /// </remarks>
-public struct Color : IEquatable<Color>
+public struct Color
 {
     public static Color White => FromSrgb(1, 1, 1);
     public static Color Black => FromSrgb(0, 0, 0);
@@ -307,32 +307,9 @@ public struct Color : IEquatable<Color>
 
     // Comparisons
 
-    public static bool operator ==(Color a, Color b)
+    public readonly bool IsApproximatelyEqual(Color other, ColorType colorType = ColorType.Linear, float tolerance = 0.000001f)
     {
-        b = b.As(a.Type);
-        return M.IsApproximatelyEqual(a.Value, b.Value);
-    }
-
-    public static bool operator !=(Color a, Color b)
-    {
-        b = b.As(a.Type);
-        return !M.IsApproximatelyEqual(a.Value, b.Value);
-    }
-
-    public readonly bool Equals(Color other)
-    {
-        return Value.Equals(other.Value)
-               && Type == other.Type;
-    }
-
-    public readonly override bool Equals(object? obj)
-    {
-        return obj is Color other && Equals(other);
-    }
-
-    public readonly override int GetHashCode()
-    {
-        return HashCode.Combine(Value, Type);
+        return M.IsApproximatelyEqual(As(colorType).Value, other.As(colorType).Value, tolerance);
     }
 
     // Operations

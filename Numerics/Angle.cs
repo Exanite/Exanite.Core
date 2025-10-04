@@ -12,7 +12,7 @@ namespace Exanite.Core.Numerics;
 /// <see cref="Radians"/>,
 /// <see cref="Degrees"/>
 /// </remarks>
-public struct Angle : IEquatable<Angle>, IComparable<Angle>
+public struct Angle
 {
     public static Angle Zero => FromRadians(0);
     public static Angle Pi => FromRadians(float.Pi);
@@ -132,56 +132,9 @@ public struct Angle : IEquatable<Angle>, IComparable<Angle>
 
     // Comparisons
 
-    public static bool operator ==(Angle a, Angle b)
+    public readonly bool IsApproximatelyEqual(Angle other, AngleType angleType = AngleType.Radians, float tolerance = 0.000001f)
     {
-        b = b.As(a.Type);
-        return M.IsApproximatelyEqual(a.Value, b.Value);
-    }
-
-    public static bool operator !=(Angle a, Angle b)
-    {
-        b = b.As(a.Type);
-        return !M.IsApproximatelyEqual(a.Value, b.Value);
-    }
-
-    public static bool operator <(Angle a, Angle b)
-    {
-        b = b.As(a.Type);
-        return a.Value < b.Value;
-    }
-
-    public static bool operator >(Angle a, Angle b)
-    {
-        b = b.As(a.Type);
-        return a.Value > b.Value;
-    }
-
-    public readonly bool Equals(Angle other)
-    {
-        return Value.Equals(other.Value)
-               && Type == other.Type;
-    }
-
-    public readonly int CompareTo(Angle other)
-    {
-        other = other.As(Type);
-
-        if (M.IsApproximatelyEqual(Value, other.Value))
-        {
-            return 0;
-        }
-
-        return Value < other.Value ? -1 : 1;
-    }
-
-    public readonly override bool Equals(object? obj)
-    {
-        return obj is Angle other && Equals(other);
-    }
-
-    public readonly override int GetHashCode()
-    {
-        return HashCode.Combine(Value, Type);
+        return M.IsApproximatelyEqual(As(angleType).Value, other.As(angleType).Value, tolerance);
     }
 
     // Operators
