@@ -328,7 +328,7 @@ public struct Color : IEquatable<Color>
 
     public readonly override bool Equals(object? obj)
     {
-        return obj is Angle other && Equals(other);
+        return obj is Color other && Equals(other);
     }
 
     public readonly override int GetHashCode()
