@@ -248,7 +248,7 @@ public struct Color
                 var h = M.Wrap(X, 0, 360); // [0, 360)
                 var s = Y; // [0, 1]
                 var l = Z; // [0, 1]
-                var a = W;
+                var a = W; // [0, 1]
 
                 var section = h / 60;
                 var c = (1 - M.Abs(2 * l)) * s;
