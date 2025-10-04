@@ -312,7 +312,11 @@ public struct Color
                 var l = (xMax + xMin) / 2;
 
                 var h = 0f;
-                if (xMax.Equals(r))
+                if (c == 0)
+                {
+                    h = 0;
+                }
+                else if (xMax.Equals(r))
                 {
                     h = 60 * (((g - b) / c) % 6);
                 }
