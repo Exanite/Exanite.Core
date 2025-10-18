@@ -62,6 +62,31 @@ public static partial class M
         return from + (to - from) * t;
     }
 
+    /// <inheritdoc cref="SmoothDamp{T}"/>/>
+    public static Vector2 SmoothDamp(Vector2 current, Vector2 target, float smoothTime, float deltaTime, ref Vector2 currentVelocity, float maxSpeed = float.PositiveInfinity)
+    {
+        var result = new Vector2(
+            SmoothDamp(current.X, target.X, smoothTime, deltaTime, ref currentVelocity.X, maxSpeed),
+            SmoothDamp(current.Y, target.Y, smoothTime, deltaTime, ref currentVelocity.Y, maxSpeed));
+
+        currentVelocity = ClampMagnitude(currentVelocity, maxSpeed);
+
+        return result;
+    }
+
+    /// <inheritdoc cref="SmoothDamp{T}"/>/>
+    public static Vector3 SmoothDamp(Vector3 current, Vector3 target, float smoothTime, float deltaTime, ref Vector3 currentVelocity, float maxSpeed = float.PositiveInfinity)
+    {
+        var result = new Vector3(
+            SmoothDamp(current.X, target.X, smoothTime, deltaTime, ref currentVelocity.X, maxSpeed),
+            SmoothDamp(current.Y, target.Y, smoothTime, deltaTime, ref currentVelocity.Y, maxSpeed),
+            SmoothDamp(current.Z, target.Z, smoothTime, deltaTime, ref currentVelocity.Z, maxSpeed));
+
+        currentVelocity = ClampMagnitude(currentVelocity, maxSpeed);
+
+        return result;
+    }
+
     /// <summary>
     /// Clamps the length of the provided vector to between [0, maxLength].
     /// </summary>
