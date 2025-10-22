@@ -54,6 +54,14 @@ public static partial class M
     }
 
     /// <summary>
+    /// Clamps the <see cref="value"/> to be in the range [0, 1].
+    /// </summary>
+    public static T Clamp01<T>(T value) where T : INumber<T>
+    {
+        return T.Clamp(value, T.Zero, T.One);
+    }
+
+    /// <summary>
     /// Interpolates from one value to another by <see cref="t"/>.
     /// <see cref="t"/> will be clamped in the range [0, 1]
     /// </summary>

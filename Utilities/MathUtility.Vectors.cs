@@ -14,7 +14,7 @@ public static partial class M
     /// </summary>
     public static Vector2 Lerp(Vector2 from, Vector2 to, float t)
     {
-        t = Clamp(t, 0, 1);
+        t = Clamp01(t);
         return from + (to - from) * t;
     }
 
@@ -24,7 +24,7 @@ public static partial class M
     /// </summary>
     public static Vector3 Lerp(Vector3 from, Vector3 to, float t)
     {
-        t = Clamp(t, 0, 1);
+        t = Clamp01(t);
         return from + (to - from) * t;
     }
 
@@ -34,7 +34,7 @@ public static partial class M
     /// </summary>
     public static Vector4 Lerp(Vector4 from, Vector4 to, float t)
     {
-        t = Clamp(t, 0, 1);
+        t = Clamp01(t);
         return from + (to - from) * t;
     }
 
