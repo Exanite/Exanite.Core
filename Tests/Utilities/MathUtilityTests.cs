@@ -10,20 +10,47 @@ public class MathUtilityTests
 {
     #region Ranges
 
+    [TestCase(5, 15, 0.8f, ExpectedResult = 13f, TestName = "Basic case")]
+    [TestCase(5, 15, 2, ExpectedResult = 15f, TestName = "Out of range t")]
+    [TestCase(5, 15, -1, ExpectedResult = 5f, TestName = "Out of range t 2")]
+    public float Lerp_ReturnsExpectedResult(float from, float to, float t)
+    {
+        return M.Lerp(from, to, t);
+    }
+
+    [TestCase(5, 15, 0.8f, ExpectedResult = 13f, TestName = "Basic case")]
+    [TestCase(5, 15, 2, ExpectedResult = 25f, TestName = "Out of range t")]
+    [TestCase(5, 15, -1, ExpectedResult = -5f, TestName = "Out of range t 2")]
+    public float LerpUnclamped_ReturnsExpectedResult(float from, float to, float t)
+    {
+        return M.LerpUnclamped(from, to, t);
+    }
+
     [TestCase(13, 5, 15, 0, 100, ExpectedResult = 80f, TestName = "Basic case")]
     [TestCase(13, 15, 5, 0, 100, ExpectedResult = 20f, TestName = "Reversed from range")]
     [TestCase(13, 5, 15, 100, 0, ExpectedResult = 20f, TestName = "Reversed to range")]
-    [TestCase(16, 5, 15, 0, 100, ExpectedResult = 100f, TestName = "Should clamp")]
-    [TestCase(16, 15, 5, 0, 100, ExpectedResult = 0f, TestName = "Reversed from range + Should clamp")]
-    [TestCase(4, 15, 5, 0, 100, ExpectedResult = 100f, TestName = "Reversed from range 2 + Should clamp")]
-    public float RemapFloat_ReturnsExpectedResult(float value, float fromStart, float fromEnd, float toStart, float toEnd)
+    [TestCase(16, 5, 15, 0, 100, ExpectedResult = 100f, TestName = "Out of range input")]
+    [TestCase(16, 15, 5, 0, 100, ExpectedResult = 0f, TestName = "Reversed from range + Out of range input")]
+    [TestCase(4, 15, 5, 0, 100, ExpectedResult = 100f, TestName = "Reversed from range + Out of range input 2")]
+    public float Remap_ReturnsExpectedResult(float value, float fromStart, float fromEnd, float toStart, float toEnd)
     {
         return M.Remap(value, fromStart, fromEnd, toStart, toEnd);
     }
 
+    [TestCase(13, 5, 15, 0, 100, ExpectedResult = 80f, TestName = "Basic case")]
+    [TestCase(13, 15, 5, 0, 100, ExpectedResult = 20f, TestName = "Reversed from range")]
+    [TestCase(13, 5, 15, 100, 0, ExpectedResult = 20f, TestName = "Reversed to range")]
+    [TestCase(16, 5, 15, 0, 100, ExpectedResult = 110f, TestName = "Out of range input")]
+    [TestCase(16, 15, 5, 0, 100, ExpectedResult = -10f, TestName = "Reversed from range + Out of range input")]
+    [TestCase(4, 15, 5, 0, 100, ExpectedResult = 110f, TestName = "Reversed from range 2 + Out of range input")]
+    public float RemapUnclamped_ReturnsExpectedResult(float value, float fromStart, float fromEnd, float toStart, float toEnd)
+    {
+        return M.RemapUnclamped(value, fromStart, fromEnd, toStart, toEnd);
+    }
+
     [TestCase(10, 0, 3, ExpectedResult = 1f)]
     [TestCase(2, 0, 3, ExpectedResult = 2f)]
-    public float WrapFloat_ReturnsExpectedResult(float value, float min, float max)
+    public float Wrap_ReturnsExpectedResult(float value, float min, float max)
     {
         return M.Wrap(value, min, max);
     }
@@ -31,7 +58,7 @@ public class MathUtilityTests
     [TestCase(5, 2, ExpectedResult = 1f)]
     [TestCase(6, 2, ExpectedResult = 0f)]
     [TestCase(-5, 2, ExpectedResult = 1f)]
-    public float ModuloFloat_ReturnsExpectedResult(float value, float divisor)
+    public float Modulo_ReturnsExpectedResult(float value, float divisor)
     {
         return M.Modulo(value, divisor);
     }

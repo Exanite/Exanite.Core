@@ -93,11 +93,21 @@ public static partial class M
 
     /// <summary>
     /// Remaps a value from one range to another.
+    /// Output will be clamped in the range [toStart, toEnd].
     /// </summary>
     public static T Remap<T>(T value, T fromStart, T fromEnd, T toStart, T toEnd) where T : IFloatingPoint<T>
     {
         var t = (value - fromStart) / (fromEnd - fromStart);
         return Lerp(toStart, toEnd, t);
+    }
+
+    /// <summary>
+    /// Remaps a value from one range to another.
+    /// </summary>
+    public static T RemapUnclamped<T>(T value, T fromStart, T fromEnd, T toStart, T toEnd) where T : IFloatingPoint<T>
+    {
+        var t = (value - fromStart) / (fromEnd - fromStart);
+        return LerpUnclamped(toStart, toEnd, t);
     }
 
     /// <summary>
