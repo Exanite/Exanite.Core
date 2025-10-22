@@ -209,15 +209,15 @@ public static partial class M
     /// <summary>
     /// Checks if two floating point values are approximately the same value based on the provided <see cref="tolerance"/>.
     /// </summary>
-    public static bool IsApproximatelyEqual<T>(T a, T b, float tolerance = 0.000001f) where T : IFloatingPoint<T>
+    public static bool ApproximatelyEquals<T>(T a, T b, float tolerance = 0.000001f) where T : IFloatingPoint<T>
     {
-        return IsApproximatelyEqual(a, b, T.CreateTruncating(tolerance));
+        return ApproximatelyEquals(a, b, T.CreateTruncating(tolerance));
     }
 
     /// <summary>
     /// Checks if two floating point values are approximately the same value based on the provided <see cref="tolerance"/>.
     /// </summary>
-    public static bool IsApproximatelyEqual<T>(T a, T b, T tolerance) where T : IFloatingPoint<T>
+    public static bool ApproximatelyEquals<T>(T a, T b, T tolerance) where T : IFloatingPoint<T>
     {
         return Abs(a - b) <= tolerance;
     }

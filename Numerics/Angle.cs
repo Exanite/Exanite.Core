@@ -132,9 +132,9 @@ public record struct Angle
 
     // Comparisons
 
-    public readonly bool IsApproximatelyEqual(Angle other, AngleType angleType = AngleType.Radians, float tolerance = 0.000001f)
+    public readonly bool ApproximatelyEquals(Angle other, AngleType angleType = AngleType.Radians, float tolerance = 0.000001f)
     {
-        return M.IsApproximatelyEqual(As(angleType).Value, other.As(angleType).Value, tolerance);
+        return M.ApproximatelyEquals(As(angleType).Value, other.As(angleType).Value, tolerance);
     }
 
     // Operators

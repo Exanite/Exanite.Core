@@ -355,9 +355,9 @@ public record struct Color
 
     // Comparisons
 
-    public readonly bool IsApproximatelyEqual(Color other, ColorType colorType = ColorType.Linear, float tolerance = 0.000001f)
+    public readonly bool ApproximatelyEquals(Color other, ColorType colorType = ColorType.Linear, float tolerance = 0.000001f)
     {
-        return M.IsApproximatelyEqual(As(colorType).Value, other.As(colorType).Value, tolerance);
+        return M.ApproximatelyEquals(As(colorType).Value, other.As(colorType).Value, tolerance);
     }
 
     // Operations

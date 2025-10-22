@@ -211,25 +211,25 @@ public static partial class M
     /// <summary>
     /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
     /// </summary>
-    public static bool IsApproximatelyEqual(Vector2 a, Vector2 b, float tolerance = 0.000001f)
+    public static bool ApproximatelyEquals(Vector2 a, Vector2 b, float tolerance = 0.000001f)
     {
-        return IsApproximatelyEqual(a.X, b.X, tolerance) && IsApproximatelyEqual(a.Y, b.Y, tolerance);
+        return ApproximatelyEquals(a.X, b.X, tolerance) && ApproximatelyEquals(a.Y, b.Y, tolerance);
     }
 
     /// <summary>
     /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
     /// </summary>
-    public static bool IsApproximatelyEqual(Vector3 a, Vector3 b, float tolerance = 0.000001f)
+    public static bool ApproximatelyEquals(Vector3 a, Vector3 b, float tolerance = 0.000001f)
     {
-        return IsApproximatelyEqual(a.X, b.X, tolerance) && IsApproximatelyEqual(a.Y, b.Y, tolerance) && IsApproximatelyEqual(a.Z, b.Z, tolerance);
+        return ApproximatelyEquals(a.X, b.X, tolerance) && ApproximatelyEquals(a.Y, b.Y, tolerance) && ApproximatelyEquals(a.Z, b.Z, tolerance);
     }
 
     /// <summary>
     /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
     /// </summary>
-    public static bool IsApproximatelyEqual(Vector4 a, Vector4 b, float tolerance = 0.000001f)
+    public static bool ApproximatelyEquals(Vector4 a, Vector4 b, float tolerance = 0.000001f)
     {
-        return IsApproximatelyEqual(a.X, b.X, tolerance) && IsApproximatelyEqual(a.Y, b.Y, tolerance) && IsApproximatelyEqual(a.Z, b.Z, tolerance) && IsApproximatelyEqual(a.W, b.W, tolerance);
+        return ApproximatelyEquals(a.X, b.X, tolerance) && ApproximatelyEquals(a.Y, b.Y, tolerance) && ApproximatelyEquals(a.Z, b.Z, tolerance) && ApproximatelyEquals(a.W, b.W, tolerance);
     }
 
     /// <summary>
@@ -428,7 +428,7 @@ public static partial class M
         var vdot = Vector3.Dot(ray.Direction, plane.Normal);
         var ndot = -Vector3.Dot(ray.Origin, plane.Normal) - plane.D;
 
-        if (IsApproximatelyEqual(vdot, 0f))
+        if (ApproximatelyEquals(vdot, 0f))
         {
             distance = 0f;
 

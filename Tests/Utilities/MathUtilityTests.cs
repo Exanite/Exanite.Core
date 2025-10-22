@@ -135,20 +135,20 @@ public class MathUtilityTests
 
     #endregion
 
-    #region IsApproximatelyEqual
+    #region ApproximatelyEquals
 
     [TestCase(0, float.Epsilon, ExpectedResult = true)]
     [TestCase(0, 1, ExpectedResult = false)]
-    public bool IsApproximatelyEqual_ReturnsExpectedResult(float a, float b)
+    public bool ApproximatelyEquals_ReturnsExpectedResult(float a, float b)
     {
-        return M.IsApproximatelyEqual(a, b);
+        return M.ApproximatelyEquals(a, b);
     }
 
     [TestCase(0, double.Epsilon, ExpectedResult = true)]
     [TestCase(0, 1, ExpectedResult = false)]
-    public bool IsApproximatelyEqual_ReturnsExpectedResult(double a, double b)
+    public bool ApproximatelyEquals_ReturnsExpectedResult(double a, double b)
     {
-        return M.IsApproximatelyEqual(a, b);
+        return M.ApproximatelyEquals(a, b);
     }
 
     #endregion
@@ -176,8 +176,8 @@ public class MathUtilityTests
     {
         var plane = M.CreatePlane(Vector3.UnitX, Vector3.Zero);
 
-        Assert.That(M.IsApproximatelyEqual(0, plane.D), Is.True);
-        Assert.That(M.IsApproximatelyEqual(Vector3.UnitX, plane.Normal), Is.True);
+        Assert.That(M.ApproximatelyEquals(0, plane.D), Is.True);
+        Assert.That(M.ApproximatelyEquals(Vector3.UnitX, plane.Normal), Is.True);
     }
 
     [TestCase]
@@ -185,8 +185,8 @@ public class MathUtilityTests
     {
         var plane = M.CreatePlane(Vector3.UnitX, Vector3.UnitX);
 
-        Assert.That(M.IsApproximatelyEqual(-1, plane.D), Is.True);
-        Assert.That(M.IsApproximatelyEqual(Vector3.UnitX, plane.Normal), Is.True);
+        Assert.That(M.ApproximatelyEquals(-1, plane.D), Is.True);
+        Assert.That(M.ApproximatelyEquals(Vector3.UnitX, plane.Normal), Is.True);
     }
 
     [TestCase]
@@ -201,8 +201,8 @@ public class MathUtilityTests
         var isHit = plane.Raycast(ray, out var distance);
 
         Assert.That(isHit, Is.True);
-        Assert.That(M.IsApproximatelyEqual(expectedDistance, distance), Is.True);
-        Assert.That(M.IsApproximatelyEqual(expectedPosition.Xy0(), ray.GetPoint(distance)), Is.True);
+        Assert.That(M.ApproximatelyEquals(expectedDistance, distance), Is.True);
+        Assert.That(M.ApproximatelyEquals(expectedPosition.Xy0(), ray.GetPoint(distance)), Is.True);
     }
 
     [TestCase]
