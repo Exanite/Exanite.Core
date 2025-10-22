@@ -10,10 +10,15 @@ public class MathUtilityTests
 {
     #region Ranges
 
-    [TestCase(5, 0, 10, 0, 100, ExpectedResult = 50f)]
-    public float RemapFloat_ReturnsExpectedResult(float value, float fromMin, float fromMax, float toMin, float toMax)
+    [TestCase(13, 5, 15, 0, 100, ExpectedResult = 80f, TestName = "Basic case")]
+    [TestCase(13, 15, 5, 0, 100, ExpectedResult = 20f, TestName = "Reversed from range")]
+    [TestCase(13, 5, 15, 100, 0, ExpectedResult = 20f, TestName = "Reversed to range")]
+    [TestCase(16, 5, 15, 0, 100, ExpectedResult = 100f, TestName = "Should clamp")]
+    [TestCase(16, 15, 5, 0, 100, ExpectedResult = 0f, TestName = "Reversed from range + Should clamp")]
+    [TestCase(4, 15, 5, 0, 100, ExpectedResult = 100f, TestName = "Reversed from range 2 + Should clamp")]
+    public float RemapFloat_ReturnsExpectedResult(float value, float fromStart, float fromEnd, float toStart, float toEnd)
     {
-        return M.Remap(value, fromMin, fromMax, toMin, toMax);
+        return M.Remap(value, fromStart, fromEnd, toStart, toEnd);
     }
 
     [TestCase(10, 0, 3, ExpectedResult = 1f)]

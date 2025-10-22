@@ -94,12 +94,10 @@ public static partial class M
     /// <summary>
     /// Remaps a value from one range to another.
     /// </summary>
-    public static T Remap<T>(T value, T fromMin, T fromMax, T toMin, T toMax) where T : IFloatingPoint<T>
+    public static T Remap<T>(T value, T fromStart, T fromEnd, T toStart, T toEnd) where T : IFloatingPoint<T>
     {
-        var fromRange = fromMax - fromMin;
-        var toRange = toMax - toMin;
-
-        return fromRange == T.Zero ? toMin : toRange * ((value - fromMin) / fromRange) + toMin;
+        var t = (value - fromStart) / (fromEnd - fromStart);
+        return Lerp(toStart, toEnd, t);
     }
 
     /// <summary>
