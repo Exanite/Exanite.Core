@@ -145,10 +145,10 @@ public static partial class M
     #region Color struct
 
     /// <summary>
-    /// Interpolates from one value to another by <see cref="t"/>.
+    /// Mixes one color with another by <see cref="t"/> using the color space specified by <see cref="mixingSpace"/>.
     /// <see cref="t"/> will be clamped in the range [0, 1]
     /// </summary>
-    public static Color Lerp(Color from, Color to, float t, ColorType mixingSpace = ColorType.Srgb)
+    public static Color Mix(Color from, Color to, float t, ColorType mixingSpace = ColorType.Srgb)
     {
         from = from.As(mixingSpace);
         to = to.As(mixingSpace);
@@ -157,9 +157,9 @@ public static partial class M
     }
 
     /// <summary>
-    /// Interpolates from one value to another by <see cref="t"/>.
+    /// Mixes one color with another by <see cref="t"/> using the color space specified by <see cref="mixingSpace"/>.
     /// </summary>
-    public static Color LerpUnclamped(Color from, Color to, float t, ColorType mixingSpace = ColorType.Srgb)
+    public static Color MixUnclamped(Color from, Color to, float t, ColorType mixingSpace = ColorType.Srgb)
     {
         from = from.As(mixingSpace);
         to = to.As(mixingSpace);
