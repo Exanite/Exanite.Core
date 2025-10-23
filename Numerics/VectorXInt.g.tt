@@ -68,6 +68,26 @@ public struct Vector<#= componentCount #>Int : IEquatable<Vector<#= componentCou
         return new Vector<#= componentCount #>(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{components[index]}")) #>);
     }
 
+    public static Vector<#= componentCount #>Int operator *(Vector<#= componentCount #>Int value, int scalar)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{components[index]} * scalar")) #>);
+    }
+
+    public static Vector<#= componentCount #> operator *(Vector<#= componentCount #>Int value, float scalar)
+    {
+        return new Vector<#= componentCount #>(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{components[index]} * scalar")) #>);
+    }
+
+    public static Vector<#= componentCount #>Int operator /(Vector<#= componentCount #>Int value, int scalar)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{components[index]} * scalar")) #>);
+    }
+
+    public static Vector<#= componentCount #> operator /(Vector<#= componentCount #>Int value, float scalar)
+    {
+        return new Vector<#= componentCount #>(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{components[index]} * scalar")) #>);
+    }
+
     public static Vector<#= componentCount #>Int operator +(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
     {
         return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{components[index]} + right.{components[index]}")) #>);
@@ -76,6 +96,46 @@ public struct Vector<#= componentCount #>Int : IEquatable<Vector<#= componentCou
     public static Vector<#= componentCount #>Int operator -(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
     {
         return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{components[index]} - right.{components[index]}")) #>);
+    }
+
+    public static Vector<#= componentCount #>Int operator *(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{components[index]} * right.{components[index]}")) #>);
+    }
+
+    public static Vector<#= componentCount #>Int operator /(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{components[index]} / right.{components[index]}")) #>);
+    }
+
+    public static Vector<#= componentCount #>Int operator <<(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{components[index]} << right.{components[index]}")) #>);
+    }
+
+    public static Vector<#= componentCount #>Int operator >>(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{components[index]} >> right.{components[index]}")) #>);
+    }
+
+    public static Vector<#= componentCount #>Int operator >>>(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{components[index]} >>> right.{components[index]}")) #>);
+    }
+
+    public static Vector<#= componentCount #>Int operator &(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{components[index]} & right.{components[index]}")) #>);
+    }
+
+    public static Vector<#= componentCount #>Int operator |(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{components[index]} | right.{components[index]}")) #>);
+    }
+
+    public static Vector<#= componentCount #>Int operator ^(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{components[index]} ^ right.{components[index]}")) #>);
     }
 
     public static Vector<#= componentCount #>Int operator -(Vector<#= componentCount #>Int value)

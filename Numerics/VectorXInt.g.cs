@@ -43,6 +43,26 @@ public struct Vector2Int : IEquatable<Vector2Int>, IFormattable
         return new Vector2(value.X, value.Y);
     }
 
+    public static Vector2Int operator *(Vector2Int value, int scalar)
+    {
+        return new Vector2Int(value.X * scalar, value.Y * scalar);
+    }
+
+    public static Vector2 operator *(Vector2Int value, float scalar)
+    {
+        return new Vector2(value.X * scalar, value.Y * scalar);
+    }
+
+    public static Vector2Int operator /(Vector2Int value, int scalar)
+    {
+        return new Vector2Int(value.X * scalar, value.Y * scalar);
+    }
+
+    public static Vector2 operator /(Vector2Int value, float scalar)
+    {
+        return new Vector2(value.X * scalar, value.Y * scalar);
+    }
+
     public static Vector2Int operator +(Vector2Int left, Vector2Int right)
     {
         return new Vector2Int(left.X + right.X, left.Y + right.Y);
@@ -51,6 +71,46 @@ public struct Vector2Int : IEquatable<Vector2Int>, IFormattable
     public static Vector2Int operator -(Vector2Int left, Vector2Int right)
     {
         return new Vector2Int(left.X - right.X, left.Y - right.Y);
+    }
+
+    public static Vector2Int operator *(Vector2Int left, Vector2Int right)
+    {
+        return new Vector2Int(left.X * right.X, left.Y * right.Y);
+    }
+
+    public static Vector2Int operator /(Vector2Int left, Vector2Int right)
+    {
+        return new Vector2Int(left.X / right.X, left.Y / right.Y);
+    }
+
+    public static Vector2Int operator <<(Vector2Int left, Vector2Int right)
+    {
+        return new Vector2Int(left.X << right.X, left.Y << right.Y);
+    }
+
+    public static Vector2Int operator >>(Vector2Int left, Vector2Int right)
+    {
+        return new Vector2Int(left.X >> right.X, left.Y >> right.Y);
+    }
+
+    public static Vector2Int operator >>>(Vector2Int left, Vector2Int right)
+    {
+        return new Vector2Int(left.X >>> right.X, left.Y >>> right.Y);
+    }
+
+    public static Vector2Int operator &(Vector2Int left, Vector2Int right)
+    {
+        return new Vector2Int(left.X & right.X, left.Y & right.Y);
+    }
+
+    public static Vector2Int operator |(Vector2Int left, Vector2Int right)
+    {
+        return new Vector2Int(left.X | right.X, left.Y | right.Y);
+    }
+
+    public static Vector2Int operator ^(Vector2Int left, Vector2Int right)
+    {
+        return new Vector2Int(left.X ^ right.X, left.Y ^ right.Y);
     }
 
     public static Vector2Int operator -(Vector2Int value)
@@ -141,6 +201,26 @@ public struct Vector3Int : IEquatable<Vector3Int>, IFormattable
         return new Vector3(value.X, value.Y, value.Z);
     }
 
+    public static Vector3Int operator *(Vector3Int value, int scalar)
+    {
+        return new Vector3Int(value.X * scalar, value.Y * scalar, value.Z * scalar);
+    }
+
+    public static Vector3 operator *(Vector3Int value, float scalar)
+    {
+        return new Vector3(value.X * scalar, value.Y * scalar, value.Z * scalar);
+    }
+
+    public static Vector3Int operator /(Vector3Int value, int scalar)
+    {
+        return new Vector3Int(value.X * scalar, value.Y * scalar, value.Z * scalar);
+    }
+
+    public static Vector3 operator /(Vector3Int value, float scalar)
+    {
+        return new Vector3(value.X * scalar, value.Y * scalar, value.Z * scalar);
+    }
+
     public static Vector3Int operator +(Vector3Int left, Vector3Int right)
     {
         return new Vector3Int(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
@@ -149,6 +229,46 @@ public struct Vector3Int : IEquatable<Vector3Int>, IFormattable
     public static Vector3Int operator -(Vector3Int left, Vector3Int right)
     {
         return new Vector3Int(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+    }
+
+    public static Vector3Int operator *(Vector3Int left, Vector3Int right)
+    {
+        return new Vector3Int(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
+    }
+
+    public static Vector3Int operator /(Vector3Int left, Vector3Int right)
+    {
+        return new Vector3Int(left.X / right.X, left.Y / right.Y, left.Z / right.Z);
+    }
+
+    public static Vector3Int operator <<(Vector3Int left, Vector3Int right)
+    {
+        return new Vector3Int(left.X << right.X, left.Y << right.Y, left.Z << right.Z);
+    }
+
+    public static Vector3Int operator >>(Vector3Int left, Vector3Int right)
+    {
+        return new Vector3Int(left.X >> right.X, left.Y >> right.Y, left.Z >> right.Z);
+    }
+
+    public static Vector3Int operator >>>(Vector3Int left, Vector3Int right)
+    {
+        return new Vector3Int(left.X >>> right.X, left.Y >>> right.Y, left.Z >>> right.Z);
+    }
+
+    public static Vector3Int operator &(Vector3Int left, Vector3Int right)
+    {
+        return new Vector3Int(left.X & right.X, left.Y & right.Y, left.Z & right.Z);
+    }
+
+    public static Vector3Int operator |(Vector3Int left, Vector3Int right)
+    {
+        return new Vector3Int(left.X | right.X, left.Y | right.Y, left.Z | right.Z);
+    }
+
+    public static Vector3Int operator ^(Vector3Int left, Vector3Int right)
+    {
+        return new Vector3Int(left.X ^ right.X, left.Y ^ right.Y, left.Z ^ right.Z);
     }
 
     public static Vector3Int operator -(Vector3Int value)
@@ -246,6 +366,26 @@ public struct Vector4Int : IEquatable<Vector4Int>, IFormattable
         return new Vector4(value.X, value.Y, value.Z, value.W);
     }
 
+    public static Vector4Int operator *(Vector4Int value, int scalar)
+    {
+        return new Vector4Int(value.X * scalar, value.Y * scalar, value.Z * scalar, value.W * scalar);
+    }
+
+    public static Vector4 operator *(Vector4Int value, float scalar)
+    {
+        return new Vector4(value.X * scalar, value.Y * scalar, value.Z * scalar, value.W * scalar);
+    }
+
+    public static Vector4Int operator /(Vector4Int value, int scalar)
+    {
+        return new Vector4Int(value.X * scalar, value.Y * scalar, value.Z * scalar, value.W * scalar);
+    }
+
+    public static Vector4 operator /(Vector4Int value, float scalar)
+    {
+        return new Vector4(value.X * scalar, value.Y * scalar, value.Z * scalar, value.W * scalar);
+    }
+
     public static Vector4Int operator +(Vector4Int left, Vector4Int right)
     {
         return new Vector4Int(left.X + right.X, left.Y + right.Y, left.Z + right.Z, left.W + right.W);
@@ -254,6 +394,46 @@ public struct Vector4Int : IEquatable<Vector4Int>, IFormattable
     public static Vector4Int operator -(Vector4Int left, Vector4Int right)
     {
         return new Vector4Int(left.X - right.X, left.Y - right.Y, left.Z - right.Z, left.W - right.W);
+    }
+
+    public static Vector4Int operator *(Vector4Int left, Vector4Int right)
+    {
+        return new Vector4Int(left.X * right.X, left.Y * right.Y, left.Z * right.Z, left.W * right.W);
+    }
+
+    public static Vector4Int operator /(Vector4Int left, Vector4Int right)
+    {
+        return new Vector4Int(left.X / right.X, left.Y / right.Y, left.Z / right.Z, left.W / right.W);
+    }
+
+    public static Vector4Int operator <<(Vector4Int left, Vector4Int right)
+    {
+        return new Vector4Int(left.X << right.X, left.Y << right.Y, left.Z << right.Z, left.W << right.W);
+    }
+
+    public static Vector4Int operator >>(Vector4Int left, Vector4Int right)
+    {
+        return new Vector4Int(left.X >> right.X, left.Y >> right.Y, left.Z >> right.Z, left.W >> right.W);
+    }
+
+    public static Vector4Int operator >>>(Vector4Int left, Vector4Int right)
+    {
+        return new Vector4Int(left.X >>> right.X, left.Y >>> right.Y, left.Z >>> right.Z, left.W >>> right.W);
+    }
+
+    public static Vector4Int operator &(Vector4Int left, Vector4Int right)
+    {
+        return new Vector4Int(left.X & right.X, left.Y & right.Y, left.Z & right.Z, left.W & right.W);
+    }
+
+    public static Vector4Int operator |(Vector4Int left, Vector4Int right)
+    {
+        return new Vector4Int(left.X | right.X, left.Y | right.Y, left.Z | right.Z, left.W | right.W);
+    }
+
+    public static Vector4Int operator ^(Vector4Int left, Vector4Int right)
+    {
+        return new Vector4Int(left.X ^ right.X, left.Y ^ right.Y, left.Z ^ right.Z, left.W ^ right.W);
     }
 
     public static Vector4Int operator -(Vector4Int value)
