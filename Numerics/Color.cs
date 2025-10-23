@@ -362,6 +362,14 @@ public record struct Color
 
     // Operations
 
+    public readonly Color WithAlpha(float a)
+    {
+        return this with
+        {
+            W = a,
+        };
+    }
+
     public readonly override string ToString()
     {
         return $"{Value} ({Type})";
