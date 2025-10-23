@@ -25,6 +25,29 @@ public struct Vector2Int : IEquatable<Vector2Int>, IFormattable
     /// <inheritdoc cref="Vector2.UnitY"/>
     public static Vector2Int UnitY => new(0, 1);
 
+    public int this[int index]
+    {
+        readonly get
+        {
+            switch (index)
+            {
+                case 0: return X;
+                case 1: return Y;
+                default: throw new IndexOutOfRangeException(nameof(index));
+            }
+        }
+
+        set
+        {
+            switch (index)
+            {
+                case 0: X = value; break;
+                case 1: Y = value; break;
+                default: throw new IndexOutOfRangeException(nameof(index));
+            }
+        }
+    }
+
     public Vector2Int(int value) : this(value, value) {}
 
     public Vector2Int(int x, int y)
@@ -181,6 +204,31 @@ public struct Vector3Int : IEquatable<Vector3Int>, IFormattable
 
     /// <inheritdoc cref="Vector3.UnitZ"/>
     public static Vector3Int UnitZ => new(0, 0, 1);
+
+    public int this[int index]
+    {
+        readonly get
+        {
+            switch (index)
+            {
+                case 0: return X;
+                case 1: return Y;
+                case 2: return Z;
+                default: throw new IndexOutOfRangeException(nameof(index));
+            }
+        }
+
+        set
+        {
+            switch (index)
+            {
+                case 0: X = value; break;
+                case 1: Y = value; break;
+                case 2: Z = value; break;
+                default: throw new IndexOutOfRangeException(nameof(index));
+            }
+        }
+    }
 
     public Vector3Int(int value) : this(value, value, value) {}
 
@@ -345,6 +393,33 @@ public struct Vector4Int : IEquatable<Vector4Int>, IFormattable
 
     /// <inheritdoc cref="Vector4.UnitW"/>
     public static Vector4Int UnitW => new(0, 0, 0, 1);
+
+    public int this[int index]
+    {
+        readonly get
+        {
+            switch (index)
+            {
+                case 0: return X;
+                case 1: return Y;
+                case 2: return Z;
+                case 3: return W;
+                default: throw new IndexOutOfRangeException(nameof(index));
+            }
+        }
+
+        set
+        {
+            switch (index)
+            {
+                case 0: X = value; break;
+                case 1: Y = value; break;
+                case 2: Z = value; break;
+                case 3: W = value; break;
+                default: throw new IndexOutOfRangeException(nameof(index));
+            }
+        }
+    }
 
     public Vector4Int(int value) : this(value, value, value, value) {}
 

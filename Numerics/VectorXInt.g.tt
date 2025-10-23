@@ -44,6 +44,41 @@ public struct Vector<#= componentCount #>Int : IEquatable<Vector<#= componentCou
     }
 
 #>
+    public int this[int index]
+    {
+        readonly get
+        {
+            switch (index)
+            {
+<#
+    for (var i = 0; i < componentCount; i++)
+    {
+#>
+                case <#= i #>: return <#= components[i]#>;
+<#
+    }
+#>
+                default: throw new IndexOutOfRangeException(nameof(index));
+            }
+        }
+
+        set
+        {
+            switch (index)
+            {
+<#
+    for (var i = 0; i < componentCount; i++)
+    {
+#>
+                case <#= i #>: <#= components[i]#> = value; break;
+<#
+    }
+#>
+                default: throw new IndexOutOfRangeException(nameof(index));
+            }
+        }
+    }
+
     public Vector<#= componentCount #>Int(int value) : this(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => "value")) #>) {}
 
     public Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"int {components[index].ToLower()}")) #>)
