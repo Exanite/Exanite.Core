@@ -1,0 +1,128 @@
+<#@ template language="C#" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+#nullable enable
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Numerics;
+using System.Runtime.InteropServices;
+
+namespace Exanite.Core.Numerics;
+<#
+var components = new List<string>() { "X", "Y", "Z", "W" };
+for (var componentCount = 2; componentCount <= components.Count; componentCount++)
+{
+#>
+
+public struct Vector<#= componentCount #>Int : IEquatable<Vector<#= componentCount #>Int>, IFormattable
+{
+<#
+    for (var i = 0; i < componentCount; i++)
+    {
+#>
+    /// <inheritdoc cref="Vector<#= componentCount #>.<#= components[i] #>"/>
+    public int <#= components[i] #>;
+
+<#
+    }
+#>
+    /// <inheritdoc cref="Vector<#= componentCount #>.Zero"/>
+    public static Vector<#= componentCount #>Int Zero => default;
+
+<#
+    for (var i = 0; i < componentCount; i++)
+    {
+        var currentComponent = i;
+        var parameters = string.Join(", ", Enumerable.Range(0, componentCount).Select(index => index == currentComponent ? 1 : 0));
+#>
+    /// <inheritdoc cref="Vector<#= componentCount #>.Unit<#= components[i] #>"/>
+    public static Vector<#= componentCount #>Int Unit<#= components[i] #> => new(<#= parameters #>);
+
+<#
+    }
+
+#>
+    public Vector<#= componentCount #>Int(int value) : this(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => "value")) #>) {}
+
+    public Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"int {components[index].ToLower()}")) #>)
+    {
+<#
+    for (var i = 0; i < componentCount; i++)
+    {
+#>
+        <#= components[i] #> = <#= components[i].ToLower() #>;
+<#
+    }
+#>
+    }
+
+    public static explicit operator Vector<#= componentCount #>Int(Vector<#= componentCount #> value)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"(int)value.{components[index]}")) #>);
+    }
+
+    public static implicit operator Vector<#= componentCount #>(Vector<#= componentCount #>Int value)
+    {
+        return new Vector<#= componentCount #>(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{components[index]}")) #>);
+    }
+
+    public static Vector<#= componentCount #>Int operator +(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{components[index]} + right.{components[index]}")) #>);
+    }
+
+    public static Vector<#= componentCount #>Int operator -(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
+    {
+        return new Vector<#= componentCount #>Int(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{components[index]} - right.{components[index]}")) #>);
+    }
+
+    public static Vector<#= componentCount #>Int operator -(Vector<#= componentCount #>Int value)
+    {
+        return Zero - value;
+    }
+
+    public static bool operator ==(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Vector<#= componentCount #>Int left, Vector<#= componentCount #>Int right)
+    {
+        return !left.Equals(right);
+    }
+
+    public bool Equals(Vector<#= componentCount #>Int other)
+    {
+        return <#= string.Join(" && ", Enumerable.Range(0, componentCount).Select(index => $"{components[index]} == other.{components[index]}")) #>;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Vector<#= componentCount #>Int other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"{components[index]}")) #>);
+    }
+
+    public override string ToString()
+    {
+        return ToString("G", CultureInfo.CurrentCulture);
+    }
+
+    public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format)
+    {
+        return ToString(format, CultureInfo.CurrentCulture);
+    }
+
+    public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format, IFormatProvider? formatProvider)
+    {
+        return ((Vector<#= componentCount #>)this).ToString(format, formatProvider);
+    }
+}
+<#
+}
+#>
