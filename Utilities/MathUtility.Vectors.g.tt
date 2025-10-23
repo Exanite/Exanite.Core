@@ -1,0 +1,111 @@
+<#@ template language="C#" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+#nullable enable
+
+using System;
+using System.Numerics;
+using Exanite.Core.Numerics;
+
+namespace Exanite.Core.Utilities;
+
+public static partial class M
+{
+<#
+var components = new List<string>() { "X", "Y", "Z", "W" };
+for (var componentCount = 2; componentCount <= components.Count; componentCount++)
+{
+#>
+    /// <summary>
+    /// Interpolates from one vector to another by <see cref="t"/>.
+    /// <see cref="t"/> will be clamped in the range [0, 1]
+    /// </summary>
+    public static Vector<#= componentCount #> Lerp(Vector<#= componentCount #> from, Vector<#= componentCount #> to, float t)
+    {
+        t = Clamp01(t);
+        return from + (to - from) * t;
+    }
+
+    /// <summary>
+    /// Interpolates from one vector to another by <see cref="t"/>.
+    /// </summary>
+    public static Vector<#= componentCount #> LerpUnclamped(Vector<#= componentCount #> from, Vector<#= componentCount #> to, float t)
+    {
+        return from + (to - from) * t;
+    }
+
+    /// <inheritdoc cref="SmoothDamp{T}"/>/>
+    public static Vector<#= componentCount #> SmoothDamp(Vector<#= componentCount #> current, Vector<#= componentCount #> target, float smoothTime, float deltaTime, ref Vector<#= componentCount #> currentVelocity, float maxSpeed = float.PositiveInfinity)
+    {
+        var result = new Vector<#= componentCount #>(<#= string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"SmoothDamp(current.{components[index]}, target.{components[index]}, smoothTime, deltaTime, ref currentVelocity.{components[index]}, maxSpeed)")) #>);
+        currentVelocity = ClampMagnitude(currentVelocity, maxSpeed);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Clamps the length of the provided vector to between [0, maxLength].
+    /// </summary>
+    public static Vector<#= componentCount #> ClampMagnitude(Vector<#= componentCount #> value, float maxLength)
+    {
+        return ClampMagnitude(value, 0, maxLength);
+    }
+
+    /// <summary>
+    /// Clamps the length of the provided vector to between [minLength, maxLength].
+    /// If a zero vector is provided, then the result is a zero vector.
+    /// </summary>
+    public static Vector<#= componentCount #> ClampMagnitude(Vector<#= componentCount #> value, float minLength, float maxLength)
+    {
+        return value.AsNormalizedSafe() * Clamp(value.Length(), minLength, maxLength);
+    }
+
+    /// <summary>
+    /// Component-wise clamps the provided vector to the bounds given by <see cref="min"/> and <see cref="max"/>.
+    /// </summary>
+    public static void Clamp(ref this Vector<#= componentCount #> vector, Vector<#= componentCount #> min, Vector<#= componentCount #> max)
+    {
+<#
+    for (var i = 0; i < componentCount; i++)
+    {
+#>
+        vector.X = Clamp(vector.<#= components[i] #>, min.<#= components[i] #>, max.<#= components[i] #>);
+<#
+    }
+#>
+    }
+
+    /// <summary>
+    /// Normalizes the vector.
+    /// <br/>
+    /// This handles the case where the provided vector is zero,
+    /// returning zero rather than NaN.
+    /// </summary>
+    public static Vector<#= componentCount #> AsNormalizedSafe(this Vector<#= componentCount #> value)
+    {
+        return value.AsNormalizedSafe(Vector<#= componentCount #>.Zero);
+    }
+
+    /// <summary>
+    /// Normalizes the vector.
+    /// <br/>
+    /// This handles the case where the provided vector is zero,
+    /// returning the provided <see cref="fallback"/> rather than NaN.
+    /// </summary>
+    public static Vector<#= componentCount #> AsNormalizedSafe(this Vector<#= componentCount #> value, Vector<#= componentCount #> fallback)
+    {
+        return value == Vector<#= componentCount #>.Zero ? fallback : Vector<#= componentCount #>.Normalize(value);
+    }
+
+    /// <summary>
+    /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
+    /// </summary>
+    public static bool ApproximatelyEquals(Vector<#= componentCount #> a, Vector<#= componentCount #> b, float tolerance = 0.000001f)
+    {
+        return <#= string.Join(" && ", Enumerable.Range(0, componentCount).Select(index => $"ApproximatelyEquals(a.{components[index]}, b.{components[index]}, tolerance)")) #>;
+    }
+<#
+}
+#>
+}
