@@ -105,6 +105,11 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
 
     // Conversions
 
+    public static implicit operator ReadOnlySpan<char>(AbsolutePath path)
+    {
+        return path.path;
+    }
+
     public static implicit operator string(AbsolutePath path)
     {
         return path.ToString();

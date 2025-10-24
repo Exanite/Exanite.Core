@@ -26,6 +26,11 @@ public readonly struct RelativePath : IEquatable<RelativePath>
 
     // Conversions
 
+    public static implicit operator ReadOnlySpan<char>(RelativePath path)
+    {
+        return path.path;
+    }
+
     public static implicit operator string(RelativePath path)
     {
         return path.ToString();
