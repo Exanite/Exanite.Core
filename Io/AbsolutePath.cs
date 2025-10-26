@@ -249,6 +249,8 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     public void CopyFileTo(AbsolutePath target, bool overwrite = false)
     {
         GuardUtility.IsTrue(Exists, "No file exists at the current path");
+
+        target.Parent.CreateFolder();
         File.Copy(this, target, overwrite);
     }
 
@@ -258,6 +260,8 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     public void MoveFileTo(AbsolutePath target, bool overwrite = false)
     {
         GuardUtility.IsTrue(IsFile, "No file exists at the current path");
+
+        target.Parent.CreateFolder();
         File.Move(this, target, overwrite);
     }
 
