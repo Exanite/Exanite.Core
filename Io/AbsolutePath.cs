@@ -456,12 +456,12 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     /// Finds files matching a list of glob patterns using this path as the root path.
     /// Patterns are case-sensitive (for cross-platform consistency) and are applied in order.
     /// </summary>
-    public AbsolutePath[] GlobFiles(ReadOnlySpan<string> patterns)
+    public AbsolutePath[] GlobFiles(IEnumerable<string> patterns)
     {
         var matcher = new Matcher(StringComparison.Ordinal, true);
         foreach (var pattern in patterns)
         {
-            if (pattern.StartsWith("!"))
+            if (pattern.StartsWith('!'))
             {
                 matcher.AddExclude(pattern[1..]);
             }
