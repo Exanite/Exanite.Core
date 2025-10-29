@@ -2,6 +2,9 @@ namespace Exanite.Core.Utilities;
 
 public static class AnsiUtility
 {
+    // ANSI Code Reference: https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
+    // More about ANSI: https://chrisyeh96.github.io/2020/03/28/terminal-colors.html
+
     /// <summary>
     /// Converts a hex color to an ansi color escape code.
     /// </summary>
