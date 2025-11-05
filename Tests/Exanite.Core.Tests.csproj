@@ -9,6 +9,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>$(NoWarn);NUnit2045</NoWarn> <!-- Don't care about Assert.Multiple -->
+    <NoWarn>$(NoWarn);NUnit4002</NoWarn> <!-- Don't care about Is.Zero -->
   </PropertyGroup>
 
   <ItemGroup>
