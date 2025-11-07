@@ -1,3 +1,5 @@
+using System.Threading;
+
 namespace Exanite.Core.Runtime;
 
 /// <summary>
@@ -16,6 +18,8 @@ public static class DoubleBuffer
 /// </summary>
 public class DoubleBuffer<T>
 {
+    private readonly Lock sync = new();
+
     public T Read { get; private set; }
     public T Write { get; private set; }
 
@@ -31,8 +35,11 @@ public class DoubleBuffer<T>
     /// <returns>The read resource.</returns>
     public T Swap()
     {
-        (Read, Write) = (Write, Read);
+        lock (sync)
+        {
+            (Read, Write) = (Write, Read);
 
-        return Read;
+            return Read;
+        }
     }
 }
