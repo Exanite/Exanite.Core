@@ -20,7 +20,14 @@ public class DoubleBuffer<T>
 {
     private readonly Lock sync = new();
 
+    /// <summary>
+    /// The read resource. Used by the consumer.
+    /// </summary>
     public T Read { get; private set; }
+
+    /// <summary>
+    /// The write resource. Used by the producer.
+    /// </summary>
     public T Write { get; private set; }
 
     public DoubleBuffer(T read, T write)
