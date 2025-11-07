@@ -1,6 +1,17 @@
 namespace Exanite.Core.Runtime;
 
 /// <summary>
+/// Utility methods for <see cref="DoubleBuffer{T}"/>.
+/// </summary>
+public static class DoubleBuffer
+{
+    public static DoubleBuffer<T> Create<T>() where T : new()
+    {
+        return new DoubleBuffer<T>(new T(), new T());
+    }
+}
+
+/// <summary>
 /// Simple double buffer implementation.
 /// </summary>
 public class DoubleBuffer<T>
