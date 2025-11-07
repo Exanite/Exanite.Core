@@ -28,8 +28,11 @@ public class DoubleBuffer<T>
     /// <summary>
     /// Swap the read and write resources.
     /// </summary>
-    public void Swap()
+    /// <returns>The read resource.</returns>
+    public T Swap()
     {
         (Read, Write) = (Write, Read);
+
+        return Read;
     }
 }
