@@ -58,7 +58,7 @@ for (var componentCount = 2; componentCount <= components.Count; componentCount+
     /// </summary>
     public static Vector<#= componentCount #> ClampMagnitude(Vector<#= componentCount #> value, float minLength, float maxLength)
     {
-        return value.AsNormalizedSafe() * Clamp(value.Length(), minLength, maxLength);
+        return value.AsNormalizedOrDefault() * Clamp(value.Length(), minLength, maxLength);
     }
 
     /// <summary>
@@ -77,25 +77,19 @@ for (var componentCount = 2; componentCount <= components.Count; componentCount+
     }
 
     /// <summary>
-    /// Normalizes the vector.
-    /// <br/>
-    /// This handles the case where the provided vector is zero,
-    /// returning zero rather than NaN.
+    /// Returns the normalized version of the provided vector, or returns zero if the provided vector is zero.
     /// </summary>
-    public static Vector<#= componentCount #> AsNormalizedSafe(this Vector<#= componentCount #> value)
+    public static Vector<#= componentCount #> AsNormalizedOrDefault(this Vector<#= componentCount #> value)
     {
-        return value.AsNormalizedSafe(Vector<#= componentCount #>.Zero);
+        return value.AsNormalizedOrDefault(Vector<#= componentCount #>.Zero);
     }
 
     /// <summary>
-    /// Normalizes the vector.
-    /// <br/>
-    /// This handles the case where the provided vector is zero,
-    /// returning the provided <see cref="fallback"/> rather than NaN.
+    /// Returns the normalized version of the provided vector, or returns the specified default value if the provided vector is zero.
     /// </summary>
-    public static Vector<#= componentCount #> AsNormalizedSafe(this Vector<#= componentCount #> value, Vector<#= componentCount #> fallback)
+    public static Vector<#= componentCount #> AsNormalizedOrDefault(this Vector<#= componentCount #> value, Vector<#= componentCount #> defaultValue)
     {
-        return value == Vector<#= componentCount #>.Zero ? fallback : Vector<#= componentCount #>.Normalize(value);
+        return value == Vector<#= componentCount #>.Zero ? defaultValue : Vector<#= componentCount #>.Normalize(value);
     }
 
     /// <summary>

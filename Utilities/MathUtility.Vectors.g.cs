@@ -62,10 +62,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Normalizes the vector.
-    /// <br/>
-    /// This handles the case where the provided vector is zero,
-    /// returning zero rather than NaN.
+    /// Returns the normalized version of the provided vector, or returns zero if the provided vector is zero.
     /// </summary>
     public static Vector2 AsNormalizedOrDefault(this Vector2 value)
     {
@@ -73,14 +70,11 @@ public static partial class M
     }
 
     /// <summary>
-    /// Normalizes the vector.
-    /// <br/>
-    /// This handles the case where the provided vector is zero,
-    /// returning the provided <see cref="fallback"/> rather than NaN.
+    /// Returns the normalized version of the provided vector, or returns the specified default value if the provided vector is zero.
     /// </summary>
-    public static Vector2 AsNormalizedOrDefault(this Vector2 value, Vector2 fallback)
+    public static Vector2 AsNormalizedOrDefault(this Vector2 value, Vector2 defaultValue)
     {
-        return value == Vector2.Zero ? fallback : Vector2.Normalize(value);
+        return value == Vector2.Zero ? defaultValue : Vector2.Normalize(value);
     }
 
     /// <summary>
@@ -145,10 +139,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Normalizes the vector.
-    /// <br/>
-    /// This handles the case where the provided vector is zero,
-    /// returning zero rather than NaN.
+    /// Returns the normalized version of the provided vector, or returns zero if the provided vector is zero.
     /// </summary>
     public static Vector3 AsNormalizedOrDefault(this Vector3 value)
     {
@@ -156,14 +147,11 @@ public static partial class M
     }
 
     /// <summary>
-    /// Normalizes the vector.
-    /// <br/>
-    /// This handles the case where the provided vector is zero,
-    /// returning the provided <see cref="fallback"/> rather than NaN.
+    /// Returns the normalized version of the provided vector, or returns the specified default value if the provided vector is zero.
     /// </summary>
-    public static Vector3 AsNormalizedOrDefault(this Vector3 value, Vector3 fallback)
+    public static Vector3 AsNormalizedOrDefault(this Vector3 value, Vector3 defaultValue)
     {
-        return value == Vector3.Zero ? fallback : Vector3.Normalize(value);
+        return value == Vector3.Zero ? defaultValue : Vector3.Normalize(value);
     }
 
     /// <summary>
@@ -229,10 +217,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Normalizes the vector.
-    /// <br/>
-    /// This handles the case where the provided vector is zero,
-    /// returning zero rather than NaN.
+    /// Returns the normalized version of the provided vector, or returns zero if the provided vector is zero.
     /// </summary>
     public static Vector4 AsNormalizedOrDefault(this Vector4 value)
     {
@@ -240,14 +225,11 @@ public static partial class M
     }
 
     /// <summary>
-    /// Normalizes the vector.
-    /// <br/>
-    /// This handles the case where the provided vector is zero,
-    /// returning the provided <see cref="fallback"/> rather than NaN.
+    /// Returns the normalized version of the provided vector, or returns the specified default value if the provided vector is zero.
     /// </summary>
-    public static Vector4 AsNormalizedOrDefault(this Vector4 value, Vector4 fallback)
+    public static Vector4 AsNormalizedOrDefault(this Vector4 value, Vector4 defaultValue)
     {
-        return value == Vector4.Zero ? fallback : Vector4.Normalize(value);
+        return value == Vector4.Zero ? defaultValue : Vector4.Normalize(value);
     }
 
     /// <summary>
