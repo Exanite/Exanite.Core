@@ -239,4 +239,180 @@ public static partial class M
     {
         return ApproximatelyEquals(a.X, b.X, tolerance) && ApproximatelyEquals(a.Y, b.Y, tolerance) && ApproximatelyEquals(a.Z, b.Z, tolerance) && ApproximatelyEquals(a.W, b.W, tolerance);
     }
+
+    /// <summary>
+    /// Converts a Vector2 to a Vector3 by adding components.
+    /// </summary>
+    public static Vector3 Xy0(this Vector2 value)
+    {
+        return new Vector3(value.X, value.Y, 0);
+    }
+
+    /// <summary>
+    /// Converts a Vector2 to a Vector3 by adding components.
+    /// </summary>
+    public static Vector3 Xy1(this Vector2 value)
+    {
+        return new Vector3(value.X, value.Y, 1);
+    }
+
+    /// <summary>
+    /// Converts a Vector2 to a Vector4 by adding components.
+    /// </summary>
+    public static Vector4 Xy00(this Vector2 value)
+    {
+        return new Vector4(value.X, value.Y, 0, 0);
+    }
+
+    /// <summary>
+    /// Converts a Vector2 to a Vector4 by adding components.
+    /// </summary>
+    public static Vector4 Xy01(this Vector2 value)
+    {
+        return new Vector4(value.X, value.Y, 0, 1);
+    }
+
+    /// <summary>
+    /// Converts a Vector2 to a Vector4 by adding components.
+    /// </summary>
+    public static Vector4 Xy10(this Vector2 value)
+    {
+        return new Vector4(value.X, value.Y, 1, 0);
+    }
+
+    /// <summary>
+    /// Converts a Vector2 to a Vector4 by adding components.
+    /// </summary>
+    public static Vector4 Xy11(this Vector2 value)
+    {
+        return new Vector4(value.X, value.Y, 1, 1);
+    }
+
+    /// <summary>
+    /// Converts a Vector3 to a Vector2 by dropping components.
+    /// </summary>
+    public static Vector2 Xy(this Vector3 value)
+    {
+        return new Vector2(value.X, value.Y);
+    }
+
+    /// <summary>
+    /// Converts a Vector3 to a Vector4 by adding components.
+    /// </summary>
+    public static Vector4 Xyz0(this Vector3 value)
+    {
+        return new Vector4(value.X, value.Y, value.Z, 0);
+    }
+
+    /// <summary>
+    /// Converts a Vector3 to a Vector4 by adding components.
+    /// </summary>
+    public static Vector4 Xyz1(this Vector3 value)
+    {
+        return new Vector4(value.X, value.Y, value.Z, 1);
+    }
+
+    /// <summary>
+    /// Converts a Vector4 to a Vector2 by dropping components.
+    /// </summary>
+    public static Vector2 Xy(this Vector4 value)
+    {
+        return new Vector2(value.X, value.Y);
+    }
+
+    /// <summary>
+    /// Converts a Vector4 to a Vector3 by dropping components.
+    /// </summary>
+    public static Vector3 Xyz(this Vector4 value)
+    {
+        return new Vector3(value.X, value.Y, value.Z);
+    }
+
+    /// <summary>
+    /// Converts a Vector2Int to a Vector3Int by adding components.
+    /// </summary>
+    public static Vector3Int Xy0(this Vector2Int value)
+    {
+        return new Vector3Int(value.X, value.Y, 0);
+    }
+
+    /// <summary>
+    /// Converts a Vector2Int to a Vector3Int by adding components.
+    /// </summary>
+    public static Vector3Int Xy1(this Vector2Int value)
+    {
+        return new Vector3Int(value.X, value.Y, 1);
+    }
+
+    /// <summary>
+    /// Converts a Vector2Int to a Vector4Int by adding components.
+    /// </summary>
+    public static Vector4Int Xy00(this Vector2Int value)
+    {
+        return new Vector4Int(value.X, value.Y, 0, 0);
+    }
+
+    /// <summary>
+    /// Converts a Vector2Int to a Vector4Int by adding components.
+    /// </summary>
+    public static Vector4Int Xy01(this Vector2Int value)
+    {
+        return new Vector4Int(value.X, value.Y, 0, 1);
+    }
+
+    /// <summary>
+    /// Converts a Vector2Int to a Vector4Int by adding components.
+    /// </summary>
+    public static Vector4Int Xy10(this Vector2Int value)
+    {
+        return new Vector4Int(value.X, value.Y, 1, 0);
+    }
+
+    /// <summary>
+    /// Converts a Vector2Int to a Vector4Int by adding components.
+    /// </summary>
+    public static Vector4Int Xy11(this Vector2Int value)
+    {
+        return new Vector4Int(value.X, value.Y, 1, 1);
+    }
+
+    /// <summary>
+    /// Converts a Vector3Int to a Vector2Int by dropping components.
+    /// </summary>
+    public static Vector2Int Xy(this Vector3Int value)
+    {
+        return new Vector2Int(value.X, value.Y);
+    }
+
+    /// <summary>
+    /// Converts a Vector3Int to a Vector4Int by adding components.
+    /// </summary>
+    public static Vector4Int Xyz0(this Vector3Int value)
+    {
+        return new Vector4Int(value.X, value.Y, value.Z, 0);
+    }
+
+    /// <summary>
+    /// Converts a Vector3Int to a Vector4Int by adding components.
+    /// </summary>
+    public static Vector4Int Xyz1(this Vector3Int value)
+    {
+        return new Vector4Int(value.X, value.Y, value.Z, 1);
+    }
+
+    /// <summary>
+    /// Converts a Vector4Int to a Vector2Int by dropping components.
+    /// </summary>
+    public static Vector2Int Xy(this Vector4Int value)
+    {
+        return new Vector2Int(value.X, value.Y);
+    }
+
+    /// <summary>
+    /// Converts a Vector4Int to a Vector3Int by dropping components.
+    /// </summary>
+    public static Vector3Int Xyz(this Vector4Int value)
+    {
+        return new Vector3Int(value.X, value.Y, value.Z);
+    }
 }

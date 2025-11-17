@@ -102,4 +102,79 @@ for (var componentCount = 2; componentCount <= components.Count; componentCount+
 <#
 }
 #>
+<#
+for (var isVectorIntI = 0; isVectorIntI < 2; isVectorIntI++)
+{
+    var suffix = isVectorIntI == 1 ? "Int" : "";
+
+    for (var fromCount = 2; fromCount <= components.Count; fromCount++)
+    {
+        for (var toCount = 2; toCount <= components.Count; toCount++)
+        {
+            if (fromCount == toCount)
+            {
+                continue;
+            }
+
+            var name = "";
+            var usedComponentCount = Math.Min(fromCount, toCount);
+            for (var usedComponentI = 0; usedComponentI < usedComponentCount; usedComponentI++)
+            {
+                var component = components[usedComponentI];
+                name += usedComponentI == 0 ? component : component.ToLower();
+            }
+
+            var isDroppingComponents = toCount < fromCount;
+            if (isDroppingComponents)
+            {
+#>
+
+    /// <summary>
+    /// Converts a Vector<#= fromCount #><#= suffix #> to a Vector<#= toCount #><#= suffix #> by dropping components.
+    /// </summary>
+    public static Vector<#= toCount #><#= suffix #> <#= name #>(this Vector<#= fromCount #><#= suffix #> value)
+    {
+        return new Vector<#= toCount #><#= suffix #>(<#= string.Join(", ", Enumerable.Range(0, toCount).Select(index => $"value.{components[index]}")) #>);
+    }
+<#
+            }
+            else
+            {
+                var addedComponents = new List<string>()
+                {
+                    "",
+                };
+
+                for (var addedComponentI = fromCount; addedComponentI < toCount; addedComponentI++)
+                {
+                    var newAddedComponents = new List<string>();
+                    foreach (var addedComponent in addedComponents)
+                    {
+                        for (var componentToAdd = 0; componentToAdd < 2; componentToAdd++)
+                        {
+                            newAddedComponents.Add(addedComponent + componentToAdd);
+                        }
+                    }
+
+                    addedComponents = newAddedComponents;
+                }
+
+                foreach (var addedComponent in addedComponents)
+                {
+#>
+
+    /// <summary>
+    /// Converts a Vector<#= fromCount #><#= suffix #> to a Vector<#= toCount #><#= suffix #> by adding components.
+    /// </summary>
+    public static Vector<#= toCount #><#= suffix #> <#= name #><#= addedComponent #>(this Vector<#= fromCount #><#= suffix #> value)
+    {
+        return new Vector<#= toCount #><#= suffix #>(<#= string.Join(", ", Enumerable.Range(0, fromCount).Select(index => $"value.{components[index]}")) #>, <#= string.Join(", ", addedComponent.Select(c => c)) #>);
+    }
+<#
+                }
+            }
+        }
+    }
+}
+#>
 }
