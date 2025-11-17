@@ -24,6 +24,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MathUtility.Vectors.g.cs</LastGenOutput>
     </None>
+    <None Update="Utilities\MathUtility.Matrices.g.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MathUtility.Matrices.g.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Numerics\VectorXInt.g.cs">
@@ -35,6 +39,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MathUtility.Vectors.g.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Utilities\MathUtility.Matrices.g.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MathUtility.Matrices.g.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   

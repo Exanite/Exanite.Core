@@ -1,0 +1,70 @@
+<#@ template language="C#" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+#nullable enable
+
+using System;
+using System.Numerics;
+using Exanite.Core.Numerics;
+
+namespace Exanite.Core.Utilities;
+
+public static partial class M
+{
+    extension(Matrix4x4)
+    {
+<#
+var components = new List<string>() { "X", "Y", "Z", "W" };
+for (var targetComponentI = 0; targetComponentI < components.Count; targetComponentI++)
+{
+    for (var basedOnComponentI = 0; basedOnComponentI < components.Count; basedOnComponentI++)
+    {
+        if (targetComponentI == basedOnComponentI)
+        {
+            continue;
+        }
+
+#>
+        /// <summary>
+        /// Creates a matrix for skewing positions on the <#= components[targetComponentI] #>-axis based on the <#= components[basedOnComponentI] #>-axis.
+        /// </summary>
+        public static Matrix4x4 CreateSkew<#= components[targetComponentI] #>With<#= components[basedOnComponentI] #>(float amount)
+        {
+            var k = amount;
+            return new Matrix4x4(
+<#
+        for (var x = 0; x < 4; x++)
+        {
+            var row = new List<string>();
+            for (var y = 0; y < 4; y++)
+            {
+                if (x == y)
+                {
+                    row.Add("1");
+                    continue;
+                }
+
+                if (x == targetComponentI && y == basedOnComponentI)
+                {
+                    row.Add("k");
+                    continue;
+                }
+
+                row.Add("0");
+            }
+
+#>
+                <#= string.Join(", ", row) #><#= x != 3 ? "," : "" #>
+<#
+        }
+#>
+            );
+        }
+
+<#
+    }
+}
+#>
+    }
+}
