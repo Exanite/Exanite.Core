@@ -1,27 +1,26 @@
 using Exanite.Core.Properties;
-using NUnit.Framework;
+using Xunit;
 
 namespace Exanite.Core.Tests.Properties;
 
-[TestFixture]
 public class PropertyTests
 {
     private const string DefaultPropertyName = "Default";
 
-    [Test]
+    [Fact]
     public void UntypedValue_IsEqualToValue()
     {
         var property = new Property<string>(DefaultPropertyName);
         property.Value = "A";
 
-        Assert.That(property.Value, Is.EqualTo(property.UntypedValue));
+        Assert.Equal(property.UntypedValue, property.Value);
 
         property.Value = "B";
 
-        Assert.That(property.Value, Is.EqualTo(property.UntypedValue));
+        Assert.Equal(property.UntypedValue, property.Value);
     }
 
-    [Test]
+    [Fact]
     public void ValueChanged_OnValueChanged_IsRaisedWithCorrectValues()
     {
         const string previousValue = "Previous";
@@ -35,17 +34,17 @@ public class PropertyTests
         {
             wasEventRaised = true;
 
-            Assert.That(args.Property, Is.EqualTo(property));
-            Assert.That(args.PreviousValue, Is.EqualTo(previousValue));
-            Assert.That(args.NewValue, Is.EqualTo(newValue));
+            Assert.Equal(property, args.Property);
+            Assert.Equal(previousValue, args.PreviousValue);
+            Assert.Equal(newValue, args.NewValue);
         };
 
         property.Value = newValue;
 
-        Assert.That(wasEventRaised, Is.True);
+        Assert.True(wasEventRaised);
     }
 
-    [Test]
+    [Fact]
     public void UntypedValueChanged_OnValueChanged_IsRaisedWithCorrectValues()
     {
         const string previousValue = "Previous";
@@ -59,13 +58,13 @@ public class PropertyTests
         {
             wasEventRaised = true;
 
-            Assert.That(args.Property, Is.EqualTo(property));
-            Assert.That(args.PreviousValue, Is.EqualTo(previousValue));
-            Assert.That(args.NewValue, Is.EqualTo(newValue));
+            Assert.Equal(property, args.Property);
+            Assert.Equal(previousValue, args.PreviousValue);
+            Assert.Equal(newValue, args.NewValue);
         };
 
         property.Value = newValue;
 
-        Assert.That(wasEventRaised, Is.True);
+        Assert.True(wasEventRaised);
     }
 }

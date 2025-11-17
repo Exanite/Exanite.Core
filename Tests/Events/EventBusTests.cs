@@ -1,12 +1,11 @@
 using Exanite.Core.Events;
-using NUnit.Framework;
+using Xunit;
 
 namespace Exanite.Core.Tests.Events;
 
-[TestFixture]
 public class EventBusTests
 {
-    [Test]
+    [Fact]
     public void RegisterForwardTo_OnlyForwardsSpecifiedType()
     {
         var eventBus = new EventBus();
@@ -16,21 +15,21 @@ public class EventBusTests
         eventBus.RegisterForwardTo<Event>(eventHandler);
         eventBus.Raise(new Event());
 
-        Assert.That(eventHandler.ReceiveCount, Is.EqualTo(1));
+        Assert.Equal(1, eventHandler.ReceiveCount);
 
         // Should not receive unregistered event
         eventBus.Raise(new EventB());
 
-        Assert.That(eventHandler.ReceiveCount, Is.EqualTo(1));
+        Assert.Equal(1, eventHandler.ReceiveCount);
 
         // Should not receive event after unregistering
         eventBus.UnregisterForwardTo<Event>(eventHandler);
         eventBus.Raise(new Event());
 
-        Assert.That(eventHandler.ReceiveCount, Is.EqualTo(1));
+        Assert.Equal(1, eventHandler.ReceiveCount);
     }
 
-    [Test]
+    [Fact]
     public void Unregister_SuccessfullyUnregisters_WhenUsingInterface()
     {
         var eventBus = new EventBus();
@@ -40,13 +39,13 @@ public class EventBusTests
         eventBus.Register(eventHandler);
         eventBus.Raise(new Event());
 
-        Assert.That(eventHandler.ReceiveCount, Is.EqualTo(1));
+        Assert.Equal(1, eventHandler.ReceiveCount);
 
         // Should not receive when unregistered
         eventBus.Unregister(eventHandler);
         eventBus.Raise(new Event());
 
-        Assert.That(eventHandler.ReceiveCount, Is.EqualTo(1));
+        Assert.Equal(1, eventHandler.ReceiveCount);
     }
 
     private struct Event;

@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using Exanite.Core.Pooling;
-using NUnit.Framework;
+using Xunit;
 
 namespace Exanite.Core.Tests;
 
-[TestFixture]
 public class PoolTests
 {
-    [TestCase]
+    [InlineData]
     public void Acquire_AcquireMultipleWithoutReleasing_ReturnsUniqueInstances()
     {
         const int acquireCount = 20;
@@ -20,13 +19,13 @@ public class PoolTests
             active.Add(pool.Acquire());
         }
 
-        Assert.That(active.Count, Is.EqualTo(acquireCount));
-        Assert.That(pool.UsageInfo.TotalCount, Is.EqualTo(acquireCount));
-        Assert.That(pool.UsageInfo.ActiveCount, Is.EqualTo(acquireCount));
-        Assert.That(pool.UsageInfo.InactiveCount, Is.EqualTo(0));
+        Assert.Equal(acquireCount, active.Count);
+        Assert.Equal(acquireCount, pool.UsageInfo.TotalCount);
+        Assert.Equal(acquireCount, pool.UsageInfo.ActiveCount);
+        Assert.Equal(0, pool.UsageInfo.InactiveCount);
     }
 
-    [TestCase]
+    [InlineData]
     public void Acquire_ReusesInstances()
     {
         const int acquireCountA = 20;
@@ -40,9 +39,9 @@ public class PoolTests
             active.Add(pool.Acquire());
         }
 
-        Assert.That(pool.UsageInfo.TotalCount, Is.EqualTo(acquireCountA));
-        Assert.That(pool.UsageInfo.ActiveCount, Is.EqualTo(acquireCountA));
-        Assert.That(pool.UsageInfo.InactiveCount, Is.EqualTo(0));
+        Assert.Equal(acquireCountA, pool.UsageInfo.TotalCount);
+        Assert.Equal(acquireCountA, pool.UsageInfo.ActiveCount);
+        Assert.Equal(0, pool.UsageInfo.InactiveCount);
 
         foreach (var instance in active)
         {
@@ -51,21 +50,21 @@ public class PoolTests
 
         active.Clear();
 
-        Assert.That(pool.UsageInfo.TotalCount, Is.EqualTo(acquireCountA));
-        Assert.That(pool.UsageInfo.ActiveCount, Is.EqualTo(0));
-        Assert.That(pool.UsageInfo.InactiveCount, Is.EqualTo(acquireCountA));
+        Assert.Equal(acquireCountA, pool.UsageInfo.TotalCount);
+        Assert.Equal(0, pool.UsageInfo.ActiveCount);
+        Assert.Equal(acquireCountA, pool.UsageInfo.InactiveCount);
 
         for (var i = 0; i < acquireCountB; i++)
         {
             active.Add(pool.Acquire());
         }
 
-        Assert.That(pool.UsageInfo.TotalCount, Is.EqualTo(acquireCountA));
-        Assert.That(pool.UsageInfo.ActiveCount, Is.EqualTo(acquireCountB));
-        Assert.That(pool.UsageInfo.InactiveCount, Is.EqualTo(acquireCountA - acquireCountB));
+        Assert.Equal(acquireCountA, pool.UsageInfo.TotalCount);
+        Assert.Equal(acquireCountB, pool.UsageInfo.ActiveCount);
+        Assert.Equal(acquireCountA - acquireCountB, pool.UsageInfo.InactiveCount);
     }
 
-    [TestCase]
+    [InlineData]
     public void Acquire_EnforcesMaxInactiveLimit()
     {
         const int acquireCountA = 20;
@@ -74,24 +73,24 @@ public class PoolTests
         var pool = new Pool<A>(create: () => new A(), initialMaxInactive: maxInactive, allowResizing: false);
         var active = new List<A>();
 
-        Assert.That(pool.UsageInfo.MaxInactive, Is.EqualTo(maxInactive));
+        Assert.Equal(maxInactive, pool.UsageInfo.MaxInactive);
 
         for (var i = 0; i < acquireCountA; i++)
         {
             active.Add(pool.Acquire());
         }
 
-        Assert.That(pool.UsageInfo.TotalCount, Is.EqualTo(acquireCountA));
-        Assert.That(pool.UsageInfo.ActiveCount, Is.EqualTo(acquireCountA));
-        Assert.That(pool.UsageInfo.InactiveCount, Is.EqualTo(0));
+        Assert.Equal(acquireCountA, pool.UsageInfo.TotalCount);
+        Assert.Equal(acquireCountA, pool.UsageInfo.ActiveCount);
+        Assert.Equal(0, pool.UsageInfo.InactiveCount);
 
         foreach (var instance in active)
         {
             pool.Release(instance);
-            Assert.That(pool.UsageInfo.InactiveCount <= maxInactive, Is.True);
+            Assert.True(pool.UsageInfo.InactiveCount <= maxInactive);
         }
 
-        Assert.That(pool.UsageInfo.InactiveCount, Is.EqualTo(maxInactive));
+        Assert.Equal(maxInactive, pool.UsageInfo.InactiveCount);
     }
 
     public class A {}

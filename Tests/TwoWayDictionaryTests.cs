@@ -1,12 +1,11 @@
 ﻿using Exanite.Core.Collections;
-using NUnit.Framework;
+using Xunit;
 
 namespace Exanite.Core.Tests;
 
-[TestFixture]
 public class TwoWayDictionaryTests
 {
-    [Test]
+    [Fact]
     public void Indexer_EntryExists_ReturnsExpectedEntry()
     {
         var dictionary = new TwoWayDictionary<string, int>
@@ -14,10 +13,10 @@ public class TwoWayDictionaryTests
             ["id"] = 5,
         };
 
-        Assert.That(dictionary["id"], Is.EqualTo(5));
+        Assert.Equal(5, dictionary["id"]);
     }
 
-    [Test]
+    [Fact]
     public void InverseIndexer_EntryExists_ReturnsExpectedEntry()
     {
         var dictionary = new TwoWayDictionary<string, int>
@@ -25,14 +24,14 @@ public class TwoWayDictionaryTests
             ["id"] = 5,
         };
 
-        Assert.That(dictionary.Inverse[5], Is.EqualTo("id"));
+        Assert.Equal("id", dictionary.Inverse[5]);
     }
 
-    [Test]
-    [TestCase(0, ExpectedResult = 0)]
-    [TestCase(5, ExpectedResult = 5)]
-    [TestCase(20, ExpectedResult = 20)]
-    public int Count_ReturnsExpectedResult(int entriesToAdd)
+    [Theory]
+    [InlineData(0, 0)]
+    [InlineData(5, 5)]
+    [InlineData(20, 20)]
+    public void Count_ReturnsExpectedResult(int entriesToAdd, int expectedCount)
     {
         var dictionary = new TwoWayDictionary<string, int>();
 
@@ -41,15 +40,15 @@ public class TwoWayDictionaryTests
             dictionary.Add(i.ToString(), i);
         }
 
-        return dictionary.Count;
+        Assert.Equal(expectedCount, dictionary.Count);
     }
 
-    [Test]
-    [TestCase(0, 0, ExpectedResult = 0)]
-    [TestCase(5, 1, ExpectedResult = 4)]
-    [TestCase(20, 3, ExpectedResult = 17)]
-    [TestCase(20, 6, ExpectedResult = 14)]
-    public int Count_AfterRemoving_ReturnsExpectedResult(int entriesToAdd, int entriesToRemove)
+    [Theory]
+    [InlineData(0, 0, 0)]
+    [InlineData(5, 1, 4)]
+    [InlineData(20, 3, 17)]
+    [InlineData(20, 6, 14)]
+    public void Count_AfterRemoving_ReturnsExpectedResult(int entriesToAdd, int entriesToRemove, int expectedCount)
     {
         var dictionary = new TwoWayDictionary<string, int>();
 
@@ -63,14 +62,14 @@ public class TwoWayDictionaryTests
             dictionary.Remove(i.ToString());
         }
 
-        return dictionary.Count;
+        Assert.Equal(expectedCount, dictionary.Count);
     }
 
-    [Test]
+    [Fact]
     public void Inverse_CalledTwice_ReturnsOriginal()
     {
         var dictionary = new TwoWayDictionary<string, int>();
 
-        Assert.That(dictionary.Inverse.Inverse, Is.EqualTo(dictionary));
+        Assert.Equal(dictionary, dictionary.Inverse.Inverse);
     }
 }

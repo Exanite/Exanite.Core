@@ -1,9 +1,8 @@
 using Exanite.Core.Properties;
-using NUnit.Framework;
+using Xunit;
 
 namespace Exanite.Core.Tests.Properties;
 
-[TestFixture]
 public class PropertyCollectionTests
 {
     private const string DefaultPropertyName = "Default";
@@ -11,23 +10,17 @@ public class PropertyCollectionTests
     private static readonly PropertyDefinition<string> StringADefinition = new("StringA");
     private static readonly PropertyDefinition<string> StringBDefinition = new("StringB");
 
-    private PropertyCollection collection = null!;
+    private readonly PropertyCollection collection = new();
 
-    [SetUp]
-    public void SetUp()
-    {
-        collection = new PropertyCollection();
-    }
-
-    [Test]
+    [Fact]
     public void GetProperty_WhenPropertyDoesNotExist_ReturnsNull()
     {
         var property = collection.GetProperty(StringADefinition);
 
-        Assert.That(property, Is.Null);
+        Assert.Null(property);
     }
 
-    [Test]
+    [Fact]
     public void GetPropertyValue_WhenPropertyDoesNotExist_ThrowsException()
     {
         Assert.Throws<PropertyNotFoundException>(() =>
@@ -36,7 +29,7 @@ public class PropertyCollectionTests
         });
     }
 
-    [Test]
+    [Fact]
     public void SetPropertyValue_WhenPropertyDoesNotExist_ThrowsException()
     {
         Assert.Throws<PropertyNotFoundException>(() =>
@@ -45,25 +38,25 @@ public class PropertyCollectionTests
         });
     }
 
-    [Test]
+    [Fact]
     public void GetOrAddProperty_WhenCalledTwice_ReturnsSameProperty()
     {
         var propertyA = collection.GetOrAddProperty(StringADefinition);
         var propertyB = collection.GetOrAddProperty(StringADefinition);
 
-        Assert.That(propertyB, Is.EqualTo(propertyA));
+        Assert.Equal(propertyA, propertyB);
     }
 
-    [Test]
+    [Fact]
     public void GetOrAddProperty_WhenProvidedDifferentStringDefinitions_ReturnsDifferentProperties()
     {
         var propertyA = collection.GetOrAddProperty(StringADefinition);
         var propertyB = collection.GetOrAddProperty(StringBDefinition);
 
-        Assert.That(propertyB, Is.Not.EqualTo(propertyA));
+        Assert.NotEqual(propertyA, propertyB);
     }
 
-    [Test]
+    [Fact]
     public void GetOrAddProperty_WhenCalledTwiceWithDifferentTypes_ThrowsException()
     {
         Assert.Throws<PropertyTypeMismatchException>(() =>

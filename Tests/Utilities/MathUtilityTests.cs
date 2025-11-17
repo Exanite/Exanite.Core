@@ -1,195 +1,208 @@
 ﻿using System.Numerics;
 using Exanite.Core.Numerics;
 using Exanite.Core.Utilities;
-using NUnit.Framework;
+using Xunit;
 
 namespace Exanite.Core.Tests.Utilities;
 
-[TestFixture]
 public class MathUtilityTests
 {
     #region Ranges
 
-    [TestCase(5, 15, 0.8f, ExpectedResult = 13f, TestName = "Basic case")]
-    [TestCase(5, 15, 2, ExpectedResult = 15f, TestName = "Out of range t")]
-    [TestCase(5, 15, -1, ExpectedResult = 5f, TestName = "Out of range t 2")]
-    public float Lerp_ReturnsExpectedResult(float from, float to, float t)
+    [Theory]
+    [InlineData(5, 15, 0.8f, 13f, TestDisplayName = "Basic case")]
+    [InlineData(5, 15, 2, 15f, TestDisplayName = "Out of range t")]
+    [InlineData(5, 15, -1, 5f, TestDisplayName = "Out of range t 2")]
+    public void Lerp_ReturnsExpectedResult(float from, float to, float t, float expected)
     {
-        return M.Lerp(from, to, t);
+        Assert.Equal(expected, M.Lerp(from, to, t));
     }
 
-    [TestCase(5, 15, 0.8f, ExpectedResult = 13f, TestName = "Basic case")]
-    [TestCase(5, 15, 2, ExpectedResult = 25f, TestName = "Out of range t")]
-    [TestCase(5, 15, -1, ExpectedResult = -5f, TestName = "Out of range t 2")]
-    public float LerpUnclamped_ReturnsExpectedResult(float from, float to, float t)
+    [Theory]
+    [InlineData(5, 15, 0.8f, 13f, TestDisplayName = "Basic case")]
+    [InlineData(5, 15, 2, 25f, TestDisplayName = "Out of range t")]
+    [InlineData(5, 15, -1, -5f, TestDisplayName = "Out of range t 2")]
+    public void LerpUnclamped_ReturnsExpectedResult(float from, float to, float t, float expected)
     {
-        return M.LerpUnclamped(from, to, t);
+        Assert.Equal(expected, M.LerpUnclamped(from, to, t));
     }
 
-    [TestCase(13, 5, 15, 0, 100, ExpectedResult = 80f, TestName = "Basic case")]
-    [TestCase(13, 15, 5, 0, 100, ExpectedResult = 20f, TestName = "Reversed from range")]
-    [TestCase(13, 5, 15, 100, 0, ExpectedResult = 20f, TestName = "Reversed to range")]
-    [TestCase(16, 5, 15, 0, 100, ExpectedResult = 100f, TestName = "Out of range input")]
-    [TestCase(16, 15, 5, 0, 100, ExpectedResult = 0f, TestName = "Reversed from range + Out of range input")]
-    [TestCase(4, 15, 5, 0, 100, ExpectedResult = 100f, TestName = "Reversed from range + Out of range input 2")]
-    public float Remap_ReturnsExpectedResult(float value, float fromStart, float fromEnd, float toStart, float toEnd)
+    [Theory]
+    [InlineData(13, 5, 15, 0, 100, 80f, TestDisplayName = "Basic case")]
+    [InlineData(13, 15, 5, 0, 100, 20f, TestDisplayName = "Reversed from range")]
+    [InlineData(13, 5, 15, 100, 0, 20f, TestDisplayName = "Reversed to range")]
+    [InlineData(16, 5, 15, 0, 100, 100f, TestDisplayName = "Out of range input")]
+    [InlineData(16, 15, 5, 0, 100, 0f, TestDisplayName = "Reversed from range + Out of range input")]
+    [InlineData(4, 15, 5, 0, 100, 100f, TestDisplayName = "Reversed from range + Out of range input 2")]
+    public void Remap_ReturnsExpectedResult(float value, float fromStart, float fromEnd, float toStart, float toEnd, float expected)
     {
-        return M.Remap(value, fromStart, fromEnd, toStart, toEnd);
+        Assert.Equal(expected, M.Remap(value, fromStart, fromEnd, toStart, toEnd));
     }
 
-    [TestCase(13, 5, 15, 0, 100, ExpectedResult = 80f, TestName = "Basic case")]
-    [TestCase(13, 15, 5, 0, 100, ExpectedResult = 20f, TestName = "Reversed from range")]
-    [TestCase(13, 5, 15, 100, 0, ExpectedResult = 20f, TestName = "Reversed to range")]
-    [TestCase(16, 5, 15, 0, 100, ExpectedResult = 110f, TestName = "Out of range input")]
-    [TestCase(16, 15, 5, 0, 100, ExpectedResult = -10f, TestName = "Reversed from range + Out of range input")]
-    [TestCase(4, 15, 5, 0, 100, ExpectedResult = 110f, TestName = "Reversed from range 2 + Out of range input")]
-    public float RemapUnclamped_ReturnsExpectedResult(float value, float fromStart, float fromEnd, float toStart, float toEnd)
+    [Theory]
+    [InlineData(13, 5, 15, 0, 100, 80f, TestDisplayName = "Basic case")]
+    [InlineData(13, 15, 5, 0, 100, 20f, TestDisplayName = "Reversed from range")]
+    [InlineData(13, 5, 15, 100, 0, 20f, TestDisplayName = "Reversed to range")]
+    [InlineData(16, 5, 15, 0, 100, 110f, TestDisplayName = "Out of range input")]
+    [InlineData(16, 15, 5, 0, 100, -10f, TestDisplayName = "Reversed from range + Out of range input")]
+    [InlineData(4, 15, 5, 0, 100, 110f, TestDisplayName = "Reversed from range 2 + Out of range input")]
+    public void RemapUnclamped_ReturnsExpectedResult(float value, float fromStart, float fromEnd, float toStart, float toEnd, float expected)
     {
-        return M.RemapUnclamped(value, fromStart, fromEnd, toStart, toEnd);
+        Assert.Equal(expected, M.RemapUnclamped(value, fromStart, fromEnd, toStart, toEnd));
     }
 
-    [TestCase(10, 0, 3, ExpectedResult = 1f)]
-    [TestCase(2, 0, 3, ExpectedResult = 2f)]
-    public float Wrap_ReturnsExpectedResult(float value, float min, float max)
+    [Theory]
+    [InlineData(10, 0, 3, 1f)]
+    [InlineData(2, 0, 3, 2f)]
+    public void Wrap_ReturnsExpectedResult(float value, float min, float max, float expected)
     {
-        return M.Wrap(value, min, max);
+        Assert.Equal(expected, M.Wrap(value, min, max));
     }
 
-    [TestCase(5, 2, ExpectedResult = 1f)]
-    [TestCase(6, 2, ExpectedResult = 0f)]
-    [TestCase(-5, 2, ExpectedResult = 1f)]
-    public float Modulo_ReturnsExpectedResult(float value, float divisor)
+    [Theory]
+    [InlineData(5, 2, 1f)]
+    [InlineData(6, 2, 0f)]
+    [InlineData(-5, 2, 1f)]
+    public void Modulo_ReturnsExpectedResult(float value, float divisor, float expected)
     {
-        return M.Modulo(value, divisor);
+        Assert.Equal(expected, M.Modulo(value, divisor));
     }
 
     #endregion
 
     #region Floats
 
-    [TestCase(0, 10, 1, ExpectedResult = 1f)]
-    [TestCase(0, 10, -1, ExpectedResult = -1f)]
-    [TestCase(0, 10, 100, ExpectedResult = 10f)]
-    public float MoveTowards_ReturnsExpectedResult(float current, float target, float maxDelta)
+    [Theory]
+    [InlineData(0, 10, 1, 1f)]
+    [InlineData(0, 10, -1, -1f)]
+    [InlineData(0, 10, 100, 10f)]
+    public void MoveTowards_ReturnsExpectedResult(float current, float target, float maxDelta, float expected)
     {
-        return M.MoveTowards(current, target, maxDelta);
+        Assert.Equal(expected, M.MoveTowards(current, target, maxDelta));
     }
 
-    [TestCase(0, 90, 30, 30f)] // Straightforward
-    [TestCase(0, -270, 30, 30f)] // Wrap
-    [TestCase(0, 10, 5, 5f)] // Counter-clockwise
-    [TestCase(0, -10, 5, -5f)] // Clockwise
+    [Theory]
+    [InlineData(0, 90, 30, 30f)] // Straightforward
+    [InlineData(0, -270, 30, 30f)] // Wrap
+    [InlineData(0, 10, 5, 5f)] // Counter-clockwise
+    [InlineData(0, -10, 5, -5f)] // Clockwise
     public void MoveTowardsAngleDegrees_ReturnsExpectedResult(float current, float target, float maxDelta, float expectedResult)
     {
         var result = M.MoveTowardsAngleDegrees(current, target, maxDelta);
-        Assert.That(result, Is.EqualTo(expectedResult).Within(0.01f));
+        Assert.Equal(expectedResult, result, 2);
     }
 
     /// <remarks>
     /// Cases are copied from <see cref="MoveTowardsAngleDegrees_ReturnsExpectedResult"/>.
     /// </remarks>
-    [TestCase(0, 90, 30, 30f)] // Straightforward
-    [TestCase(0, -270, 30, 30f)] // Wrap
-    [TestCase(0, 10, 5, 5f)] // Counter-clockwise
-    [TestCase(0, -10, 5, -5f)] // Clockwise
+    [Theory]
+    [InlineData(0, 90, 30, 30f)] // Straightforward
+    [InlineData(0, -270, 30, 30f)] // Wrap
+    [InlineData(0, 10, 5, 5f)] // Counter-clockwise
+    [InlineData(0, -10, 5, -5f)] // Clockwise
     public void MoveTowardsAngleRadians_ReturnsExpectedResult(float current, float target, float maxDelta, float expectedResult)
     {
         var result = M.Rad2Deg(M.MoveTowardsAngleRadians(M.Deg2Rad(current), M.Deg2Rad(target), M.Deg2Rad(maxDelta)));
-        Assert.That(result, Is.EqualTo(expectedResult).Within(0.01f));
+        Assert.Equal(expectedResult, result, 2);
     }
 
     #endregion
 
     #region Integers
 
-    [TestCase(1, 16, ExpectedResult = 16)]
-    [TestCase(8, 16, ExpectedResult = 16)]
-    [TestCase(16, 16, ExpectedResult = 16)]
-    [TestCase(32, 16, ExpectedResult = 32)]
-    [TestCase(32, 64, ExpectedResult = 64)]
-    [TestCase(127, 64, ExpectedResult = 128)]
-    public int GetAlignedSize_ReturnsExpectedResult(int value, int multiple)
+    [Theory]
+    [InlineData(1, 16, 16)]
+    [InlineData(8, 16, 16)]
+    [InlineData(16, 16, 16)]
+    [InlineData(32, 16, 32)]
+    [InlineData(32, 64, 64)]
+    [InlineData(127, 64, 128)]
+    public void GetAlignedSize_ReturnsExpectedResult(int value, int multiple, int expected)
     {
-        return M.GetAlignedSize(value, multiple);
+        Assert.Equal(expected, M.GetAlignedSize(value, multiple));
     }
 
-    [TestCase(45, 11, ExpectedResult = 44)]
-    [TestCase(55, 11, ExpectedResult = 55)]
-    [TestCase(54, 11, ExpectedResult = 55)]
-    [TestCase(49, 11, ExpectedResult = 44)]
-    [TestCase(50, 11, ExpectedResult = 55)]
-    public int GetNearestMultiple_ReturnsExpectedResult(int value, int multiple)
+    [Theory]
+    [InlineData(45, 11, 44)]
+    [InlineData(55, 11, 55)]
+    [InlineData(54, 11, 55)]
+    [InlineData(49, 11, 44)]
+    [InlineData(50, 11, 55)]
+    public void GetNearestMultiple_ReturnsExpectedResult(int value, int multiple, int expected)
     {
-        return M.GetNearestMultiple(value, multiple);
+        Assert.Equal(expected, M.GetNearestMultiple(value, multiple));
     }
 
-    [TestCase(0, ExpectedResult = 2)]
-    [TestCase(2, ExpectedResult = 2)]
-    [TestCase(5, ExpectedResult = 8)]
-    [TestCase(16, ExpectedResult = 16)]
-    [TestCase(123, ExpectedResult = 128)]
-    public int GetNextPowerOfTwo_ReturnsExpectedResult(int value)
+    [Theory]
+    [InlineData(0, 2)]
+    [InlineData(2, 2)]
+    [InlineData(5, 8)]
+    [InlineData(16, 16)]
+    [InlineData(123, 128)]
+    public void GetNextPowerOfTwo_ReturnsExpectedResult(int value, int expected)
     {
-        return M.GetNextPowerOfTwo(value);
+        Assert.Equal(expected, M.GetNextPowerOfTwo(value));
     }
 
     #endregion
 
     #region ApproximatelyEquals
 
-    [TestCase(0, float.Epsilon, ExpectedResult = true)]
-    [TestCase(0, 1, ExpectedResult = false)]
-    public bool ApproximatelyEquals_ReturnsExpectedResult(float a, float b)
+    [Theory]
+    [InlineData(0, float.Epsilon, true)]
+    [InlineData(0, 1, false)]
+    public void ApproximatelyEquals_Float_ReturnsExpectedResult(float a, float b, bool expected)
     {
-        return M.ApproximatelyEquals(a, b);
+        Assert.Equal(expected, M.ApproximatelyEquals(a, b));
     }
 
-    [TestCase(0, double.Epsilon, ExpectedResult = true)]
-    [TestCase(0, 1, ExpectedResult = false)]
-    public bool ApproximatelyEquals_ReturnsExpectedResult(double a, double b)
+    [Theory]
+    [InlineData(0, double.Epsilon, true)]
+    [InlineData(0, 1, false)]
+    public void ApproximatelyEquals_Double_ReturnsExpectedResult(double a, double b, bool expected)
     {
-        return M.ApproximatelyEquals(a, b);
+        Assert.Equal(expected, M.ApproximatelyEquals(a, b));
     }
 
     #endregion
 
     #region Colors
 
-    [TestCase]
+    [Fact]
     public void HexToSrgb_ReturnsExpectedResult()
     {
-        Assert.That(M.HexToSrgb("fff"), Is.EqualTo(new Vector4(1, 1, 1, 1)));
-        Assert.That(M.HexToSrgb("ffff"), Is.EqualTo(new Vector4(1, 1, 1, 1)));
-        Assert.That(M.HexToSrgb("#fff"), Is.EqualTo(new Vector4(1, 1, 1, 1)));
-        Assert.That(M.HexToSrgb("#ffff"), Is.EqualTo(new Vector4(1, 1, 1, 1)));
-        Assert.That(M.HexToSrgb("#FFFF"), Is.EqualTo(new Vector4(1, 1, 1, 1)));
+        Assert.Equal(new Vector4(1, 1, 1, 1), M.HexToSrgb("fff"));
+        Assert.Equal(new Vector4(1, 1, 1, 1), M.HexToSrgb("ffff"));
+        Assert.Equal(new Vector4(1, 1, 1, 1), M.HexToSrgb("#fff"));
+        Assert.Equal(new Vector4(1, 1, 1, 1), M.HexToSrgb("#ffff"));
+        Assert.Equal(new Vector4(1, 1, 1, 1), M.HexToSrgb("#FFFF"));
 
-        Assert.That(M.HexToSrgb("#1f8ec2"), Is.EqualTo(new Vector4(0x1f / 255f, 0x8e / 255f, 0xc2 / 255f, 1)));
+        Assert.Equal(new Vector4(0x1f / 255f, 0x8e / 255f, 0xc2 / 255f, 1), M.HexToSrgb("#1f8ec2"));
     }
 
     #endregion
 
     #region Planes
 
-    [TestCase]
+    [Fact]
     public void CreatePlane_ReturnsExpectedResult1()
     {
         var plane = M.CreatePlane(Vector3.UnitX, Vector3.Zero);
 
-        Assert.That(M.ApproximatelyEquals(0, plane.D), Is.True);
-        Assert.That(M.ApproximatelyEquals(Vector3.UnitX, plane.Normal), Is.True);
+        Assert.True(M.ApproximatelyEquals(0, plane.D));
+        Assert.True(M.ApproximatelyEquals(Vector3.UnitX, plane.Normal));
     }
 
-    [TestCase]
+    [Fact]
     public void CreatePlane_ReturnsExpectedResult2()
     {
         var plane = M.CreatePlane(Vector3.UnitX, Vector3.UnitX);
 
-        Assert.That(M.ApproximatelyEquals(-1, plane.D), Is.True);
-        Assert.That(M.ApproximatelyEquals(Vector3.UnitX, plane.Normal), Is.True);
+        Assert.True(M.ApproximatelyEquals(-1, plane.D));
+        Assert.True(M.ApproximatelyEquals(Vector3.UnitX, plane.Normal));
     }
 
-    [TestCase]
+    [Fact]
     public void PlaneRaycast_ReturnsExpectedResult1()
     {
         var expectedDistance = 10;
@@ -200,12 +213,12 @@ public class MathUtilityTests
 
         var isHit = plane.Raycast(ray, out var distance);
 
-        Assert.That(isHit, Is.True);
-        Assert.That(M.ApproximatelyEquals(expectedDistance, distance), Is.True);
-        Assert.That(M.ApproximatelyEquals(expectedPosition.Xy0(), ray.GetPoint(distance)), Is.True);
+        Assert.True(isHit);
+        Assert.True(M.ApproximatelyEquals(expectedDistance, distance));
+        Assert.True(M.ApproximatelyEquals(expectedPosition.Xy0(), ray.GetPoint(distance)));
     }
 
-    [TestCase]
+    [Fact]
     public void PlaneRaycast_ReturnsExpectedResult2()
     {
         var plane = M.CreatePlane(Vector3.UnitZ, Vector3.Zero);
@@ -213,7 +226,7 @@ public class MathUtilityTests
 
         var isHit = plane.Raycast(ray, out _);
 
-        Assert.That(isHit, Is.False);
+        Assert.False(isHit);
     }
 
     #endregion

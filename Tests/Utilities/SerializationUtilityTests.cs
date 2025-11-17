@@ -1,18 +1,17 @@
 using System;
 using Exanite.Core.Utilities;
-using NUnit.Framework;
+using Xunit;
 
 namespace Exanite.Core.Tests.Utilities;
 
-[TestFixture]
 public class SerializationUtilityTests
 {
-    [Test]
+    [Fact]
     public void SerializeType_IsReversedBy_DeserializeType()
     {
         void Test(Type? type)
         {
-            Assert.That(SerializationUtility.DeserializeType(SerializationUtility.SerializeType(type)), Is.EqualTo(type));
+            Assert.Equal(type, SerializationUtility.DeserializeType(SerializationUtility.SerializeType(type)));
         }
 
         Test(null);
