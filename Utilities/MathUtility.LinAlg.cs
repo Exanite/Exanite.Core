@@ -178,6 +178,48 @@ public static partial class M
         );
     }
 
+    /// <summary>
+    /// Returns the inversed version of the provided matrix, or returns the identity matrix if the provided matrix is not invertible.
+    /// </summary>
+    public static Matrix3x2 AsInversedOrDefault(this Matrix3x2 value)
+    {
+        return value.AsInversedOrDefault(Matrix3x2.Identity);
+    }
+
+    /// <summary>
+    /// Returns the inversed version of the provided matrix, or returns the specified default value if the provided matrix is not invertible.
+    /// </summary>
+    public static Matrix3x2 AsInversedOrDefault(this Matrix3x2 value, Matrix3x2 defaultValue)
+    {
+        if (Matrix3x2.Invert(value, out var result))
+        {
+            return result;
+        }
+
+        return defaultValue;
+    }
+
+    /// <summary>
+    /// Returns the inversed version of the provided matrix, or returns the identity matrix if the provided matrix is not invertible.
+    /// </summary>
+    public static Matrix4x4 AsInversedOrDefault(this Matrix4x4 value)
+    {
+        return value.AsInversedOrDefault(Matrix4x4.Identity);
+    }
+
+    /// <summary>
+    /// Returns the inversed version of the provided matrix, or returns the specified default value if the provided matrix is not invertible.
+    /// </summary>
+    public static Matrix4x4 AsInversedOrDefault(this Matrix4x4 value, Matrix4x4 defaultValue)
+    {
+        if (Matrix4x4.Invert(value, out var result))
+        {
+            return result;
+        }
+
+        return defaultValue;
+    }
+
     #endregion
 
     #region Planes
