@@ -204,7 +204,7 @@ public static partial class M
     /// </summary>
     public static Angle AngleBetween(Vector2 a, Vector2 b)
     {
-        return Angle.FromRadians(Acos(Vector2.Dot(a.AsNormalizedSafe(), b.AsNormalizedSafe())));
+        return Angle.FromRadians(Acos(Vector2.Dot(a.AsNormalizedOrDefault(), b.AsNormalizedOrDefault())));
     }
 
     /// <summary>
@@ -212,7 +212,7 @@ public static partial class M
     /// </summary>
     public static Angle AngleBetween(Vector3 a, Vector3 b)
     {
-        return Angle.FromRadians(Acos(Vector3.Dot(a.AsNormalizedSafe(), b.AsNormalizedSafe())));
+        return Angle.FromRadians(Acos(Vector3.Dot(a.AsNormalizedOrDefault(), b.AsNormalizedOrDefault())));
     }
 
     /// <summary>

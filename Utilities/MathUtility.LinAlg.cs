@@ -190,7 +190,7 @@ public static partial class M
     /// </remarks>
     public static Plane CreatePlane(Vector3 normal, Vector3 position)
     {
-        normal = normal.AsNormalizedSafe();
+        normal = normal.AsNormalizedOrDefault();
         var distance = -Vector3.Dot(normal, position);
 
         return new Plane(normal, distance);

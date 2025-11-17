@@ -49,7 +49,7 @@ public static partial class M
     /// </summary>
     public static Vector2 ClampMagnitude(Vector2 value, float minLength, float maxLength)
     {
-        return value.AsNormalizedSafe() * Clamp(value.Length(), minLength, maxLength);
+        return value.AsNormalizedOrDefault() * Clamp(value.Length(), minLength, maxLength);
     }
 
     /// <summary>
@@ -67,9 +67,9 @@ public static partial class M
     /// This handles the case where the provided vector is zero,
     /// returning zero rather than NaN.
     /// </summary>
-    public static Vector2 AsNormalizedSafe(this Vector2 value)
+    public static Vector2 AsNormalizedOrDefault(this Vector2 value)
     {
-        return value.AsNormalizedSafe(Vector2.Zero);
+        return value.AsNormalizedOrDefault(Vector2.Zero);
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public static partial class M
     /// This handles the case where the provided vector is zero,
     /// returning the provided <see cref="fallback"/> rather than NaN.
     /// </summary>
-    public static Vector2 AsNormalizedSafe(this Vector2 value, Vector2 fallback)
+    public static Vector2 AsNormalizedOrDefault(this Vector2 value, Vector2 fallback)
     {
         return value == Vector2.Zero ? fallback : Vector2.Normalize(value);
     }
@@ -131,7 +131,7 @@ public static partial class M
     /// </summary>
     public static Vector3 ClampMagnitude(Vector3 value, float minLength, float maxLength)
     {
-        return value.AsNormalizedSafe() * Clamp(value.Length(), minLength, maxLength);
+        return value.AsNormalizedOrDefault() * Clamp(value.Length(), minLength, maxLength);
     }
 
     /// <summary>
@@ -150,9 +150,9 @@ public static partial class M
     /// This handles the case where the provided vector is zero,
     /// returning zero rather than NaN.
     /// </summary>
-    public static Vector3 AsNormalizedSafe(this Vector3 value)
+    public static Vector3 AsNormalizedOrDefault(this Vector3 value)
     {
-        return value.AsNormalizedSafe(Vector3.Zero);
+        return value.AsNormalizedOrDefault(Vector3.Zero);
     }
 
     /// <summary>
@@ -161,7 +161,7 @@ public static partial class M
     /// This handles the case where the provided vector is zero,
     /// returning the provided <see cref="fallback"/> rather than NaN.
     /// </summary>
-    public static Vector3 AsNormalizedSafe(this Vector3 value, Vector3 fallback)
+    public static Vector3 AsNormalizedOrDefault(this Vector3 value, Vector3 fallback)
     {
         return value == Vector3.Zero ? fallback : Vector3.Normalize(value);
     }
@@ -214,7 +214,7 @@ public static partial class M
     /// </summary>
     public static Vector4 ClampMagnitude(Vector4 value, float minLength, float maxLength)
     {
-        return value.AsNormalizedSafe() * Clamp(value.Length(), minLength, maxLength);
+        return value.AsNormalizedOrDefault() * Clamp(value.Length(), minLength, maxLength);
     }
 
     /// <summary>
@@ -234,9 +234,9 @@ public static partial class M
     /// This handles the case where the provided vector is zero,
     /// returning zero rather than NaN.
     /// </summary>
-    public static Vector4 AsNormalizedSafe(this Vector4 value)
+    public static Vector4 AsNormalizedOrDefault(this Vector4 value)
     {
-        return value.AsNormalizedSafe(Vector4.Zero);
+        return value.AsNormalizedOrDefault(Vector4.Zero);
     }
 
     /// <summary>
@@ -245,7 +245,7 @@ public static partial class M
     /// This handles the case where the provided vector is zero,
     /// returning the provided <see cref="fallback"/> rather than NaN.
     /// </summary>
-    public static Vector4 AsNormalizedSafe(this Vector4 value, Vector4 fallback)
+    public static Vector4 AsNormalizedOrDefault(this Vector4 value, Vector4 fallback)
     {
         return value == Vector4.Zero ? fallback : Vector4.Normalize(value);
     }
