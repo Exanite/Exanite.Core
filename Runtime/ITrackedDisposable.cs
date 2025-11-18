@@ -15,31 +15,31 @@ public interface ITrackedDisposable : IDisposable
     public bool IsDisposed { get; }
 
 #if EXANITE_NEVER_COMPILE
-        // Reference ITrackedDisposable implementation
+    // Reference ITrackedDisposable implementation
 
-        public bool IsDisposed { get; private set; }
+    public bool IsDisposed { get; private set; }
 
-        private unsafe void ReleaseResources()
+    private unsafe void ReleaseResources()
+    {
+
+    }
+
+    public void Dispose()
+    {
+        if (IsDisposed)
         {
-
+            return;
         }
 
-        public void Dispose()
-        {
-            if (IsDisposed)
-            {
-                return;
-            }
+        IsDisposed = true;
 
-            IsDisposed = true;
+        ReleaseResources();
+        GC.SuppressFinalize(this);
+    }
 
-            ReleaseResources();
-            GC.SuppressFinalize(this);
-        }
-
-        ~ITrackedDisposable()
-        {
-            Dispose();
-        }
+    ~ITrackedDisposable()
+    {
+        Dispose();
+    }
 #endif
 }
