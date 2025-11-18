@@ -363,6 +363,11 @@ public record struct Color
 
     // Operations
 
+    public readonly Color AsPremultiplied()
+    {
+        return M.Premultiply(this);
+    }
+
     public readonly Color WithAlpha(float a)
     {
         return this with
