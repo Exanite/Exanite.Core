@@ -6,7 +6,7 @@ namespace Exanite.Core.Tests;
 
 public class PoolTests
 {
-    [InlineData]
+    [Fact]
     public void Acquire_AcquireMultipleWithoutReleasing_ReturnsUniqueInstances()
     {
         const int acquireCount = 20;
@@ -25,7 +25,7 @@ public class PoolTests
         Assert.Equal(0, pool.UsageInfo.InactiveCount);
     }
 
-    [InlineData]
+    [Fact]
     public void Acquire_ReusesInstances()
     {
         const int acquireCountA = 20;
@@ -64,7 +64,7 @@ public class PoolTests
         Assert.Equal(acquireCountA - acquireCountB, pool.UsageInfo.InactiveCount);
     }
 
-    [InlineData]
+    [Fact]
     public void Acquire_EnforcesMaxInactiveLimit()
     {
         const int acquireCountA = 20;
