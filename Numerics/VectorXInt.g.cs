@@ -19,6 +19,9 @@ public struct Vector2Int : IEquatable<Vector2Int>, IFormattable
     /// <inheritdoc cref="Vector2.Zero"/>
     public static Vector2Int Zero => default;
 
+    /// <inheritdoc cref="Vector2.One"/>
+    public static Vector2Int One => new(1);
+
     /// <inheritdoc cref="Vector2.UnitX"/>
     public static Vector2Int UnitX => new(1, 0);
 
@@ -195,6 +198,9 @@ public struct Vector3Int : IEquatable<Vector3Int>, IFormattable
 
     /// <inheritdoc cref="Vector3.Zero"/>
     public static Vector3Int Zero => default;
+
+    /// <inheritdoc cref="Vector3.One"/>
+    public static Vector3Int One => new(1);
 
     /// <inheritdoc cref="Vector3.UnitX"/>
     public static Vector3Int UnitX => new(1, 0, 0);
@@ -381,6 +387,9 @@ public struct Vector4Int : IEquatable<Vector4Int>, IFormattable
 
     /// <inheritdoc cref="Vector4.Zero"/>
     public static Vector4Int Zero => default;
+
+    /// <inheritdoc cref="Vector4.One"/>
+    public static Vector4Int One => new(1);
 
     /// <inheritdoc cref="Vector4.UnitX"/>
     public static Vector4Int UnitX => new(1, 0, 0, 0);

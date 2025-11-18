@@ -31,6 +31,9 @@ public struct Vector<#= componentCount #>Int : IEquatable<Vector<#= componentCou
     /// <inheritdoc cref="Vector<#= componentCount #>.Zero"/>
     public static Vector<#= componentCount #>Int Zero => default;
 
+    /// <inheritdoc cref="Vector<#= componentCount #>.One"/>
+    public static Vector<#= componentCount #>Int One => new(1);
+
 <#
     for (var i = 0; i < componentCount; i++)
     {
