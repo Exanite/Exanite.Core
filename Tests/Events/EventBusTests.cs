@@ -49,6 +49,7 @@ public class EventBusTests
     }
 
     private struct Event;
+
     private struct EventB;
 
     private class EventHandler<T> : IEventHandler<T>

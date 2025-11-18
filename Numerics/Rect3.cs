@@ -33,10 +33,10 @@ public record struct Rect3
     public readonly bool Contains(Vector3 position)
     {
         return position.X >= Offset.X
-               && position.Y >= Offset.Y
-               && position.Z >= Offset.Z
-               && position.X < Offset.X + Size.X
-               && position.Y < Offset.Y + Size.Y
-               && position.Z < Offset.Z + Size.Z;
+            && position.Y >= Offset.Y
+            && position.Z >= Offset.Z
+            && position.X < Offset.X + Size.X
+            && position.Y < Offset.Y + Size.Y
+            && position.Z < Offset.Z + Size.Z;
     }
 }

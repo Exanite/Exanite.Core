@@ -29,9 +29,8 @@ public record struct Rect2Int
     public readonly bool Contains(Vector2 position)
     {
         return position.X >= Offset.X
-               && position.Y >= Offset.Y
-               && position.X < Offset.X + Size.X
-               && position.Y < Offset.Y + Size.Y;
+            && position.Y >= Offset.Y
+            && position.X < Offset.X + Size.X
+            && position.Y < Offset.Y + Size.Y;
     }
 }
-
