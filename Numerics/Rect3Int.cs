@@ -4,6 +4,9 @@ namespace Exanite.Core.Numerics;
 
 public record struct Rect3Int
 {
+    public static readonly Rect3Int Zero = default;
+    public static readonly Rect3Int One = new(Vector3Int.One);
+
     public Vector3Int Size;
     public Vector3Int Offset;
 
