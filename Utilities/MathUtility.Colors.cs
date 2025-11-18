@@ -145,26 +145,35 @@ public static partial class M
     #region Color struct
 
     /// <summary>
-    /// Mixes one color with another by <see cref="t"/> using the color space specified by <see cref="mixingSpace"/>.
+    /// Mixes one color with another by <see cref="t"/> using the specified color space.
     /// <see cref="t"/> will be clamped in the range [0, 1]
     /// </summary>
-    public static Color Mix(Color from, Color to, float t, ColorType mixingSpace = ColorType.Srgb)
+    public static Color Mix(Color from, Color to, float t, ColorType space = ColorType.Srgb)
     {
-        from = from.As(mixingSpace);
-        to = to.As(mixingSpace);
+        from = from.As(space);
+        to = to.As(space);
 
-        return new Color(Lerp(from.Value, to.Value, t), mixingSpace);
+        return new Color(Lerp(from.Value, to.Value, t), space);
     }
 
     /// <summary>
-    /// Mixes one color with another by <see cref="t"/> using the color space specified by <see cref="mixingSpace"/>.
+    /// Mixes one color with another by <see cref="t"/> using the specified color space.
     /// </summary>
-    public static Color MixUnclamped(Color from, Color to, float t, ColorType mixingSpace = ColorType.Srgb)
+    public static Color MixUnclamped(Color from, Color to, float t, ColorType space = ColorType.Srgb)
     {
-        from = from.As(mixingSpace);
-        to = to.As(mixingSpace);
+        from = from.As(space);
+        to = to.As(space);
 
-        return new Color(LerpUnclamped(from.Value, to.Value, t), mixingSpace);
+        return new Color(LerpUnclamped(from.Value, to.Value, t), space);
+    }
+
+    /// <summary>
+    /// Premultiplies the specified color using the specified color space.
+    /// </summary>
+    public static Color Premultiply(Color color, ColorType space = ColorType.Srgb)
+    {
+        color = color.As(space);
+        return new Color(new Vector4(color.X * color.W, color.Y * color.W, color.Z * color.W, color.W), space);
     }
 
     #endregion
