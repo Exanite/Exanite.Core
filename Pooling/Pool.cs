@@ -93,8 +93,6 @@ public class Pool<T> : Pool, IPool<T>
                 usageInfo.MaxInactiveResizeCount++;
             }
         };
-
-        Pools.AddPool(this, false);
     }
 
     /// <summary>
@@ -187,7 +185,6 @@ public class Pool<T> : Pool, IPool<T>
             IsDisposed = true;
 
             Clear();
-            Pools.RemovePool(this);
         }
     }
 
