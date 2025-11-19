@@ -93,5 +93,5 @@ public class PoolTests
         Assert.Equal(maxInactive, pool.UsageInfo.InactiveCount);
     }
 
-    public class A {}
+    public class A;
 }

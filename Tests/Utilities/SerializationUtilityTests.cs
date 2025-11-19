@@ -30,13 +30,13 @@ public class SerializationUtilityTests
 
     public class NestedClass
     {
-        public class DoubleNestedClass {}
+        public class DoubleNestedClass;
     }
 
-    public class GenericClass<T1> {}
+    public class GenericClass<T1>;
 
     public class GenericClass<T1, T2>
     {
-        public class NestedClassInGenericClass {}
+        public class NestedClassInGenericClass;
     }
 }

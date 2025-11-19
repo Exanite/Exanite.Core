@@ -3,13 +3,13 @@ using System.Collections.Generic;
 namespace Exanite.Core.Pooling;
 
 /// <inheritdoc cref="CollectionPool{T, T}"/>>
-public abstract class ListPool<T> : CollectionPool<List<T>, T> {}
+public abstract class ListPool<T> : CollectionPool<List<T>, T>;
 
 /// <inheritdoc cref="CollectionPool{T, T}"/>>
-public abstract class HashSetPool<T> : CollectionPool<HashSet<T>, T> {}
+public abstract class HashSetPool<T> : CollectionPool<HashSet<T>, T>;
 
 /// <inheritdoc cref="CollectionPool{T, T}"/>>
-public abstract class DictionaryPool<TKey, TValue> : CollectionPool<Dictionary<TKey, TValue>, KeyValuePair<TKey, TValue>> where TKey : notnull {}
+public abstract class DictionaryPool<TKey, TValue> : CollectionPool<Dictionary<TKey, TValue>, KeyValuePair<TKey, TValue>> where TKey : notnull;
 
 /// <summary>
 /// A collection pool. Releasing a collection back to the pool will clear it automatically.

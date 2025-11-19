@@ -8,7 +8,7 @@ namespace Exanite.Core.Pooling;
 /// <remarks>
 /// This is a convenience interface specialized for <see cref="Pool{T}"/>.
 /// </remarks>
-public interface IPool<T> : IPool<T, Pool<T>.Handle> {}
+public interface IPool<T> : IPool<T, Pool<T>.Handle>;
 
 /// <summary>
 /// Defines a minimal interface for pools.
