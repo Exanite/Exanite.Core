@@ -27,25 +27,16 @@ public abstract class CollectionPool<TCollection, TItem> where TCollection : cla
 
     public static Pool<TCollection>.Handle Acquire(out TCollection value)
     {
-        lock (Pool)
-        {
-            return Pool.Acquire(out value);
-        }
+        return Pool.Acquire(out value);
     }
 
     public static TCollection Acquire()
     {
-        lock (Pool)
-        {
-            return Pool.Acquire();
-        }
+        return Pool.Acquire();
     }
 
     public static void Release(TCollection value)
     {
-        lock (Pool)
-        {
-            Pool.Release(value);
-        }
+        Pool.Release(value);
     }
 }

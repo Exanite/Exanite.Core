@@ -18,25 +18,16 @@ public abstract class StringBuilderPool
 
     public static Pool<StringBuilder>.Handle Acquire(out StringBuilder value)
     {
-        lock (Pool)
-        {
-            return Pool.Acquire(out value);
-        }
+        return Pool.Acquire(out value);
     }
 
     public static StringBuilder Acquire()
     {
-        lock (Pool)
-        {
-            return Pool.Acquire();
-        }
+        return Pool.Acquire();
     }
 
     public static void Release(StringBuilder value)
     {
-        lock (Pool)
-        {
-            Pool.Release(value);
-        }
+        Pool.Release(value);
     }
 }

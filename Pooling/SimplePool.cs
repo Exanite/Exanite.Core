@@ -25,25 +25,16 @@ public abstract class SimplePool<T> where T : new()
 
     public static Pool<T>.Handle Acquire(out T value)
     {
-        lock (Pool)
-        {
-            return Pool.Acquire(out value);
-        }
+        return Pool.Acquire(out value);
     }
 
     public static T Acquire()
     {
-        lock (Pool)
-        {
-            return Pool.Acquire();
-        }
+        return Pool.Acquire();
     }
 
     public static void Release(T value)
     {
-        lock (Pool)
-        {
-            Pool.Release(value);
-        }
+        Pool.Release(value);
     }
 }
