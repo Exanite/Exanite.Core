@@ -30,7 +30,7 @@ public class PropertyTests
         property.Value = previousValue;
 
         var wasEventRaised = false;
-        property.ValueChanged += (sender, args) =>
+        property.ValueChanged += (_, args) =>
         {
             wasEventRaised = true;
 
@@ -54,7 +54,7 @@ public class PropertyTests
         property.Value = previousValue;
 
         var wasEventRaised = false;
-        property.UntypedValueChanged += (sender, args) =>
+        property.UntypedValueChanged += (_, args) =>
         {
             wasEventRaised = true;
 
