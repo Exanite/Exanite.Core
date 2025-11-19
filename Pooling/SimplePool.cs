@@ -16,7 +16,7 @@ public abstract class SimplePool
 /// </summary>
 public abstract class SimplePool<T> where T : new()
 {
-    private static readonly Pool<T> Pool = Pools.AddPool(Create(), true);
+    private static readonly Pool<T> Pool = Create();
 
     public static Pool<T> Create()
     {

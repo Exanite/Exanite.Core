@@ -7,7 +7,7 @@ namespace Exanite.Core.Pooling;
 /// </summary>
 public abstract class StringBuilderPool
 {
-    private static readonly Pool<StringBuilder> Pool = Pools.AddPool(Create(), true);
+    private static readonly Pool<StringBuilder> Pool = Create();
 
     public static Pool<StringBuilder> Create()
     {

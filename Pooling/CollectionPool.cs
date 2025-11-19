@@ -16,7 +16,7 @@ public abstract class DictionaryPool<TKey, TValue> : CollectionPool<Dictionary<T
 /// </summary>
 public abstract class CollectionPool<TCollection, TItem> where TCollection : class, ICollection<TItem>, new()
 {
-    private static readonly Pool<TCollection> Pool = Pools.AddPool(Create(), true);
+    private static readonly Pool<TCollection> Pool = Create();
 
     public static Pool<TCollection> Create()
     {
