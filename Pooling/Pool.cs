@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Exanite.Core.Runtime;
 using Exanite.Core.Utilities;
 
@@ -20,8 +21,12 @@ public abstract class Pool : ITrackedDisposable
 }
 
 /// <inheritdoc cref="Pool"/>
+/// <remarks>
+/// This class is internally synchronized.
+/// </remarks>
 public class Pool<T> : Pool, IPool<T>
 {
+    private readonly Lock sync = new();
     private readonly Stack<T> values = new();
 
     private readonly Func<T> create;
@@ -35,8 +40,11 @@ public class Pool<T> : Pool, IPool<T>
     {
         get
         {
-            UpdateUsageInfo();
-            return usageInfo;
+            lock (sync)
+            {
+                UpdateUsageInfo();
+                return usageInfo;
+            }
         }
     }
 
@@ -102,17 +110,20 @@ public class Pool<T> : Pool, IPool<T>
     /// </summary>
     public T Acquire()
     {
-        AssertUtility.IsFalse(IsDisposed, "Pool has been disposed");
-
-        if (!values.TryPop(out var value))
+        lock (sync)
         {
-            value = create.Invoke();
-            usageInfo.TotalCount++;
+            AssertUtility.IsFalse(IsDisposed, "Pool has been disposed");
+
+            if (!values.TryPop(out var value))
+            {
+                value = create.Invoke();
+                usageInfo.TotalCount++;
+            }
+
+            onAcquire.Invoke(value);
+
+            return value;
         }
-
-        onAcquire.Invoke(value);
-
-        return value;
     }
 
     /// <summary>
@@ -124,17 +135,20 @@ public class Pool<T> : Pool, IPool<T>
     /// </remarks>
     public void Release(T value)
     {
-        onRelease.Invoke(value);
+        lock (sync)
+        {
+            onRelease.Invoke(value);
 
-        UpdateUsageInfo();
-        if (!IsDisposed && usageInfo.InactiveCount < usageInfo.MaxInactive)
-        {
-            values.Push(value);
-        }
-        else
-        {
-            usageInfo.TotalCount--;
-            onDestroy.Invoke(value);
+            UpdateUsageInfo();
+            if (!IsDisposed && usageInfo.InactiveCount < usageInfo.MaxInactive)
+            {
+                values.Push(value);
+            }
+            else
+            {
+                usageInfo.TotalCount--;
+                onDestroy.Invoke(value);
+            }
         }
     }
 
@@ -143,13 +157,16 @@ public class Pool<T> : Pool, IPool<T>
     /// </summary>
     public void Clear()
     {
-        foreach (var value in values)
+        lock (sync)
         {
-            usageInfo.TotalCount--;
-            onDestroy.Invoke(value);
-        }
+            foreach (var value in values)
+            {
+                usageInfo.TotalCount--;
+                onDestroy.Invoke(value);
+            }
 
-        values.Clear();
+            values.Clear();
+        }
     }
 
     private void UpdateUsageInfo()
@@ -160,15 +177,18 @@ public class Pool<T> : Pool, IPool<T>
 
     public override void Dispose()
     {
-        if (IsDisposed)
+        lock (sync)
         {
-            return;
+            if (IsDisposed)
+            {
+                return;
+            }
+
+            IsDisposed = true;
+
+            Clear();
+            Pools.RemovePool(this);
         }
-
-        IsDisposed = true;
-
-        Clear();
-        Pools.RemovePool(this);
     }
 
     public readonly struct Handle : IDisposable
