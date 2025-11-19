@@ -9,6 +9,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>$(NoWarn);xUnit2013</NoWarn> <!-- Don't care about Assert.Empty/NotEmpty/Single -->
+    <NoWarn>$(NoWarn);xUnit2017</NoWarn> <!-- Don't care about Assert.Contains/DoesNotContain -->
   </PropertyGroup>
 
   <ItemGroup>
