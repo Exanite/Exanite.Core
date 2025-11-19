@@ -6,13 +6,13 @@ namespace Exanite.Core.Runtime;
 /// </summary>
 /// <remarks>
 /// This is not named Ref because of Silk.Net 3's Ref struct.
-/// See <see cref="ReadOnlyValueRef{T}"/> for a readonly version.
+/// See <see cref="ReadOnlyVRef{T}"/> for a readonly version.
 /// </remarks>
-public readonly ref struct ValueRef<T>
+public readonly ref struct VRef<T>
 {
     public readonly ref T Value;
 
-    public ValueRef(ref T value)
+    public VRef(ref T value)
     {
         Value = ref value;
     }

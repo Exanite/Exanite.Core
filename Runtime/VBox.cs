@@ -1,19 +1,19 @@
 namespace Exanite.Core.Runtime;
 
-public abstract class ValueBox
+public abstract class VBox
 {
-    internal ValueBox() {}
+    internal VBox() {}
 }
 
 /// <summary>
 /// Wraps a value inside a heap allocated class.
 /// This is mainly intended to be used as a way to avoid repeated GC allocations when storing value types as objects.
 /// </summary>
-public class ValueBox<T> : ValueBox
+public class VBox<T> : VBox
 {
     public T Value;
 
-    public ValueBox(T value)
+    public VBox(T value)
     {
         Value = value;
     }

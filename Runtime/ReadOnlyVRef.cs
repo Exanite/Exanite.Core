@@ -5,13 +5,13 @@ namespace Exanite.Core.Runtime;
 /// This can be useful for ensuring that refs do not get accidentally dropped or for returning refs from TryGet methods.
 /// </summary>
 /// <remarks>
-/// See <see cref="ValueRef{T}"/> for a mutable version.
+/// See <see cref="VRef{T}"/> for a mutable version.
 /// </remarks>
-public readonly ref struct ReadOnlyValueRef<T>
+public readonly ref struct ReadOnlyVRef<T>
 {
     public readonly ref readonly T Value;
 
-    public ReadOnlyValueRef(ref T value)
+    public ReadOnlyVRef(ref T value)
     {
         Value = ref value;
     }
