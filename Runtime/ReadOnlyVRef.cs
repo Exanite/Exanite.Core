@@ -6,6 +6,7 @@ namespace Exanite.Core.Runtime;
 /// </summary>
 /// <remarks>
 /// See <see cref="VRef{T}"/> for a mutable version.
+/// Originally called a ReadOnlyValueRef, but shortened since this is a commonly used type.
 /// </remarks>
 public readonly ref struct ReadOnlyVRef<T>
 {
