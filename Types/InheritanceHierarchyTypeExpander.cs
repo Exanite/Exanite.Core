@@ -4,25 +4,42 @@ using System.Linq;
 
 namespace Exanite.Core.Types;
 
+/// <summary>
+/// Type expander that returns the class inheritance hierarchy of the input type.
+/// </summary>
+/// <remarks>
+/// Interfaces are not returned.
+/// </remarks>
 public class InheritanceHierarchyTypeExpander : ITypeExpander
 {
+    /// <summary>
+    /// A set of types that determine when the type expander stops traversing the type inheritance hierarchy.
+    /// </summary>
     public IReadOnlySet<Type> BaseTypes { get; }
 
-    public bool MustExtendBaseType { get; }
+    /// <summary>
+    /// Whether the input type must extend from a base type specified by <see cref="BaseTypes"/>.
+    /// An exception will be thrown if this is true and the input type does not extend from a base type.
+    /// </summary>
+    public bool MustExtendBaseType { get; init; } = false;
 
-    public bool IncludeInputType { get; }
-    // public bool IncludeBaseType { get; } // TODO
+    /// <summary>
+    /// Whether the input type is included in the results.
+    /// </summary>
+    public bool IncludeInputType { get; init; } = true;
 
-    public InheritanceHierarchyTypeExpander(Type? baseType = null, bool includeInputType = false, bool mustExtendBaseType = false)
-        : this([baseType], includeInputType, mustExtendBaseType) {}
+    /// <summary>
+    /// Whether the base type is included in the results.
+    /// </summary>
+    public bool IncludeBaseType { get; init; } = false;
 
-    public InheritanceHierarchyTypeExpander(IEnumerable<Type?> baseTypes, bool includeInputType = false, bool mustExtendBaseType = false)
+    public InheritanceHierarchyTypeExpander(IEnumerable<Type>? baseTypes = null)
     {
-        BaseTypes = new HashSet<Type>(baseTypes.Where(type => type != null).Cast<Type>());
-        IncludeInputType = includeInputType;
-        MustExtendBaseType = mustExtendBaseType;
+        baseTypes ??= [];
+        BaseTypes = baseTypes.ToHashSet();
     }
 
+    // TODO: This implementation is currently wrong due to some API contract changes
     public IEnumerable<Type> Expand(Type type)
     {
         var hasReachedBaseType = false;
