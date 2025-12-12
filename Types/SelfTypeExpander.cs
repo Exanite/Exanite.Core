@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Exanite.Core.Types;
 
 /// <summary>
-/// Type expander that simply returns the input type.
+/// Type expander that returns the input type.
 /// </summary>
 public class SelfTypeExpander : ITypeExpander
 {
