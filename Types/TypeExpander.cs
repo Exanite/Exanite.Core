@@ -3,23 +3,21 @@ using System.Collections.Generic;
 
 namespace Exanite.Core.Types;
 
-public class TypeFilter : ITypeFilter
+public class TypeExpander : ITypeExpander
 {
-    public List<ITypeFilter> Filters { get; } = new();
+    public IReadOnlyList<ITypeExpander> Filters { get; }
 
-    public TypeFilter Add(ITypeFilter filter)
+    public TypeExpander(IEnumerable<ITypeExpander> filters)
     {
-        Filters.Add(filter);
-
-        return this;
+        Filters = [..filters];
     }
 
-    public IEnumerable<Type> Filter(Type type)
+    public IEnumerable<Type> Expand(Type type)
     {
         var results = new HashSet<Type>();
         foreach (var filter in Filters)
         {
-            foreach (var filterType in filter.Filter(type))
+            foreach (var filterType in filter.Expand(type))
             {
                 results.Add(filterType);
             }

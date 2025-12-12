@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Exanite.Core.Types;
 
-public class InterfaceTypeFilter : ITypeFilter
+public class InterfaceTypeExpander : ITypeExpander
 {
-    public IEnumerable<Type> Filter(Type type)
+    public IEnumerable<Type> Expand(Type type)
     {
         return type.GetInterfaces();
     }

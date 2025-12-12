@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Exanite.Core.Types;
 
-public interface ITypeFilter
+public interface ITypeExpander
 {
-    public IEnumerable<Type> Filter(Type type);
+    public IEnumerable<Type> Expand(Type type);
 }

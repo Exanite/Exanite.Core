@@ -1,28 +1,29 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Exanite.Core.Types;
 
-public class InheritanceHierarchyTypeFilter : ITypeFilter
+public class InheritanceHierarchyTypeExpander : ITypeExpander
 {
-    public HashSet<Type?> BaseTypes { get; }
-    public bool Inclusive { get; set; }
-    public bool MustExtendBaseType { get; set; }
+    public IReadOnlySet<Type> BaseTypes { get; }
 
-    public InheritanceHierarchyTypeFilter(Type? baseType = null, bool inclusive = false, bool mustExtendBaseType = false) : this(new HashSet<Type?>() { baseType }, inclusive, mustExtendBaseType) {}
+    public bool MustExtendBaseType { get; }
 
-    public InheritanceHierarchyTypeFilter(IEnumerable<Type?> baseTypes, bool inclusive = false, bool mustExtendBaseType = false) : this(new HashSet<Type?>(baseTypes), inclusive, mustExtendBaseType) {}
+    public bool IncludeInputType { get; }
+    // public bool IncludeBaseType { get; } // TODO
 
-    private InheritanceHierarchyTypeFilter(HashSet<Type?> baseTypes, bool inclusive, bool mustExtendBaseType)
+    public InheritanceHierarchyTypeExpander(Type? baseType = null, bool includeInputType = false, bool mustExtendBaseType = false)
+        : this([baseType], includeInputType, mustExtendBaseType) {}
+
+    public InheritanceHierarchyTypeExpander(IEnumerable<Type?> baseTypes, bool includeInputType = false, bool mustExtendBaseType = false)
     {
-        BaseTypes = baseTypes;
-        Inclusive = inclusive;
+        BaseTypes = new HashSet<Type>(baseTypes.Where(type => type != null).Cast<Type>());
+        IncludeInputType = includeInputType;
         MustExtendBaseType = mustExtendBaseType;
-
-        BaseTypes.Remove(null);
     }
 
-    public IEnumerable<Type> Filter(Type type)
+    public IEnumerable<Type> Expand(Type type)
     {
         var hasReachedBaseType = false;
         if (BaseTypes.Count == 0)
@@ -35,7 +36,7 @@ public class InheritanceHierarchyTypeFilter : ITypeFilter
         {
             if (BaseTypes.Contains(currentType))
             {
-                if (Inclusive)
+                if (IncludeInputType)
                 {
                     yield return currentType;
                 }
