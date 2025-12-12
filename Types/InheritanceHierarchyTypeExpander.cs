@@ -39,7 +39,6 @@ public class InheritanceHierarchyTypeExpander : ITypeExpander
         BaseTypes = baseTypes.ToHashSet();
     }
 
-    // TODO: This implementation is currently wrong due to some API contract changes
     public IEnumerable<Type> Expand(Type type)
     {
         var hasReachedBaseType = false;
@@ -53,17 +52,22 @@ public class InheritanceHierarchyTypeExpander : ITypeExpander
         {
             if (BaseTypes.Contains(currentType))
             {
-                if (IncludeInputType)
+                // Base type reached
+                hasReachedBaseType = true;
+
+                if (IncludeBaseType)
                 {
                     yield return currentType;
                 }
 
-                hasReachedBaseType = true;
-
                 break;
             }
 
-            yield return currentType;
+            if (IncludeInputType || currentType != type)
+            {
+                yield return currentType;
+            }
+
             currentType = currentType.BaseType;
         }
 
