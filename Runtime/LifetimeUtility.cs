@@ -33,7 +33,7 @@ public static class LifetimeUtility
     /// <summary>
     /// Adds an action to be invoked when the lifetime is disposed.
     /// </summary>
-    public static Action InvokeWith(this Action action, Lifetime lifetime)
+    public static Action WhenDisposed(this Lifetime lifetime, Action action)
     {
         return lifetime.InvokeWith(action);
     }
