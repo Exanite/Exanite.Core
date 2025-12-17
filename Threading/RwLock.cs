@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Exanite.Core.Runtime;
 
 namespace Exanite.Core.Threading;
@@ -31,7 +32,7 @@ public class RwLock<T>
         return new WriteLockHandle(sync);
     }
 
-    public readonly ref struct ReadLockHandle
+    public readonly ref struct ReadLockHandle : IDisposable
     {
         private readonly ReaderWriterLockSlim sync;
 
@@ -46,7 +47,7 @@ public class RwLock<T>
         }
     }
 
-    public readonly ref struct WriteLockHandle
+    public readonly ref struct WriteLockHandle : IDisposable
     {
         private readonly ReaderWriterLockSlim sync;
 
