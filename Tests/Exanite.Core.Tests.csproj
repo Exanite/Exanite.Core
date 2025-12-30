@@ -3,6 +3,7 @@
     <AssemblyName>Exanite.Core.Tests</AssemblyName>
     <RootNamespace>Exanite.Core.Tests</RootNamespace>
 
+    <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <LangVersion>14</LangVersion>
     <Nullable>enable</Nullable>
