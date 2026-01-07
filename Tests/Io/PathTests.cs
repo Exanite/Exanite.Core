@@ -16,7 +16,7 @@ public class PathTests
     }
 
     [Fact]
-    public void RelativePaths_CanBeJoined_WithStrings()
+    public void RelativePath_CanBeJoined_WithStrings()
     {
         var path = new RelativePath("A") / "B" / "C";
 
@@ -24,7 +24,7 @@ public class PathTests
     }
 
     [Fact]
-    public void RelativePaths_CanBeJoined_WithRelativePaths()
+    public void RelativePath_CanBeJoined_WithRelativePaths()
     {
         var path = new RelativePath("A") / new RelativePath("B") / new RelativePath("C");
 
@@ -32,7 +32,7 @@ public class PathTests
     }
 
     [Fact]
-    public void RelativePaths_CanBeJoined_WithAbsolutePath()
+    public void RelativePath_CanBeJoined_WithAbsolutePath()
     {
         var path = new AbsolutePath("Absolute") / new RelativePath("A") / "B" / "C";
 
