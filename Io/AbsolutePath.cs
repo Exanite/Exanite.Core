@@ -196,6 +196,23 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     }
 
     /// <summary>
+    /// If the provided path is absolute, then returns the provided path.
+    /// Otherwise, returns the current path joined with the provided path.
+    /// </summary>
+    /// <remarks>
+    /// Use this when you do not know if the provided path is absolute or relative.
+    /// </remarks>
+    public AbsolutePath Resolve(string path)
+    {
+        if (Path.IsPathRooted(path))
+        {
+            return path;
+        }
+
+        return this / path;
+    }
+
+    /// <summary>
     /// Creates the folder at this path if it does not exist.
     /// </summary>
     public void CreateFolder()
