@@ -39,15 +39,7 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     /// <summary>
     /// Gets the parent folder of this path.
     /// </summary>
-    public AbsolutePath Parent
-    {
-        get
-        {
-            var parent = this / "..";
-            GuardUtility.IsTrue(parent != this, "Already a root path");
-            return parent;
-        }
-    }
+    public AbsolutePath Parent => this / "..";
 
     /// <summary>
     /// The name of the folder or file, including any extensions.

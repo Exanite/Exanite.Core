@@ -102,20 +102,6 @@ public class PathTests
     }
 
     [Fact]
-    public void AbsolutePath_Parent_EventuallyThrows()
-    {
-        var path = new AbsolutePath(".");
-
-        Assert.ThrowsAny<Exception>(() =>
-        {
-            for (var i = 0; i < 1000; i++)
-            {
-                path = path.Parent;
-            }
-        });
-    }
-
-    [Fact]
     public void AbsolutePath_Name_ReturnsLastSegment()
     {
         var path = new AbsolutePath(".") / "A";
