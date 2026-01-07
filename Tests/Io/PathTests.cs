@@ -60,15 +60,6 @@ public class PathTests
     }
 
     [Fact]
-    public void AbsolutePath_ThrowsException_WhenJoined_WhenEmpty()
-    {
-        Assert.ThrowsAny<Exception>(() =>
-        {
-            _ = new AbsolutePath() / "Other";
-        });
-    }
-
-    [Fact]
     public void AbsolutePath_ThrowsException_WhenJoined_WhenDefault()
     {
         Assert.ThrowsAny<Exception>(() =>
@@ -108,13 +99,20 @@ public class PathTests
     }
 
     [Fact]
-    public void AbsolutePath_Name_ThrowWhen_IsRoot()
+    public void AbsolutePath_Name_Throws_WhenIsRoot()
     {
         var path = new AbsolutePath("/");
         Assert.ThrowsAny<Exception>(() =>
         {
             _ = path.Name;
         });
+    }
+
+    [Fact]
+    public void AbsolutePath_Parent_ReturnsSelf_WhenIsRoot()
+    {
+        var path = new AbsolutePath("/");
+        Assert.Equal(path, path.Parent);
     }
 
     [Fact]
