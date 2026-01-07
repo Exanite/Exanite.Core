@@ -40,6 +40,27 @@ public class PathTests
     }
 
     [Fact]
+    public void RelativePath_ThrowsException_WhenRooted()
+    {
+        Assert.ThrowsAny<Exception>(() =>
+        {
+            _ = new RelativePath("/home");
+        });
+    }
+
+    [Fact]
+    public void RelativePath_ThrowsException_WhenRooted_OnWindows()
+    {
+        Assert.SkipWhen(!OperatingSystem.IsWindows(), "Windows only");
+
+        Assert.ThrowsAny<Exception>(() =>
+        {
+            _ = new RelativePath("C:/Users");
+        });
+    }
+
+
+    [Fact]
     public void AbsolutePath_ThrowsException_WhenJoined_WhenEmpty()
     {
         Assert.ThrowsAny<Exception>(() =>

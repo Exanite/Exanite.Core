@@ -110,6 +110,7 @@ public readonly struct RelativePath : IEquatable<RelativePath>
     {
         GuardUtility.IsTrue(!string.IsNullOrEmpty(path), "Relative path cannot be a null or empty string");
         GuardUtility.IsTrue(!path.StartsWith(Path.AltDirectorySeparatorChar) && !path.EndsWith(Path.AltDirectorySeparatorChar), "Relative path cannot start or end with slashes");
+        GuardUtility.IsTrue(!Path.IsPathRooted(path), "Relative path cannot be rooted");
     }
 
     /// <summary>
