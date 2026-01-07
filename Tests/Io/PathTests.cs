@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Exanite.Core.Io;
 using Xunit;
 
@@ -156,5 +157,12 @@ public class PathTests
             var expected = (RelativePath[])[".."];
             Assert.Equal(expected, pathInsideBase.GetRelativePathTo(basePath).Split());
         }
+    }
+
+    [Fact]
+    public void AbsolutePath_Split_ReturnsExpectedValue()
+    {
+        Assert.Equal(["A", "B", "C"], new AbsolutePath("/A/B/C").Split());
+        Assert.Equal([], new AbsolutePath("/").Split());
     }
 }

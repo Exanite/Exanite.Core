@@ -417,7 +417,13 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     /// </summary>
     public RelativePath[] Split()
     {
-        return [..PathUtility.TrimSeparators(path).Split(Path.AltDirectorySeparatorChar)];
+        var current = PathUtility.TrimSeparators(path);
+        if (current == "")
+        {
+            return [];
+        }
+
+        return [..current.Split(Path.AltDirectorySeparatorChar)];
     }
 
     /// <summary>
