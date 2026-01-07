@@ -59,7 +59,6 @@ public class PathTests
         });
     }
 
-
     [Fact]
     public void AbsolutePath_ThrowsException_WhenJoined_WhenEmpty()
     {
