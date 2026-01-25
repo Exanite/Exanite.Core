@@ -108,6 +108,14 @@ public static partial class M
     }
 
     /// <summary>
+    /// Returns the transposed version of the provided matrix.
+    /// </summary>
+    public static Matrix4x4 AsTransposed(this Matrix4x4 value)
+    {
+        return Matrix4x4.Transpose(value);
+    }
+
+    /// <summary>
     /// Returns the inversed version of the provided matrix, or returns the identity matrix if the provided matrix is not invertible.
     /// </summary>
     public static Matrix4x4 AsInversedOrDefault(this Matrix4x4 value)
