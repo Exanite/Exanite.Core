@@ -12,19 +12,12 @@ namespace Exanite.Core.Numerics;
 [StructLayout(LayoutKind.Sequential)]
 public record struct LinearColor4
 {
-    private Vector4 color;
+    public Vector4 Value;
+    public Color Color => Color.FromLinear(Value);
 
-    public Vector4 Value
+    public LinearColor4(Vector4 value)
     {
-        readonly get => color;
-        set => color = value;
-    }
-
-    public Color Color => Color.FromLinear(color);
-
-    public LinearColor4(Vector4 color)
-    {
-        this.color = color;
+        Value = value;
     }
 
     public static implicit operator LinearColor4(Vector4 angle)

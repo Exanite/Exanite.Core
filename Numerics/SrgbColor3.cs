@@ -12,19 +12,12 @@ namespace Exanite.Core.Numerics;
 [StructLayout(LayoutKind.Sequential)]
 public record struct SrgbColor3
 {
-    private Vector3 color;
+    public Vector3 Value;
+    public Color Color => Color.FromSrgb(Value);
 
-    public Vector3 Value
+    public SrgbColor3(Vector3 value)
     {
-        readonly get => color;
-        set => color = value;
-    }
-
-    public Color Color => Color.FromSrgb(color);
-
-    public SrgbColor3(Vector3 color)
-    {
-        this.color = color;
+        Value = value;
     }
 
     public static implicit operator SrgbColor3(Vector3 angle)
