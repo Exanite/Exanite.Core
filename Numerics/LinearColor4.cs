@@ -10,7 +10,7 @@ namespace Exanite.Core.Numerics;
 /// See <see cref="Color"/> for a general color representation struct and corresponding APIs.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct LinearColor4
+public record struct LinearColor4
 {
     private Vector4 color;
 
