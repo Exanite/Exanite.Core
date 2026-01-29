@@ -1,30 +1,26 @@
 using System;
-using System.Threading;
 
 namespace Exanite.Core.Runtime;
 
 /// <summary>
-/// Utility methods for <see cref="DoubleBuffer{T}"/>.
+/// Utility methods for <see cref="ValueDoubleBuffer{T}"/>.
 /// </summary>
-public static class DoubleBuffer
+public static class ValueDoubleBuffer
 {
-    public static DoubleBuffer<T> Create<T>() where T : new()
+    public static ValueDoubleBuffer<T> Create<T>() where T : new()
     {
-        return new DoubleBuffer<T>(new T(), new T());
+        return new ValueDoubleBuffer<T>(new T(), new T());
     }
 }
 
 /// <summary>
-/// Simple double buffer implementation.
+/// Simple double buffer implementation as a struct.
 /// </summary>
 /// <remarks>
-/// This class is intentionally not disposable.
-/// See <see cref="ValueDoubleBuffer"/> for a struct version.
+/// See <see cref="DoubleBuffer"/> for a class version.
 /// </remarks>
-public class DoubleBuffer<T>
+public struct ValueDoubleBuffer<T>
 {
-    private readonly Lock sync = new();
-
     /// <summary>
     /// The read resource. Used by the consumer.
     /// </summary>
@@ -40,7 +36,7 @@ public class DoubleBuffer<T>
     /// </summary>
     /// <param name="read">The resource that will be first used as the read resource.</param>
     /// <param name="write">The resource that will be first used as the write resource.</param>
-    public DoubleBuffer(T read, T write)
+    public ValueDoubleBuffer(T read, T write)
     {
         Read = read;
         Write = write;
@@ -50,7 +46,7 @@ public class DoubleBuffer<T>
     /// Create a double buffer using the resources created by the function to create the read and write resources.
     /// </summary>
     /// <param name="create">Create the resource. The int parameter is the number of resources created so far.</param>
-    public DoubleBuffer(Func<int, T> create)
+    public ValueDoubleBuffer(Func<int, T> create)
     {
         Read = create.Invoke(0);
         Write = create.Invoke(1);
@@ -62,10 +58,7 @@ public class DoubleBuffer<T>
     /// <returns>The read resource.</returns>
     public T Swap()
     {
-        lock (sync)
-        {
-            (Read, Write) = (Write, Read);
-            return Read;
-        }
+        (Read, Write) = (Write, Read);
+        return Read;
     }
 }
