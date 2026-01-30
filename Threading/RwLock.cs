@@ -16,19 +16,19 @@ public class RwLock<T>
         this.value = value;
     }
 
-    public ReadLockHandle EnterReadLock(out ReadOnlyVRef<T> value)
+    public ReadLockHandle EnterReadLock(out ReadOnlyRef<T> value)
     {
         sync.EnterReadLock();
 
-        value = new ReadOnlyVRef<T>(ref this.value);
+        value = new ReadOnlyRef<T>(ref this.value);
         return new ReadLockHandle(sync);
     }
 
-    public WriteLockHandle EnterWriteLock(out VRef<T> value)
+    public WriteLockHandle EnterWriteLock(out Ref<T> value)
     {
         sync.EnterWriteLock();
 
-        value = new VRef<T>(ref this.value);
+        value = new Ref<T>(ref this.value);
         return new WriteLockHandle(sync);
     }
 

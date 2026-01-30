@@ -5,15 +5,13 @@ namespace Exanite.Core.Runtime;
 /// This can be useful for ensuring that refs do not get accidentally dropped or for returning refs from TryGet methods.
 /// </summary>
 /// <remarks>
-/// This is not named Ref because of Silk.Net 3's Ref struct.
-/// See <see cref="ReadOnlyVRef{T}"/> for a readonly version.
-/// Originally called a ValueRef, but shortened since this is a commonly used type.
+/// See <see cref="ReadOnlyRef{T}"/> for a readonly version.
 /// </remarks>
-public readonly ref struct VRef<T>
+public readonly ref struct Ref<T>
 {
     public readonly ref T Value;
 
-    public VRef(ref T value)
+    public Ref(ref T value)
     {
         Value = ref value;
     }
