@@ -5,29 +5,36 @@ namespace Exanite.Core.Numerics;
 public record struct Rect3
 {
     public static readonly Rect3 Zero = default;
-    public static readonly Rect3 One = new(Vector3.One);
+    public static readonly Rect3 One = FromSize(Vector3.One);
 
-    public Vector3 Size;
     public Vector3 Offset;
+    public Vector3 Size;
 
-    public Rect3(Vector3 size, Vector3 offset = default)
+    public static Rect3 FromSize(Vector3 size)
     {
-        Size = size;
-        Offset = offset;
+        return new Rect3()
+        {
+            Size = size,
+        };
     }
 
-    public readonly Rect3 Scale(Vector3 size)
+    public static Rect3 FromOffsetSize(Vector3 offset, Vector3 size)
     {
-        return new Rect3(
-            new Vector3(size.X * Size.X, size.Y * Size.Y, size.Z * Size.Z),
-            new Vector3(size.X * Offset.X, size.Y * Offset.Y, size.Z * Offset.Z));
+        return new Rect3()
+        {
+            Offset = offset,
+            Size = size,
+        };
     }
 
-    public readonly Rect3Int ScaleToInt(Vector3Int size)
+    public readonly Rect3 Scale(Vector3 scale)
     {
-        return new Rect3Int(
-            new Vector3Int((int)(size.X * Size.X), (int)(size.Y * Size.Y), (int)(size.Z * Size.Z)),
-            new Vector3Int((int)(size.X * Offset.X), (int)(size.Y * Offset.Y), (int)(size.Z * Offset.Z)));
+        return FromOffsetSize(scale * Offset, scale * Size);
+    }
+
+    public readonly Rect3Int ScaleToInt(Vector3Int scale)
+    {
+        return Rect3Int.FromOffsetSize((Vector3Int)(scale * Offset), (Vector3Int)(scale * Size));
     }
 
     public readonly bool Contains(Vector3 position)

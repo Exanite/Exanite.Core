@@ -5,29 +5,36 @@ namespace Exanite.Core.Numerics;
 public record struct Rect2
 {
     public static readonly Rect2 Zero = default;
-    public static readonly Rect2 One = new(Vector2.One);
+    public static readonly Rect2 One = FromSize(Vector2.One);
 
-    public Vector2 Size;
     public Vector2 Offset;
+    public Vector2 Size;
 
-    public Rect2(Vector2 size, Vector2 offset = default)
+    public static Rect2 FromSize(Vector2 size)
     {
-        Size = size;
-        Offset = offset;
+        return new Rect2()
+        {
+            Size = size,
+        };
     }
 
-    public readonly Rect2 Scale(Vector2 size)
+    public static Rect2 FromOffsetSize(Vector2 offset, Vector2 size)
     {
-        return new Rect2(
-            new Vector2(size.X * Size.X, size.Y * Size.Y),
-            new Vector2(size.X * Offset.X, size.Y * Offset.Y));
+        return new Rect2()
+        {
+            Offset = offset,
+            Size = size,
+        };
     }
 
-    public readonly Rect2Int ScaleToInt(Vector2Int size)
+    public readonly Rect2 Scale(Vector2 scale)
     {
-        return new Rect2Int(
-            new Vector2Int((int)(size.X * Size.X), (int)(size.Y * Size.Y)),
-            new Vector2Int((int)(size.X * Offset.X), (int)(size.Y * Offset.Y)));
+        return FromOffsetSize(scale * Offset, scale * Size);
+    }
+
+    public readonly Rect2Int ScaleToInt(Vector2Int scale)
+    {
+        return Rect2Int.FromOffsetSize((Vector2Int)(scale * Offset), (Vector2Int)(scale * Size));
     }
 
     public readonly bool Contains(Vector2 position)

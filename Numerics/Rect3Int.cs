@@ -5,25 +5,36 @@ namespace Exanite.Core.Numerics;
 public record struct Rect3Int
 {
     public static readonly Rect3Int Zero = default;
-    public static readonly Rect3Int One = new(Vector3Int.One);
+    public static readonly Rect3Int One = FromSize(Vector3Int.One);
 
-    public Vector3Int Size;
     public Vector3Int Offset;
+    public Vector3Int Size;
 
-    public Rect3Int(Vector3Int size, Vector3Int offset = default)
+    public static Rect3Int FromSize(Vector3Int size)
     {
-        Size = size;
-        Offset = offset;
+        return new Rect3Int()
+        {
+            Size = size,
+        };
+    }
+
+    public static Rect3Int FromOffsetSize(Vector3Int offset, Vector3Int size)
+    {
+        return new Rect3Int()
+        {
+            Offset = offset,
+            Size = size,
+        };
     }
 
     public static explicit operator Rect3Int(Rect3 rect)
     {
-        return new Rect3Int(new Vector3Int((int)rect.Size.X, (int)rect.Size.Y, (int)rect.Size.Z), new Vector3Int((int)rect.Offset.X, (int)rect.Offset.Y, (int)rect.Offset.Z));
+        return FromOffsetSize(new Vector3Int((int)rect.Offset.X, (int)rect.Offset.Y, (int)rect.Offset.Z), new Vector3Int((int)rect.Size.X, (int)rect.Size.Y, (int)rect.Size.Z));
     }
 
     public static implicit operator Rect3(Rect3Int value)
     {
-        return new Rect3(new Vector3(value.Size.X, value.Size.Y, value.Size.Z), new Vector3(value.Offset.X, value.Offset.Y, value.Offset.Z));
+        return Rect3.FromOffsetSize(new Vector3(value.Offset.X, value.Offset.Y, value.Offset.Z), new Vector3(value.Size.X, value.Size.Y, value.Size.Z));
     }
 
     public readonly bool Contains(Vector3 position)
