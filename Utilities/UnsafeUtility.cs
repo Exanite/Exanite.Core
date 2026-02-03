@@ -19,9 +19,11 @@ public static class UnsafeUtility
     /// Gets the alignment of an unmanaged type.
     /// See: https://stackoverflow.com/questions/77212211/how-do-i-find-the-alignment-of-a-struct-in-c
     /// </summary>
-    public static int AlignmentOf<T>() where T : unmanaged
+    [SkipLocalsInit]
+    public static unsafe int AlignmentOf<T>() where T : unmanaged
     {
-        return (int)Marshal.OffsetOf<AlignmentHelper<T>>(nameof(AlignmentHelper<T>.Target));
+        Unsafe.SkipInit(out AlignmentHelper<T> helper);
+        return (int)((nuint)Unsafe.AsPointer(ref helper.Target) - (nuint)Unsafe.AsPointer(ref helper));
     }
 
     internal struct AlignmentHelper<T> where T : unmanaged
