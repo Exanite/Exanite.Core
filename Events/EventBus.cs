@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Exanite.Core.Runtime;
 using Exanite.Core.Utilities;
@@ -97,9 +98,9 @@ public class EventBus : IAllEventHandler, IDisposable
         }
 
         var invoker = invokerByTypeIndex[TypeIndex.Get<T>()];
-        if (invoker is Action<T> typedInvoker)
+        if (invoker != null)
         {
-            typedInvoker.Invoke(e);
+            Unsafe.As<object, Action<T>>(ref invoker).Invoke(e);
         }
     }
 
