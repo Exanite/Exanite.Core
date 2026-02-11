@@ -70,7 +70,7 @@ public class EventBus : IAllEventHandler, IDisposable
     /// <returns>True if the handler was successfully removed.</returns>
     public bool Unregister<T>(Action<T> handler) where T : allows ref struct
     {
-        if (invokerByTypeIndex.Count <= TypeIndex.Get<T>())
+        if ((uint)TypeIndex.Get<T>() >= (uint)invokerByTypeIndex.Count)
         {
             return false;
         }
@@ -92,7 +92,7 @@ public class EventBus : IAllEventHandler, IDisposable
             return true;
         }
 
-        if (invokerByTypeIndex.Count <= TypeIndex.Get<T>())
+        if ((uint)TypeIndex.Get<T>() >= (uint)invokerByTypeIndex.Count)
         {
             return false;
         }
@@ -110,7 +110,7 @@ public class EventBus : IAllEventHandler, IDisposable
             anyHandler.OnEvent(e);
         }
 
-        if (invokerByTypeIndex.Count <= TypeIndex.Get<T>())
+        if ((uint)TypeIndex.Get<T>() >= (uint)invokerByTypeIndex.Count)
         {
             return;
         }
