@@ -15,8 +15,7 @@ namespace Exanite.Core.Events;
 public class EventBus : IAllEventHandler, IDisposable
 {
     private readonly List<IAllEventHandler> allHandlers = new();
-    private readonly Dictionary<Type, List<IAllEventHandler>> interfaceHandlersByType = new();
-    private readonly Dictionary<Type, List<object>> actionHandlersByType = new();
+    private readonly Dictionary<Type, List<object>> handlersByType = new();
 
     /// <summary>
     /// Configures all events received by this event bus to be sent to the provided handler.
@@ -37,35 +36,6 @@ public class EventBus : IAllEventHandler, IDisposable
     /// <summary>
     /// Configures events of the specified type to be sent to the provided handler.
     /// </summary>
-    public void RegisterForwardTo<T>(IAllEventHandler handler)
-    {
-        var type = typeof(T);
-
-        if (!interfaceHandlersByType.ContainsKey(typeof(T)))
-        {
-            interfaceHandlersByType.Add(type, new List<IAllEventHandler>());
-        }
-
-        interfaceHandlersByType[type].Add(handler);
-    }
-
-    /// <summary>
-    /// Removes a handler registered by <see cref="RegisterForwardTo{T}"/>.
-    /// </summary>
-    /// <returns>True if the handler was successfully removed.</returns>
-    public bool UnregisterForwardTo<T>(IAllEventHandler handler)
-    {
-        if (!interfaceHandlersByType.TryGetValue(typeof(T), out var interfaceHandlers))
-        {
-            return false;
-        }
-
-        return interfaceHandlers.Remove(handler);
-    }
-
-    /// <summary>
-    /// Configures events of the specified type to be sent to the provided handler.
-    /// </summary>
     public void Register<T>(IEventHandler<T> handler) where T : allows ref struct
     {
         Register<T>(handler.OnEvent);
@@ -78,12 +48,12 @@ public class EventBus : IAllEventHandler, IDisposable
     {
         var type = typeof(T);
 
-        if (!actionHandlersByType.ContainsKey(typeof(T)))
+        if (!handlersByType.ContainsKey(typeof(T)))
         {
-            actionHandlersByType.Add(type, new List<object>());
+            handlersByType.Add(type, new List<object>());
         }
 
-        actionHandlersByType[type].Add(handler);
+        handlersByType[type].Add(handler);
     }
 
     /// <summary>
@@ -101,12 +71,12 @@ public class EventBus : IAllEventHandler, IDisposable
     /// <returns>True if the handler was successfully removed.</returns>
     public bool Unregister<T>(Action<T> handler) where T : allows ref struct
     {
-        if (!actionHandlersByType.TryGetValue(typeof(T), out var actionHandlers))
+        if (!handlersByType.TryGetValue(typeof(T), out var handlers))
         {
             return false;
         }
 
-        return actionHandlers.Remove(handler);
+        return handlers.Remove(handler);
     }
 
     /// <summary>
@@ -121,17 +91,9 @@ public class EventBus : IAllEventHandler, IDisposable
             anyHandler.OnEvent(e);
         }
 
-        if (interfaceHandlersByType.TryGetValue(type, out var interfaceHandlers))
+        if (handlersByType.TryGetValue(type, out var handlers))
         {
-            foreach (var handler in interfaceHandlers)
-            {
-                handler.OnEvent(e);
-            }
-        }
-
-        if (actionHandlersByType.TryGetValue(type, out var actionHandlers))
-        {
-            foreach (var handler in actionHandlers)
+            foreach (var handler in handlers)
             {
                 ((Action<T>)handler).Invoke(e);
             }
@@ -144,8 +106,7 @@ public class EventBus : IAllEventHandler, IDisposable
     public void Clear()
     {
         allHandlers.Clear();
-        interfaceHandlersByType.Clear();
-        actionHandlersByType.Clear();
+        handlersByType.Clear();
     }
 
     public void Dispose()

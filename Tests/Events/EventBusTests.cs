@@ -6,30 +6,6 @@ namespace Exanite.Core.Tests.Events;
 public class EventBusTests
 {
     [Fact]
-    public void RegisterForwardTo_OnlyForwardsSpecifiedType()
-    {
-        using var eventBus = new EventBus();
-        var eventHandler = new AllEventHandler();
-
-        // Should receive event when registered
-        eventBus.RegisterForwardTo<Event>(eventHandler);
-        eventBus.Raise(new Event());
-
-        Assert.Equal(1, eventHandler.ReceiveCount);
-
-        // Should not receive unregistered event
-        eventBus.Raise(new EventB());
-
-        Assert.Equal(1, eventHandler.ReceiveCount);
-
-        // Should not receive event after unregistering
-        eventBus.UnregisterForwardTo<Event>(eventHandler);
-        eventBus.Raise(new Event());
-
-        Assert.Equal(1, eventHandler.ReceiveCount);
-    }
-
-    [Fact]
     public void Unregister_SuccessfullyUnregisters_WhenUsingInterface()
     {
         using var eventBus = new EventBus();
