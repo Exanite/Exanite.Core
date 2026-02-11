@@ -85,6 +85,7 @@ public class EventBus : IAllEventHandler, IDisposable
     /// <summary>
     /// Returns whether any event handlers are registered for the specified type.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool HasHandlers<T>() where T : allows ref struct
     {
         if (allHandlers.Count > 0)
@@ -103,6 +104,7 @@ public class EventBus : IAllEventHandler, IDisposable
     /// <summary>
     /// Raises an event.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Raise<T>(T e) where T : allows ref struct
     {
         foreach (var anyHandler in allHandlers)
