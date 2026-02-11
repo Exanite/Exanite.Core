@@ -8,7 +8,7 @@ public class EventBusTests
     [Fact]
     public void RegisterForwardTo_OnlyForwardsSpecifiedType()
     {
-        var eventBus = new EventBus();
+        using var eventBus = new EventBus();
         var eventHandler = new AllEventHandler();
 
         // Should receive event when registered
@@ -32,7 +32,7 @@ public class EventBusTests
     [Fact]
     public void Unregister_SuccessfullyUnregisters_WhenUsingInterface()
     {
-        var eventBus = new EventBus();
+        using var eventBus = new EventBus();
         var eventHandler = new EventHandler<Event>();
 
         // Should receive event when registered
