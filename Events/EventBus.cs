@@ -83,6 +83,24 @@ public class EventBus : IAllEventHandler, IDisposable
     }
 
     /// <summary>
+    /// Returns whether any event handlers are registered for the specified type.
+    /// </summary>
+    public bool HasHandlers<T>() where T : allows ref struct
+    {
+        if (allHandlers.Count > 0)
+        {
+            return true;
+        }
+
+        if (invokerByTypeIndex.Count <= TypeIndex.Get<T>())
+        {
+            return false;
+        }
+
+        return invokerByTypeIndex[TypeIndex.Get<T>()] != null;
+    }
+
+    /// <summary>
     /// Raises an event.
     /// </summary>
     public void Raise<T>(T e) where T : allows ref struct
