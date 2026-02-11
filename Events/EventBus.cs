@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using Exanite.Core.Runtime;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Events;
 
@@ -15,7 +18,7 @@ namespace Exanite.Core.Events;
 public class EventBus : IAllEventHandler, IDisposable
 {
     private readonly List<IAllEventHandler> allHandlers = new();
-    private readonly Dictionary<Type, List<object>> handlersByType = new();
+    private readonly List<List<object>?> handlersByTypeIndex = new();
 
     /// <summary>
     /// Configures all events received by this event bus to be sent to the provided handler.
@@ -46,14 +49,14 @@ public class EventBus : IAllEventHandler, IDisposable
     /// </summary>
     public void Register<T>(Action<T> handler) where T : allows ref struct
     {
-        var type = typeof(T);
-
-        if (!handlersByType.ContainsKey(typeof(T)))
+        CollectionsMarshal.SetCount(handlersByTypeIndex, TypeIndex.Get<T>() + 1);
+        ref var handlers = ref handlersByTypeIndex.AsSpan()[TypeIndex.Get<T>()];
+        if (handlers == null)
         {
-            handlersByType.Add(type, new List<object>());
+            handlers = [];
         }
 
-        handlersByType[type].Add(handler);
+        handlers.Add(handler);
     }
 
     /// <summary>
@@ -71,9 +74,15 @@ public class EventBus : IAllEventHandler, IDisposable
     /// <returns>True if the handler was successfully removed.</returns>
     public bool Unregister<T>(Action<T> handler) where T : allows ref struct
     {
-        if (!handlersByType.TryGetValue(typeof(T), out var handlers))
+        if (handlersByTypeIndex.Count <= TypeIndex.Get<T>())
         {
             return false;
+        }
+
+        ref var handlers = ref handlersByTypeIndex.AsSpan()[TypeIndex.Get<T>()];
+        if (handlers == null)
+        {
+            handlers = [];
         }
 
         return handlers.Remove(handler);
@@ -84,14 +93,18 @@ public class EventBus : IAllEventHandler, IDisposable
     /// </summary>
     public void Raise<T>(T e) where T : allows ref struct
     {
-        var type = typeof(T);
-
         foreach (var anyHandler in allHandlers)
         {
             anyHandler.OnEvent(e);
         }
 
-        if (handlersByType.TryGetValue(type, out var handlers))
+        if (handlersByTypeIndex.Count <= TypeIndex.Get<T>())
+        {
+            return;
+        }
+
+        ref var handlers = ref handlersByTypeIndex.AsSpan()[TypeIndex.Get<T>()];
+        if (handlers != null)
         {
             foreach (var handler in handlers)
             {
@@ -106,7 +119,7 @@ public class EventBus : IAllEventHandler, IDisposable
     public void Clear()
     {
         allHandlers.Clear();
-        handlersByType.Clear();
+        handlersByTypeIndex.Clear();
     }
 
     public void Dispose()
