@@ -50,8 +50,9 @@ public class EventBus : IAllEventHandler, IDisposable
     /// </summary>
     public void Register<T>(Action<T> handler) where T : allows ref struct
     {
-        CollectionsMarshal.SetCount(invokerByTypeIndex, TypeIndex.Get<T>() + 1);
-        ref var invoker = ref invokerByTypeIndex.AsSpan()[TypeIndex.Get<T>()];
+        var typeIndex = TypeIndex.Get<T>();
+        CollectionsMarshal.SetCount(invokerByTypeIndex, typeIndex + 1);
+        ref var invoker = ref invokerByTypeIndex.AsSpan()[typeIndex];
         invoker = Delegate.Combine((Action<T>?)invoker, handler);
     }
 
@@ -70,12 +71,13 @@ public class EventBus : IAllEventHandler, IDisposable
     /// <returns>True if the handler was successfully removed.</returns>
     public bool Unregister<T>(Action<T> handler) where T : allows ref struct
     {
-        if ((uint)TypeIndex.Get<T>() >= (uint)invokerByTypeIndex.Count)
+        var typeIndex = TypeIndex.Get<T>();
+        if ((uint)typeIndex >= (uint)invokerByTypeIndex.Count)
         {
             return false;
         }
 
-        ref var invoker = ref invokerByTypeIndex.AsSpan()[TypeIndex.Get<T>()];
+        ref var invoker = ref invokerByTypeIndex.AsSpan()[typeIndex];
         var originalInvoker = invoker;
         invoker = Delegate.Remove((Action<T>?)invoker, handler);
 
@@ -93,12 +95,13 @@ public class EventBus : IAllEventHandler, IDisposable
             return true;
         }
 
-        if ((uint)TypeIndex.Get<T>() >= (uint)invokerByTypeIndex.Count)
+        var typeIndex = TypeIndex.Get<T>();
+        if ((uint)typeIndex >= (uint)invokerByTypeIndex.Count)
         {
             return false;
         }
 
-        return invokerByTypeIndex[TypeIndex.Get<T>()] != null;
+        return invokerByTypeIndex[typeIndex] != null;
     }
 
     /// <summary>
@@ -112,12 +115,13 @@ public class EventBus : IAllEventHandler, IDisposable
             anyHandler.OnEvent(e);
         }
 
-        if ((uint)TypeIndex.Get<T>() >= (uint)invokerByTypeIndex.Count)
+        var typeIndex = TypeIndex.Get<T>();
+        if ((uint)typeIndex >= (uint)invokerByTypeIndex.Count)
         {
             return;
         }
 
-        var invoker = invokerByTypeIndex[TypeIndex.Get<T>()];
+        var invoker = invokerByTypeIndex[typeIndex];
         if (invoker != null)
         {
             Unsafe.As<object, Action<T>>(ref invoker).Invoke(e);
