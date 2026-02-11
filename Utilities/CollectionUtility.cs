@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Exanite.Core.Utilities;
@@ -11,6 +12,7 @@ public static class CollectionUtility
     /// <para/>
     /// This includes operations such as adding/removing elements and trimming the list.
     /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Span<T> AsSpan<T>(this List<T> list)
     {
         return CollectionsMarshal.AsSpan(list);
