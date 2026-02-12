@@ -51,7 +51,7 @@ public class EventBus : IAllEventHandler, IDisposable
     public void Register<T>(Action<T> handler) where T : allows ref struct
     {
         var typeIndex = TypeIndex.Get<T>();
-        CollectionsMarshal.SetCount(invokerByTypeIndex, typeIndex + 1);
+        CollectionsMarshal.SetCount(invokerByTypeIndex, int.Max(invokerByTypeIndex.Count, typeIndex + 1));
         ref var invoker = ref invokerByTypeIndex.AsSpan()[typeIndex];
         invoker = Delegate.Combine((Action<T>?)invoker, handler);
     }
