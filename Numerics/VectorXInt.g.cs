@@ -81,12 +81,12 @@ public struct Vector2Int : IEquatable<Vector2Int>, IFormattable
 
     public static Vector2Int operator /(Vector2Int value, int scalar)
     {
-        return new Vector2Int(value.X * scalar, value.Y * scalar);
+        return new Vector2Int(value.X / scalar, value.Y / scalar);
     }
 
     public static Vector2 operator /(Vector2Int value, float scalar)
     {
-        return new Vector2(value.X * scalar, value.Y * scalar);
+        return new Vector2(value.X / scalar, value.Y / scalar);
     }
 
     public static Vector2Int operator +(Vector2Int left, Vector2Int right)
