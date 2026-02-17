@@ -14,8 +14,8 @@ public static class TypeIndex
         return TypeIndex<T>.Value;
     }
 
-    private static int Counter = -1;
-    internal static int GetNext() => Interlocked.Increment(ref Counter);
+    private static int PreviousId = -1;
+    internal static int GetNext() => Interlocked.Increment(ref PreviousId);
 }
 
 /// <summary>
