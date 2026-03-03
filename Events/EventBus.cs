@@ -50,7 +50,7 @@ public class EventBus : IAllEventHandler, IDisposable
     /// </summary>
     public void Register<T>(Action<T> handler) where T : allows ref struct
     {
-        var typeIndex = TypeIndex.Get<T>();
+        var typeIndex = TypeIndex<EventBus>.Get<T>();
         CollectionsMarshal.SetCount(invokerByTypeIndex, int.Max(invokerByTypeIndex.Count, typeIndex + 1));
         ref var invoker = ref invokerByTypeIndex.AsSpan()[typeIndex];
         invoker = Delegate.Combine((Action<T>?)invoker, handler);
@@ -71,7 +71,7 @@ public class EventBus : IAllEventHandler, IDisposable
     /// <returns>True if the handler was successfully removed.</returns>
     public bool Unregister<T>(Action<T> handler) where T : allows ref struct
     {
-        var typeIndex = TypeIndex.Get<T>();
+        var typeIndex = TypeIndex<EventBus>.Get<T>();
         if ((uint)typeIndex >= (uint)invokerByTypeIndex.Count)
         {
             return false;
@@ -95,7 +95,7 @@ public class EventBus : IAllEventHandler, IDisposable
             return true;
         }
 
-        var typeIndex = TypeIndex.Get<T>();
+        var typeIndex = TypeIndex<EventBus>.Get<T>();
         if ((uint)typeIndex >= (uint)invokerByTypeIndex.Count)
         {
             return false;
@@ -115,7 +115,7 @@ public class EventBus : IAllEventHandler, IDisposable
             anyHandler.OnEvent(e);
         }
 
-        var typeIndex = TypeIndex.Get<T>();
+        var typeIndex = TypeIndex<EventBus>.Get<T>();
         if ((uint)typeIndex >= (uint)invokerByTypeIndex.Count)
         {
             return;

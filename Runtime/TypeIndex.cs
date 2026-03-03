@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Exanite.Core.Runtime;
 
-public abstract class TypeIndex : ITypeIndex
+public abstract class TypeIndex<TScope>
 {
     private TypeIndex() {}
 
@@ -13,17 +13,20 @@ public abstract class TypeIndex : ITypeIndex
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int Get<T>() where T : allows ref struct
     {
-        return TypeIndex<T>.Value;
+        return TypeIndex<TScope, T>.Value;
     }
 
-    private static int PreviousId = -1;
+    /// <summary>
+    /// 1 is the first valid id.
+    /// </summary>
+    private static int PreviousId = 0;
     internal static int GetNext() => Interlocked.Increment(ref PreviousId);
 }
 
 /// <summary>
 /// Assigns a unique index to each type.
 /// </summary>
-internal static class TypeIndex<T> where T : allows ref struct
+internal static class TypeIndex<TScope, T> where T : allows ref struct
 {
     /// <summary>
     /// The unique index for <typeparamref name="T"/>.
@@ -31,5 +34,5 @@ internal static class TypeIndex<T> where T : allows ref struct
     /// <remarks>
     /// This property is cached, making repeated accesses very efficient.
     /// </remarks>
-    public static readonly int Value = TypeIndex.GetNext();
+    public static readonly int Value = TypeIndex<TScope>.GetNext();
 }
