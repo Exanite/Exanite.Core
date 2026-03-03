@@ -17,7 +17,7 @@ namespace Exanite.Core.Runtime;
 /// <typeparam name="TValue">The type of stored values.</typeparam>
 public class TypeIndexedList<TScope, TValue>
 {
-    private readonly List<TValue> valuesByTypeIndex = new();
+    private readonly List<TValue?> valuesByTypeIndex = new();
 
     /// <summary>
     /// Returns whether this list has a slot for the specified type.
@@ -38,7 +38,7 @@ public class TypeIndexedList<TScope, TValue>
     /// <remarks>
     /// This can resize the internal list.
     /// </remarks>
-    public ref TValue Get<TType>() where TType : allows ref struct
+    public ref TValue? Get<TType>() where TType : allows ref struct
     {
         var typeIndex = TypeIndex<TScope>.Get<TType>();
         CollectionsMarshal.SetCount(valuesByTypeIndex, int.Max(valuesByTypeIndex.Count, typeIndex + 1));
