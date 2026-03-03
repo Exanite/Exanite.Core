@@ -17,9 +17,9 @@ public abstract class TypeIndex<TScope>
     }
 
     /// <summary>
-    /// 1 is the first valid index.
+    /// 0 is the first valid index.
     /// </summary>
-    private static int PreviousIndex = 0;
+    private static int PreviousIndex = -1;
     internal static int GetNext() => Interlocked.Increment(ref PreviousIndex);
 }
 
