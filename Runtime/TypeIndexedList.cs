@@ -13,9 +13,7 @@ namespace Exanite.Core.Runtime;
 /// The backing storage is a list that grows to accommodate the highest stored index.
 /// In most usage cases, this backing list will be sparse.
 /// </remarks>
-/// <typeparam name="TScope">See <see cref="TypeIndex{TScope}"/> for information about <see cref="TScope"/>.</typeparam>
-/// <typeparam name="TValue">The type of stored values.</typeparam>
-public class TypeIndexedList<TScope, TValue>
+public class TypeIndexedList<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
 {
     private readonly List<TValue?> valuesByTypeIndex = new();
 
@@ -78,7 +76,7 @@ public class TypeIndexedList<TScope, TValue>
     /// </remarks>
     public int GetIndex<TType>() where TType : allows ref struct
     {
-        return TypeIndex<TScope>.Get<TType>();
+        return TTypeIndex.Get<TType>();
     }
 
     /// <summary>

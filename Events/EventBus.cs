@@ -17,7 +17,7 @@ namespace Exanite.Core.Events;
 public class EventBus : IAllEventHandler, IDisposable
 {
     private readonly List<IAllEventHandler> allHandlers = new();
-    private readonly TypeIndexedList<EventBus, object?> invokerByTypeIndex = new();
+    private readonly TypeIndexedList<TypeIndex<TypeIndexScope>, object?> invokerByTypeIndex = new();
 
     /// <summary>
     /// Configures all events received by this event bus to be sent to the provided handler.
@@ -139,4 +139,6 @@ public class EventBus : IAllEventHandler, IDisposable
     {
         Raise(e);
     }
+
+    private struct TypeIndexScope;
 }
