@@ -19,7 +19,7 @@ namespace Exanite.Core.Events;
 public class EventBus : IAllEventHandler, IDisposable
 {
     private readonly List<IAllEventHandler> allHandlers = new();
-    private readonly List<object?> invokerByTypeIndex = new();
+    private readonly TypeIndexedList<EventBus, object?> invokerByTypeIndex = new();
 
     /// <summary>
     /// Configures all events received by this event bus to be sent to the provided handler.
@@ -50,9 +50,7 @@ public class EventBus : IAllEventHandler, IDisposable
     /// </summary>
     public void Register<T>(Action<T> handler) where T : allows ref struct
     {
-        var typeIndex = TypeIndex<EventBus>.Get<T>();
-        CollectionsMarshal.SetCount(invokerByTypeIndex, int.Max(invokerByTypeIndex.Count, typeIndex + 1));
-        ref var invoker = ref invokerByTypeIndex.AsSpan()[typeIndex];
+        ref var invoker = ref invokerByTypeIndex.Get<T>();
         invoker = Delegate.Combine((Action<T>?)invoker, handler);
     }
 
@@ -71,13 +69,12 @@ public class EventBus : IAllEventHandler, IDisposable
     /// <returns>True if the handler was successfully removed.</returns>
     public bool Unregister<T>(Action<T> handler) where T : allows ref struct
     {
-        var typeIndex = TypeIndex<EventBus>.Get<T>();
-        if ((uint)typeIndex >= (uint)invokerByTypeIndex.Count)
+        if (!invokerByTypeIndex.IsInBounds<T>())
         {
             return false;
         }
 
-        ref var invoker = ref invokerByTypeIndex.AsSpan()[typeIndex];
+        ref var invoker = ref invokerByTypeIndex.Get<T>();
         var originalInvoker = invoker;
         invoker = Delegate.Remove((Action<T>?)invoker, handler);
 
@@ -95,13 +92,12 @@ public class EventBus : IAllEventHandler, IDisposable
             return true;
         }
 
-        var typeIndex = TypeIndex<EventBus>.Get<T>();
-        if ((uint)typeIndex >= (uint)invokerByTypeIndex.Count)
+        if (!invokerByTypeIndex.IsInBounds<T>())
         {
             return false;
         }
 
-        return invokerByTypeIndex[typeIndex] != null;
+        return invokerByTypeIndex.Get<T>() != null;
     }
 
     /// <summary>
@@ -115,13 +111,12 @@ public class EventBus : IAllEventHandler, IDisposable
             anyHandler.OnEvent(e);
         }
 
-        var typeIndex = TypeIndex<EventBus>.Get<T>();
-        if ((uint)typeIndex >= (uint)invokerByTypeIndex.Count)
+        if (!invokerByTypeIndex.IsInBounds<T>())
         {
             return;
         }
 
-        var invoker = invokerByTypeIndex[typeIndex];
+        var invoker = invokerByTypeIndex.Get<T>();
         if (invoker != null)
         {
             Unsafe.As<object, Action<T>>(ref invoker).Invoke(e);

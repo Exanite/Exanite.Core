@@ -3,6 +3,15 @@ using System.Threading;
 
 namespace Exanite.Core.Runtime;
 
+/// <summary>
+/// Can be used to acquire sequential indexes unique to each input type.
+/// The first valid index starts at 1.
+/// </summary>
+/// <typeparam name="TScope">
+/// The type used as the scope for the generated indices.
+/// Because the indices are global and often used to index lists (see <see cref="TypeIndexedList{TScope, TValue}"/>),
+/// this can be used to avoid polluting the indices with unrelated types.
+/// </typeparam>
 public abstract class TypeIndex<TScope>
 {
     private TypeIndex() {}
