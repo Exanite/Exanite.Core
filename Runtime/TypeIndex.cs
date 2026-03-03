@@ -5,7 +5,7 @@ namespace Exanite.Core.Runtime;
 
 /// <summary>
 /// Can be used to acquire sequential indexes unique to each input type.
-/// The first valid index starts at 1.
+/// The first index starts at 0 and grows consecutively.
 /// </summary>
 /// <typeparam name="TScope">
 /// The type used as the scope for the generated indices.
