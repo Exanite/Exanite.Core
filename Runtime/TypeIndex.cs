@@ -17,10 +17,10 @@ public abstract class TypeIndex<TScope>
     }
 
     /// <summary>
-    /// 1 is the first valid id.
+    /// 1 is the first valid index.
     /// </summary>
-    private static int PreviousId = 0;
-    internal static int GetNext() => Interlocked.Increment(ref PreviousId);
+    private static int PreviousIndex = 0;
+    internal static int GetNext() => Interlocked.Increment(ref PreviousIndex);
 }
 
 /// <summary>
