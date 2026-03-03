@@ -28,8 +28,31 @@ public class TypeIndexedList<TScope, TValue>
     /// </remarks>
     public bool IsInBounds<TType>() where TType : allows ref struct
     {
-        var typeIndex = TypeIndex<TScope>.Get<TType>();
+        var typeIndex = GetIndex<TType>();
         return (uint)typeIndex < (uint)valuesByTypeIndex.Count;
+    }
+
+    /// <summary>
+    /// Returns whether this list has a slot for the specified index.
+    /// This does not check whether the value stored in the slot is null or default.
+    /// </summary>
+    /// <remarks>
+    /// This will not resize the internal list.
+    /// </remarks>
+    public bool IsInBounds(int index)
+    {
+        return (uint)index < (uint)valuesByTypeIndex.Count;
+    }
+
+    /// <summary>
+    /// Returns the stored value at the specified index.
+    /// </summary>
+    /// <remarks>
+    /// This will not resize the internal list.
+    /// </remarks>
+    public ref TValue? Get(int index)
+    {
+        return ref valuesByTypeIndex.AsSpan()[index];
     }
 
     /// <summary>
@@ -40,10 +63,22 @@ public class TypeIndexedList<TScope, TValue>
     /// </remarks>
     public ref TValue? Get<TType>() where TType : allows ref struct
     {
-        var typeIndex = TypeIndex<TScope>.Get<TType>();
+        var typeIndex = GetIndex<TType>();
         CollectionsMarshal.SetCount(valuesByTypeIndex, int.Max(valuesByTypeIndex.Count, typeIndex + 1));
 
         return ref valuesByTypeIndex.AsSpan()[typeIndex];
+    }
+
+    /// <summary>
+    /// Gets the corresponding index for the specified type.
+    /// This index can be out of bounds.
+    /// </summary>
+    /// <remarks>
+    /// This will not resize the internal list.
+    /// </remarks>
+    public int GetIndex<TType>() where TType : allows ref struct
+    {
+        return TypeIndex<TScope>.Get<TType>();
     }
 
     /// <summary>
