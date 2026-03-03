@@ -3,8 +3,10 @@ using System.Threading;
 
 namespace Exanite.Core.Runtime;
 
-public static class TypeIndex
+public abstract class TypeIndex : ITypeIndex
 {
+    private TypeIndex() {}
+
     /// <summary>
     /// The unique index for <typeparamref name="T"/>.
     /// </summary>
