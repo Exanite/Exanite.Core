@@ -5,7 +5,7 @@ namespace Exanite.Core.Runtime;
 
 /// <summary>
 /// Can be used to acquire sequential indexes unique to each input type.
-/// The first index starts at 0 and grows consecutively.
+/// The first index starts at 0 and grows sequentially for new types accessed.
 /// </summary>
 /// <typeparam name="TScope">
 /// The type used as the scope for the generated indices.
@@ -18,6 +18,7 @@ public abstract class TypeIndex<TScope>
 
     /// <summary>
     /// The unique index for <typeparamref name="T"/>.
+    /// The first index starts at 0 and grows sequentially for new types accessed.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int Get<T>() where T : allows ref struct
