@@ -5,7 +5,7 @@ namespace Exanite.Core.Numerics;
 
 /// <summary>
 /// Storage struct useful for explicitly storing a color in linear format.
-/// Primary recommended use is for interop and other scenarios requiring the byte-level format to be in linear.
+/// Primary recommended use is for interop and other scenarios requiring the underlying numeric format to be in linear.
 /// <br/>
 /// See <see cref="Color"/> for a general color representation struct and corresponding APIs.
 /// </summary>
