@@ -116,6 +116,7 @@ public class VectorIntGenerator
                 AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "-");
                 AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "*");
                 AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "/");
+                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "%");
 
                 AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "<<");
                 AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, ">>");

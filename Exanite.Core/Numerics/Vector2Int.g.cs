@@ -110,6 +110,11 @@ public partial struct Vector2Int : IEquatable<Vector2Int>, IFormattable
         return new Vector2Int(left.X / right.X, left.Y / right.Y);
     }
 
+    public static Vector2Int operator %(Vector2Int left, Vector2Int right)
+    {
+        return new Vector2Int(left.X % right.X, left.Y % right.Y);
+    }
+
     public static Vector2Int operator <<(Vector2Int left, Vector2Int right)
     {
         return new Vector2Int(left.X << right.X, left.Y << right.Y);

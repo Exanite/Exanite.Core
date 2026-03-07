@@ -119,6 +119,11 @@ public partial struct Vector3Int : IEquatable<Vector3Int>, IFormattable
         return new Vector3Int(left.X / right.X, left.Y / right.Y, left.Z / right.Z);
     }
 
+    public static Vector3Int operator %(Vector3Int left, Vector3Int right)
+    {
+        return new Vector3Int(left.X % right.X, left.Y % right.Y, left.Z % right.Z);
+    }
+
     public static Vector3Int operator <<(Vector3Int left, Vector3Int right)
     {
         return new Vector3Int(left.X << right.X, left.Y << right.Y, left.Z << right.Z);
