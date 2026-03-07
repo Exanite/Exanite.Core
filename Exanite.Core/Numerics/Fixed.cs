@@ -28,6 +28,30 @@ public readonly struct Fixed : INumber<Fixed>
         this.value = value;
     }
 
+    // Conversion: Safe - No precision loss possible
+    public static implicit operator Fixed(int value) => new((long)value << Shift);
+    public static implicit operator Fixed(short value) => new((long)value << Shift);
+    public static implicit operator Fixed(byte value) => new((long)value << Shift);
+
+    // Conversion: Potentially unsafe - Can exceed 48-bit integer range
+    public static explicit operator Fixed(long value) => new(value << Shift);
+
+    // Conversion: Very unsafe - Non-deterministic
+    // Consider using FromFraction instead
+    public static explicit operator Fixed(float value) => CreateChecked(value);
+    public static explicit operator Fixed(double value) => CreateChecked(value);
+
+    // Conversion: Safe - To primitives
+    public static explicit operator int(Fixed value) => (int)(value.value >> Shift);
+    public static explicit operator long(Fixed value) => value.value >> Shift;
+    public static explicit operator float(Fixed value) => (float)value.value / OneValue;
+    public static explicit operator double(Fixed value) => (double)value.value / OneValue;
+
+    public static Fixed FromFraction(Fixed numerator, Fixed denominator)
+    {
+        return numerator / denominator;
+    }
+
     // Operators
     public static Fixed operator +(Fixed left, Fixed right) => new(left.value + right.value);
     public static Fixed operator -(Fixed left, Fixed right) => new(left.value - right.value);
