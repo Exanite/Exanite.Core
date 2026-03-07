@@ -10,7 +10,11 @@ public readonly struct Fixed :
     IEquatable<Fixed>,
     IComparable<Fixed>,
     IAdditiveIdentity<Fixed, Fixed>,
-    IMultiplicativeIdentity<Fixed, Fixed>
+    IMultiplicativeIdentity<Fixed, Fixed>,
+    IAdditionOperators<Fixed, Fixed, Fixed>,
+    ISubtractionOperators<Fixed, Fixed, Fixed>,
+    IMultiplyOperators<Fixed, Fixed, Fixed>,
+    IDivisionOperators<Fixed, Fixed, Fixed>
 {
     // Constants
     private const int Shift = 16;
@@ -27,6 +31,19 @@ public readonly struct Fixed :
     {
         this.value = value;
     }
+
+    // Operators
+    // TODO: Use Int128 to avoid overflows
+    public static Fixed operator +(Fixed left, Fixed right) => new(left.value + right.value);
+    public static Fixed operator -(Fixed left, Fixed right) => new(left.value - right.value);
+    public static Fixed operator *(Fixed left, Fixed right) => new((left.value * right.value) >> Shift);
+    public static Fixed operator /(Fixed left, Fixed right) => new((left.value << Shift) / right.value);
+    public static Fixed operator %(Fixed left, Fixed right) => new(left.value % right.value);
+
+    public static Fixed operator +(Fixed value) => value;
+    public static Fixed operator -(Fixed value) => new(-value.value);
+    public static Fixed operator --(Fixed value) => value - One;
+    public static Fixed operator ++(Fixed value) => value + One;
 
     // Comparisons
     public static bool operator ==(Fixed left, Fixed right) => left.value == right.value;
