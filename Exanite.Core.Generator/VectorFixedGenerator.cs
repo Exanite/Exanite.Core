@@ -15,6 +15,7 @@ public class VectorFixedGenerator
         {
             var components = AllComponents.Take(componentCount).ToArray();
             var vectorFixedType = $"Vector{componentCount}Fixed";
+            var vectorIntType = $"Vector{componentCount}Int";
             var vectorFloatType = $"Vector{componentCount}";
 
             var builder = new IndentedStringBuilder();
@@ -95,17 +96,34 @@ public class VectorFixedGenerator
                     }
                 }
 
-                // builder.AppendSeparation();
-                // using (builder.EnterScope($"public static explicit operator {vectorFixedType}({vectorFloatType} value)"))
-                // {
-                //     builder.AppendLine($"return new {vectorFixedType}({string.Join(", ", components.Select(c => $"(int)value.{c}"))});");
-                // }
-                //
-                // builder.AppendSeparation();
-                // using (builder.EnterScope($"public static implicit operator {vectorFloatType}({vectorFixedType} value)"))
-                // {
-                //     builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", components.Select(c => $"value.{c}"))});");
-                // }
+                builder.AppendSeparation();
+                builder.AppendLine("// Conversion: Safe - No precision loss possible");
+                using (builder.EnterScope($"public static implicit operator {vectorFixedType}({vectorIntType} value)"))
+                {
+                    builder.AppendLine($"return new {vectorFixedType}({string.Join(", ", components.Select(c => $"value.{c}"))});");
+                }
+
+                builder.AppendSeparation();
+                builder.AppendLine("// Conversion: Unsafe - Non-deterministic");
+                builder.AppendLine("// Consider using FromFraction instead");
+                using (builder.EnterScope($"public static explicit operator {vectorFixedType}({vectorFloatType} value)"))
+                {
+                    builder.AppendLine($"return new {vectorFixedType}({string.Join(", ", components.Select(c => $"(Fixed)value.{c}"))});");
+                }
+
+                builder.AppendSeparation();
+                builder.AppendLine("// Conversion: Loss of fraction");
+                using (builder.EnterScope($"public static explicit operator {vectorIntType}({vectorFixedType} value)"))
+                {
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", components.Select(c => $"(int)value.{c}"))});");
+                }
+
+                builder.AppendSeparation();
+                builder.AppendLine("// Conversion: Loss of precision");
+                using (builder.EnterScope($"public static explicit operator {vectorFloatType}({vectorFixedType} value)"))
+                {
+                    builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", components.Select(c => $"(float)value.{c}"))});");
+                }
                 //
                 // AppendScalarOperation(builder, components, vectorFixedType, "int", vectorFixedType, "*");
                 // AppendScalarOperation(builder, components, vectorFixedType, "float", vectorFloatType, "*");

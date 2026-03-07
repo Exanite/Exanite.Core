@@ -36,14 +36,16 @@ public readonly struct Fixed : INumber<Fixed>
     // Conversion: Potentially unsafe - Can exceed 48-bit integer range
     public static explicit operator Fixed(long value) => new(value << Shift);
 
-    // Conversion: Very unsafe - Non-deterministic
+    // Conversion: Unsafe - Non-deterministic
     // Consider using FromFraction instead
     public static explicit operator Fixed(float value) => CreateChecked(value);
     public static explicit operator Fixed(double value) => CreateChecked(value);
 
-    // Conversion: Safe - To primitives
+    // Conversion: Loss of fraction
     public static explicit operator int(Fixed value) => (int)(value.value >> Shift);
     public static explicit operator long(Fixed value) => value.value >> Shift;
+
+    // Conversion: Loss of precision
     public static explicit operator float(Fixed value) => (float)value.value / OneValue;
     public static explicit operator double(Fixed value) => (double)value.value / OneValue;
 

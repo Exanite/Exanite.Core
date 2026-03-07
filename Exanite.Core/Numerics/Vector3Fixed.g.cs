@@ -68,4 +68,29 @@ public partial struct Vector3Fixed
         Y = y;
         Z = z;
     }
+
+    // Conversion: Safe - No precision loss possible
+    public static implicit operator Vector3Fixed(Vector3Int value)
+    {
+        return new Vector3Fixed(value.X, value.Y, value.Z);
+    }
+
+    // Conversion: Unsafe - Non-deterministic
+    // Consider using FromFraction instead
+    public static explicit operator Vector3Fixed(Vector3 value)
+    {
+        return new Vector3Fixed((Fixed)value.X, (Fixed)value.Y, (Fixed)value.Z);
+    }
+
+    // Conversion: Loss of fraction
+    public static explicit operator Vector3Int(Vector3Fixed value)
+    {
+        return new Vector3Int((int)value.X, (int)value.Y, (int)value.Z);
+    }
+
+    // Conversion: Loss of precision
+    public static explicit operator Vector3(Vector3Fixed value)
+    {
+        return new Vector3((float)value.X, (float)value.Y, (float)value.Z);
+    }
 }

@@ -59,4 +59,29 @@ public partial struct Vector2Fixed
         X = x;
         Y = y;
     }
+
+    // Conversion: Safe - No precision loss possible
+    public static implicit operator Vector2Fixed(Vector2Int value)
+    {
+        return new Vector2Fixed(value.X, value.Y);
+    }
+
+    // Conversion: Unsafe - Non-deterministic
+    // Consider using FromFraction instead
+    public static explicit operator Vector2Fixed(Vector2 value)
+    {
+        return new Vector2Fixed((Fixed)value.X, (Fixed)value.Y);
+    }
+
+    // Conversion: Loss of fraction
+    public static explicit operator Vector2Int(Vector2Fixed value)
+    {
+        return new Vector2Int((int)value.X, (int)value.Y);
+    }
+
+    // Conversion: Loss of precision
+    public static explicit operator Vector2(Vector2Fixed value)
+    {
+        return new Vector2((float)value.X, (float)value.Y);
+    }
 }
