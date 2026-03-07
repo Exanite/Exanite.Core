@@ -26,7 +26,7 @@ public record struct Radians
 
     public static implicit operator Radians(Angle angle)
     {
-        return new Radians(angle.Radians.Value);
+        return new Radians(angle.To(AngleType.Radians));
     }
 
     public static implicit operator Radians(float angle)

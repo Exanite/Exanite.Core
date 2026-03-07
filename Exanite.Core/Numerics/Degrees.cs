@@ -26,7 +26,7 @@ public record struct Degrees
 
     public static implicit operator Degrees(Angle angle)
     {
-        return angle.Degrees;
+        return new Degrees(angle.To(AngleType.Degrees));
     }
 
     public static implicit operator Degrees(float angle)
