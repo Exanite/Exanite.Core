@@ -21,6 +21,6 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Exanite.Core\Exanite.Core.csproj"/>
+    <ProjectReference Include="..\..\Exanite.Core\Exanite.Core\Exanite.Core.csproj"/>
   </ItemGroup>
 </Project>
