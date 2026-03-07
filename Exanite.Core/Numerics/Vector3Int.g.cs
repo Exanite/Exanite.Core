@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace Exanite.Core.Numerics;
 
-public struct Vector3Int : IEquatable<Vector3Int>, IFormattable
+public partial struct Vector3Int : IEquatable<Vector3Int>, IFormattable
 {
     /// <inheritdoc cref="Vector3.X"/>
     public int X;

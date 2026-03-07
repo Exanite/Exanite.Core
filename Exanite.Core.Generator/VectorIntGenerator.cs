@@ -28,7 +28,7 @@ public class VectorIntGenerator
             builder.AppendLine("namespace Exanite.Core.Numerics;");
 
             builder.AppendSeparation();
-            using (builder.EnterScope($"public struct {vectorIntType} : IEquatable<{vectorIntType}>, IFormattable"))
+            using (builder.EnterScope($"public partial struct {vectorIntType} : IEquatable<{vectorIntType}>, IFormattable"))
             {
                 foreach (var component in components)
                 {
