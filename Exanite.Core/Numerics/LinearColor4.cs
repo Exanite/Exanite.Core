@@ -31,6 +31,16 @@ public record struct LinearColor4
         return new LinearColor4(color.To(ColorType.Linear));
     }
 
+    public static implicit operator LinearColor4(Vector4 angle)
+    {
+        return new LinearColor4(angle);
+    }
+
+    public static implicit operator Vector4(LinearColor4 angle)
+    {
+        return angle.Value;
+    }
+
     public readonly override string ToString()
     {
         return $"{Value} (Linear)";

@@ -30,6 +30,16 @@ public record struct SrgbColor4
         return new SrgbColor4(color.To(ColorType.Srgb));
     }
 
+    public static implicit operator SrgbColor4(Vector4 angle)
+    {
+        return new SrgbColor4(angle);
+    }
+
+    public static implicit operator Vector4(SrgbColor4 angle)
+    {
+        return angle.Value;
+    }
+
     public readonly override string ToString()
     {
         return $"{Value} (sRGB)";

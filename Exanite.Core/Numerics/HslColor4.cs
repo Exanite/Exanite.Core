@@ -30,6 +30,16 @@ public record struct HslColor4
         return new HslColor4(color.To(ColorType.Hsl));
     }
 
+    public static implicit operator HslColor4(Vector4 angle)
+    {
+        return new HslColor4(angle);
+    }
+
+    public static implicit operator Vector4(HslColor4 angle)
+    {
+        return angle.Value;
+    }
+
     public readonly override string ToString()
     {
         return $"{Value} (HSL)";

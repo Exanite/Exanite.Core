@@ -29,6 +29,16 @@ public record struct Radians
         return new Radians(angle.Radians.Value);
     }
 
+    public static implicit operator Radians(float angle)
+    {
+        return new Radians(angle);
+    }
+
+    public static implicit operator float(Radians angle)
+    {
+        return angle.Value;
+    }
+
     public readonly override string ToString()
     {
         return $"{Value} radians";

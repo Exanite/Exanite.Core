@@ -29,6 +29,16 @@ public record struct Degrees
         return angle.Degrees;
     }
 
+    public static implicit operator Degrees(float angle)
+    {
+        return new Degrees(angle);
+    }
+
+    public static implicit operator float(Degrees angle)
+    {
+        return angle.Value;
+    }
+
     public readonly override string ToString()
     {
         return $"{Value} degrees";

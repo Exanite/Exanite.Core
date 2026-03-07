@@ -31,6 +31,16 @@ public record struct LinearColor3
         return new LinearColor3(color.To(ColorType.Linear).Xyz());
     }
 
+    public static implicit operator LinearColor3(Vector3 angle)
+    {
+        return new LinearColor3(angle);
+    }
+
+    public static implicit operator Vector3(LinearColor3 angle)
+    {
+        return angle.Value;
+    }
+
     public readonly override string ToString()
     {
         return $"{Value} (Linear)";

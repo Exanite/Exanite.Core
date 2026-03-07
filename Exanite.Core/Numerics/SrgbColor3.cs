@@ -31,6 +31,16 @@ public record struct SrgbColor3
         return new SrgbColor3(color.To(ColorType.Srgb).Xyz());
     }
 
+    public static implicit operator SrgbColor3(Vector3 angle)
+    {
+        return new SrgbColor3(angle);
+    }
+
+    public static implicit operator Vector3(SrgbColor3 angle)
+    {
+        return angle.Value;
+    }
+
     public readonly override string ToString()
     {
         return $"{Value} (sRGB)";
