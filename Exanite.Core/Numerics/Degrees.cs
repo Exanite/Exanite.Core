@@ -12,7 +12,7 @@ namespace Exanite.Core.Numerics;
 public record struct Degrees
 {
     public float Value;
-    public Angle Color => Angle.FromDegrees(Value);
+    public Angle Angle => Angle.FromDegrees(Value);
 
     public Degrees(float value)
     {
