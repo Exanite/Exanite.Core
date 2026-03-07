@@ -4,7 +4,7 @@ namespace Exanite.Core.Numerics;
 
 /// <summary>
 /// Storage struct useful for explicitly storing an angle in radians format.
-/// Primary recommended use is for interop and other scenarios requiring the byte-level format to be in radians.
+/// Primary recommended use is for interop and other scenarios requiring the underlying numeric format to be in radians.
 /// <br/>
 /// See <see cref="Numerics.Angle"/> for a general angle representation struct and corresponding APIs.
 /// </summary>

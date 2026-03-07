@@ -6,7 +6,7 @@ namespace Exanite.Core.Numerics;
 
 /// <summary>
 /// Storage struct useful for explicitly storing a color in HSL format.
-/// Primary recommended use is for interop and other scenarios requiring the byte-level format to be in HSL.
+/// Primary recommended use is for interop and other scenarios requiring the underlying numeric format to be in HSL.
 /// <br/>
 /// See <see cref="Numerics.Color"/> for a general color representation struct and corresponding APIs.
 /// </summary>
