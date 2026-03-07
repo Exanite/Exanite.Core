@@ -33,6 +33,8 @@ public readonly struct Fixed :
     public static Fixed AdditiveIdentity => Zero;
     public static Fixed MultiplicativeIdentity => One;
 
+    // public static int Radix => CreateChecked(2);
+
     private readonly long value;
 
     private Fixed(long value)
@@ -67,25 +69,30 @@ public readonly struct Fixed :
     public bool Equals(Fixed other) => value == other.value;
     public override int GetHashCode() => value.GetHashCode();
 
-    // public static int Radix { get; }
+    // Properties
+    public static bool IsZero(Fixed value) => value.value == 0;
+    public static bool IsPositive(Fixed value) => value.value >= 0; // Int32.IsPositive uses >=
+    public static bool IsNegative(Fixed value) => value.value < 0;
+
+    public static bool IsInteger(Fixed value) => (value.value & (OneValue - 1)) == 0;
+    public static bool IsEvenInteger(Fixed value) => IsInteger(value) && (value.value >> Shift) % 2 == 0;
+    public static bool IsOddInteger(Fixed value) => IsInteger(value) && (value.value >> Shift) % 2 == 1;
+
+    public static bool IsRealNumber(Fixed value) => true;
+    public static bool IsComplexNumber(Fixed value) => false;
+    public static bool IsImaginaryNumber(Fixed value) => false;
+
+    public static bool IsFinite(Fixed value) => true;
+    public static bool IsInfinity(Fixed value) => false;
+    public static bool IsPositiveInfinity(Fixed value) => false;
+    public static bool IsNegativeInfinity(Fixed value) => false;
+
+    public static bool IsNormal(Fixed value) => value.value != 0;
+    public static bool IsCanonical(Fixed value) => true;
+    public static bool IsNaN(Fixed value) => false;
+    public static bool IsSubnormal(Fixed value) => false;
+
     // public static Fixed Abs(Fixed value);
-    // public static bool IsCanonical(Fixed value);
-    // public static bool IsComplexNumber(Fixed value);
-    // public static bool IsEvenInteger(Fixed value);
-    // public static bool IsFinite(Fixed value);
-    // public static bool IsImaginaryNumber(Fixed value);
-    // public static bool IsInfinity(Fixed value);
-    // public static bool IsInteger(Fixed value);
-    // public static bool IsNaN(Fixed value);
-    // public static bool IsNegative(Fixed value);
-    // public static bool IsNegativeInfinity(Fixed value);
-    // public static bool IsNormal(Fixed value);
-    // public static bool IsOddInteger(Fixed value);
-    // public static bool IsPositive(Fixed value);
-    // public static bool IsPositiveInfinity(Fixed value);
-    // public static bool IsRealNumber(Fixed value);
-    // public static bool IsSubnormal(Fixed value);
-    // public static bool IsZero(Fixed value);
     // public static Fixed MaxMagnitude(Fixed x, Fixed y);
     // public static Fixed MaxMagnitudeNumber(Fixed x, Fixed y);
     // public static Fixed MinMagnitude(Fixed x, Fixed y);
