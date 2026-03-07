@@ -5,7 +5,7 @@ using Exanite.Core.Utilities;
 namespace Exanite.Core.Runtime;
 
 /// <summary>
-/// A list indexed by the type.
+/// A table indexed by the type.
 /// Can be used as a high performance replacement for <see cref="Dictionary{Type, TValue}"/>
 /// in cases where all accesses are strongly typed.
 /// </summary>
@@ -13,7 +13,7 @@ namespace Exanite.Core.Runtime;
 /// The backing storage is a list that grows to accommodate the highest stored index.
 /// In most usage cases, this backing list will be sparse.
 /// </remarks>
-public class TypeIndexedList<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
+public class TypeIndexedTable<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
 {
     private readonly List<TValue?> valuesByTypeIndex = new();
 
@@ -46,10 +46,11 @@ public class TypeIndexedList<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
     /// Returns the stored value at the specified index.
     /// </summary>
     /// <remarks>
-    /// This will not resize the internal list.
+    /// This can resize the internal list.
     /// </remarks>
     public ref TValue? Get(int index)
     {
+        CollectionsMarshal.SetCount(valuesByTypeIndex, int.Max(valuesByTypeIndex.Count, index + 1));
         return ref valuesByTypeIndex.AsSpan()[index];
     }
 
@@ -63,7 +64,6 @@ public class TypeIndexedList<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
     {
         var typeIndex = GetIndex<TType>();
         CollectionsMarshal.SetCount(valuesByTypeIndex, int.Max(valuesByTypeIndex.Count, typeIndex + 1));
-
         return ref valuesByTypeIndex.AsSpan()[typeIndex];
     }
 
