@@ -331,7 +331,7 @@ public record struct Color
                 }
 
                 var s = 0f;
-                if (!l.Equals(0) || !l.Equals(1))
+                if (l > 0 && l < 1)
                 {
                     s = (xMax - l) / M.Min(l, 1 - l);
                 }
