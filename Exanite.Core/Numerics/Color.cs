@@ -202,7 +202,7 @@ public record struct Color
 
     public readonly string ToAnsi()
     {
-        var drawingColor = ToDrawingColor();
+        var drawingColor = AsPremultiplied().ToDrawingColor();
         var value = (drawingColor.R << 16) | (drawingColor.G << 8) | (drawingColor.B << 0);
 
         return AnsiUtility.HexColorToAnsi(value);
