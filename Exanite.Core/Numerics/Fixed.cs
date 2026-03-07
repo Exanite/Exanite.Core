@@ -14,7 +14,12 @@ public readonly struct Fixed :
     IAdditionOperators<Fixed, Fixed, Fixed>,
     ISubtractionOperators<Fixed, Fixed, Fixed>,
     IMultiplyOperators<Fixed, Fixed, Fixed>,
-    IDivisionOperators<Fixed, Fixed, Fixed>
+    IDivisionOperators<Fixed, Fixed, Fixed>,
+    IEqualityOperators<Fixed, Fixed, bool>,
+    IIncrementOperators<Fixed>,
+    IDecrementOperators<Fixed>,
+    IUnaryPlusOperators<Fixed, Fixed>,
+    IUnaryNegationOperators<Fixed, Fixed>
 {
     // Constants
     private const int Shift = 16;
