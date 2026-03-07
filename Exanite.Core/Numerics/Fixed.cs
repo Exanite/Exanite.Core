@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Numerics;
 
 namespace Exanite.Core.Numerics;
@@ -19,7 +21,8 @@ public readonly struct Fixed :
     IIncrementOperators<Fixed>,
     IDecrementOperators<Fixed>,
     IUnaryPlusOperators<Fixed, Fixed>,
-    IUnaryNegationOperators<Fixed, Fixed>
+    IUnaryNegationOperators<Fixed, Fixed>,
+    INumber<Fixed>
 {
     // Constants
     private const int Shift = 16;
@@ -63,4 +66,45 @@ public readonly struct Fixed :
     public override bool Equals(object? obj) => obj is Fixed other && Equals(other);
     public bool Equals(Fixed other) => value == other.value;
     public override int GetHashCode() => value.GetHashCode();
+
+    // public static int Radix { get; }
+    // public static Fixed Abs(Fixed value);
+    // public static bool IsCanonical(Fixed value);
+    // public static bool IsComplexNumber(Fixed value);
+    // public static bool IsEvenInteger(Fixed value);
+    // public static bool IsFinite(Fixed value);
+    // public static bool IsImaginaryNumber(Fixed value);
+    // public static bool IsInfinity(Fixed value);
+    // public static bool IsInteger(Fixed value);
+    // public static bool IsNaN(Fixed value);
+    // public static bool IsNegative(Fixed value);
+    // public static bool IsNegativeInfinity(Fixed value);
+    // public static bool IsNormal(Fixed value);
+    // public static bool IsOddInteger(Fixed value);
+    // public static bool IsPositive(Fixed value);
+    // public static bool IsPositiveInfinity(Fixed value);
+    // public static bool IsRealNumber(Fixed value);
+    // public static bool IsSubnormal(Fixed value);
+    // public static bool IsZero(Fixed value);
+    // public static Fixed MaxMagnitude(Fixed x, Fixed y);
+    // public static Fixed MaxMagnitudeNumber(Fixed x, Fixed y);
+    // public static Fixed MinMagnitude(Fixed x, Fixed y);
+    // public static Fixed MinMagnitudeNumber(Fixed x, Fixed y);
+    // public static Fixed Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider);
+    // public static Fixed Parse(string s, NumberStyles style, IFormatProvider? provider);
+    // public static bool TryConvertFromChecked<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>;
+    // public static bool TryConvertFromSaturating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>;
+    // public static bool TryConvertFromTruncating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>;
+    // public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>;
+    // public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>;
+    // public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>;
+    // public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed result);
+    // public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out Fixed result);
+    // public string ToString(string? format, IFormatProvider? formatProvider);
+    // public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider);
+    // public int CompareTo(object? obj);
+    // public static Fixed Parse(string s, IFormatProvider? provider);
+    // public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out Fixed result);
+    // public static Fixed Parse(ReadOnlySpan<char> s, IFormatProvider? provider);
+    // public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out Fixed result);
 }
