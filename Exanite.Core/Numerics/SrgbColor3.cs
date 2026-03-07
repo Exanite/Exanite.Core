@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
@@ -13,20 +14,30 @@ namespace Exanite.Core.Numerics;
 public record struct SrgbColor3
 {
     public Vector3 Value;
-    public Color Color => Color.FromSrgb(Value);
+    public Color Color => this;
 
     public SrgbColor3(Vector3 value)
     {
         Value = value;
     }
 
-    public static implicit operator SrgbColor3(Vector3 angle)
+    public static implicit operator Color(SrgbColor3 color)
     {
-        return new SrgbColor3(angle);
+        return Color.FromSrgb(color.Value);
     }
 
-    public static implicit operator Vector3(SrgbColor3 angle)
+    public static implicit operator SrgbColor3(Color color)
     {
-        return angle.Value;
+        return new SrgbColor3(color.Srgb.Value.Xyz());
+    }
+
+    public static implicit operator SrgbColor3(Vector3 color)
+    {
+        return new SrgbColor3(color);
+    }
+
+    public static implicit operator Vector3(SrgbColor3 color)
+    {
+        return color.Value;
     }
 }

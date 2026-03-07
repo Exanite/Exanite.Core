@@ -12,7 +12,11 @@ namespace Exanite.Core.Numerics;
 /// <remarks>
 /// Consider using one of the storage types if you want efficient storage:
 /// <see cref="LinearColor4"/>,
-/// <see cref="SrgbColor4"/>
+/// <see cref="LinearColor3"/>,
+/// <see cref="SrgbColor4"/>,
+/// <see cref="SrgbColor3"/>,
+/// <see cref="HslColor4"/>,
+/// <see cref="HslColor3"/>
 /// </remarks>
 public record struct Color
 {
@@ -78,16 +82,6 @@ public record struct Color
 
     public readonly Color Srgb => As(ColorType.Srgb);
 
-    public static implicit operator Color(SrgbColor4 color)
-    {
-        return new Color(color.Value, ColorType.Srgb);
-    }
-
-    public static implicit operator SrgbColor4(Color color)
-    {
-        return new SrgbColor4(color.As(ColorType.Srgb).Value);
-    }
-
     public static Color FromSrgb(Vector3 value)
     {
         return new Color(value.Xyz1(), ColorType.Srgb);
@@ -111,16 +105,6 @@ public record struct Color
     // Linear
 
     public readonly Color Linear => As(ColorType.Linear);
-
-    public static implicit operator Color(LinearColor4 color)
-    {
-        return new Color(color.Value, ColorType.Linear);
-    }
-
-    public static implicit operator LinearColor4(Color color)
-    {
-        return new LinearColor4(color.As(ColorType.Linear).Value);
-    }
 
     public static Color FromLinear(Vector3 value)
     {

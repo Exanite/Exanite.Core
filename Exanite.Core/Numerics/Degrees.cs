@@ -12,11 +12,21 @@ namespace Exanite.Core.Numerics;
 public struct Degrees
 {
     public float Value;
-    public Angle Color => new(Value, AngleType.Degrees);
+    public Angle Color => this;
 
     public Degrees(float value)
     {
         Value = value;
+    }
+
+    public static implicit operator Angle(Degrees angle)
+    {
+        return Angle.FromDegrees(angle.Value);
+    }
+
+    public static implicit operator Degrees(Angle angle)
+    {
+        return new Degrees(angle.Degrees.Value);
     }
 
     public static implicit operator Degrees(float angle)

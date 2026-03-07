@@ -13,20 +13,30 @@ namespace Exanite.Core.Numerics;
 public record struct SrgbColor4
 {
     public Vector4 Value;
-    public Color Color => Color.FromSrgb(Value);
+    public Color Color => this;
 
     public SrgbColor4(Vector4 value)
     {
         Value = value;
     }
 
-    public static implicit operator SrgbColor4(Vector4 angle)
+    public static implicit operator Color(SrgbColor4 color)
     {
-        return new SrgbColor4(angle);
+        return Color.FromSrgb(color.Value);
     }
 
-    public static implicit operator Vector4(SrgbColor4 angle)
+    public static implicit operator SrgbColor4(Color color)
     {
-        return angle.Value;
+        return new SrgbColor4(color.Srgb.Value);
+    }
+
+    public static implicit operator SrgbColor4(Vector4 color)
+    {
+        return new SrgbColor4(color);
+    }
+
+    public static implicit operator Vector4(SrgbColor4 color)
+    {
+        return color.Value;
     }
 }

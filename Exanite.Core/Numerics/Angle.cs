@@ -41,16 +41,6 @@ public record struct Angle
 
     public readonly Angle Degrees => As(AngleType.Degrees);
 
-    public static implicit operator Angle(Degrees angle)
-    {
-        return new Angle(angle.Value, AngleType.Degrees);
-    }
-
-    public static implicit operator Degrees(Angle angle)
-    {
-        return new Degrees(angle.Degrees.Value);
-    }
-
     public static Angle FromDegrees(float value)
     {
         return new Angle(value, AngleType.Degrees);
@@ -59,16 +49,6 @@ public record struct Angle
     // Radians
 
     public readonly Angle Radians => As(AngleType.Radians);
-
-    public static implicit operator Angle(Radians angle)
-    {
-        return new Angle(angle.Value, AngleType.Radians);
-    }
-
-    public static implicit operator Radians(Angle angle)
-    {
-        return new Radians(angle.Radians.Value);
-    }
 
     public static Angle FromRadians(float value)
     {
