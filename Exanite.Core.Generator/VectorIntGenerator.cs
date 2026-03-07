@@ -24,30 +24,33 @@ public class VectorIntGenerator
 
         for (var componentCount = 2; componentCount <= Components.Length; componentCount++)
         {
+            var vectorIntType = $"Vector{componentCount}Int";
+            var vectorFloatType = $"Vector{componentCount}";
+
             builder.Separate();
-            builder.AppendLine($"public struct Vector{componentCount}Int : IEquatable<Vector{componentCount}Int>, IFormattable");
+            builder.AppendLine($"public struct {vectorIntType} : IEquatable<{vectorIntType}>, IFormattable");
             using (builder.EnterScope())
             {
                 for (var i = 0; i < componentCount; i++)
                 {
-                    builder.AppendLine($"/// <inheritdoc cref=\"Vector{componentCount}.{Components[i]}\"/>");
+                    builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.{Components[i]}\"/>");
                     builder.AppendLine($"public int {Components[i]};");
                     builder.AppendLine();
                 }
 
-                builder.AppendLine($"/// <inheritdoc cref=\"Vector{componentCount}.Zero\"/>");
-                builder.AppendLine($"public static Vector{componentCount}Int Zero => default;");
+                builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.Zero\"/>");
+                builder.AppendLine($"public static {vectorIntType} Zero => default;");
                 builder.Separate();
-                builder.AppendLine($"/// <inheritdoc cref=\"Vector{componentCount}.One\"/>");
-                builder.AppendLine($"public static Vector{componentCount}Int One => new(1);");
+                builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.One\"/>");
+                builder.AppendLine($"public static {vectorIntType} One => new(1);");
 
                 for (var i = 0; i < componentCount; i++)
                 {
                     var currentComponent = i;
                     var parameters = string.Join(", ", Enumerable.Range(0, componentCount).Select(index => index == currentComponent ? "1" : "0"));
                     builder.Separate();
-                    builder.AppendLine($"/// <inheritdoc cref=\"Vector{componentCount}.Unit{Components[i]}\"/>");
-                    builder.AppendLine($"public static Vector{componentCount}Int Unit{Components[i]} => new({parameters});");
+                    builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.Unit{Components[i]}\"/>");
+                    builder.AppendLine($"public static {vectorIntType} Unit{Components[i]} => new({parameters});");
                 }
 
                 builder.Separate();
@@ -85,10 +88,10 @@ public class VectorIntGenerator
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public Vector{componentCount}Int(int value) : this({string.Join(", ", Enumerable.Range(0, componentCount).Select(_ => "value"))}) {{}}");
+                builder.AppendLine($"public {vectorIntType}(int value) : this({string.Join(", ", Enumerable.Range(0, componentCount).Select(_ => "value"))}) {{}}");
 
                 builder.Separate();
-                builder.AppendLine($"public Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"int {Components[index].ToLower()}"))})");
+                builder.AppendLine($"public {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"int {Components[index].ToLower()}"))})");
                 using (builder.EnterScope())
                 {
                     for (var i = 0; i < componentCount; i++)
@@ -98,140 +101,140 @@ public class VectorIntGenerator
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static explicit operator Vector{componentCount}Int(Vector{componentCount} value)");
+                builder.AppendLine($"public static explicit operator {vectorIntType}({vectorFloatType} value)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"(int)value.{Components[index]}"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"(int)value.{Components[index]}"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static implicit operator Vector{componentCount}(Vector{componentCount}Int value)");
+                builder.AppendLine($"public static implicit operator {vectorFloatType}({vectorIntType} value)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{Components[index]}"))});");
+                    builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{Components[index]}"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator *(Vector{componentCount}Int value, int scalar)");
+                builder.AppendLine($"public static {vectorIntType} operator *({vectorIntType} value, int scalar)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{Components[index]} * scalar"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{Components[index]} * scalar"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount} operator *(Vector{componentCount}Int value, float scalar)");
+                builder.AppendLine($"public static {vectorFloatType} operator *({vectorIntType} value, float scalar)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{Components[index]} * scalar"))});");
+                    builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{Components[index]} * scalar"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator /(Vector{componentCount}Int value, int scalar)");
+                builder.AppendLine($"public static {vectorIntType} operator /({vectorIntType} value, int scalar)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{Components[index]} / scalar"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{Components[index]} / scalar"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount} operator /(Vector{componentCount}Int value, float scalar)");
+                builder.AppendLine($"public static {vectorFloatType} operator /({vectorIntType} value, float scalar)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{Components[index]} / scalar"))});");
+                    builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{Components[index]} / scalar"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator +(Vector{componentCount}Int left, Vector{componentCount}Int right)");
+                builder.AppendLine($"public static {vectorIntType} operator +({vectorIntType} left, {vectorIntType} right)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} + right.{Components[index]}"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} + right.{Components[index]}"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator -(Vector{componentCount}Int left, Vector{componentCount}Int right)");
+                builder.AppendLine($"public static {vectorIntType} operator -({vectorIntType} left, {vectorIntType} right)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} - right.{Components[index]}"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} - right.{Components[index]}"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator *(Vector{componentCount}Int left, Vector{componentCount}Int right)");
+                builder.AppendLine($"public static {vectorIntType} operator *({vectorIntType} left, {vectorIntType} right)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} * right.{Components[index]}"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} * right.{Components[index]}"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator /(Vector{componentCount}Int left, Vector{componentCount}Int right)");
+                builder.AppendLine($"public static {vectorIntType} operator /({vectorIntType} left, {vectorIntType} right)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} / right.{Components[index]}"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} / right.{Components[index]}"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator <<(Vector{componentCount}Int left, Vector{componentCount}Int right)");
+                builder.AppendLine($"public static {vectorIntType} operator <<({vectorIntType} left, {vectorIntType} right)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} << right.{Components[index]}"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} << right.{Components[index]}"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator >>(Vector{componentCount}Int left, Vector{componentCount}Int right)");
+                builder.AppendLine($"public static {vectorIntType} operator >>({vectorIntType} left, {vectorIntType} right)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} >> right.{Components[index]}"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} >> right.{Components[index]}"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator >>>(Vector{componentCount}Int left, Vector{componentCount}Int right)");
+                builder.AppendLine($"public static {vectorIntType} operator >>>({vectorIntType} left, {vectorIntType} right)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} >>> right.{Components[index]}"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} >>> right.{Components[index]}"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator &(Vector{componentCount}Int left, Vector{componentCount}Int right)");
+                builder.AppendLine($"public static {vectorIntType} operator &({vectorIntType} left, {vectorIntType} right)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} & right.{Components[index]}"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} & right.{Components[index]}"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator |(Vector{componentCount}Int left, Vector{componentCount}Int right)");
+                builder.AppendLine($"public static {vectorIntType} operator |({vectorIntType} left, {vectorIntType} right)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} | right.{Components[index]}"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} | right.{Components[index]}"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator ^(Vector{componentCount}Int left, Vector{componentCount}Int right)");
+                builder.AppendLine($"public static {vectorIntType} operator ^({vectorIntType} left, {vectorIntType} right)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new Vector{componentCount}Int({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} ^ right.{Components[index]}"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{Components[index]} ^ right.{Components[index]}"))});");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static Vector{componentCount}Int operator -(Vector{componentCount}Int value)");
+                builder.AppendLine($"public static {vectorIntType} operator -({vectorIntType} value)");
                 using (builder.EnterScope())
                 {
                     builder.AppendLine("return Zero - value;");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static bool operator ==(Vector{componentCount}Int left, Vector{componentCount}Int right)");
+                builder.AppendLine($"public static bool operator ==({vectorIntType} left, {vectorIntType} right)");
                 using (builder.EnterScope())
                 {
                     builder.AppendLine("return left.Equals(right);");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public static bool operator !=(Vector{componentCount}Int left, Vector{componentCount}Int right)");
+                builder.AppendLine($"public static bool operator !=({vectorIntType} left, {vectorIntType} right)");
                 using (builder.EnterScope())
                 {
                     builder.AppendLine("return !left.Equals(right);");
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public bool Equals(Vector{componentCount}Int other)");
+                builder.AppendLine($"public bool Equals({vectorIntType} other)");
                 using (builder.EnterScope())
                 {
                     builder.AppendLine($"return {string.Join(" && ", Enumerable.Range(0, componentCount).Select(index => $"{Components[index]} == other.{Components[index]}"))};");
@@ -241,7 +244,7 @@ public class VectorIntGenerator
                 builder.AppendLine("public override bool Equals(object? obj)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return obj is Vector{componentCount}Int other && Equals(other);");
+                    builder.AppendLine($"return obj is {vectorIntType} other && Equals(other);");
                 }
 
                 builder.Separate();
@@ -269,7 +272,7 @@ public class VectorIntGenerator
                 builder.AppendLine("public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format, IFormatProvider? formatProvider)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return ((Vector{componentCount})this).ToString(format, formatProvider);");
+                    builder.AppendLine($"return (({vectorFloatType})this).ToString(format, formatProvider);");
                 }
             }
         }
