@@ -76,7 +76,7 @@ public partial struct Vector3Int : IEquatable<Vector3Int>, IFormattable
 
     public static implicit operator Vector3(Vector3Int value)
     {
-        return new Vector3(value.X, value.Y, value.Z);
+        return new Vector3((float)value.X, (float)value.Y, (float)value.Z);
     }
 
     public static Vector3Int operator *(Vector3Int value, int scalar)

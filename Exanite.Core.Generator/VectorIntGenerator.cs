@@ -13,6 +13,10 @@ public class VectorIntGenerator : VectorGenerator
         for (var componentCount = 2; componentCount <= AllComponents.Length; componentCount++)
         {
             var components = AllComponents.Take(componentCount).ToArray();
+
+            var intType = "int";
+            var floatType = "float";
+
             var vectorIntType = $"Vector{componentCount}Int";
             var vectorFloatType = $"Vector{componentCount}";
 
@@ -30,87 +34,23 @@ public class VectorIntGenerator : VectorGenerator
             builder.AppendSeparation();
             using (builder.EnterScope($"public partial struct {vectorIntType} : IEquatable<{vectorIntType}>, IFormattable"))
             {
-                foreach (var component in components)
-                {
-                    builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.{component}\"/>");
-                    builder.AppendLine($"public int {component};");
-                    builder.AppendLine();
-                }
+                AppendComponentFields(builder, intType, components);
 
-                builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.Zero\"/>");
-                builder.AppendLine($"public static {vectorIntType} Zero => default;");
-                builder.AppendLine();
-                builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.One\"/>");
-                builder.AppendLine($"public static {vectorIntType} One => new(1);");
+                AppendIdentityVectorConstants(builder, vectorIntType, components);
+                AppendBasisVectorConstants(builder, vectorIntType, components);
 
-                for (var i = 0; i < componentCount; i++)
-                {
-                    var currentComponent = i;
-                    var parameters = string.Join(", ", Enumerable.Range(0, componentCount).Select(index => index == currentComponent ? "1" : "0"));
+                AppendIndexer(builder, intType, components);
 
-                    builder.AppendSeparation();
-                    builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.Unit{components[i]}\"/>");
-                    builder.AppendLine($"public static {vectorIntType} Unit{components[i]} => new({parameters});");
-                }
+                AppendConstructors(builder, vectorIntType, intType, components);
 
-                builder.AppendSeparation();
-                using (builder.EnterScope("public int this[int index]"))
-                {
-                    using (builder.EnterScope("readonly get"))
-                    {
-                        using (builder.EnterScope("switch (index)"))
-                        {
-                            for (var i = 0; i < componentCount; i++)
-                            {
-                                builder.AppendLine($"case {i}: return {components[i]};");
-                            }
-                            builder.AppendLine("default: throw new IndexOutOfRangeException(nameof(index));");
-                        }
-                    }
+                AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorIntType, intType, components);
+                AppendVectorCastOperation(builder, "implicit", vectorIntType, vectorFloatType, floatType, components);
 
-                    builder.AppendSeparation();
-                    using (builder.EnterScope("set"))
-                    {
-                        using (builder.EnterScope("switch (index)"))
-                        {
-                            for (var i = 0; i < componentCount; i++)
-                            {
-                                builder.AppendLine($"case {i}: {components[i]} = value; break;");
-                            }
-                            builder.AppendLine("default: throw new IndexOutOfRangeException(nameof(index));");
-                        }
-                    }
-                }
+                AppendScalarOperation(builder, components, vectorIntType, intType, vectorIntType, "*");
+                AppendScalarOperation(builder, components, vectorIntType, floatType, vectorFloatType, "*");
 
-                builder.AppendSeparation();
-                builder.AppendLine($"public {vectorIntType}(int value) : this({string.Join(", ", components.Select(_ => "value"))}) {{}}");
-
-                builder.AppendSeparation();
-                using (builder.EnterScope($"public {vectorIntType}({string.Join(", ", components.Select(c => $"int {c.ToLower()}"))})"))
-                {
-                    foreach (var component in components)
-                    {
-                        builder.AppendLine($"{component} = {component.ToLower()};");
-                    }
-                }
-
-                builder.AppendSeparation();
-                using (builder.EnterScope($"public static explicit operator {vectorIntType}({vectorFloatType} value)"))
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", components.Select(c => $"(int)value.{c}"))});");
-                }
-
-                builder.AppendSeparation();
-                using (builder.EnterScope($"public static implicit operator {vectorFloatType}({vectorIntType} value)"))
-                {
-                    builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", components.Select(c => $"value.{c}"))});");
-                }
-
-                AppendScalarOperation(builder, components, vectorIntType, "int", vectorIntType, "*");
-                AppendScalarOperation(builder, components, vectorIntType, "float", vectorFloatType, "*");
-
-                AppendScalarOperation(builder, components, vectorIntType, "int", vectorIntType, "/");
-                AppendScalarOperation(builder, components, vectorIntType, "float", vectorFloatType, "/");
+                AppendScalarOperation(builder, components, vectorIntType, intType, vectorIntType, "/");
+                AppendScalarOperation(builder, components, vectorIntType, floatType, vectorFloatType, "/");
 
                 AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "+");
                 AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "-");
@@ -125,11 +65,7 @@ public class VectorIntGenerator : VectorGenerator
                 AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "|");
                 AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "^");
 
-                builder.AppendSeparation();
-                using (builder.EnterScope($"public static {vectorIntType} operator -({vectorIntType} value)"))
-                {
-                    builder.AppendLine("return Zero - value;");
-                }
+                AppendNegateOperation(builder, vectorIntType);
 
                 AppendEqualityOperations(builder, vectorIntType, components);
                 AppendFormattingOperations(builder, components);

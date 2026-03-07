@@ -67,7 +67,7 @@ public partial struct Vector2Int : IEquatable<Vector2Int>, IFormattable
 
     public static implicit operator Vector2(Vector2Int value)
     {
-        return new Vector2(value.X, value.Y);
+        return new Vector2((float)value.X, (float)value.Y);
     }
 
     public static Vector2Int operator *(Vector2Int value, int scalar)

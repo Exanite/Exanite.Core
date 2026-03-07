@@ -85,7 +85,7 @@ public partial struct Vector4Int : IEquatable<Vector4Int>, IFormattable
 
     public static implicit operator Vector4(Vector4Int value)
     {
-        return new Vector4(value.X, value.Y, value.Z, value.W);
+        return new Vector4((float)value.X, (float)value.Y, (float)value.Z, (float)value.W);
     }
 
     public static Vector4Int operator *(Vector4Int value, int scalar)

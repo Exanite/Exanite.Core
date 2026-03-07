@@ -13,6 +13,11 @@ public class VectorFixedGenerator : VectorGenerator
         for (var componentCount = 2; componentCount <= AllComponents.Length; componentCount++)
         {
             var components = AllComponents.Take(componentCount).ToArray();
+
+            var fixedType = "Fixed";
+            var intType = "int";
+            var floatType = "float";
+
             var vectorFixedType = $"Vector{componentCount}Fixed";
             var vectorIntType = $"Vector{componentCount}Int";
             var vectorFloatType = $"Vector{componentCount}";
@@ -31,101 +36,34 @@ public class VectorFixedGenerator : VectorGenerator
             builder.AppendSeparation();
             using (builder.EnterScope($"public partial struct {vectorFixedType} : IEquatable<{vectorFixedType}>, IFormattable"))
             {
-                foreach (var component in components)
-                {
-                    builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.{component}\"/>");
-                    builder.AppendLine($"public Fixed {component};");
-                    builder.AppendLine();
-                }
+                AppendComponentFields(builder, fixedType, components);
 
-                builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.Zero\"/>");
-                builder.AppendLine($"public static {vectorFixedType} Zero => default;");
-                builder.AppendLine();
-                builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.One\"/>");
-                builder.AppendLine($"public static {vectorFixedType} One => new(1);");
+                AppendIdentityVectorConstants(builder, vectorFixedType, components);
+                AppendBasisVectorConstants(builder, vectorFixedType, components);
 
-                for (var i = 0; i < componentCount; i++)
-                {
-                    var currentComponent = i;
-                    var parameters = string.Join(", ", Enumerable.Range(0, componentCount).Select(index => index == currentComponent ? "1" : "0"));
+                AppendIndexer(builder, fixedType, components);
 
-                    builder.AppendSeparation();
-                    builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.Unit{components[i]}\"/>");
-                    builder.AppendLine($"public static {vectorFixedType} Unit{components[i]} => new({parameters});");
-                }
-
-                builder.AppendSeparation();
-                using (builder.EnterScope("public Fixed this[int index]"))
-                {
-                    using (builder.EnterScope("readonly get"))
-                    {
-                        using (builder.EnterScope("switch (index)"))
-                        {
-                            for (var i = 0; i < componentCount; i++)
-                            {
-                                builder.AppendLine($"case {i}: return {components[i]};");
-                            }
-                            builder.AppendLine("default: throw new IndexOutOfRangeException(nameof(index));");
-                        }
-                    }
-
-                    builder.AppendSeparation();
-                    using (builder.EnterScope("set"))
-                    {
-                        using (builder.EnterScope("switch (index)"))
-                        {
-                            for (var i = 0; i < componentCount; i++)
-                            {
-                                builder.AppendLine($"case {i}: {components[i]} = value; break;");
-                            }
-                            builder.AppendLine("default: throw new IndexOutOfRangeException(nameof(index));");
-                        }
-                    }
-                }
-
-                builder.AppendSeparation();
-                builder.AppendLine($"public {vectorFixedType}(Fixed value) : this({string.Join(", ", components.Select(_ => "value"))}) {{}}");
-
-                builder.AppendSeparation();
-                using (builder.EnterScope($"public {vectorFixedType}({string.Join(", ", components.Select(c => $"Fixed {c.ToLower()}"))})"))
-                {
-                    foreach (var component in components)
-                    {
-                        builder.AppendLine($"{component} = {component.ToLower()};");
-                    }
-                }
+                AppendConstructors(builder, vectorFixedType, fixedType, components);
 
                 builder.AppendSeparation();
                 builder.AppendLine("// Conversion: Safe - No precision loss possible");
-                using (builder.EnterScope($"public static implicit operator {vectorFixedType}({vectorIntType} value)"))
-                {
-                    builder.AppendLine($"return new {vectorFixedType}({string.Join(", ", components.Select(c => $"value.{c}"))});");
-                }
+                AppendVectorCastOperation(builder, "implicit", vectorIntType, vectorFixedType, fixedType, components, true);
 
                 builder.AppendSeparation();
                 builder.AppendLine("// Conversion: Unsafe - Non-deterministic");
                 builder.AppendLine("// Consider using FromFraction instead");
-                using (builder.EnterScope($"public static explicit operator {vectorFixedType}({vectorFloatType} value)"))
-                {
-                    builder.AppendLine($"return new {vectorFixedType}({string.Join(", ", components.Select(c => $"(Fixed)value.{c}"))});");
-                }
+                AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorFixedType, fixedType, components, true);
 
                 builder.AppendSeparation();
                 builder.AppendLine("// Conversion: Loss of fraction");
-                using (builder.EnterScope($"public static explicit operator {vectorIntType}({vectorFixedType} value)"))
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", components.Select(c => $"(int)value.{c}"))});");
-                }
+                AppendVectorCastOperation(builder, "explicit", vectorFixedType, vectorIntType, intType, components, true);
 
                 builder.AppendSeparation();
                 builder.AppendLine("// Conversion: Loss of precision");
-                using (builder.EnterScope($"public static explicit operator {vectorFloatType}({vectorFixedType} value)"))
-                {
-                    builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", components.Select(c => $"(float)value.{c}"))});");
-                }
+                AppendVectorCastOperation(builder, "explicit", vectorFixedType, vectorFloatType, floatType, components, true);
 
-                AppendScalarOperation(builder, components, vectorFixedType, "Fixed", vectorFixedType, "*");
-                AppendScalarOperation(builder, components, vectorFixedType, "Fixed", vectorFixedType, "/");
+                AppendScalarOperation(builder, components, vectorFixedType, fixedType, vectorFixedType, "*");
+                AppendScalarOperation(builder, components, vectorFixedType, fixedType, vectorFixedType, "/");
 
                 AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "+");
                 AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "-");
@@ -133,11 +71,7 @@ public class VectorFixedGenerator : VectorGenerator
                 AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "/");
                 AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "%");
 
-                builder.AppendSeparation();
-                using (builder.EnterScope($"public static {vectorFixedType} operator -({vectorFixedType} value)"))
-                {
-                    builder.AppendLine("return Zero - value;");
-                }
+                AppendNegateOperation(builder, vectorFixedType);
 
                 AppendEqualityOperations(builder, vectorFixedType, components);
                 AppendFormattingOperations(builder, components);

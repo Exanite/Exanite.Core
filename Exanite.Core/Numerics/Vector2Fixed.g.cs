@@ -63,7 +63,7 @@ public partial struct Vector2Fixed : IEquatable<Vector2Fixed>, IFormattable
     // Conversion: Safe - No precision loss possible
     public static implicit operator Vector2Fixed(Vector2Int value)
     {
-        return new Vector2Fixed(value.X, value.Y);
+        return new Vector2Fixed((Fixed)value.X, (Fixed)value.Y);
     }
 
     // Conversion: Unsafe - Non-deterministic

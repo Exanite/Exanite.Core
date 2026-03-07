@@ -81,7 +81,7 @@ public partial struct Vector4Fixed : IEquatable<Vector4Fixed>, IFormattable
     // Conversion: Safe - No precision loss possible
     public static implicit operator Vector4Fixed(Vector4Int value)
     {
-        return new Vector4Fixed(value.X, value.Y, value.Z, value.W);
+        return new Vector4Fixed((Fixed)value.X, (Fixed)value.Y, (Fixed)value.Z, (Fixed)value.W);
     }
 
     // Conversion: Unsafe - Non-deterministic
