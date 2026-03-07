@@ -14,13 +14,20 @@ public class ColorTests
     {
         Assert.Multiple(() =>
         {
+            // Grayscale
             Assert.Equal("#FFFFFFFF", Color.FromHsl(0, 0, 1).ToHex());
             Assert.Equal("#000000FF", Color.FromHsl(0, 0, 0).ToHex());
 
+            // Grayscale with non-zero hue
             Assert.Equal("#FFFFFFFF", Color.FromHsl(180, 0, 1).ToHex());
             Assert.Equal("#000000FF", Color.FromHsl(180, 0, 0).ToHex());
 
+            // Simple primary color
             Assert.Equal("#FF0000FF", Color.FromHsl(0, 1, 0.5f).ToHex());
+
+            // Hue wrapping
+            Assert.Equal("#FF00FFFF", Color.FromHsl(-60, 1, 0.5f).ToHex());
+            Assert.Equal("#FF00FFFF", Color.FromHsl(300, 1, 0.5f).ToHex());
 
             // Values from https://colordesigner.io/convert/hextohsl
             Assert.Equal("#204C82FF", Color.FromHsl(213.06f, 0.6049f, 0.3176f).ToHex());
@@ -34,10 +41,16 @@ public class ColorTests
     {
         Assert.Multiple(() =>
         {
+            // Grayscale
             Assert.Equal(new Vector3(0, 0, 1), Color.FromHex("#FFFFFFFF").Hsl3.Value, HslValueComparer.Instance);
             Assert.Equal(new Vector3(0, 0, 0), Color.FromHex("#000000FF").Hsl3.Value, HslValueComparer.Instance);
 
+            // Simple primary color
             Assert.Equal(new Vector3(0, 1, 0.5f), Color.FromHex("#FF0000FF").Hsl3.Value, HslValueComparer.Instance);
+
+            // Hue wrapping
+            // Should return [0, 360)
+            Assert.Equal(new Vector3(300, 1, 0.5f), Color.FromHex("#FF00FFFF").Hsl3.Value, HslValueComparer.Instance);
 
             // Values from https://colordesigner.io/convert/hextohsl
             Assert.Equal(new Vector3(213.06f, 0.6049f, 0.3176f), Color.FromHex("#204C82FF").Hsl3.Value, HslValueComparer.Instance);
