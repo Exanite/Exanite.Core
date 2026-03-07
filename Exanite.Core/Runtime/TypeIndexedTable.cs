@@ -15,7 +15,7 @@ namespace Exanite.Core.Runtime;
 /// </remarks>
 public class TypeIndexedTable<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
 {
-    private readonly List<TValue?> valuesByTypeIndex = new();
+    private readonly List<TValue?> values = new();
 
     /// <summary>
     /// Returns whether this list has a slot for the specified type.
@@ -27,7 +27,7 @@ public class TypeIndexedTable<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
     public bool IsInBounds<TType>() where TType : allows ref struct
     {
         var typeIndex = GetIndex<TType>();
-        return (uint)typeIndex < (uint)valuesByTypeIndex.Count;
+        return (uint)typeIndex < (uint)values.Count;
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ public class TypeIndexedTable<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
     /// </remarks>
     public bool IsInBounds(int index)
     {
-        return (uint)index < (uint)valuesByTypeIndex.Count;
+        return (uint)index < (uint)values.Count;
     }
 
     /// <summary>
@@ -50,8 +50,8 @@ public class TypeIndexedTable<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
     /// </remarks>
     public ref TValue? Get(int index)
     {
-        CollectionsMarshal.SetCount(valuesByTypeIndex, int.Max(valuesByTypeIndex.Count, index + 1));
-        return ref valuesByTypeIndex.AsSpan()[index];
+        CollectionsMarshal.SetCount(values, int.Max(values.Count, index + 1));
+        return ref values.AsSpan()[index];
     }
 
     /// <summary>
@@ -63,8 +63,8 @@ public class TypeIndexedTable<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
     public ref TValue? Get<TType>() where TType : allows ref struct
     {
         var typeIndex = GetIndex<TType>();
-        CollectionsMarshal.SetCount(valuesByTypeIndex, int.Max(valuesByTypeIndex.Count, typeIndex + 1));
-        return ref valuesByTypeIndex.AsSpan()[typeIndex];
+        CollectionsMarshal.SetCount(values, int.Max(values.Count, typeIndex + 1));
+        return ref values.AsSpan()[typeIndex];
     }
 
     /// <summary>
@@ -84,6 +84,6 @@ public class TypeIndexedTable<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
     /// </summary>
     public void Clear()
     {
-        valuesByTypeIndex.Clear();
+        values.Clear();
     }
 }
