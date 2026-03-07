@@ -8,21 +8,7 @@ namespace Exanite.Core.Numerics;
 /// <summary>
 /// A fixed point Q48.16 value (48-bits integer, 16-bits fraction).
 /// </summary>
-public readonly struct Fixed :
-    IEquatable<Fixed>,
-    IComparable<Fixed>,
-    IAdditiveIdentity<Fixed, Fixed>,
-    IMultiplicativeIdentity<Fixed, Fixed>,
-    IAdditionOperators<Fixed, Fixed, Fixed>,
-    ISubtractionOperators<Fixed, Fixed, Fixed>,
-    IMultiplyOperators<Fixed, Fixed, Fixed>,
-    IDivisionOperators<Fixed, Fixed, Fixed>,
-    IEqualityOperators<Fixed, Fixed, bool>,
-    IIncrementOperators<Fixed>,
-    IDecrementOperators<Fixed>,
-    IUnaryPlusOperators<Fixed, Fixed>,
-    IUnaryNegationOperators<Fixed, Fixed>,
-    INumber<Fixed>
+public readonly struct Fixed : INumber<Fixed>
 {
     // Constants
     private const int Shift = 16;
@@ -122,7 +108,7 @@ public readonly struct Fixed :
 
     public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var doubleValue = value.value / (double)OneValue;
+        var doubleValue = (double)value.value / OneValue;
         return TOther.TryConvertFromChecked(doubleValue, out result);
     }
 
@@ -134,16 +120,45 @@ public readonly struct Fixed :
     public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther> => TryConvertToChecked(value, out result);
     public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther> => TryConvertToChecked(value, out result);
 
-    // public string ToString(string? format, IFormatProvider? formatProvider);
-    // public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider);
+    // Formatting
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        return ((double)value / OneValue).ToString(format, formatProvider);
+    }
 
-    // public static Fixed Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider);
-    // public static Fixed Parse(string s, NumberStyles style, IFormatProvider? provider);
-    // public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed result);
-    // public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out Fixed result);
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        return ((double)value / OneValue).TryFormat(destination, out charsWritten, format, provider);
+    }
 
-    // public static Fixed Parse(string s, IFormatProvider? provider);
-    // public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out Fixed result);
-    // public static Fixed Parse(ReadOnlySpan<char> s, IFormatProvider? provider);
-    // public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out Fixed result);
+    // Parsing
+    public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed result)
+    {
+        if (double.TryParse(s, style, provider, out var doubleValue))
+        {
+            result = new Fixed((long)(doubleValue * OneValue));
+            return true;
+        }
+
+        result = default;
+        return false;
+    }
+
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out Fixed result) => TryParse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider, out result);
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out Fixed result) => TryParse((ReadOnlySpan<char>)s, provider, out result);
+    public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out Fixed result) => TryParse((ReadOnlySpan<char>)s, style, provider, out result);
+
+    public static Fixed Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider)
+    {
+        if (!TryParse(s, style, provider, out var result))
+        {
+            throw new FormatException($"Input string '{s.ToString()}' was not in a correct format.");
+        }
+
+        return result;
+    }
+
+    public static Fixed Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider);
+    public static Fixed Parse(string s, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, provider);
+    public static Fixed Parse(string s, NumberStyles style, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, style, provider);
 }
