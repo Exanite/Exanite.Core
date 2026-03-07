@@ -63,6 +63,7 @@ public readonly struct Fixed :
     public static bool operator <=(Fixed left, Fixed right) => left.value <= right.value;
     public static bool operator >=(Fixed left, Fixed right) => left.value >= right.value;
 
+    public int CompareTo(object? obj) => obj is Fixed other ? CompareTo(other) : throw new ArgumentException();
     public int CompareTo(Fixed other) => value.CompareTo(other.value);
 
     public override bool Equals(object? obj) => obj is Fixed other && Equals(other);
@@ -97,19 +98,22 @@ public readonly struct Fixed :
     // public static Fixed MaxMagnitudeNumber(Fixed x, Fixed y);
     // public static Fixed MinMagnitude(Fixed x, Fixed y);
     // public static Fixed MinMagnitudeNumber(Fixed x, Fixed y);
-    // public static Fixed Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider);
-    // public static Fixed Parse(string s, NumberStyles style, IFormatProvider? provider);
+
     // public static bool TryConvertFromChecked<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>;
     // public static bool TryConvertFromSaturating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>;
     // public static bool TryConvertFromTruncating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>;
     // public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>;
     // public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>;
     // public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>;
-    // public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed result);
-    // public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out Fixed result);
+
     // public string ToString(string? format, IFormatProvider? formatProvider);
     // public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider);
-    // public int CompareTo(object? obj);
+
+    // public static Fixed Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider);
+    // public static Fixed Parse(string s, NumberStyles style, IFormatProvider? provider);
+    // public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed result);
+    // public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out Fixed result);
+
     // public static Fixed Parse(string s, IFormatProvider? provider);
     // public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out Fixed result);
     // public static Fixed Parse(ReadOnlySpan<char> s, IFormatProvider? provider);
