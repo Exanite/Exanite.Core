@@ -102,4 +102,69 @@ public partial struct Vector4Fixed
     {
         return new Vector4((float)value.X, (float)value.Y, (float)value.Z, (float)value.W);
     }
+
+    public static Vector4Fixed operator *(Vector4Fixed value, Fixed scalar)
+    {
+        return new Vector4Fixed(value.X * scalar, value.Y * scalar, value.Z * scalar, value.W * scalar);
+    }
+
+    public static Vector4Fixed operator /(Vector4Fixed value, Fixed scalar)
+    {
+        return new Vector4Fixed(value.X / scalar, value.Y / scalar, value.Z / scalar, value.W / scalar);
+    }
+
+    public static Vector4Fixed operator +(Vector4Fixed left, Vector4Fixed right)
+    {
+        return new Vector4Fixed(left.X + right.X, left.Y + right.Y, left.Z + right.Z, left.W + right.W);
+    }
+
+    public static Vector4Fixed operator -(Vector4Fixed left, Vector4Fixed right)
+    {
+        return new Vector4Fixed(left.X - right.X, left.Y - right.Y, left.Z - right.Z, left.W - right.W);
+    }
+
+    public static Vector4Fixed operator *(Vector4Fixed left, Vector4Fixed right)
+    {
+        return new Vector4Fixed(left.X * right.X, left.Y * right.Y, left.Z * right.Z, left.W * right.W);
+    }
+
+    public static Vector4Fixed operator /(Vector4Fixed left, Vector4Fixed right)
+    {
+        return new Vector4Fixed(left.X / right.X, left.Y / right.Y, left.Z / right.Z, left.W / right.W);
+    }
+
+    public static Vector4Fixed operator %(Vector4Fixed left, Vector4Fixed right)
+    {
+        return new Vector4Fixed(left.X % right.X, left.Y % right.Y, left.Z % right.Z, left.W % right.W);
+    }
+
+    public static Vector4Fixed operator -(Vector4Fixed value)
+    {
+        return Zero - value;
+    }
+
+    public static bool operator ==(Vector4Fixed left, Vector4Fixed right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Vector4Fixed left, Vector4Fixed right)
+    {
+        return !left.Equals(right);
+    }
+
+    public bool Equals(Vector4Fixed other)
+    {
+        return X == other.X && Y == other.Y && Z == other.Z && W == other.W;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Vector4Fixed other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y, Z, W);
+    }
 }

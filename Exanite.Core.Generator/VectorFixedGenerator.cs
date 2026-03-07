@@ -124,60 +124,51 @@ public class VectorFixedGenerator
                 {
                     builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", components.Select(c => $"(float)value.{c}"))});");
                 }
-                //
-                // AppendScalarOperation(builder, components, vectorFixedType, "int", vectorFixedType, "*");
-                // AppendScalarOperation(builder, components, vectorFixedType, "float", vectorFloatType, "*");
-                //
-                // AppendScalarOperation(builder, components, vectorFixedType, "int", vectorFixedType, "/");
-                // AppendScalarOperation(builder, components, vectorFixedType, "float", vectorFloatType, "/");
-                //
-                // AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "+");
-                // AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "-");
-                // AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "*");
-                // AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "/");
-                //
-                // AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "<<");
-                // AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, ">>");
-                // AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, ">>>");
-                // AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "&");
-                // AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "|");
-                // AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "^");
-                //
-                // builder.AppendSeparation();
-                // using (builder.EnterScope($"public static {vectorFixedType} operator -({vectorFixedType} value)"))
-                // {
-                //     builder.AppendLine("return Zero - value;");
-                // }
-                //
-                // builder.AppendSeparation();
-                // using (builder.EnterScope($"public static bool operator ==({vectorFixedType} left, {vectorFixedType} right)"))
-                // {
-                //     builder.AppendLine("return left.Equals(right);");
-                // }
-                //
-                // builder.AppendSeparation();
-                // using (builder.EnterScope($"public static bool operator !=({vectorFixedType} left, {vectorFixedType} right)"))
-                // {
-                //     builder.AppendLine("return !left.Equals(right);");
-                // }
-                //
-                // builder.AppendSeparation();
-                // using (builder.EnterScope($"public bool Equals({vectorFixedType} other)"))
-                // {
-                //     builder.AppendLine($"return {string.Join(" && ", components.Select(c => $"{c} == other.{c}"))};");
-                // }
-                //
-                // builder.AppendSeparation();
-                // using (builder.EnterScope("public override bool Equals(object? obj)"))
-                // {
-                //     builder.AppendLine($"return obj is {vectorFixedType} other && Equals(other);");
-                // }
-                //
-                // builder.AppendSeparation();
-                // using (builder.EnterScope("public override int GetHashCode()"))
-                // {
-                //     builder.AppendLine($"return HashCode.Combine({string.Join(", ", components.Select(c => $"{c}"))});");
-                // }
+
+                AppendScalarOperation(builder, components, vectorFixedType, "Fixed", vectorFixedType, "*");
+                AppendScalarOperation(builder, components, vectorFixedType, "Fixed", vectorFixedType, "/");
+
+                AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "+");
+                AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "-");
+                AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "*");
+                AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "/");
+                AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "%");
+
+                builder.AppendSeparation();
+                using (builder.EnterScope($"public static {vectorFixedType} operator -({vectorFixedType} value)"))
+                {
+                    builder.AppendLine("return Zero - value;");
+                }
+
+                builder.AppendSeparation();
+                using (builder.EnterScope($"public static bool operator ==({vectorFixedType} left, {vectorFixedType} right)"))
+                {
+                    builder.AppendLine("return left.Equals(right);");
+                }
+
+                builder.AppendSeparation();
+                using (builder.EnterScope($"public static bool operator !=({vectorFixedType} left, {vectorFixedType} right)"))
+                {
+                    builder.AppendLine("return !left.Equals(right);");
+                }
+
+                builder.AppendSeparation();
+                using (builder.EnterScope($"public bool Equals({vectorFixedType} other)"))
+                {
+                    builder.AppendLine($"return {string.Join(" && ", components.Select(c => $"{c} == other.{c}"))};");
+                }
+
+                builder.AppendSeparation();
+                using (builder.EnterScope("public override bool Equals(object? obj)"))
+                {
+                    builder.AppendLine($"return obj is {vectorFixedType} other && Equals(other);");
+                }
+
+                builder.AppendSeparation();
+                using (builder.EnterScope("public override int GetHashCode()"))
+                {
+                    builder.AppendLine($"return HashCode.Combine({string.Join(", ", components.Select(c => $"{c}"))});");
+                }
                 //
                 // builder.AppendSeparation();
                 // using (builder.EnterScope("public override string ToString()"))

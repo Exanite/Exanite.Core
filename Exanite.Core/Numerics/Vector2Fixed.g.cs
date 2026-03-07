@@ -84,4 +84,69 @@ public partial struct Vector2Fixed
     {
         return new Vector2((float)value.X, (float)value.Y);
     }
+
+    public static Vector2Fixed operator *(Vector2Fixed value, Fixed scalar)
+    {
+        return new Vector2Fixed(value.X * scalar, value.Y * scalar);
+    }
+
+    public static Vector2Fixed operator /(Vector2Fixed value, Fixed scalar)
+    {
+        return new Vector2Fixed(value.X / scalar, value.Y / scalar);
+    }
+
+    public static Vector2Fixed operator +(Vector2Fixed left, Vector2Fixed right)
+    {
+        return new Vector2Fixed(left.X + right.X, left.Y + right.Y);
+    }
+
+    public static Vector2Fixed operator -(Vector2Fixed left, Vector2Fixed right)
+    {
+        return new Vector2Fixed(left.X - right.X, left.Y - right.Y);
+    }
+
+    public static Vector2Fixed operator *(Vector2Fixed left, Vector2Fixed right)
+    {
+        return new Vector2Fixed(left.X * right.X, left.Y * right.Y);
+    }
+
+    public static Vector2Fixed operator /(Vector2Fixed left, Vector2Fixed right)
+    {
+        return new Vector2Fixed(left.X / right.X, left.Y / right.Y);
+    }
+
+    public static Vector2Fixed operator %(Vector2Fixed left, Vector2Fixed right)
+    {
+        return new Vector2Fixed(left.X % right.X, left.Y % right.Y);
+    }
+
+    public static Vector2Fixed operator -(Vector2Fixed value)
+    {
+        return Zero - value;
+    }
+
+    public static bool operator ==(Vector2Fixed left, Vector2Fixed right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Vector2Fixed left, Vector2Fixed right)
+    {
+        return !left.Equals(right);
+    }
+
+    public bool Equals(Vector2Fixed other)
+    {
+        return X == other.X && Y == other.Y;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Vector2Fixed other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y);
+    }
 }

@@ -93,4 +93,69 @@ public partial struct Vector3Fixed
     {
         return new Vector3((float)value.X, (float)value.Y, (float)value.Z);
     }
+
+    public static Vector3Fixed operator *(Vector3Fixed value, Fixed scalar)
+    {
+        return new Vector3Fixed(value.X * scalar, value.Y * scalar, value.Z * scalar);
+    }
+
+    public static Vector3Fixed operator /(Vector3Fixed value, Fixed scalar)
+    {
+        return new Vector3Fixed(value.X / scalar, value.Y / scalar, value.Z / scalar);
+    }
+
+    public static Vector3Fixed operator +(Vector3Fixed left, Vector3Fixed right)
+    {
+        return new Vector3Fixed(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+    }
+
+    public static Vector3Fixed operator -(Vector3Fixed left, Vector3Fixed right)
+    {
+        return new Vector3Fixed(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+    }
+
+    public static Vector3Fixed operator *(Vector3Fixed left, Vector3Fixed right)
+    {
+        return new Vector3Fixed(left.X * right.X, left.Y * right.Y, left.Z * right.Z);
+    }
+
+    public static Vector3Fixed operator /(Vector3Fixed left, Vector3Fixed right)
+    {
+        return new Vector3Fixed(left.X / right.X, left.Y / right.Y, left.Z / right.Z);
+    }
+
+    public static Vector3Fixed operator %(Vector3Fixed left, Vector3Fixed right)
+    {
+        return new Vector3Fixed(left.X % right.X, left.Y % right.Y, left.Z % right.Z);
+    }
+
+    public static Vector3Fixed operator -(Vector3Fixed value)
+    {
+        return Zero - value;
+    }
+
+    public static bool operator ==(Vector3Fixed left, Vector3Fixed right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Vector3Fixed left, Vector3Fixed right)
+    {
+        return !left.Equals(right);
+    }
+
+    public bool Equals(Vector3Fixed other)
+    {
+        return X == other.X && Y == other.Y && Z == other.Z;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Vector3Fixed other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y, Z);
+    }
 }
