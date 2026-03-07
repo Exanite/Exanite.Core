@@ -32,10 +32,10 @@ public class VectorIntGenerator
             builder.AppendLine($"public struct {vectorIntType} : IEquatable<{vectorIntType}>, IFormattable");
             using (builder.EnterScope())
             {
-                for (var i = 0; i < componentCount; i++)
+                foreach (var component in components)
                 {
-                    builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.{AllComponents[i]}\"/>");
-                    builder.AppendLine($"public int {AllComponents[i]};");
+                    builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.{component}\"/>");
+                    builder.AppendLine($"public int {component};");
                     builder.AppendLine();
                 }
 
@@ -50,8 +50,8 @@ public class VectorIntGenerator
                     var currentComponent = i;
                     var parameters = string.Join(", ", Enumerable.Range(0, componentCount).Select(index => index == currentComponent ? "1" : "0"));
                     builder.Separate();
-                    builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.Unit{AllComponents[i]}\"/>");
-                    builder.AppendLine($"public static {vectorIntType} Unit{AllComponents[i]} => new({parameters});");
+                    builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.Unit{components[i]}\"/>");
+                    builder.AppendLine($"public static {vectorIntType} Unit{components[i]} => new({parameters});");
                 }
 
                 builder.Separate();
@@ -66,7 +66,7 @@ public class VectorIntGenerator
                         {
                             for (var i = 0; i < componentCount; i++)
                             {
-                                builder.AppendLine($"case {i}: return {AllComponents[i]};");
+                                builder.AppendLine($"case {i}: return {components[i]};");
                             }
                             builder.AppendLine("default: throw new IndexOutOfRangeException(nameof(index));");
                         }
@@ -81,7 +81,7 @@ public class VectorIntGenerator
                         {
                             for (var i = 0; i < componentCount; i++)
                             {
-                                builder.AppendLine($"case {i}: {AllComponents[i]} = value; break;");
+                                builder.AppendLine($"case {i}: {components[i]} = value; break;");
                             }
                             builder.AppendLine("default: throw new IndexOutOfRangeException(nameof(index));");
                         }
@@ -89,15 +89,15 @@ public class VectorIntGenerator
                 }
 
                 builder.Separate();
-                builder.AppendLine($"public {vectorIntType}(int value) : this({string.Join(", ", Enumerable.Range(0, componentCount).Select(_ => "value"))}) {{}}");
+                builder.AppendLine($"public {vectorIntType}(int value) : this({string.Join(", ", components.Select(_ => "value"))}) {{}}");
 
                 builder.Separate();
-                builder.AppendLine($"public {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"int {AllComponents[index].ToLower()}"))})");
+                builder.AppendLine($"public {vectorIntType}({string.Join(", ", components.Select(c => $"int {c.ToLower()}"))})");
                 using (builder.EnterScope())
                 {
-                    for (var i = 0; i < componentCount; i++)
+                    foreach (var component in components)
                     {
-                        builder.AppendLine($"{AllComponents[i]} = {AllComponents[i].ToLower()};");
+                        builder.AppendLine($"{component} = {component.ToLower()};");
                     }
                 }
 
@@ -105,14 +105,14 @@ public class VectorIntGenerator
                 builder.AppendLine($"public static explicit operator {vectorIntType}({vectorFloatType} value)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"(int)value.{AllComponents[index]}"))});");
+                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", components.Select(c => $"(int)value.{c}"))});");
                 }
 
                 builder.Separate();
                 builder.AppendLine($"public static implicit operator {vectorFloatType}({vectorIntType} value)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{AllComponents[index]}"))});");
+                    builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", components.Select(c => $"value.{c}"))});");
                 }
 
                 AppendScalarOperation(builder, components, vectorIntType, "int", vectorIntType, "*");
@@ -158,7 +158,7 @@ public class VectorIntGenerator
                 builder.AppendLine($"public bool Equals({vectorIntType} other)");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return {string.Join(" && ", Enumerable.Range(0, componentCount).Select(index => $"{AllComponents[index]} == other.{AllComponents[index]}"))};");
+                    builder.AppendLine($"return {string.Join(" && ", components.Select(c => $"{c} == other.{c}"))};");
                 }
 
                 builder.Separate();
@@ -172,7 +172,7 @@ public class VectorIntGenerator
                 builder.AppendLine("public override int GetHashCode()");
                 using (builder.EnterScope())
                 {
-                    builder.AppendLine($"return HashCode.Combine({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"{AllComponents[index]}"))});");
+                    builder.AppendLine($"return HashCode.Combine({string.Join(", ", components.Select(c => $"{c}"))});");
                 }
 
                 builder.Separate();
