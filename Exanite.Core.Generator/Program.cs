@@ -12,5 +12,7 @@ public class Program
 
         new VectorIntGenerator().Run();
         new VectorFixedGenerator().Run();
+
+        new MathUtilitiesMatricesGenerator().Run();
     }
 }
