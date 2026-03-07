@@ -6,13 +6,11 @@ namespace Exanite.Core.Generator;
 
 public class VectorIntGenerator : VectorGenerator
 {
-    private static readonly string[] AllComponents = ["X", "Y", "Z", "W"];
-
     public void Run()
     {
-        for (var componentCount = 2; componentCount <= AllComponents.Length; componentCount++)
+        for (var componentCount = 2; componentCount <= GeneratorConstants.VectorComponents.Length; componentCount++)
         {
-            var components = AllComponents.Take(componentCount).ToArray();
+            var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
 
             var intType = "int";
             var floatType = "float";
