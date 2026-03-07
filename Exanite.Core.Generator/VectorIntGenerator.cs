@@ -28,7 +28,7 @@ public class VectorIntGenerator
             var vectorIntType = $"Vector{componentCount}Int";
             var vectorFloatType = $"Vector{componentCount}";
 
-            builder.Separate();
+            builder.AppendSeparation();
             using (builder.EnterScope($"public struct {vectorIntType} : IEquatable<{vectorIntType}>, IFormattable"))
             {
                 foreach (var component in components)
@@ -49,12 +49,12 @@ public class VectorIntGenerator
                     var currentComponent = i;
                     var parameters = string.Join(", ", Enumerable.Range(0, componentCount).Select(index => index == currentComponent ? "1" : "0"));
 
-                    builder.Separate();
+                    builder.AppendSeparation();
                     builder.AppendLine($"/// <inheritdoc cref=\"{vectorFloatType}.Unit{components[i]}\"/>");
                     builder.AppendLine($"public static {vectorIntType} Unit{components[i]} => new({parameters});");
                 }
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope("public int this[int index]"))
                 {
                     using (builder.EnterScope("readonly get"))
@@ -69,7 +69,7 @@ public class VectorIntGenerator
                         }
                     }
 
-                    builder.Separate();
+                    builder.AppendSeparation();
                     using (builder.EnterScope("set"))
                     {
                         using (builder.EnterScope("switch (index)"))
@@ -83,10 +83,10 @@ public class VectorIntGenerator
                     }
                 }
 
-                builder.Separate();
+                builder.AppendSeparation();
                 builder.AppendLine($"public {vectorIntType}(int value) : this({string.Join(", ", components.Select(_ => "value"))}) {{}}");
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope($"public {vectorIntType}({string.Join(", ", components.Select(c => $"int {c.ToLower()}"))})"))
                 {
                     foreach (var component in components)
@@ -95,13 +95,13 @@ public class VectorIntGenerator
                     }
                 }
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope($"public static explicit operator {vectorIntType}({vectorFloatType} value)"))
                 {
                     builder.AppendLine($"return new {vectorIntType}({string.Join(", ", components.Select(c => $"(int)value.{c}"))});");
                 }
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope($"public static implicit operator {vectorFloatType}({vectorIntType} value)"))
                 {
                     builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", components.Select(c => $"value.{c}"))});");
@@ -125,55 +125,55 @@ public class VectorIntGenerator
                 AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "|");
                 AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "^");
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope($"public static {vectorIntType} operator -({vectorIntType} value)"))
                 {
                     builder.AppendLine("return Zero - value;");
                 }
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope($"public static bool operator ==({vectorIntType} left, {vectorIntType} right)"))
                 {
                     builder.AppendLine("return left.Equals(right);");
                 }
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope($"public static bool operator !=({vectorIntType} left, {vectorIntType} right)"))
                 {
                     builder.AppendLine("return !left.Equals(right);");
                 }
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope($"public bool Equals({vectorIntType} other)"))
                 {
                     builder.AppendLine($"return {string.Join(" && ", components.Select(c => $"{c} == other.{c}"))};");
                 }
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope("public override bool Equals(object? obj)"))
                 {
                     builder.AppendLine($"return obj is {vectorIntType} other && Equals(other);");
                 }
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope("public override int GetHashCode()"))
                 {
                     builder.AppendLine($"return HashCode.Combine({string.Join(", ", components.Select(c => $"{c}"))});");
                 }
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope("public override string ToString()"))
                 {
                     builder.AppendLine("return ToString(\"G\", CultureInfo.CurrentCulture);");
                 }
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope("public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format)"))
                 {
                     builder.AppendLine("return ToString(format, CultureInfo.CurrentCulture);");
                 }
 
-                builder.Separate();
+                builder.AppendSeparation();
                 using (builder.EnterScope("public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format, IFormatProvider? formatProvider)"))
                 {
                     builder.AppendLine($"return (({vectorFloatType})this).ToString(format, formatProvider);");
@@ -187,7 +187,7 @@ public class VectorIntGenerator
 
     private void AppendScalarOperation(IndentedStringBuilder builder, string[] components, string leftInputType, string rightInputType, string returnType, string operation)
     {
-        builder.Separate();
+        builder.AppendSeparation();
         using (builder.EnterScope($"public static {returnType} operator {operation}({leftInputType} value, {rightInputType} scalar)"))
         {
             builder.AppendLine($"return new {returnType}({string.Join(", ", components.Select(c => $"value.{c} {operation} scalar"))});");
@@ -196,7 +196,7 @@ public class VectorIntGenerator
 
     private void AppendVectorOperation(IndentedStringBuilder builder, string[] components, string leftInputType, string rightInputType, string returnType, string operation)
     {
-        builder.Separate();
+        builder.AppendSeparation();
         using (builder.EnterScope($"public static {returnType} operator {operation}({leftInputType} left, {rightInputType} right)"))
         {
             builder.AppendLine($"return new {returnType}({string.Join(", ", components.Select(c => $"left.{c} {operation} right.{c}"))});");
