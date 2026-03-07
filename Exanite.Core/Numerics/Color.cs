@@ -33,15 +33,6 @@ public record struct Color
 
     private Vector4 linear;
 
-    /// <summary>
-    /// The raw value of the color in linear.
-    /// </summary>
-    public Vector4 Value
-    {
-        readonly get => linear;
-        set => linear = value;
-    }
-
     public float X
     {
         readonly get => linear.X;
@@ -331,7 +322,7 @@ public record struct Color
 
     public readonly override string ToString()
     {
-        return $"{Value} (Linear)";
+        return $"{linear} (Linear)";
     }
 
     // Predefined palettes

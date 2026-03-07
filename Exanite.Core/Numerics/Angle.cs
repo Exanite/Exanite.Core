@@ -18,15 +18,6 @@ public record struct Angle
 
     private float radians;
 
-    /// <summary>
-    /// The raw value of the angle in radians.
-    /// </summary>
-    public float Value
-    {
-        readonly get => radians;
-        set => radians = value;
-    }
-
     private Angle(float radians)
     {
         this.radians = radians;
@@ -101,38 +92,38 @@ public record struct Angle
 
     public static Angle operator +(Angle a, Angle b)
     {
-        return new Angle(a.Value + b.Value);
+        return new Angle(a.radians + b.radians);
     }
 
     public static Angle operator -(Angle a, Angle b)
     {
-        return new Angle(a.Value - b.Value);
+        return new Angle(a.radians - b.radians);
     }
 
     public static Angle operator -(Angle a)
     {
-        return new Angle(-a.Value);
+        return new Angle(-a.radians);
     }
 
     public static Angle operator *(Angle a, float scalar)
     {
-        return new Angle(a.Value * scalar);
+        return new Angle(a.radians * scalar);
     }
 
     public static Angle operator *(float scalar, Angle a)
     {
-        return new Angle(a.Value * scalar);
+        return new Angle(a.radians * scalar);
     }
 
     public static Angle operator /(Angle a, float scalar)
     {
-        return new Angle(a.Value / scalar);
+        return new Angle(a.radians / scalar);
     }
 
     // Operations
 
     public readonly override string ToString()
     {
-        return $"{Value} radians";
+        return $"{radians} radians";
     }
 }
