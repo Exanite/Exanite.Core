@@ -33,7 +33,7 @@ public readonly struct Fixed :
     public static Fixed AdditiveIdentity => Zero;
     public static Fixed MultiplicativeIdentity => One;
 
-    // public static int Radix => CreateChecked(2);
+    public static int Radix => 2;
 
     private readonly long value;
 
@@ -93,19 +93,46 @@ public readonly struct Fixed :
     public static bool IsNaN(Fixed value) => false;
     public static bool IsSubnormal(Fixed value) => false;
 
-    // Magnitude operations
+    // Magnitude methods
     public static Fixed Abs(Fixed value) => new(long.Abs(value.value));
     public static Fixed MaxMagnitude(Fixed x, Fixed y) => Abs(x) > Abs(y) ? x : y;
     public static Fixed MaxMagnitudeNumber(Fixed x, Fixed y) => MaxMagnitude(x, y);
     public static Fixed MinMagnitude(Fixed x, Fixed y) => Abs(x) < Abs(y) ? x : y;
     public static Fixed MinMagnitudeNumber(Fixed x, Fixed y) => MinMagnitude(x, y);
 
-    // public static bool TryConvertFromChecked<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>;
-    // public static bool TryConvertFromSaturating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>;
-    // public static bool TryConvertFromTruncating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>;
-    // public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>;
-    // public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>;
-    // public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>;
+    // Creation methods
+    public static bool TryConvertFromChecked<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>
+    {
+        if (TryConvertToDouble<TOther, double>(value, out var doubleValue))
+        {
+            result = new Fixed((long)(doubleValue * OneValue));
+            return true;
+        }
+
+        result = default;
+        return false;
+    }
+
+    private static bool TryConvertToDouble<TOther, TDouble>(TOther value, out double result)
+        where TOther : INumberBase<TOther>
+        where TDouble : INumberBase<double>
+    {
+        return TDouble.TryConvertFromChecked(value, out result);
+    }
+
+    public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
+    {
+        var doubleValue = value.value / (double)OneValue;
+        return TOther.TryConvertFromChecked(doubleValue, out result);
+    }
+
+    public static Fixed CreateChecked<TOther>(TOther value) where TOther : INumberBase<TOther> => TryConvertFromChecked(value, out var result) ? result : throw new OverflowException();
+    public static Fixed CreateSaturating<TOther>(TOther value) where TOther : INumberBase<TOther> => CreateChecked(value);
+    public static Fixed CreateTruncating<TOther>(TOther value) where TOther : INumberBase<TOther> => CreateChecked(value);
+    public static bool TryConvertFromSaturating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther> => TryConvertFromChecked(value, out result);
+    public static bool TryConvertFromTruncating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther> => TryConvertFromChecked(value, out result);
+    public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther> => TryConvertToChecked(value, out result);
+    public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther> => TryConvertToChecked(value, out result);
 
     // public string ToString(string? format, IFormatProvider? formatProvider);
     // public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider);
