@@ -29,12 +29,19 @@ public readonly struct Fixed : INumber<Fixed>
     }
 
     // Operators
-    // TODO: Use Int128 to avoid overflows
     public static Fixed operator +(Fixed left, Fixed right) => new(left.value + right.value);
     public static Fixed operator -(Fixed left, Fixed right) => new(left.value - right.value);
-    public static Fixed operator *(Fixed left, Fixed right) => new((left.value * right.value) >> Shift);
-    public static Fixed operator /(Fixed left, Fixed right) => new((left.value << Shift) / right.value);
     public static Fixed operator %(Fixed left, Fixed right) => new(left.value % right.value);
+
+    public static Fixed operator *(Fixed left, Fixed right)
+    {
+        return new Fixed((long)(((Int128)left.value * right.value) >> Shift));
+    }
+
+    public static Fixed operator /(Fixed left, Fixed right)
+    {
+        return new Fixed((long)(((Int128)left.value << Shift) / right.value));
+    }
 
     public static Fixed operator +(Fixed value) => value;
     public static Fixed operator -(Fixed value) => new(-value.value);
