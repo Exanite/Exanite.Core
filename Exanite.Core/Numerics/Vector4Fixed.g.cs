@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace Exanite.Core.Numerics;
 
-public partial struct Vector4Fixed
+public partial struct Vector4Fixed : IEquatable<Vector4Fixed>, IFormattable
 {
     /// <inheritdoc cref="Vector4.X"/>
     public Fixed X;
@@ -166,5 +166,22 @@ public partial struct Vector4Fixed
     public override int GetHashCode()
     {
         return HashCode.Combine(X, Y, Z, W);
+    }
+
+    public override string ToString()
+    {
+        return ToString("G", CultureInfo.CurrentCulture);
+    }
+
+    public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format)
+    {
+        return ToString(format, CultureInfo.CurrentCulture);
+    }
+
+    public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format, IFormatProvider? formatProvider)
+    {
+        string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
+
+        return $"<{X.ToString(format, formatProvider)}{separator} {Y.ToString(format, formatProvider)}{separator} {Z.ToString(format, formatProvider)}{separator} {W.ToString(format, formatProvider)}>";
     }
 }

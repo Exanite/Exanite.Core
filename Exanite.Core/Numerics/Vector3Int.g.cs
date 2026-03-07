@@ -196,6 +196,8 @@ public partial struct Vector3Int : IEquatable<Vector3Int>, IFormattable
 
     public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format, IFormatProvider? formatProvider)
     {
-        return ((Vector3)this).ToString(format, formatProvider);
+        string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
+
+        return $"<{X.ToString(format, formatProvider)}{separator} {Y.ToString(format, formatProvider)}{separator} {Z.ToString(format, formatProvider)}>";
     }
 }

@@ -173,10 +173,15 @@ public class VectorIntGenerator
                     builder.AppendLine("return ToString(format, CultureInfo.CurrentCulture);");
                 }
 
+                // This matches the System.Numerics Vector.ToString() implementation
                 builder.AppendSeparation();
                 using (builder.EnterScope("public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format, IFormatProvider? formatProvider)"))
                 {
-                    builder.AppendLine($"return (({vectorFloatType})this).ToString(format, formatProvider);");
+                    builder.AppendLine("string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;");
+                    builder.AppendLine();
+
+                    var format = string.Join("{separator} ", components.Select(c => $"{{{c}.ToString(format, formatProvider)}}"));
+                    builder.AppendLine($"return $\"<{format}>\";");
                 }
             }
 

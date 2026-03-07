@@ -187,6 +187,8 @@ public partial struct Vector2Int : IEquatable<Vector2Int>, IFormattable
 
     public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format, IFormatProvider? formatProvider)
     {
-        return ((Vector2)this).ToString(format, formatProvider);
+        string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
+
+        return $"<{X.ToString(format, formatProvider)}{separator} {Y.ToString(format, formatProvider)}>";
     }
 }

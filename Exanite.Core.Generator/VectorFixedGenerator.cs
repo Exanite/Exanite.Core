@@ -30,7 +30,7 @@ public class VectorFixedGenerator
             builder.AppendLine("namespace Exanite.Core.Numerics;");
 
             builder.AppendSeparation();
-            using (builder.EnterScope($"public partial struct {vectorFixedType}")) // TODO: : IEquatable<{vectorFixedType}> , IFormattable
+            using (builder.EnterScope($"public partial struct {vectorFixedType} : IEquatable<{vectorFixedType}>, IFormattable"))
             {
                 foreach (var component in components)
                 {
@@ -169,24 +169,29 @@ public class VectorFixedGenerator
                 {
                     builder.AppendLine($"return HashCode.Combine({string.Join(", ", components.Select(c => $"{c}"))});");
                 }
-                //
-                // builder.AppendSeparation();
-                // using (builder.EnterScope("public override string ToString()"))
-                // {
-                //     builder.AppendLine("return ToString(\"G\", CultureInfo.CurrentCulture);");
-                // }
-                //
-                // builder.AppendSeparation();
-                // using (builder.EnterScope("public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format)"))
-                // {
-                //     builder.AppendLine("return ToString(format, CultureInfo.CurrentCulture);");
-                // }
-                //
-                // builder.AppendSeparation();
-                // using (builder.EnterScope("public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format, IFormatProvider? formatProvider)"))
-                // {
-                //     builder.AppendLine($"return (({vectorFloatType})this).ToString(format, formatProvider);");
-                // }
+
+                builder.AppendSeparation();
+                using (builder.EnterScope("public override string ToString()"))
+                {
+                    builder.AppendLine("return ToString(\"G\", CultureInfo.CurrentCulture);");
+                }
+
+                builder.AppendSeparation();
+                using (builder.EnterScope("public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format)"))
+                {
+                    builder.AppendLine("return ToString(format, CultureInfo.CurrentCulture);");
+                }
+
+                // This matches the System.Numerics Vector.ToString() implementation
+                builder.AppendSeparation();
+                using (builder.EnterScope("public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format, IFormatProvider? formatProvider)"))
+                {
+                    builder.AppendLine("string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;");
+                    builder.AppendLine();
+
+                    var format = string.Join("{separator} ", components.Select(c => $"{{{c}.ToString(format, formatProvider)}}"));
+                    builder.AppendLine($"return $\"<{format}>\";");
+                }
             }
 
             var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{vectorFixedType}.g.cs";
