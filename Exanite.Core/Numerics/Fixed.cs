@@ -93,11 +93,12 @@ public readonly struct Fixed :
     public static bool IsNaN(Fixed value) => false;
     public static bool IsSubnormal(Fixed value) => false;
 
-    // public static Fixed Abs(Fixed value);
-    // public static Fixed MaxMagnitude(Fixed x, Fixed y);
-    // public static Fixed MaxMagnitudeNumber(Fixed x, Fixed y);
-    // public static Fixed MinMagnitude(Fixed x, Fixed y);
-    // public static Fixed MinMagnitudeNumber(Fixed x, Fixed y);
+    // Magnitude operations
+    public static Fixed Abs(Fixed value) => new(long.Abs(value.value));
+    public static Fixed MaxMagnitude(Fixed x, Fixed y) => Abs(x) > Abs(y) ? x : y;
+    public static Fixed MaxMagnitudeNumber(Fixed x, Fixed y) => MaxMagnitude(x, y);
+    public static Fixed MinMagnitude(Fixed x, Fixed y) => Abs(x) < Abs(y) ? x : y;
+    public static Fixed MinMagnitudeNumber(Fixed x, Fixed y) => MinMagnitude(x, y);
 
     // public static bool TryConvertFromChecked<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>;
     // public static bool TryConvertFromSaturating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>;
