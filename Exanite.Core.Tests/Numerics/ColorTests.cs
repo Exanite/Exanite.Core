@@ -71,9 +71,9 @@ public class ColorTests
                 && M.ApproximatelyEquals(a.Z, b.Z, 0.001f);
         }
 
-        public int GetHashCode(Vector3 obj)
+        public int GetHashCode(Vector3 value)
         {
-            throw new NotSupportedException();
+            return 0;
         }
     }
 }
