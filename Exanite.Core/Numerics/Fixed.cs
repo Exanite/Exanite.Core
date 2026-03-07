@@ -1,12 +1,26 @@
 using System;
+using System.Numerics;
 
 namespace Exanite.Core.Numerics;
 
 /// <summary>
 /// A fixed point Q48.16 value (48-bits integer, 16-bits fraction).
 /// </summary>
-public readonly struct Fixed : IEquatable<Fixed>, IComparable<Fixed>
+public readonly struct Fixed :
+    IEquatable<Fixed>,
+    IComparable<Fixed>,
+    IAdditiveIdentity<Fixed, Fixed>,
+    IMultiplicativeIdentity<Fixed, Fixed>
 {
+    // Constants
+    private const int Shift = 16;
+    private const long OneValue = 1L << Shift;
+
+    public static Fixed One => new(OneValue);
+    public static Fixed Zero => new(0);
+    public static Fixed AdditiveIdentity => Zero;
+    public static Fixed MultiplicativeIdentity => One;
+
     private readonly long value;
 
     private Fixed(long value)
