@@ -70,7 +70,7 @@ public readonly struct Fixed : INumber<Fixed>
 
     public static bool IsInteger(Fixed value) => (value.value & (OneValue - 1)) == 0;
     public static bool IsEvenInteger(Fixed value) => IsInteger(value) && (value.value >> Shift) % 2 == 0;
-    public static bool IsOddInteger(Fixed value) => IsInteger(value) && (value.value >> Shift) % 2 == 1;
+    public static bool IsOddInteger(Fixed value) => IsInteger(value) && (value.value >> Shift) % 2 != 0;
 
     public static bool IsRealNumber(Fixed value) => true;
     public static bool IsComplexNumber(Fixed value) => false;
