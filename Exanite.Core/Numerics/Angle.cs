@@ -13,8 +13,8 @@ namespace Exanite.Core.Numerics;
 /// </remarks>
 public record struct Angle
 {
-    public static Angle Zero => FromRadians(0);
-    public static Angle Pi => FromRadians(float.Pi);
+    public static readonly Angle Zero = FromRadians(0);
+    public static readonly Angle Pi = FromRadians(float.Pi);
 
     private float angle;
     private AngleType type;
