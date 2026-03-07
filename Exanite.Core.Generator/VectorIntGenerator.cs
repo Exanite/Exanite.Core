@@ -115,103 +115,23 @@ public class VectorIntGenerator
                     builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{AllComponents[index]}"))});");
                 }
 
-                builder.Separate();
-                builder.AppendLine($"public static {vectorIntType} operator *({vectorIntType} value, int scalar)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{AllComponents[index]} * scalar"))});");
-                }
+                AppendScalarOperation(builder, components, vectorIntType, "int", vectorIntType, "*");
+                AppendScalarOperation(builder, components, vectorIntType, "float", vectorFloatType, "*");
 
-                builder.Separate();
-                builder.AppendLine($"public static {vectorFloatType} operator *({vectorIntType} value, float scalar)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{AllComponents[index]} * scalar"))});");
-                }
+                AppendScalarOperation(builder, components, vectorIntType, "int", vectorIntType, "/");
+                AppendScalarOperation(builder, components, vectorIntType, "float", vectorFloatType, "/");
 
-                builder.Separate();
-                builder.AppendLine($"public static {vectorIntType} operator /({vectorIntType} value, int scalar)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{AllComponents[index]} / scalar"))});");
-                }
+                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "+");
+                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "-");
+                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "*");
+                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "/");
 
-                builder.Separate();
-                builder.AppendLine($"public static {vectorFloatType} operator /({vectorIntType} value, float scalar)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorFloatType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"value.{AllComponents[index]} / scalar"))});");
-                }
-
-                builder.Separate();
-                builder.AppendLine($"public static {vectorIntType} operator +({vectorIntType} left, {vectorIntType} right)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{AllComponents[index]} + right.{AllComponents[index]}"))});");
-                }
-
-                builder.Separate();
-                builder.AppendLine($"public static {vectorIntType} operator -({vectorIntType} left, {vectorIntType} right)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{AllComponents[index]} - right.{AllComponents[index]}"))});");
-                }
-
-                builder.Separate();
-                builder.AppendLine($"public static {vectorIntType} operator *({vectorIntType} left, {vectorIntType} right)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{AllComponents[index]} * right.{AllComponents[index]}"))});");
-                }
-
-                builder.Separate();
-                builder.AppendLine($"public static {vectorIntType} operator /({vectorIntType} left, {vectorIntType} right)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{AllComponents[index]} / right.{AllComponents[index]}"))});");
-                }
-
-                builder.Separate();
-                builder.AppendLine($"public static {vectorIntType} operator <<({vectorIntType} left, {vectorIntType} right)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{AllComponents[index]} << right.{AllComponents[index]}"))});");
-                }
-
-                builder.Separate();
-                builder.AppendLine($"public static {vectorIntType} operator >>({vectorIntType} left, {vectorIntType} right)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{AllComponents[index]} >> right.{AllComponents[index]}"))});");
-                }
-
-                builder.Separate();
-                builder.AppendLine($"public static {vectorIntType} operator >>>({vectorIntType} left, {vectorIntType} right)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{AllComponents[index]} >>> right.{AllComponents[index]}"))});");
-                }
-
-                builder.Separate();
-                builder.AppendLine($"public static {vectorIntType} operator &({vectorIntType} left, {vectorIntType} right)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{AllComponents[index]} & right.{AllComponents[index]}"))});");
-                }
-
-                builder.Separate();
-                builder.AppendLine($"public static {vectorIntType} operator |({vectorIntType} left, {vectorIntType} right)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{AllComponents[index]} | right.{AllComponents[index]}"))});");
-                }
-
-                builder.Separate();
-                builder.AppendLine($"public static {vectorIntType} operator ^({vectorIntType} left, {vectorIntType} right)");
-                using (builder.EnterScope())
-                {
-                    builder.AppendLine($"return new {vectorIntType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"left.{AllComponents[index]} ^ right.{AllComponents[index]}"))});");
-                }
+                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "<<");
+                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, ">>");
+                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, ">>>");
+                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "&");
+                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "|");
+                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "^");
 
                 builder.Separate();
                 builder.AppendLine($"public static {vectorIntType} operator -({vectorIntType} value)");
@@ -280,5 +200,25 @@ public class VectorIntGenerator
 
         var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / "VectorXInt.g.cs";
         outputPath.WriteAllText(builder.ToString());
+    }
+
+    private void AppendScalarOperation(IndentedStringBuilder builder, string[] components, string leftInputType, string rightInputType, string returnType, string operation)
+    {
+        builder.Separate();
+        builder.AppendLine($"public static {returnType} operator {operation}({leftInputType} value, {rightInputType} scalar)");
+        using (builder.EnterScope())
+        {
+            builder.AppendLine($"return new {returnType}({string.Join(", ", components.Select(c => $"value.{c} {operation} scalar"))});");
+        }
+    }
+
+    private void AppendVectorOperation(IndentedStringBuilder builder, string[] components, string leftInputType, string rightInputType, string returnType, string operation)
+    {
+        builder.Separate();
+        builder.AppendLine($"public static {returnType} operator {operation}({leftInputType} left, {rightInputType} right)");
+        using (builder.EnterScope())
+        {
+            builder.AppendLine($"return new {returnType}({string.Join(", ", components.Select(c => $"left.{c} {operation} right.{c}"))});");
+        }
     }
 }
