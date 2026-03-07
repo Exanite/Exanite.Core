@@ -11,5 +11,6 @@ public class Program
         GuardUtility.IsTrue(csprojFile.Exists, "Working directory is incorrect. Please set it to be the root of the Exanite.Core repo");
 
         new VectorIntGenerator().Run();
+        new VectorFixedGenerator().Run();
     }
 }
