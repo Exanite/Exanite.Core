@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Exanite.Core.Generator</AssemblyName>
+    <RootNamespace>Exanite.Core.Generator</RootNamespace>
+
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>14</LangVersion>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Exanite.CodeGen\Exanite.CodeGen\Exanite.CodeGen.csproj"/>
+    <ProjectReference Include="..\..\Exanite.Core\Exanite.Core\Exanite.Core.csproj"/>
+  </ItemGroup>
+</Project>
