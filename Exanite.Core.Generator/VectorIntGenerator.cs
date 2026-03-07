@@ -11,9 +11,8 @@ public class VectorIntGenerator
     public void Run()
     {
         var builder = new IndentedStringBuilder();
+        builder.AppendGeneratedCodeHeader();
 
-        builder.AppendLine("#nullable enable");
-        builder.AppendLine();
         builder.AppendLine("using System;");
         builder.AppendLine("using System.Diagnostics.CodeAnalysis;");
         builder.AppendLine("using System.Globalization;");
