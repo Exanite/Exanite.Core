@@ -283,6 +283,10 @@ public record struct Color
                     h = 60 * (((r - g) / c) + 4);
                 }
 
+                // The above can return negative values
+                // Eg: For linear input, (1, 0, 1)
+                h = M.Wrap(h, 0, 360);
+
                 var s = 0f;
                 if (l > 0 && l < 1)
                 {
