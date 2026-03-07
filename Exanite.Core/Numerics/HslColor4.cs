@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Exanite.Core.Numerics;
 
 /// <summary>
-/// Storage struct useful for explicitly storing an angle in HSL format.
+/// Storage struct useful for explicitly storing a color in HSL format.
 /// Primary recommended use is for interop and other scenarios requiring the byte-level format to be in HSL.
 /// <br/>
 /// See <see cref="Numerics.Color"/> for a general color representation struct and corresponding APIs.
@@ -30,14 +30,14 @@ public record struct HslColor4
         return new HslColor4(color.To(ColorType.Hsl));
     }
 
-    public static implicit operator HslColor4(Vector4 angle)
+    public static implicit operator HslColor4(Vector4 color)
     {
-        return new HslColor4(angle);
+        return new HslColor4(color);
     }
 
-    public static implicit operator Vector4(HslColor4 angle)
+    public static implicit operator Vector4(HslColor4 color)
     {
-        return angle.Value;
+        return color.Value;
     }
 
     public readonly override string ToString()

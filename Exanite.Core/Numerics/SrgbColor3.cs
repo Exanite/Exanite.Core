@@ -5,7 +5,7 @@ using Exanite.Core.Utilities;
 namespace Exanite.Core.Numerics;
 
 /// <summary>
-/// Storage struct useful for explicitly storing an angle in sRGB format.
+/// Storage struct useful for explicitly storing a color in sRGB format.
 /// Primary recommended use is for interop and other scenarios requiring the byte-level format to be in sRGB.
 /// <br/>
 /// See <see cref="Numerics.Color"/> for a general color representation struct and corresponding APIs.
@@ -31,14 +31,14 @@ public record struct SrgbColor3
         return new SrgbColor3(color.To(ColorType.Srgb).Xyz());
     }
 
-    public static implicit operator SrgbColor3(Vector3 angle)
+    public static implicit operator SrgbColor3(Vector3 color)
     {
-        return new SrgbColor3(angle);
+        return new SrgbColor3(color);
     }
 
-    public static implicit operator Vector3(SrgbColor3 angle)
+    public static implicit operator Vector3(SrgbColor3 color)
     {
-        return angle.Value;
+        return color.Value;
     }
 
     public readonly override string ToString()
