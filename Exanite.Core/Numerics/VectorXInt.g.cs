@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -267,12 +267,12 @@ public struct Vector3Int : IEquatable<Vector3Int>, IFormattable
 
     public static Vector3Int operator /(Vector3Int value, int scalar)
     {
-        return new Vector3Int(value.X * scalar, value.Y * scalar, value.Z * scalar);
+        return new Vector3Int(value.X / scalar, value.Y / scalar, value.Z / scalar);
     }
 
     public static Vector3 operator /(Vector3Int value, float scalar)
     {
-        return new Vector3(value.X * scalar, value.Y * scalar, value.Z * scalar);
+        return new Vector3(value.X / scalar, value.Y / scalar, value.Z / scalar);
     }
 
     public static Vector3Int operator +(Vector3Int left, Vector3Int right)
@@ -462,12 +462,12 @@ public struct Vector4Int : IEquatable<Vector4Int>, IFormattable
 
     public static Vector4Int operator /(Vector4Int value, int scalar)
     {
-        return new Vector4Int(value.X * scalar, value.Y * scalar, value.Z * scalar, value.W * scalar);
+        return new Vector4Int(value.X / scalar, value.Y / scalar, value.Z / scalar, value.W / scalar);
     }
 
     public static Vector4 operator /(Vector4Int value, float scalar)
     {
-        return new Vector4(value.X * scalar, value.Y * scalar, value.Z * scalar, value.W * scalar);
+        return new Vector4(value.X / scalar, value.Y / scalar, value.Z / scalar, value.W / scalar);
     }
 
     public static Vector4Int operator +(Vector4Int left, Vector4Int right)
