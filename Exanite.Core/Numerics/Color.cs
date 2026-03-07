@@ -14,7 +14,9 @@ namespace Exanite.Core.Numerics;
 /// <see cref="LinearColor4"/>,
 /// <see cref="LinearColor3"/>,
 /// <see cref="SrgbColor4"/>,
-/// <see cref="SrgbColor3"/>
+/// <see cref="SrgbColor3"/>,
+/// <see cref="HslColor4"/>,
+/// <see cref="HslColor3"/>
 /// </remarks>
 public record struct Color
 {
