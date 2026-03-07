@@ -10,22 +10,22 @@ public class VectorIntGenerator
 
     public void Run()
     {
-        var builder = new IndentedStringBuilder();
-        builder.AppendGeneratedCodeHeader();
-
-        builder.AppendLine("using System;");
-        builder.AppendLine("using System.Diagnostics.CodeAnalysis;");
-        builder.AppendLine("using System.Globalization;");
-        builder.AppendLine("using System.Numerics;");
-        builder.AppendLine("using System.Runtime.InteropServices;");
-        builder.AppendLine();
-        builder.AppendLine("namespace Exanite.Core.Numerics;");
-
         for (var componentCount = 2; componentCount <= AllComponents.Length; componentCount++)
         {
             var components = AllComponents.Take(componentCount).ToArray();
             var vectorIntType = $"Vector{componentCount}Int";
             var vectorFloatType = $"Vector{componentCount}";
+
+            var builder = new IndentedStringBuilder();
+            builder.AppendGeneratedCodeHeader();
+
+            builder.AppendLine("using System;");
+            builder.AppendLine("using System.Diagnostics.CodeAnalysis;");
+            builder.AppendLine("using System.Globalization;");
+            builder.AppendLine("using System.Numerics;");
+            builder.AppendLine("using System.Runtime.InteropServices;");
+            builder.AppendLine();
+            builder.AppendLine("namespace Exanite.Core.Numerics;");
 
             builder.AppendSeparation();
             using (builder.EnterScope($"public struct {vectorIntType} : IEquatable<{vectorIntType}>, IFormattable"))
@@ -178,10 +178,10 @@ public class VectorIntGenerator
                     builder.AppendLine($"return (({vectorFloatType})this).ToString(format, formatProvider);");
                 }
             }
-        }
 
-        var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / "VectorXInt.g.cs";
-        outputPath.WriteAllText(builder.ToString());
+            var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{vectorIntType}.g.cs";
+            outputPath.WriteAllText(builder.ToString());
+        }
     }
 
     private void AppendScalarOperation(IndentedStringBuilder builder, string[] components, string leftInputType, string rightInputType, string returnType, string operation)
