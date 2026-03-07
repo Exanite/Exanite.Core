@@ -10,9 +10,11 @@ namespace Exanite.Core.Numerics;
 /// Allows for easy conversion between different formats.
 /// </summary>
 /// <remarks>
-/// Consider using one of the storage types if you want efficient storage:
+/// Consider using one of the storage types if you want consistent and efficient storage:
 /// <see cref="LinearColor4"/>,
-/// <see cref="SrgbColor4"/>
+/// <see cref="LinearColor3"/>,
+/// <see cref="SrgbColor4"/>,
+/// <see cref="SrgbColor3"/>
 /// </remarks>
 public record struct Color
 {
@@ -29,131 +31,109 @@ public record struct Color
     public static Color TransparentWhite => FromSrgb(1, 1, 1, 0);
     public static Color TransparentBlack => FromSrgb(0, 0, 0, 0);
 
-    private Vector4 color;
-    private ColorType type;
+    private Vector4 linear;
 
-    public ColorType Type
-    {
-        readonly get => type;
-        set => type = value;
-    }
-
+    /// <summary>
+    /// The raw value of the color in linear.
+    /// </summary>
     public Vector4 Value
     {
-        readonly get => color;
-        set => color = value;
+        readonly get => linear;
+        set => linear = value;
     }
 
     public float X
     {
-        readonly get => color.X;
-        set => color.X = value;
+        readonly get => linear.X;
+        set => linear.X = value;
     }
 
     public float Y
     {
-        readonly get => color.Y;
-        set => color.Y = value;
+        readonly get => linear.Y;
+        set => linear.Y = value;
     }
 
     public float Z
     {
-        readonly get => color.Z;
-        set => color.Z = value;
+        readonly get => linear.Z;
+        set => linear.Z = value;
     }
 
     public float W
     {
-        readonly get => color.W;
-        set => color.W = value;
+        readonly get => linear.W;
+        set => linear.W = value;
     }
 
-    public Color(Vector4 color, ColorType type)
+    private Color(Vector4 linear)
     {
-        this.color = color;
-        this.type = type;
+        this.linear = linear;
     }
 
     // Srgb
 
-    public readonly Color Srgb => As(ColorType.Srgb);
-
-    public static implicit operator Color(SrgbColor4 color)
-    {
-        return new Color(color.Value, ColorType.Srgb);
-    }
-
-    public static implicit operator SrgbColor4(Color color)
-    {
-        return new SrgbColor4(color.As(ColorType.Srgb).Value);
-    }
+    public readonly SrgbColor4 Srgb4 => this;
+    public readonly SrgbColor3 Srgb3 => this;
 
     public static Color FromSrgb(Vector3 value)
     {
-        return new Color(value.Xyz1(), ColorType.Srgb);
+        return From(value.Xyz1(), ColorType.Srgb);
     }
 
     public static Color FromSrgb(Vector4 value)
     {
-        return new Color(value, ColorType.Srgb);
+        return From(value, ColorType.Srgb);
     }
 
     public static Color FromSrgb(float r, float g, float b, float a = 1)
     {
-        return new Color(new Vector4(r, g, b, a), ColorType.Srgb);
+        return From(new Vector4(r, g, b, a), ColorType.Srgb);
     }
 
     public static Color FromBytesSrgb(byte r, byte g, byte b, byte a = byte.MaxValue)
     {
-        return new Color(new Vector4(r, g, b, a) / byte.MaxValue, ColorType.Srgb);
+        return From(new Vector4(r, g, b, a) / byte.MaxValue, ColorType.Srgb);
     }
 
     // Linear
 
-    public readonly Color Linear => As(ColorType.Linear);
-
-    public static implicit operator Color(LinearColor4 color)
-    {
-        return new Color(color.Value, ColorType.Linear);
-    }
-
-    public static implicit operator LinearColor4(Color color)
-    {
-        return new LinearColor4(color.As(ColorType.Linear).Value);
-    }
+    public readonly LinearColor4 Linear4 => this;
+    public readonly LinearColor3 Linear3 => this;
 
     public static Color FromLinear(Vector3 value)
     {
-        return new Color(value.Xyz1(), ColorType.Linear);
+        return From(value.Xyz1(), ColorType.Linear);
     }
 
     public static Color FromLinear(Vector4 value)
     {
-        return new Color(value, ColorType.Linear);
+        return From(value, ColorType.Linear);
     }
 
     public static Color FromLinear(float r, float g, float b, float a = 1)
     {
-        return new Color(new Vector4(r, g, b, a), ColorType.Linear);
+        return From(new Vector4(r, g, b, a), ColorType.Linear);
     }
 
     // Hsl
 
-    public readonly Color Hsl => As(ColorType.Hsl);
+    public readonly HslColor4 Hsl4 => this;
+    public readonly HslColor3 Hsl3 => this;
 
     public static Color FromHsl(Vector3 value)
     {
-        return new Color(value.Xyz1(), ColorType.Hsl);
+        return From(value.Xyz1(), ColorType.Hsl);
     }
 
     public static Color FromHsl(Vector4 value)
     {
-        return new Color(value, ColorType.Hsl);
+        return From(value, ColorType.Hsl);
     }
 
     public static Color FromHsl(float h, float s, float l, float a = 1)
     {
-        return new Color(new Vector4(h, s, l, a), ColorType.Hsl);
+        return From(new Vector4(h, s, l, a), ColorType.Hsl);
     }
 
     // System.Drawing.Color
@@ -171,12 +151,12 @@ public record struct Color
     public static Color FromDrawingColor(DrawingColor color)
     {
         var value = new Vector4(color.R, color.G, color.B, color.A) / byte.MaxValue;
-        return new Color(value, ColorType.Srgb);
+        return From(value, ColorType.Srgb);
     }
 
     public readonly DrawingColor ToDrawingColor()
     {
-        var value = Srgb.Value * byte.MaxValue;
+        var value = To(ColorType.Srgb) * byte.MaxValue;
         value = new Vector4(float.Round(value.X), float.Round(value.Y), float.Round(value.Z), float.Round(value.W));
 
         return DrawingColor.FromArgb((byte)value.W, (byte)value.X, (byte)value.Y, (byte)value.Z);
@@ -186,7 +166,7 @@ public record struct Color
 
     public static Color FromHex(string hex)
     {
-        return new Color(M.HexToSrgb(hex), ColorType.Srgb);
+        return From(M.HexToSrgb(hex), ColorType.Srgb);
     }
 
     public readonly string ToHex(bool includeAlpha = true)
@@ -220,33 +200,17 @@ public record struct Color
 
     // Conversions
 
-    public readonly Color As(ColorType type)
+    public static Color From(Vector4 value, ColorType type)
     {
-        return Convert(this, type);
-    }
-
-    private static Color Convert(Color color, ColorType targetType)
-    {
-        if (color.Type == targetType)
-        {
-            return color;
-        }
-
-        // Implementation note:
-        // All conversions go through linear to keep things simple, but does lead to some inefficiencies
-
-        // Convert to linear first
-        var value = color.Value;
-        switch (color.Type)
+        switch (type)
         {
             case ColorType.Linear:
             {
-                break;
+                return new Color(value);
             }
             case ColorType.Srgb:
             {
-                value = M.SrgbToLinear(value);
-                break;
+                return new Color(M.SrgbToLinear(value));
             }
             case ColorType.Hsl:
             {
@@ -274,32 +238,30 @@ public record struct Color
 
                 srgb += new Vector4(m, m, m, 0);
 
-                // This is inefficient if the requested type is Srgb
-                value = M.SrgbToLinear(srgb);
-
-                break;
+                return new Color(M.SrgbToLinear(srgb));
             }
             default:
             {
-                throw ExceptionUtility.NotSupportedEnumValue(color.Type);
+                throw ExceptionUtility.NotSupportedEnumValue(type);
             }
         }
+    }
 
-        // Convert to output type
-        switch (targetType)
+    public readonly Vector4 To(ColorType type)
+    {
+        switch (type)
         {
             case ColorType.Linear:
             {
-                break;
+                return linear;
             }
             case ColorType.Srgb:
             {
-                value = M.LinearToSrgb(value);
-                break;
+                return M.LinearToSrgb(linear);
             }
             case ColorType.Hsl:
             {
-                value = M.LinearToSrgb(value);
+                var value = M.LinearToSrgb(linear);
 
                 var r = value.X;
                 var g = value.Y;
@@ -336,29 +298,20 @@ public record struct Color
                     s = (xMax - l) / M.Min(l, 1 - l);
                 }
 
-                value = new Vector4(h, s, l, a);
-
-                break;
+                return new Vector4(h, s, l, a);
             }
             default:
             {
-                throw ExceptionUtility.NotSupportedEnumValue(targetType);
+                throw ExceptionUtility.NotSupportedEnumValue(type);
             }
         }
-
-        return new Color(value, targetType);
-    }
-
-    public readonly Color WithTypeOverride(ColorType type)
-    {
-        return new Color(Value, type);
     }
 
     // Comparisons
 
     public readonly bool ApproximatelyEquals(Color other, ColorType colorType = ColorType.Linear, float tolerance = 0.000001f)
     {
-        return M.ApproximatelyEquals(As(colorType).Value, other.As(colorType).Value, tolerance);
+        return M.ApproximatelyEquals(To(colorType), other.To(colorType), tolerance);
     }
 
     // Operations
@@ -378,7 +331,7 @@ public record struct Color
 
     public readonly override string ToString()
     {
-        return $"{Value} ({Type})";
+        return $"{Value} (Linear)";
     }
 
     // Predefined palettes

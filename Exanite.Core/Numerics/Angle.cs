@@ -7,7 +7,7 @@ namespace Exanite.Core.Numerics;
 /// Allows for easy conversion between different formats.
 /// </summary>
 /// <remarks>
-/// Consider using one of the storage types if you want efficient storage:
+/// Consider using one of the storage types if you want consistent and efficient storage:
 /// <see cref="Radians"/>,
 /// <see cref="Degrees"/>
 /// </remarks>
@@ -16,164 +16,123 @@ public record struct Angle
     public static Angle Zero => FromRadians(0);
     public static Angle Pi => FromRadians(float.Pi);
 
-    private float angle;
-    private AngleType type;
+    private float radians;
 
-    public AngleType Type
-    {
-        readonly get => type;
-        set => type = value;
-    }
-
+    /// <summary>
+    /// The raw value of the angle in radians.
+    /// </summary>
     public float Value
     {
-        readonly get => angle;
-        set => angle = value;
+        readonly get => radians;
+        set => radians = value;
     }
 
-    public Angle(float angle, AngleType type)
+    private Angle(float radians)
     {
-        this.angle = angle;
-        this.type = type;
+        this.radians = radians;
     }
 
     // Degrees
 
-    public readonly Angle Degrees => As(AngleType.Degrees);
-
-    public static implicit operator Angle(Degrees angle)
-    {
-        return new Angle(angle.Value, AngleType.Degrees);
-    }
-
-    public static implicit operator Degrees(Angle angle)
-    {
-        return new Degrees(angle.Degrees.Value);
-    }
+    public readonly Degrees Degrees => this;
 
     public static Angle FromDegrees(float value)
     {
-        return new Angle(value, AngleType.Degrees);
+        return From(value, AngleType.Degrees);
     }
 
     // Radians
 
-    public readonly Angle Radians => As(AngleType.Radians);
-
-    public static implicit operator Angle(Radians angle)
-    {
-        return new Angle(angle.Value, AngleType.Radians);
-    }
-
-    public static implicit operator Radians(Angle angle)
-    {
-        return new Radians(angle.Radians.Value);
-    }
+    public readonly Radians Radians => this;
 
     public static Angle FromRadians(float value)
     {
-        return new Angle(value, AngleType.Radians);
+        return From(value, AngleType.Radians);
     }
 
     // Conversions
 
-    public readonly Angle As(AngleType type)
+    public static Angle From(float value, AngleType type)
     {
-        if (Type == type)
-        {
-            return this;
-        }
-
-        // Convert to radians first
-        var value = Value;
-        switch (Type)
-        {
-            case AngleType.Degrees:
-            {
-                value = M.Deg2Rad(value);
-                break;
-            }
-            case AngleType.Radians:
-            {
-                break;
-            }
-            default:
-            {
-                throw ExceptionUtility.NotSupportedEnumValue(Type);
-            }
-        }
-
-        // Convert to output type
         switch (type)
         {
             case AngleType.Degrees:
             {
-                value = M.Rad2Deg(value);
-                break;
+                return new Angle(M.Deg2Rad(value));
             }
             case AngleType.Radians:
             {
-                break;
+                return new Angle(value);
             }
             default:
             {
-                throw ExceptionUtility.NotSupportedEnumValue(Type);
+                throw ExceptionUtility.NotSupportedEnumValue(type);
             }
         }
-
-        return new Angle(value, type);
     }
 
-    public readonly Angle WithTypeOverride(AngleType type)
+    public readonly float To(AngleType type)
     {
-        return new Angle(Value, type);
+        switch (type)
+        {
+            case AngleType.Degrees:
+            {
+                return M.Rad2Deg(radians);
+            }
+            case AngleType.Radians:
+            {
+                return radians;
+            }
+            default:
+            {
+                throw ExceptionUtility.NotSupportedEnumValue(type);
+            }
+        }
     }
 
     // Comparisons
 
     public readonly bool ApproximatelyEquals(Angle other, AngleType angleType = AngleType.Radians, float tolerance = 0.000001f)
     {
-        return M.ApproximatelyEquals(As(angleType).Value, other.As(angleType).Value, tolerance);
+        return M.ApproximatelyEquals(To(angleType), other.To(angleType), tolerance);
     }
 
     // Operators
 
     public static Angle operator +(Angle a, Angle b)
     {
-        b = b.As(a.Type);
-        return new Angle(a.Value + b.Value, a.Type);
+        return new Angle(a.Value + b.Value);
     }
 
     public static Angle operator -(Angle a, Angle b)
     {
-        b = b.As(a.Type);
-        return new Angle(a.Value - b.Value, a.Type);
+        return new Angle(a.Value - b.Value);
     }
 
     public static Angle operator -(Angle a)
     {
-        return new Angle(-a.Value, a.Type);
+        return new Angle(-a.Value);
     }
 
     public static Angle operator *(Angle a, float scalar)
     {
-        return new Angle(a.Value * scalar, a.Type);
+        return new Angle(a.Value * scalar);
     }
 
     public static Angle operator *(float scalar, Angle a)
     {
-        return new Angle(a.Value * scalar, a.Type);
+        return new Angle(a.Value * scalar);
     }
 
     public static Angle operator /(Angle a, float scalar)
     {
-        return new Angle(a.Value / scalar, a.Type);
+        return new Angle(a.Value / scalar);
     }
 
     // Operations
 
     public readonly override string ToString()
     {
-        return $"{Value} {Type}";
+        return $"{Value} radians";
     }
 }

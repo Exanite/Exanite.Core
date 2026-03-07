@@ -6,26 +6,31 @@ namespace Exanite.Core.Numerics;
 /// Storage struct useful for explicitly storing an angle in radians format.
 /// Primary recommended use is for interop and other scenarios requiring the byte-level format to be in radians.
 /// <br/>
-/// See <see cref="Angle"/> for a general angle representation struct and corresponding APIs.
+/// See <see cref="Numerics.Angle"/> for a general angle representation struct and corresponding APIs.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct Radians
+public record struct Radians
 {
     public float Value;
-    public Angle Color => new(Value, AngleType.Radians);
+    public Angle Angle => Angle.FromRadians(Value);
 
     public Radians(float value)
     {
         Value = value;
     }
 
-    public static implicit operator Radians(float angle)
+    public static implicit operator Angle(Radians angle)
     {
-        return new Radians(angle);
+        return Angle.From(angle.Value, AngleType.Radians);
     }
 
-    public static implicit operator float(Radians angle)
+    public static implicit operator Radians(Angle angle)
     {
-        return angle.Value;
+        return new Radians(angle.Radians.Value);
+    }
+
+    public readonly override string ToString()
+    {
+        return $"{Value} radians";
     }
 }

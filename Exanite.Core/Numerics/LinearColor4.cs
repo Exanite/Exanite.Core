@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
@@ -7,7 +8,7 @@ namespace Exanite.Core.Numerics;
 /// Storage struct useful for explicitly storing an angle in linear format.
 /// Primary recommended use is for interop and other scenarios requiring the byte-level format to be in linear.
 /// <br/>
-/// See <see cref="Color"/> for a general color representation struct and corresponding APIs.
+/// See <see cref="Numerics.Color"/> for a general color representation struct and corresponding APIs.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public record struct LinearColor4
@@ -20,13 +21,18 @@ public record struct LinearColor4
         Value = value;
     }
 
-    public static implicit operator LinearColor4(Vector4 angle)
+    public static implicit operator Color(LinearColor4 color)
     {
-        return new LinearColor4(angle);
+        return Color.From(color.Value, ColorType.Linear);
     }
 
-    public static implicit operator Vector4(LinearColor4 angle)
+    public static implicit operator LinearColor4(Color color)
     {
-        return angle.Value;
+        return new LinearColor4(color.To(ColorType.Linear));
+    }
+
+    public readonly override string ToString()
+    {
+        return $"{Value} (Linear)";
     }
 }

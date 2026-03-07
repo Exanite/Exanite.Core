@@ -6,26 +6,31 @@ namespace Exanite.Core.Numerics;
 /// Storage struct useful for explicitly storing an angle in degrees format.
 /// Primary recommended use is for interop and other scenarios requiring the byte-level format to be in degrees.
 /// <br/>
-/// See <see cref="Angle"/> for a general angle representation struct and corresponding APIs.
+/// See <see cref="Numerics.Angle"/> for a general angle representation struct and corresponding APIs.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct Degrees
+public record struct Degrees
 {
     public float Value;
-    public Angle Color => new(Value, AngleType.Degrees);
+    public Angle Color => Angle.FromDegrees(Value);
 
     public Degrees(float value)
     {
         Value = value;
     }
 
-    public static implicit operator Degrees(float angle)
+    public static implicit operator Angle(Degrees angle)
     {
-        return new Degrees(angle);
+        return Angle.From(angle.Value, AngleType.Degrees);
     }
 
-    public static implicit operator float(Degrees angle)
+    public static implicit operator Degrees(Angle angle)
     {
-        return angle.Value;
+        return angle.Degrees;
+    }
+
+    public readonly override string ToString()
+    {
+        return $"{Value} degrees";
     }
 }

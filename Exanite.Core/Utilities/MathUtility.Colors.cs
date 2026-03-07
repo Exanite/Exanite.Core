@@ -150,10 +150,9 @@ public static partial class M
     /// </summary>
     public static Color Mix(Color from, Color to, float t, ColorType space = ColorType.Srgb)
     {
-        from = from.As(space);
-        to = to.As(space);
-
-        return new Color(Lerp(from.Value, to.Value, t), space);
+        var fromValue = from.To(space);
+        var toValue = to.To(space);
+        return Color.From(Lerp(fromValue, toValue, t), space);
     }
 
     /// <summary>
@@ -161,10 +160,9 @@ public static partial class M
     /// </summary>
     public static Color MixUnclamped(Color from, Color to, float t, ColorType space = ColorType.Srgb)
     {
-        from = from.As(space);
-        to = to.As(space);
-
-        return new Color(LerpUnclamped(from.Value, to.Value, t), space);
+        var fromValue = from.To(space);
+        var toValue = to.To(space);
+        return Color.From(LerpUnclamped(fromValue, toValue, t), space);
     }
 
     /// <summary>
@@ -172,8 +170,8 @@ public static partial class M
     /// </summary>
     public static Color Premultiply(Color color, ColorType space = ColorType.Srgb)
     {
-        color = color.As(space);
-        return new Color(new Vector4(color.X * color.W, color.Y * color.W, color.Z * color.W, color.W), space);
+        var colorValue = color.To(space);
+        return Color.From(new Vector4(colorValue.X * colorValue.W, colorValue.Y * colorValue.W, colorValue.Z * colorValue.W, colorValue.W), space);
     }
 
     #endregion
