@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using Exanite.Core.Utilities;
+using System.Runtime.CompilerServices;
 
 namespace Exanite.Core.Runtime;
 
@@ -13,10 +12,8 @@ namespace Exanite.Core.Runtime;
 /// The backing storage is a list that grows to accommodate the highest accessed index.
 /// In most usage cases, this backing list will be sparse.
 /// </remarks>
-public class TypeIndexedTable<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
+public class TypeIndexedTable<TTypeIndex, TValue> : IntIndexedTable<TValue> where TTypeIndex : ITypeIndex
 {
-    private readonly List<TValue?> values = new();
-
     /// <summary>
     /// Returns whether this list has a slot for the specified type.
     /// This does not check whether the value stored in the slot is null or default.
@@ -24,34 +21,10 @@ public class TypeIndexedTable<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
     /// <remarks>
     /// This will not resize the internal list.
     /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsInBounds<TType>() where TType : allows ref struct
     {
-        var typeIndex = GetIndex<TType>();
-        return (uint)typeIndex < (uint)values.Count;
-    }
-
-    /// <summary>
-    /// Returns whether this list has a slot for the specified index.
-    /// This does not check whether the value stored in the slot is null or default.
-    /// </summary>
-    /// <remarks>
-    /// This will not resize the internal list.
-    /// </remarks>
-    public bool IsInBounds(int index)
-    {
-        return (uint)index < (uint)values.Count;
-    }
-
-    /// <summary>
-    /// Returns the stored value at the specified index.
-    /// </summary>
-    /// <remarks>
-    /// This can resize the internal list.
-    /// </remarks>
-    public ref TValue? Get(int index)
-    {
-        CollectionsMarshal.SetCount(values, int.Max(values.Count, index + 1));
-        return ref values.AsSpan()[index];
+        return IsInBounds(GetIndex<TType>());
     }
 
     /// <summary>
@@ -60,11 +33,10 @@ public class TypeIndexedTable<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
     /// <remarks>
     /// This can resize the internal list.
     /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ref TValue? Get<TType>() where TType : allows ref struct
     {
-        var typeIndex = GetIndex<TType>();
-        CollectionsMarshal.SetCount(values, int.Max(values.Count, typeIndex + 1));
-        return ref values.AsSpan()[typeIndex];
+        return ref Get(GetIndex<TType>());
     }
 
     /// <summary>
@@ -74,16 +46,9 @@ public class TypeIndexedTable<TTypeIndex, TValue> where TTypeIndex : ITypeIndex
     /// <remarks>
     /// This will not resize the internal list.
     /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int GetIndex<TType>() where TType : allows ref struct
     {
         return TTypeIndex.Get<TType>();
-    }
-
-    /// <summary>
-    /// Clears the list.
-    /// </summary>
-    public void Clear()
-    {
-        values.Clear();
     }
 }
