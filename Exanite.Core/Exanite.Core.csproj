@@ -16,10 +16,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Update="Numerics\VectorXInt.g.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>VectorXInt.g.cs</LastGenOutput>
-    </None>
     <None Update="Utilities\MathUtility.Vectors.g.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MathUtility.Vectors.g.cs</LastGenOutput>
@@ -30,11 +26,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Numerics\VectorXInt.g.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>VectorXInt.g.tt</DependentUpon>
-    </Compile>
     <Compile Update="Utilities\MathUtility.Vectors.g.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
