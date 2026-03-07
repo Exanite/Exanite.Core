@@ -14,7 +14,7 @@ namespace Exanite.Core.Numerics;
 public record struct LinearColor3
 {
     public Vector3 Value;
-    public Color Color => this;
+    public readonly Color Color => this;
 
     public LinearColor3(Vector3 value)
     {
@@ -39,5 +39,10 @@ public record struct LinearColor3
     public static implicit operator Vector3(LinearColor3 color)
     {
         return color.Value;
+    }
+
+    public readonly override string ToString()
+    {
+        return Color.ToString();
     }
 }

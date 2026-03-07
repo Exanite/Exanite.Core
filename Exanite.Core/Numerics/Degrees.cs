@@ -12,7 +12,7 @@ namespace Exanite.Core.Numerics;
 public struct Degrees
 {
     public float Value;
-    public Angle Color => this;
+    public readonly Angle Angle => this;
 
     public Degrees(float value)
     {
@@ -37,5 +37,10 @@ public struct Degrees
     public static implicit operator float(Degrees angle)
     {
         return angle.Value;
+    }
+
+    public readonly override string ToString()
+    {
+        return Angle.ToString();
     }
 }

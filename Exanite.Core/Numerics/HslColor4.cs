@@ -13,7 +13,7 @@ namespace Exanite.Core.Numerics;
 public record struct HslColor4
 {
     public Vector4 Value;
-    public Color Color => this;
+    public readonly Color Color => this;
 
     public HslColor4(Vector4 value)
     {
@@ -42,6 +42,6 @@ public record struct HslColor4
 
     public readonly override string ToString()
     {
-        return $"{Value} (HSL)";
+        return Color.ToString();
     }
 }
