@@ -133,6 +133,8 @@ public readonly struct Fixed : INumber<Fixed>
         return ((double)value / OneValue).ToString(format, formatProvider);
     }
 
+    public override string ToString() => ToString(null, null);
+
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         return ((double)value / OneValue).TryFormat(destination, out charsWritten, format, provider);
