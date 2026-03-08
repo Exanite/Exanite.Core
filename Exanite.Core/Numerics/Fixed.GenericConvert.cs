@@ -86,13 +86,13 @@ public partial struct Fixed
         if (TOther.IsInteger(value))
         {
             var longValue = long.CreateSaturating(value);
-            if (longValue > MaxValue)
+            if (longValue > (long)MaxValue)
             {
                 result = MaxValue;
                 return true;
             }
 
-            if (longValue < MinValue)
+            if (longValue < (long)MinValue)
             {
                 result = MinValue;
                 return true;
@@ -105,13 +105,13 @@ public partial struct Fixed
         try
         {
             var decimalValue = decimal.CreateSaturating(value);
-            if (decimalValue > MaxValue)
+            if (decimalValue > (decimal)MaxValue)
             {
                 result = MaxValue;
                 return true;
             }
 
-            if (decimalValue < MinValue)
+            if (decimalValue < (decimal)MinValue)
             {
                 result = MinValue;
                 return true;
