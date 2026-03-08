@@ -8,7 +8,7 @@ namespace Exanite.Core.Numerics;
 /// <summary>
 /// A fixed point Q48.16 value (48-bits integer, 16-bits fraction).
 /// </summary>
-public readonly struct Fixed : INumber<Fixed>, IMinMaxValue<Fixed>
+public readonly struct Fixed : INumber<Fixed>, IMinMaxValue<Fixed>, ISignedNumber<Fixed>
 {
     // Constants
     private const int Shift = 16;
@@ -16,6 +16,7 @@ public readonly struct Fixed : INumber<Fixed>, IMinMaxValue<Fixed>
 
     public static Fixed One => new(OneValue);
     public static Fixed Zero => new(0);
+    public static Fixed NegativeOne => new(-OneValue);
 
     public static Fixed AdditiveIdentity => Zero;
     public static Fixed MultiplicativeIdentity => One;
