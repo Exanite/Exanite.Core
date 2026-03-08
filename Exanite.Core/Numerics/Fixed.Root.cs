@@ -33,48 +33,43 @@ public partial struct Fixed // : IRootFunctions<Fixed>
             return 0;
         }
 
-        // Normalize x so that it is in the range [0.5, 2)
-        var leadingZeroCount = (int)long.LeadingZeroCount(x.value);
-        var normalizeShift = leadingZeroCount - (63 - Shift);
-        var normalizedX = normalizeShift >= 0 ? x.value << normalizeShift : x.value >> -normalizeShift;
-
-        var y = OneValue; // TODO: Use LUT
-        while (true)
+        checked // TODO: Remove
         {
-            // Inverse Newton-Raphson method:
-            // y_n+1 = (y_n * (3 - x * y_n * y_n)) >> 1
-            var xy = (normalizedX * y) >> Shift;
-            var xyy = (xy * y) >> Shift;
-            var threeMinusXyy = (3 << Shift) - xyy;
-            var yNext = (y * threeMinusXyy) >> (Shift + 1);
-
-            if (yNext == y)
+            // Normalize x so that it is in the range [0.5, 2) // TODO: This is now wrong
+            var leadingZeroCount = (int)long.LeadingZeroCount(x.value);
+            var normalizeShift = leadingZeroCount - (63 - Shift);
+            if ((normalizeShift & 1) != 0)
             {
-                break;
+                // Ensure the shift is even
+                // TODO: Maybe decrement/increment towards 0?
+                normalizeShift--;
             }
 
-            y = yNext;
+            var normalizedX = normalizeShift >= 0 ? x.value << normalizeShift : x.value >> -normalizeShift;
+
+            var y = OneValue; // TODO: Use LUT
+            while (true)
+            {
+                // Inverse Newton-Raphson method:
+                // y_n+1 = (y_n * (3 - x * y_n * y_n)) >> 1
+                var xy = (normalizedX * y) >> Shift;
+                var xyy = (xy * y) >> Shift;
+                var threeMinusXyy = (3 << Shift) - xyy;
+                var yNext = (y * threeMinusXyy) >> (Shift + 1);
+
+                if (yNext == y)
+                {
+                    break;
+                }
+
+                y = yNext;
+            }
+
+            // We need to cancel out the normalization step we did above
+            var normalizedResult = (normalizedX * y) >> Shift;
+            var finalShift = normalizeShift / 2;
+            return new Fixed(finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift);
         }
-
-        // We need to cancel out the normalization step we did above
-        var normalizedResult = (normalizedX * y) >> Shift;
-        var finalShift = normalizeShift / 2; // TODO: This probably is losing a .5 since sqrt(2) fails, sqrt(4) works. sqrt(36) fails, sqrt(72) works
-
-        var result = new Fixed(finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift);
-        if (int.IsOddInteger(normalizeShift))
-        {
-            // TODO: Hey look, this fixes it
-            if (normalizeShift > 0)
-            {
-                result /= (Fixed)1.41421356237;
-            }
-            else
-            {
-                result *= (Fixed)1.41421356237;
-            }
-        }
-
-        return result;
     }
 
     // AI generated code for reference
