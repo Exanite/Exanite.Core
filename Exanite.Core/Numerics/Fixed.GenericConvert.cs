@@ -7,11 +7,12 @@ namespace Exanite.Core.Numerics;
 public partial struct Fixed
 {
     // Create
+    // These are based on .NET's own implementation: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Int32.cs,718
+    // The implementation seems to be the same for all types
+    // Note how we have to check both directions
 
     public static Fixed CreateChecked<TOther>(TOther value) where TOther : INumberBase<TOther>
     {
-        // Based on .NET's own implementation: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Int32.cs,718
-        // The implementation seems to be the same for all types
         Fixed result;
         if (typeof(TOther) == typeof(Fixed))
         {
@@ -27,8 +28,6 @@ public partial struct Fixed
 
     public static Fixed CreateSaturating<TOther>(TOther value) where TOther : INumberBase<TOther>
     {
-        // Based on .NET's own implementation: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Int32.cs,718
-        // The implementation seems to be the same for all types
         Fixed result;
         if (typeof(TOther) == typeof(Fixed))
         {
@@ -44,8 +43,6 @@ public partial struct Fixed
 
     public static Fixed CreateTruncating<TOther>(TOther value) where TOther : INumberBase<TOther>
     {
-        // Based on .NET's own implementation: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Int32.cs,718
-        // The implementation seems to be the same for all types
         Fixed result;
         if (typeof(TOther) == typeof(Fixed))
         {
@@ -136,6 +133,7 @@ public partial struct Fixed
     }
 
     // TryConvertTo
+    // Similar to the Create methods, we have to check both directions here
 
     public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
@@ -156,6 +154,7 @@ public partial struct Fixed
     }
 
     // TryConvertTo_FromDecimal
+    // We can't call the relevant methods on decimal directly since these are explicit interface implementations
 
     private static bool TryConvertFromCheckedFromDecimal<TTo, TFrom>(decimal value, [MaybeNullWhen(false)] out TTo result)
         where TTo : INumberBase<TTo>
