@@ -33,23 +33,23 @@ public partial struct Fixed // : IRootFunctions<Fixed>
             return 0;
         }
 
-        checked // TODO: Remove
+        // checked // Uncomment when debugging
         {
-            // Normalize x so that it is in the range [0.5, 2) // TODO: This is now wrong
-            var leadingZeroCount = (int)long.LeadingZeroCount(x.value);
-            var evenNormalizeShift = (leadingZeroCount - (64 - 1 - Shift)) & ~1;
-            var normalizedX = evenNormalizeShift >= 0 ? x.value << evenNormalizeShift : x.value >> -evenNormalizeShift;
+            // This uses Q96.48 for better precision
 
-            var y = OneValue; // TODO: Use LUT
+            // Normalize x so that it is in the range [0.5, 2) // TODO: This is now wrong (maybe?)
+            var leadingZeroCount = (int)long.LeadingZeroCount(x.value) + 64;
+            var evenNormalizeShift = (leadingZeroCount - (128 - 1 - Shift * 2)) & ~1;
+            var normalizedX = evenNormalizeShift >= 0 ? (Int128)x.value << evenNormalizeShift : (Int128)x.value >> -evenNormalizeShift;
+
+            var y = (Int128)1 << (Shift * 2); // TODO: Use LUT
             while (true)
             {
-                // Inverse Newton-Raphson method:
+                // Inverse Newton-Raphson method:-4
                 // y_n+1 = (y_n * (3 - x * y_n * y_n)) >> 1
-                var xy = (normalizedX * y) >> Shift;
-                var xyy = (xy * y) >> Shift;
-                var threeMinusXyy = (3 << Shift) - xyy;
-                var yNext = (y * threeMinusXyy) >> (Shift + 1);
-
+                var xyy = (normalizedX * y * y) >> (Shift * 4);
+                var threeMinusXyy = ((Int128)3 << (Shift * 2)) - xyy;
+                var yNext = (y * threeMinusXyy) >> (Shift * 2 + 1);
                 if (yNext == y)
                 {
                     break;
@@ -59,9 +59,10 @@ public partial struct Fixed // : IRootFunctions<Fixed>
             }
 
             // We need to cancel out the normalization step we did above
-            var normalizedResult = (normalizedX * y) >> Shift;
-            var finalShift = evenNormalizeShift / 2;
-            return new Fixed(finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift);
+            var normalizedResult = (normalizedX * y) >> (Shift * 2);
+            var finalShift = (evenNormalizeShift - Shift) / 2; // TODO: Figure out why I need the shift here. I think I understand, but it's better to fully verify.
+            var fixed128Value = finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift;
+            return new Fixed((long)(fixed128Value >> Shift));
         }
     }
 
