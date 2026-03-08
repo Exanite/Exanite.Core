@@ -77,6 +77,8 @@ public readonly partial struct Fixed :
     /// </summary>
     public static Fixed FromParts(int integral, int fractional)
     {
+        AssertUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
+
         if (fractional == 0)
         {
             return new Fixed(integral * OneValue);
@@ -95,7 +97,7 @@ public readonly partial struct Fixed :
             divisor *= 10;
         }
 
-        return new Fixed(integral * OneValue + ((fractional * OneValue) / divisor));
+        return new Fixed(integral * OneValue + long.Sign(integral) * ((fractional * OneValue) / divisor));
     }
 
     /// <summary>
