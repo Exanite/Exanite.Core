@@ -28,7 +28,19 @@ public class FixedTests
     [InlineData(-1, 1, -1.1)]
     [InlineData(3, 14159, 3.14159)]
     [InlineData(-3, 14159, -3.14159)]
-    public void CreateParts_ReturnsExpectedResult(long integral, int fractional, double expected)
+    public void CreateParts_ReturnsExpectedResult_IntOverload(int integral, int fractional, double expected)
+    {
+        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), Fixed.Precision);
+    }
+
+    [Theory]
+    [InlineData(1, 0, 1)]
+    [InlineData(-1, 0, -1)]
+    [InlineData(1, 1, 1.1)]
+    [InlineData(-1, 1, -1.1)]
+    [InlineData(3, 14159, 3.14159)]
+    [InlineData(-3, 14159, -3.14159)]
+    public void CreateParts_ReturnsExpectedResult_LongOverload(long integral, int fractional, double expected)
     {
         Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), Fixed.Precision);
     }
