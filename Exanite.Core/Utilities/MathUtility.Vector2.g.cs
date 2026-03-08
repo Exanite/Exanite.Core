@@ -54,15 +54,6 @@ public static partial class M
     }
 
     /// <summary>
-    /// Component-wise clamps the provided vector to the bounds given by <see cref="min"/> and <see cref="max"/>.
-    /// </summary>
-    public static void Clamp(ref this Vector2 vector, Vector2 min, Vector2 max)
-    {
-        vector.X = Clamp(vector.X, min.X, max.X);
-        vector.Y = Clamp(vector.Y, min.Y, max.Y);
-    }
-
-    /// <summary>
     /// Returns the normalized version of the provided vector, or returns zero if the provided vector is zero.
     /// </summary>
     public static Vector2 AsNormalizedOrDefault(this Vector2 value)
@@ -84,5 +75,13 @@ public static partial class M
     public static bool ApproximatelyEquals(Vector2 a, Vector2 b, float tolerance = 0.000001f)
     {
         return ApproximatelyEquals(a.X, b.X, tolerance) && ApproximatelyEquals(a.Y, b.Y, tolerance);
+    }
+    /// <summary>
+    /// Component-wise clamps the provided vector to the bounds given by <see cref="min"/> and <see cref="max"/>.
+    /// </summary>
+    public static void Clamp(ref this Vector2 vector, Vector2 min, Vector2 max)
+    {
+        vector.X = Clamp(vector.X, min.X, max.X);
+        vector.Y = Clamp(vector.Y, min.Y, max.Y);
     }
 }

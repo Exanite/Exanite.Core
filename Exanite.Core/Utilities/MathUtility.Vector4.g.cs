@@ -54,17 +54,6 @@ public static partial class M
     }
 
     /// <summary>
-    /// Component-wise clamps the provided vector to the bounds given by <see cref="min"/> and <see cref="max"/>.
-    /// </summary>
-    public static void Clamp(ref this Vector4 vector, Vector4 min, Vector4 max)
-    {
-        vector.X = Clamp(vector.X, min.X, max.X);
-        vector.Y = Clamp(vector.Y, min.Y, max.Y);
-        vector.Z = Clamp(vector.Z, min.Z, max.Z);
-        vector.W = Clamp(vector.W, min.W, max.W);
-    }
-
-    /// <summary>
     /// Returns the normalized version of the provided vector, or returns zero if the provided vector is zero.
     /// </summary>
     public static Vector4 AsNormalizedOrDefault(this Vector4 value)
@@ -86,5 +75,15 @@ public static partial class M
     public static bool ApproximatelyEquals(Vector4 a, Vector4 b, float tolerance = 0.000001f)
     {
         return ApproximatelyEquals(a.X, b.X, tolerance) && ApproximatelyEquals(a.Y, b.Y, tolerance) && ApproximatelyEquals(a.Z, b.Z, tolerance) && ApproximatelyEquals(a.W, b.W, tolerance);
+    }
+    /// <summary>
+    /// Component-wise clamps the provided vector to the bounds given by <see cref="min"/> and <see cref="max"/>.
+    /// </summary>
+    public static void Clamp(ref this Vector4 vector, Vector4 min, Vector4 max)
+    {
+        vector.X = Clamp(vector.X, min.X, max.X);
+        vector.Y = Clamp(vector.Y, min.Y, max.Y);
+        vector.Z = Clamp(vector.Z, min.Z, max.Z);
+        vector.W = Clamp(vector.W, min.W, max.W);
     }
 }
