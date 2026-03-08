@@ -54,6 +54,7 @@ public readonly partial struct Fixed :
     public static implicit operator Fixed(byte value) => new((long)value << Shift);
     public static implicit operator Fixed(short value) => new((long)value << Shift);
     public static implicit operator Fixed(int value) => new((long)value << Shift);
+    public static implicit operator Fixed(uint value) => new((long)value << Shift);
 
     // Conversion: Potentially unsafe - Can exceed range
     public static explicit operator Fixed(long value) => new(value << Shift);
@@ -64,9 +65,11 @@ public readonly partial struct Fixed :
     public static explicit operator Fixed(float value) => new((long)(value * OneValue));
     public static explicit operator Fixed(double value) => new((long)(value * OneValue));
 
-    // Conversion: Loss of fraction
+    // Conversion: Loss of fraction / sign
     public static explicit operator int(Fixed value) => (int)(value.value >> Shift);
+    public static explicit operator uint(Fixed value) => (uint)(value.value >> Shift);
     public static explicit operator long(Fixed value) => value.value >> Shift;
+    public static explicit operator ulong(Fixed value) => (ulong)(value.value >> Shift);
 
     // Conversion: Loss of precision / determinism
     public static explicit operator float(Fixed value) => (float)value.value / OneValue;
