@@ -69,6 +69,12 @@ public class FixedTests
         Assert.Equal(expected, (double)Fixed.Sqrt(Fixed.FromParts(integral, fractional)), Fixed.Precision - 1);
     }
 
+    [Fact]
+    public void Sqrt_OfMaxValue_ReturnsExpectedValue()
+    {
+        Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), Fixed.Precision - 1);
+    }
+
     [Theory]
     [InlineData(0)]
     [InlineData(123)]
