@@ -30,7 +30,7 @@ public readonly partial struct Fixed :
     public static Fixed MultiplicativeIdentity => One;
 
     public static Fixed MaxValue => new(long.MaxValue);
-    public static Fixed MinValue => new(long.MinValue);
+    public static Fixed MinValue => new(long.MinValue + 1);
 
     public static Fixed E => new(178145); // Equal to floor(e * 2^16)
     public static Fixed Pi => new(205887); // Equal to floor(pi * 2^16)

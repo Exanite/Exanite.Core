@@ -5,6 +5,12 @@ namespace Exanite.Core.Tests.Numerics;
 
 public class FixedTests
 {
+    [Fact]
+    public void MinMax_AreSymmetric()
+    {
+        Assert.Equal(Fixed.MaxValue, -Fixed.MinValue);
+    }
+
     [Theory]
     [InlineData(1, 1, 1)]
     [InlineData(-1, 1, -1)]
