@@ -1,7 +1,7 @@
 using System.Linq;
 using Exanite.CodeGen;
 
-namespace Exanite.Core.Generator;
+namespace Exanite.Core.Generator.Generators;
 
 public class VectorGenerator
 {

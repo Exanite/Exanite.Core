@@ -2,7 +2,7 @@ using System.Linq;
 using Exanite.CodeGen;
 using Exanite.Core.Io;
 
-namespace Exanite.Core.Generator;
+namespace Exanite.Core.Generator.Generators;
 
 public class VectorFixedGenerator : VectorGenerator
 {
@@ -49,7 +49,7 @@ public class VectorFixedGenerator : VectorGenerator
 
                 builder.AppendSeparation();
                 builder.AppendLine("// Conversion: Unsafe - Non-deterministic");
-                builder.AppendLine("// Consider using FromFraction instead");
+                builder.AppendLine("// Consider using Fixed.FromParts or Fixed.FromFraction instead");
                 AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorFixedType, fixedType, components, true);
 
                 builder.AppendSeparation();

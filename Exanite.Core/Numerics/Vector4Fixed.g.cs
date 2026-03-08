@@ -85,7 +85,7 @@ public partial struct Vector4Fixed : IEquatable<Vector4Fixed>, IFormattable
     }
 
     // Conversion: Unsafe - Non-deterministic
-    // Consider using FromFraction instead
+    // Consider using Fixed.FromParts or Fixed.FromFraction instead
     public static explicit operator Vector4Fixed(Vector4 value)
     {
         return new Vector4Fixed((Fixed)value.X, (Fixed)value.Y, (Fixed)value.Z, (Fixed)value.W);
