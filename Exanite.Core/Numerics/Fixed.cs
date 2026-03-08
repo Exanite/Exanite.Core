@@ -83,12 +83,16 @@ public readonly partial struct Fixed :
         }
 
         // Determine the number of digits in the fractional part
-        var divisor = 1;
-        var temporaryFractional = fractional;
-        while (temporaryFractional > 0)
+        // Note: Not sure if a LUT is actually faster here, but I don't want to benchmark right now
+        var divisor = 10;
+        foreach (var digitLimit in DigitsLut)
         {
+            if (fractional < digitLimit)
+            {
+                break;
+            }
+
             divisor *= 10;
-            temporaryFractional /= 10;
         }
 
         return new Fixed(integral * OneValue + ((fractional * OneValue) / divisor));

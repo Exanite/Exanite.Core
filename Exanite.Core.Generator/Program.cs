@@ -11,6 +11,8 @@ public class Program
         var csprojFile = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Exanite.Core.csproj";
         GuardUtility.IsTrue(csprojFile.Exists, "Working directory is incorrect. Please set it to be the root of the Exanite.Core repo");
 
+        new FixedLookupsGenerator().Run();
+
         new VectorIntGenerator().Run();
         new VectorFixedGenerator().Run();
 
