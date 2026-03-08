@@ -235,18 +235,18 @@ public readonly partial struct Fixed :
         return false;
     }
 
-    private static bool TryConvertToLong<TOther, TDecimal>(TOther value, out long result)
-        where TOther : INumberBase<TOther>
-        where TDecimal : INumberBase<long>
+    private static bool TryConvertToLong<TFrom, TTo>(TFrom value, out long result)
+        where TFrom : INumberBase<TFrom>
+        where TTo : INumberBase<long>
     {
-        return TDecimal.TryConvertFromChecked(value, out result);
+        return TTo.TryConvertFromChecked(value, out result);
     }
 
-    private static bool TryConvertToDecimal<TOther, TDecimal>(TOther value, out decimal result)
-        where TOther : INumberBase<TOther>
-        where TDecimal : INumberBase<decimal>
+    private static bool TryConvertToDecimal<TFrom, TTo>(TFrom value, out decimal result)
+        where TFrom : INumberBase<TFrom>
+        where TTo : INumberBase<decimal>
     {
-        return TDecimal.TryConvertFromChecked(value, out result);
+        return TTo.TryConvertFromChecked(value, out result);
     }
 
     public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
