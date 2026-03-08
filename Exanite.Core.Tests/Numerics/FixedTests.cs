@@ -68,4 +68,13 @@ public class FixedTests
     {
         Assert.Equal(expected, (double)Fixed.Sqrt(Fixed.FromParts(integral, fractional)), Fixed.Precision - 1);
     }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(123)]
+    [InlineData(123.456)]
+    public void CreateChecked_ReturnsExpectedValue(double input)
+    {
+        Assert.Equal(input, (double)Fixed.CreateChecked(input), Fixed.Precision);
+    }
 }
