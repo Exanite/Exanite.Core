@@ -61,8 +61,8 @@ public readonly partial struct Fixed :
 
     // Conversion: Unsafe - Non-deterministic
     // Consider using FromFraction or FromParts instead
-    public static explicit operator Fixed(float value) => CreateChecked(value);
-    public static explicit operator Fixed(double value) => CreateChecked(value);
+    public static explicit operator Fixed(float value) => new((long)(value * OneValue));
+    public static explicit operator Fixed(double value) => new((long)(value * OneValue));
 
     // Conversion: Loss of fraction
     public static explicit operator int(Fixed value) => (int)(value.value >> Shift);
