@@ -23,8 +23,8 @@ public class MathUtilitiesVectorsGenerator
         builder.AppendLine("public static partial class M");
         using (builder.EnterScope())
         {
-            var components = new List<string>() { "X", "Y", "Z", "W" };
-            for (var componentCount = 2; componentCount <= components.Count; componentCount++)
+            var components = GeneratorConstants.VectorComponents;
+            for (var componentCount = 2; componentCount <= components.Length; componentCount++)
             {
                 builder.AppendLine("/// <summary>");
                 builder.AppendLine("/// Interpolates from one vector to another by <see cref=\"t\"/>.");
@@ -118,9 +118,9 @@ public class MathUtilitiesVectorsGenerator
             {
                 var suffix = isVectorIntI == 1 ? "Int" : "";
 
-                for (var fromCount = 2; fromCount <= components.Count; fromCount++)
+                for (var fromCount = 2; fromCount <= components.Length; fromCount++)
                 {
-                    for (var toCount = 2; toCount <= components.Count; toCount++)
+                    for (var toCount = 2; toCount <= components.Length; toCount++)
                     {
                         if (fromCount == toCount)
                         {
