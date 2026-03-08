@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
@@ -19,6 +20,7 @@ public readonly partial struct Fixed :
     private const int Shift = 16;
     private const int Mask = (1 << Shift) - 1;
     private const long OneValue = 1L << Shift;
+    private const long HalfValue = OneValue / 2;
 
     public static Fixed One => new(OneValue);
     public static Fixed Zero => new(0);
@@ -106,6 +108,47 @@ public readonly partial struct Fixed :
     public static Fixed FromFraction(Fixed numerator, Fixed denominator)
     {
         return numerator / denominator;
+    }
+
+    // Rounding
+
+    /// <summary>
+    /// Rounds down to the nearest integer.
+    /// </summary>
+    public static Fixed Floor(Fixed value)
+    {
+        return new Fixed(value.value & ~Mask);
+    }
+
+    /// <summary>
+    /// Rounds up to the nearest integer.
+    /// </summary>
+    public static Fixed Ceiling(Fixed value)
+    {
+        var fractional = value.value & Mask;
+        return fractional == 0 ? value : Floor(value) + One;
+    }
+
+    /// <summary>
+    /// Rounds to the nearest integer.
+    /// If halfway between an even and odd value, returns the even value.
+    /// </summary>
+    public static Fixed Round(Fixed value)
+    {
+        var integral = value.value & ~Mask;
+        var fractional = value.value & Mask;
+
+        if (fractional < HalfValue)
+        {
+            return new Fixed(integral);
+        }
+
+        if (fractional > HalfValue)
+        {
+            return new Fixed(integral + OneValue);
+        }
+
+        return IsEvenInteger(new Fixed(integral)) ? new Fixed(integral) : new Fixed(integral + OneValue);
     }
 
     // Operators
