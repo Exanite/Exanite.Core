@@ -14,5 +14,6 @@ public class Program
         new VectorFixedGenerator().Run();
 
         new MathUtilitiesMatricesGenerator().Run();
+        new MathUtilitiesVectorsGenerator().Run();
     }
 }

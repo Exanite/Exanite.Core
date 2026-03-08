@@ -14,26 +14,4 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="10.0.1"/>
   </ItemGroup>
-  
-  <ItemGroup>
-    <None Update="Utilities\MathUtility.Vectors.g.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MathUtility.Vectors.g.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Utilities\MathUtility.Vectors.g.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MathUtility.Vectors.g.tt</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  
-  <!-- Exclude Tests project -->
-  <PropertyGroup>
-    <DefaultItemExcludes>
-      $(DefaultItemExcludes);
-      Tests/**/*;
-    </DefaultItemExcludes>
-  </PropertyGroup>
 </Project>
