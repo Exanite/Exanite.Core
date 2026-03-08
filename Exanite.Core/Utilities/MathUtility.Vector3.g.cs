@@ -27,7 +27,7 @@ public static partial class M
         return from + (to - from) * t;
     }
 
-    /// <inheritdoc cref="SmoothDamp{T}"/>/>
+    /// <inheritdoc cref="SmoothDamp{T}"/>
     public static Vector3 SmoothDamp(Vector3 current, Vector3 target, float smoothTime, float deltaTime, ref Vector3 currentVelocity)
     {
         var result = new Vector3(SmoothDamp(current.X, target.X, smoothTime, deltaTime, ref currentVelocity.X, float.PositiveInfinity), SmoothDamp(current.Y, target.Y, smoothTime, deltaTime, ref currentVelocity.Y, float.PositiveInfinity), SmoothDamp(current.Z, target.Z, smoothTime, deltaTime, ref currentVelocity.Z, float.PositiveInfinity));
@@ -36,7 +36,7 @@ public static partial class M
         return result;
     }
 
-    /// <inheritdoc cref="SmoothDamp{T}"/>/>
+    /// <inheritdoc cref="SmoothDamp{T}"/>
     public static Vector3 SmoothDamp(Vector3 current, Vector3 target, float smoothTime, float deltaTime, ref Vector3 currentVelocity, float maxSpeed)
     {
         var result = new Vector3(SmoothDamp(current.X, target.X, smoothTime, deltaTime, ref currentVelocity.X, maxSpeed), SmoothDamp(current.Y, target.Y, smoothTime, deltaTime, ref currentVelocity.Y, maxSpeed), SmoothDamp(current.Z, target.Z, smoothTime, deltaTime, ref currentVelocity.Z, maxSpeed));

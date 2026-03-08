@@ -26,6 +26,8 @@ public class MathUtilitiesVectorsGenerator
             new("Fixed", "Fixed")
             {
                 IsFixedBacked = true,
+
+                SmoothDampMaxSpeed = "Fixed.MaxValue",
             },
         };
 
@@ -77,21 +79,18 @@ public class MathUtilitiesVectorsGenerator
 
                         if (!isFixedBacked)
                         {
-                            if (vector.SmoothDampMaxSpeed != null)
+                            builder.AppendSeparation();
+                            builder.AppendLine("/// <inheritdoc cref=\"SmoothDamp{T}\"/>");
+                            using (builder.EnterScope($"public static {vectorType} SmoothDamp({vectorType} current, {vectorType} target, {backingType} smoothTime, {backingType} deltaTime, ref {vectorType} currentVelocity)"))
                             {
-                                builder.AppendSeparation();
-                                builder.AppendLine("/// <inheritdoc cref=\"SmoothDamp{T}\"/>/>");
-                                using (builder.EnterScope($"public static {vectorType} SmoothDamp({vectorType} current, {vectorType} target, {backingType} smoothTime, {backingType} deltaTime, ref {vectorType} currentVelocity)"))
-                                {
-                                    builder.AppendLine($"var result = new {vectorType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"SmoothDamp(current.{components[index]}, target.{components[index]}, smoothTime, deltaTime, ref currentVelocity.{components[index]}, {vector.SmoothDampMaxSpeed})"))});");
-                                    builder.AppendLine($"currentVelocity = ClampMagnitude(currentVelocity, {vector.SmoothDampMaxSpeed});");
-                                    builder.AppendLine();
-                                    builder.AppendLine("return result;");
-                                }
+                                builder.AppendLine($"var result = new {vectorType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"SmoothDamp(current.{components[index]}, target.{components[index]}, smoothTime, deltaTime, ref currentVelocity.{components[index]}, {vector.SmoothDampMaxSpeed})"))});");
+                                builder.AppendLine($"currentVelocity = ClampMagnitude(currentVelocity, {vector.SmoothDampMaxSpeed});");
+                                builder.AppendLine();
+                                builder.AppendLine("return result;");
                             }
 
                             builder.AppendSeparation();
-                            builder.AppendLine("/// <inheritdoc cref=\"SmoothDamp{T}\"/>/>");
+                            builder.AppendLine("/// <inheritdoc cref=\"SmoothDamp{T}\"/>");
                             using (builder.EnterScope($"public static {vectorType} SmoothDamp({vectorType} current, {vectorType} target, {backingType} smoothTime, {backingType} deltaTime, ref {vectorType} currentVelocity, {backingType} maxSpeed)"))
                             {
                                 builder.AppendLine($"var result = new {vectorType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"SmoothDamp(current.{components[index]}, target.{components[index]}, smoothTime, deltaTime, ref currentVelocity.{components[index]}, maxSpeed)"))});");
@@ -137,16 +136,13 @@ public class MathUtilitiesVectorsGenerator
                                 builder.AppendLine($"return value == {vectorType}.Zero ? defaultValue : {vectorType}.Normalize(value);");
                             }
 
-                            if (vector.ApproximatelyEqualsTolerance != null)
+                            builder.AppendSeparation();
+                            builder.AppendLine("/// <summary>");
+                            builder.AppendLine("/// Checks if two vectors are approximately the same value based on the provided <see cref=\"tolerance\"/>.");
+                            builder.AppendLine("/// </summary>");
+                            using (builder.EnterScope($"public static bool ApproximatelyEquals({vectorType} a, {vectorType} b)"))
                             {
-                                builder.AppendSeparation();
-                                builder.AppendLine("/// <summary>");
-                                builder.AppendLine("/// Checks if two vectors are approximately the same value based on the provided <see cref=\"tolerance\"/>.");
-                                builder.AppendLine("/// </summary>");
-                                using (builder.EnterScope($"public static bool ApproximatelyEquals({vectorType} a, {vectorType} b)"))
-                                {
-                                    builder.AppendLine($"return {string.Join(" && ", Enumerable.Range(0, componentCount).Select(index => $"ApproximatelyEquals(a.{components[index]}, b.{components[index]}, {vector.ApproximatelyEqualsTolerance})"))};");
-                                }
+                                builder.AppendLine($"return {string.Join(" && ", Enumerable.Range(0, componentCount).Select(index => $"ApproximatelyEquals(a.{components[index]}, b.{components[index]}, {vector.ApproximatelyEqualsTolerance})"))};");
                             }
 
                             builder.AppendSeparation();
