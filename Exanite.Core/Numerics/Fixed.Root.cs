@@ -60,7 +60,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
 
             // We need to cancel out the normalization step we did above
             var normalizedResult = (normalizedX * y) >> (Shift * 2);
-            var finalShift = (evenNormalizeShift - Shift) / 2; // TODO: Figure out why I need the shift here. I think I understand, but it's better to fully verify.
+            var finalShift = (evenNormalizeShift - Shift) / 2;
             var fixed128Value = finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift;
             return new Fixed((long)(fixed128Value >> Shift));
         }
