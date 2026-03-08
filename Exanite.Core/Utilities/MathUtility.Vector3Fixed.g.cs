@@ -10,6 +10,24 @@ namespace Exanite.Core.Utilities;
 public static partial class M
 {
     /// <summary>
+    /// Interpolates from one vector to another by <see cref="t"/>.
+    /// <see cref="t"/> will be clamped in the range [0, 1]
+    /// </summary>
+    public static Vector3Fixed Lerp(Vector3Fixed from, Vector3Fixed to, Fixed t)
+    {
+        t = Clamp01(t);
+        return from + (to - from) * t;
+    }
+
+    /// <summary>
+    /// Interpolates from one vector to another by <see cref="t"/>.
+    /// </summary>
+    public static Vector3Fixed LerpUnclamped(Vector3Fixed from, Vector3Fixed to, Fixed t)
+    {
+        return from + (to - from) * t;
+    }
+
+    /// <summary>
     /// Component-wise clamps the provided vector to the bounds given by <see cref="min"/> and <see cref="max"/>.
     /// </summary>
     public static void Clamp(ref this Vector3Fixed vector, Vector3Fixed min, Vector3Fixed max)

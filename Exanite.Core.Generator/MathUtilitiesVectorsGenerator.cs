@@ -5,7 +5,6 @@ using Exanite.Core.Io;
 
 namespace Exanite.Core.Generator;
 
-// TODO: This needs cleanup and also added support for VectorXFixed types
 public class MathUtilitiesVectorsGenerator
 {
     public void Run()
@@ -13,10 +12,7 @@ public class MathUtilitiesVectorsGenerator
         var components = GeneratorConstants.VectorComponents;
         var vectors = new List<VectorType>()
         {
-            new("", "float")
-            {
-                IsIntegerBacked = false,
-            },
+            new("", "float"),
 
             new("Int", "int")
             {
@@ -25,7 +21,7 @@ public class MathUtilitiesVectorsGenerator
 
             new("Fixed", "Fixed")
             {
-                IsIntegerBacked = true, // TODO: Change this to false
+                IsFixedBacked = true,
             },
         };
 
@@ -34,6 +30,7 @@ public class MathUtilitiesVectorsGenerator
             var suffix = vector.Suffix;
             var backingType = vector.BackingType;
             var isIntegerBacked = vector.IsIntegerBacked;
+            var isFixedBacked = vector.IsFixedBacked;
 
             for (var componentCount = 2; componentCount <= components.Length; componentCount++)
             {
@@ -74,59 +71,62 @@ public class MathUtilitiesVectorsGenerator
                         }
                         builder.AppendLine();
 
-                        builder.AppendLine("/// <inheritdoc cref=\"SmoothDamp{T}\"/>/>");
-                        using (builder.EnterScope($"public static {vectorType} SmoothDamp({vectorType} current, {vectorType} target, float smoothTime, float deltaTime, ref {vectorType} currentVelocity, float maxSpeed = float.PositiveInfinity)"))
+                        if (!isFixedBacked)
                         {
-                            builder.AppendLine($"var result = new {vectorType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"SmoothDamp(current.{components[index]}, target.{components[index]}, smoothTime, deltaTime, ref currentVelocity.{components[index]}, maxSpeed)"))});");
-                            builder.AppendLine("currentVelocity = ClampMagnitude(currentVelocity, maxSpeed);");
+                            builder.AppendLine("/// <inheritdoc cref=\"SmoothDamp{T}\"/>/>");
+                            using (builder.EnterScope($"public static {vectorType} SmoothDamp({vectorType} current, {vectorType} target, {backingType} smoothTime, {backingType} deltaTime, ref {vectorType} currentVelocity, {backingType} maxSpeed = float.PositiveInfinity)"))
+                            {
+                                builder.AppendLine($"var result = new {vectorType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"SmoothDamp(current.{components[index]}, target.{components[index]}, smoothTime, deltaTime, ref currentVelocity.{components[index]}, maxSpeed)"))});");
+                                builder.AppendLine("currentVelocity = ClampMagnitude(currentVelocity, maxSpeed);");
+                                builder.AppendLine();
+                                builder.AppendLine("return result;");
+                            }
                             builder.AppendLine();
-                            builder.AppendLine("return result;");
-                        }
-                        builder.AppendLine();
 
-                        builder.AppendLine("/// <summary>");
-                        builder.AppendLine("/// Clamps the length of the provided vector to between [0, maxLength].");
-                        builder.AppendLine("/// </summary>");
-                        using (builder.EnterScope($"public static {vectorType} ClampMagnitude({vectorType} value, float maxLength)"))
-                        {
-                            builder.AppendLine("return ClampMagnitude(value, 0, maxLength);");
-                        }
-                        builder.AppendLine();
+                            builder.AppendLine("/// <summary>");
+                            builder.AppendLine("/// Clamps the length of the provided vector to between [0, maxLength].");
+                            builder.AppendLine("/// </summary>");
+                            using (builder.EnterScope($"public static {vectorType} ClampMagnitude({vectorType} value, {backingType} maxLength)"))
+                            {
+                                builder.AppendLine("return ClampMagnitude(value, 0, maxLength);");
+                            }
+                            builder.AppendLine();
 
-                        builder.AppendLine("/// <summary>");
-                        builder.AppendLine("/// Clamps the length of the provided vector to between [minLength, maxLength].");
-                        builder.AppendLine("/// If a zero vector is provided, then the result is a zero vector.");
-                        builder.AppendLine("/// </summary>");
-                        using (builder.EnterScope($"public static {vectorType} ClampMagnitude({vectorType} value, float minLength, float maxLength)"))
-                        {
-                            builder.AppendLine("return value.AsNormalizedOrDefault() * Clamp(value.Length(), minLength, maxLength);");
-                        }
-                        builder.AppendLine();
+                            builder.AppendLine("/// <summary>");
+                            builder.AppendLine("/// Clamps the length of the provided vector to between [minLength, maxLength].");
+                            builder.AppendLine("/// If a zero vector is provided, then the result is a zero vector.");
+                            builder.AppendLine("/// </summary>");
+                            using (builder.EnterScope($"public static {vectorType} ClampMagnitude({vectorType} value, {backingType} minLength, {backingType} maxLength)"))
+                            {
+                                builder.AppendLine("return value.AsNormalizedOrDefault() * Clamp(value.Length(), minLength, maxLength);");
+                            }
+                            builder.AppendLine();
 
-                        builder.AppendLine("/// <summary>");
-                        builder.AppendLine("/// Returns the normalized version of the provided vector, or returns zero if the provided vector is zero.");
-                        builder.AppendLine("/// </summary>");
-                        using (builder.EnterScope($"public static {vectorType} AsNormalizedOrDefault(this {vectorType} value)"))
-                        {
-                            builder.AppendLine($"return value.AsNormalizedOrDefault({vectorType}.Zero);");
-                        }
-                        builder.AppendLine();
+                            builder.AppendLine("/// <summary>");
+                            builder.AppendLine("/// Returns the normalized version of the provided vector, or returns zero if the provided vector is zero.");
+                            builder.AppendLine("/// </summary>");
+                            using (builder.EnterScope($"public static {vectorType} AsNormalizedOrDefault(this {vectorType} value)"))
+                            {
+                                builder.AppendLine($"return value.AsNormalizedOrDefault({vectorType}.Zero);");
+                            }
+                            builder.AppendLine();
 
-                        builder.AppendLine("/// <summary>");
-                        builder.AppendLine("/// Returns the normalized version of the provided vector, or returns the specified default value if the provided vector is zero.");
-                        builder.AppendLine("/// </summary>");
-                        using (builder.EnterScope($"public static {vectorType} AsNormalizedOrDefault(this {vectorType} value, {vectorType} defaultValue)"))
-                        {
-                            builder.AppendLine($"return value == {vectorType}.Zero ? defaultValue : {vectorType}.Normalize(value);");
-                        }
-                        builder.AppendLine();
+                            builder.AppendLine("/// <summary>");
+                            builder.AppendLine("/// Returns the normalized version of the provided vector, or returns the specified default value if the provided vector is zero.");
+                            builder.AppendLine("/// </summary>");
+                            using (builder.EnterScope($"public static {vectorType} AsNormalizedOrDefault(this {vectorType} value, {vectorType} defaultValue)"))
+                            {
+                                builder.AppendLine($"return value == {vectorType}.Zero ? defaultValue : {vectorType}.Normalize(value);");
+                            }
+                            builder.AppendLine();
 
-                        builder.AppendLine("/// <summary>");
-                        builder.AppendLine("/// Checks if two vectors are approximately the same value based on the provided <see cref=\"tolerance\"/>.");
-                        builder.AppendLine("/// </summary>");
-                        using (builder.EnterScope($"public static bool ApproximatelyEquals({vectorType} a, {vectorType} b, float tolerance = 0.000001f)"))
-                        {
-                            builder.AppendLine($"return {string.Join(" && ", Enumerable.Range(0, componentCount).Select(index => $"ApproximatelyEquals(a.{components[index]}, b.{components[index]}, tolerance)"))};");
+                            builder.AppendLine("/// <summary>");
+                            builder.AppendLine("/// Checks if two vectors are approximately the same value based on the provided <see cref=\"tolerance\"/>.");
+                            builder.AppendLine("/// </summary>");
+                            using (builder.EnterScope($"public static bool ApproximatelyEquals({vectorType} a, {vectorType} b, {backingType} tolerance = 0.000001f)"))
+                            {
+                                builder.AppendLine($"return {string.Join(" && ", Enumerable.Range(0, componentCount).Select(index => $"ApproximatelyEquals(a.{components[index]}, b.{components[index]}, tolerance)"))};");
+                            }
                         }
                     }
 
@@ -150,6 +150,7 @@ public class MathUtilitiesVectorsGenerator
 
     private readonly record struct VectorType(string Suffix, string BackingType)
     {
-        public required bool IsIntegerBacked { get; init; }
+        public bool IsIntegerBacked { get; init; } = false;
+        public bool IsFixedBacked { get; init; } // TODO: Temporary config for excluding certain methods from fixed type vectors
     }
 }
