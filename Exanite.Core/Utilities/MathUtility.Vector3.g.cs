@@ -28,7 +28,16 @@ public static partial class M
     }
 
     /// <inheritdoc cref="SmoothDamp{T}"/>/>
-    public static Vector3 SmoothDamp(Vector3 current, Vector3 target, float smoothTime, float deltaTime, ref Vector3 currentVelocity, float maxSpeed = float.PositiveInfinity)
+    public static Vector3 SmoothDamp(Vector3 current, Vector3 target, float smoothTime, float deltaTime, ref Vector3 currentVelocity)
+    {
+        var result = new Vector3(SmoothDamp(current.X, target.X, smoothTime, deltaTime, ref currentVelocity.X, float.PositiveInfinity), SmoothDamp(current.Y, target.Y, smoothTime, deltaTime, ref currentVelocity.Y, float.PositiveInfinity), SmoothDamp(current.Z, target.Z, smoothTime, deltaTime, ref currentVelocity.Z, float.PositiveInfinity));
+        currentVelocity = ClampMagnitude(currentVelocity, float.PositiveInfinity);
+
+        return result;
+    }
+
+    /// <inheritdoc cref="SmoothDamp{T}"/>/>
+    public static Vector3 SmoothDamp(Vector3 current, Vector3 target, float smoothTime, float deltaTime, ref Vector3 currentVelocity, float maxSpeed)
     {
         var result = new Vector3(SmoothDamp(current.X, target.X, smoothTime, deltaTime, ref currentVelocity.X, maxSpeed), SmoothDamp(current.Y, target.Y, smoothTime, deltaTime, ref currentVelocity.Y, maxSpeed), SmoothDamp(current.Z, target.Z, smoothTime, deltaTime, ref currentVelocity.Z, maxSpeed));
         currentVelocity = ClampMagnitude(currentVelocity, maxSpeed);
@@ -72,7 +81,15 @@ public static partial class M
     /// <summary>
     /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
     /// </summary>
-    public static bool ApproximatelyEquals(Vector3 a, Vector3 b, float tolerance = 0.000001f)
+    public static bool ApproximatelyEquals(Vector3 a, Vector3 b)
+    {
+        return ApproximatelyEquals(a.X, b.X, 0.000001f) && ApproximatelyEquals(a.Y, b.Y, 0.000001f) && ApproximatelyEquals(a.Z, b.Z, 0.000001f);
+    }
+
+    /// <summary>
+    /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
+    /// </summary>
+    public static bool ApproximatelyEquals(Vector3 a, Vector3 b, float tolerance)
     {
         return ApproximatelyEquals(a.X, b.X, tolerance) && ApproximatelyEquals(a.Y, b.Y, tolerance) && ApproximatelyEquals(a.Z, b.Z, tolerance);
     }
