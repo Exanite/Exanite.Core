@@ -97,7 +97,7 @@ public partial struct Vector4Fixed : IEquatable<Vector4Fixed>, IFormattable
         return new Vector4Int((int)value.X, (int)value.Y, (int)value.Z, (int)value.W);
     }
 
-    // Conversion: Loss of precision
+    // Conversion: Loss of precision / determinism
     public static explicit operator Vector4(Vector4Fixed value)
     {
         return new Vector4((float)value.X, (float)value.Y, (float)value.Z, (float)value.W);

@@ -57,7 +57,7 @@ public class VectorFixedGenerator : VectorGenerator
                 AppendVectorCastOperation(builder, "explicit", vectorFixedType, vectorIntType, intType, components, true);
 
                 builder.AppendSeparation();
-                builder.AppendLine("// Conversion: Loss of precision");
+                builder.AppendLine("// Conversion: Loss of precision / determinism");
                 AppendVectorCastOperation(builder, "explicit", vectorFixedType, vectorFloatType, floatType, components, true);
 
                 AppendScalarOperation(builder, components, vectorFixedType, fixedType, vectorFixedType, "*");

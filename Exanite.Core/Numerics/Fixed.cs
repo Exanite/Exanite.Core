@@ -68,9 +68,10 @@ public readonly partial struct Fixed :
     public static explicit operator int(Fixed value) => (int)(value.value >> Shift);
     public static explicit operator long(Fixed value) => value.value >> Shift;
 
-    // Conversion: Loss of precision
+    // Conversion: Loss of precision / determinism
     public static explicit operator float(Fixed value) => (float)value.value / OneValue;
     public static explicit operator double(Fixed value) => (double)value.value / OneValue;
+    public static explicit operator decimal(Fixed value) => (decimal)value.value / OneValue;
 
     /// <inheritdoc cref="FromParts(long,int)"/>
     public static Fixed FromParts(int integral, int fractional)
