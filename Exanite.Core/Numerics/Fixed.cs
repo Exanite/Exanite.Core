@@ -246,53 +246,6 @@ public readonly partial struct Fixed :
     public static Fixed MinMagnitude(Fixed x, Fixed y) => Abs(x) < Abs(y) ? x : y;
     public static Fixed MinMagnitudeNumber(Fixed x, Fixed y) => MinMagnitude(x, y);
 
-    // Creation methods
-    public static bool TryConvertFromChecked<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>
-    {
-        if (TOther.IsInteger(value) && TryConvertToLong<TOther, long>(value, out var longValue))
-        {
-            result = new Fixed(longValue * OneValue);
-            return true;
-        }
-
-        if (TryConvertToDecimal<TOther, decimal>(value, out var decimalValue))
-        {
-            result = new Fixed((long)(decimalValue * OneValue));
-            return true;
-        }
-
-        result = default;
-        return false;
-    }
-
-    private static bool TryConvertToLong<TFrom, TTo>(TFrom value, out long result)
-        where TFrom : INumberBase<TFrom>
-        where TTo : INumberBase<long>
-    {
-        return TTo.TryConvertFromChecked(value, out result);
-    }
-
-    private static bool TryConvertToDecimal<TFrom, TTo>(TFrom value, out decimal result)
-        where TFrom : INumberBase<TFrom>
-        where TTo : INumberBase<decimal>
-    {
-        return TTo.TryConvertFromChecked(value, out result);
-    }
-
-    public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
-    {
-        var decimalValue = (decimal)value.value / OneValue;
-        return TOther.TryConvertFromChecked(decimalValue, out result);
-    }
-
-    public static Fixed CreateChecked<TOther>(TOther value) where TOther : INumberBase<TOther> => TryConvertFromChecked(value, out var result) ? result : throw new NotSupportedException($"Failed to create a fixed point value from the provided value: {value}");
-    public static Fixed CreateSaturating<TOther>(TOther value) where TOther : INumberBase<TOther> => CreateChecked(value);
-    public static Fixed CreateTruncating<TOther>(TOther value) where TOther : INumberBase<TOther> => CreateChecked(value);
-    public static bool TryConvertFromSaturating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther> => TryConvertFromChecked(value, out result);
-    public static bool TryConvertFromTruncating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther> => TryConvertFromChecked(value, out result);
-    public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther> => TryConvertToChecked(value, out result);
-    public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther> => TryConvertToChecked(value, out result);
-
     // Formatting
     public string ToString(string? format, IFormatProvider? formatProvider)
     {

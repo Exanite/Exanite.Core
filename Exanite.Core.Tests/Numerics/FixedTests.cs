@@ -1,3 +1,4 @@
+using System;
 using Exanite.Core.Numerics;
 using Xunit;
 
@@ -44,6 +45,62 @@ public class FixedTests
     {
         Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), Fixed.Precision);
     }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(123)]
+    [InlineData(123.456)]
+    public void Fixed_CreateChecked_ReturnsExpectedValue(double input)
+    {
+        Assert.Equal(input, (double)Fixed.CreateChecked(input), Fixed.Precision);
+    }
+
+    [Fact]
+    public void Fixed_CreateChecked_HasCorrect_EndpointBehavior()
+    {
+        Assert.Throws<OverflowException>(() =>
+        {
+            Fixed.CreateChecked((decimal)Fixed.MaxValue * 2);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            Fixed.CreateChecked((long)Fixed.MaxValue * 2);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            Fixed.CreateChecked((decimal)Fixed.MinValue * 2);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            Fixed.CreateChecked((long)Fixed.MinValue * 2);
+        });
+    }
+
+    [Fact]
+    public void Fixed_CreateSaturating_HasCorrect_EndpointBehavior()
+    {
+        Assert.Equal(Fixed.MaxValue, Fixed.CreateSaturating((decimal)Fixed.MaxValue * 2));
+        Assert.Equal(Fixed.MaxValue, Fixed.CreateSaturating((long)Fixed.MaxValue * 2));
+
+        Assert.Equal(Fixed.MinValue, Fixed.CreateSaturating((decimal)Fixed.MinValue * 2));
+        Assert.Equal(Fixed.MinValue, Fixed.CreateSaturating((long)Fixed.MinValue * 2));
+    }
+
+    [Fact]
+    public void Fixed_CreateTruncating_HasCorrect_EndpointBehavior()
+    {
+        // TODO: Probably need to adjust precision checks for these
+        Assert.Equal((decimal)Fixed.MinValue / 2, (decimal)Fixed.CreateTruncating((decimal)Fixed.MaxValue * 1.5M));
+        Assert.Equal((decimal)Fixed.MinValue / 2, (decimal)Fixed.CreateTruncating((long)Fixed.MaxValue * 1.5));
+
+        Assert.Equal((decimal)Fixed.MaxValue / 2, (decimal)Fixed.CreateTruncating((decimal)Fixed.MinValue * 1.5M));
+        Assert.Equal((decimal)Fixed.MaxValue / 2, (decimal)Fixed.CreateTruncating((long)Fixed.MinValue * 1.5));
+    }
+
+    // TODO: Tests for converting from Fixed
 
     [Theory]
     [InlineData(1, 5, 1)]
@@ -93,14 +150,5 @@ public class FixedTests
     public void Sqrt_OfMaxValue_ReturnsExpectedValue()
     {
         Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), Fixed.Precision - 2);
-    }
-
-    [Theory]
-    [InlineData(0)]
-    [InlineData(123)]
-    [InlineData(123.456)]
-    public void CreateChecked_ReturnsExpectedValue(double input)
-    {
-        Assert.Equal(input, (double)Fixed.CreateChecked(input), Fixed.Precision);
     }
 }
