@@ -49,7 +49,7 @@ public class FixedLookupsGenerator
             }
         }
 
-        var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"Fixed.Lookups.g.cs";
+        var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / "Fixed.Lookups.g.cs";
         outputPath.WriteAllText(builder.ToString());
     }
 }
