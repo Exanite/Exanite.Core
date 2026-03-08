@@ -37,14 +37,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
         {
             // Normalize x so that it is in the range [0.5, 2) // TODO: This is now wrong
             var leadingZeroCount = (int)long.LeadingZeroCount(x.value);
-            var normalizeShift = leadingZeroCount - (63 - Shift);
-            if ((normalizeShift & 1) != 0)
-            {
-                // Ensure the shift is even
-                // TODO: Maybe decrement/increment towards 0?
-                normalizeShift--;
-            }
-
+            var normalizeShift = (leadingZeroCount - (63 - Shift)) & ~1;
             var normalizedX = normalizeShift >= 0 ? x.value << normalizeShift : x.value >> -normalizeShift;
 
             var y = OneValue; // TODO: Use LUT
