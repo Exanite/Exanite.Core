@@ -7,8 +7,9 @@ namespace Exanite.Core.Numerics;
 
 /// <summary>
 /// A fixed point Q48.16 value (48-bits integer, 16-bits fraction).
+/// Has a guaranteed precision of 4 decimal places.
 /// </summary>
-public readonly struct Fixed :
+public readonly partial struct Fixed :
     INumber<Fixed>,
     IMinMaxValue<Fixed>,
     ISignedNumber<Fixed>,
@@ -16,6 +17,7 @@ public readonly struct Fixed :
 {
     // Constants
     private const int Shift = 16;
+    private const int Mask = (1 << Shift) - 1;
     private const long OneValue = 1L << Shift;
 
     public static Fixed One => new(OneValue);
@@ -34,6 +36,11 @@ public readonly struct Fixed :
 
     public static int Radix => 2;
 
+    /// <summary>
+    /// The number of guaranteed decimal places of precision.
+    /// </summary>
+    public static int Precision => 4;
+
     private readonly long value;
 
     private Fixed(long value)
@@ -42,15 +49,16 @@ public readonly struct Fixed :
     }
 
     // Conversion: Safe - No precision loss possible
-    public static implicit operator Fixed(int value) => new((long)value << Shift);
-    public static implicit operator Fixed(short value) => new((long)value << Shift);
     public static implicit operator Fixed(byte value) => new((long)value << Shift);
+    public static implicit operator Fixed(short value) => new((long)value << Shift);
+    public static implicit operator Fixed(int value) => new((long)value << Shift);
+    public static implicit operator Fixed(decimal value) => new((long)value * OneValue);
 
     // Conversion: Potentially unsafe - Can exceed 48-bit integer range
     public static explicit operator Fixed(long value) => new(value << Shift);
 
     // Conversion: Unsafe - Non-deterministic
-    // Consider using FromFraction instead
+    // Consider using FromFraction or FromParts instead
     public static explicit operator Fixed(float value) => CreateChecked(value);
     public static explicit operator Fixed(double value) => CreateChecked(value);
 
@@ -62,6 +70,33 @@ public readonly struct Fixed :
     public static explicit operator float(Fixed value) => (float)value.value / OneValue;
     public static explicit operator double(Fixed value) => (double)value.value / OneValue;
 
+    /// <summary>
+    /// Creates a fixed point number by using combining an integral part and a fractional part.
+    /// Eg: FromParts(1, 1) -> 1.1
+    /// Eg: FromParts(1, 123) -> 1.123
+    /// </summary>
+    public static Fixed FromParts(int integral, int fractional)
+    {
+        if (fractional == 0)
+        {
+            return new Fixed(integral * OneValue);
+        }
+
+        // Determine the number of digits in the fractional part
+        var divisor = 1;
+        var temporaryFractional = fractional;
+        while (temporaryFractional > 0)
+        {
+            divisor *= 10;
+            temporaryFractional /= 10;
+        }
+
+        return new Fixed(integral * OneValue + ((fractional * OneValue) / divisor));
+    }
+
+    /// <summary>
+    /// Creates a fixed point number by dividing the numerator by the denominator.
+    /// </summary>
     public static Fixed FromFraction(Fixed numerator, Fixed denominator)
     {
         return numerator / denominator;
