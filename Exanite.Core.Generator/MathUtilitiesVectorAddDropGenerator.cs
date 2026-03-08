@@ -11,14 +11,14 @@ public class MathUtilitiesVectorAddDropGenerator
     public void Run()
     {
         var components = GeneratorConstants.VectorComponents;
-        var vectorTypes = new List<VectorType>()
+        var vectorTypeSuffixes = new List<string>()
         {
-            new("", "float"),
-            new("Int", "int"),
-            new("Fixed", "Fixed"),
+            "",
+            "Int",
+            "Fixed",
         };
 
-        foreach (var (suffix, _) in vectorTypes)
+        foreach (var suffix in vectorTypeSuffixes)
         {
             var builder = new IndentedStringBuilder();
             builder.AppendGeneratedCodeHeader();
