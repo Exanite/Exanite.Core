@@ -27,7 +27,7 @@ public static partial class M
         return from + (to - from) * t;
     }
 
-    /// <inheritdoc cref="SmoothDamp{T}"/>
+    /// <inheritdoc cref="SmoothDamp{T}(T,T,T,T,ref T)"/>
     public static Vector3 SmoothDamp(Vector3 current, Vector3 target, float smoothTime, float deltaTime, ref Vector3 currentVelocity)
     {
         var result = new Vector3(SmoothDamp(current.X, target.X, smoothTime, deltaTime, ref currentVelocity.X, float.PositiveInfinity), SmoothDamp(current.Y, target.Y, smoothTime, deltaTime, ref currentVelocity.Y, float.PositiveInfinity), SmoothDamp(current.Z, target.Z, smoothTime, deltaTime, ref currentVelocity.Z, float.PositiveInfinity));
@@ -36,7 +36,7 @@ public static partial class M
         return result;
     }
 
-    /// <inheritdoc cref="SmoothDamp{T}"/>
+    /// <inheritdoc cref="SmoothDamp{T}(T,T,T,T,ref T,T)"/>
     public static Vector3 SmoothDamp(Vector3 current, Vector3 target, float smoothTime, float deltaTime, ref Vector3 currentVelocity, float maxSpeed)
     {
         var result = new Vector3(SmoothDamp(current.X, target.X, smoothTime, deltaTime, ref currentVelocity.X, maxSpeed), SmoothDamp(current.Y, target.Y, smoothTime, deltaTime, ref currentVelocity.Y, maxSpeed), SmoothDamp(current.Z, target.Z, smoothTime, deltaTime, ref currentVelocity.Z, maxSpeed));
@@ -79,7 +79,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Checks if two vectors are approximately the same value based on the provided <see cref="tolerance"/>.
+    /// Checks if two vectors are approximately the same value using the default tolerance of 0.000001f.
     /// </summary>
     public static bool ApproximatelyEquals(Vector3 a, Vector3 b)
     {

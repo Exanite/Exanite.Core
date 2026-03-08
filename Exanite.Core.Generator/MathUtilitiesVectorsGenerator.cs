@@ -80,7 +80,7 @@ public class MathUtilitiesVectorsGenerator
                         if (!isFixedBacked)
                         {
                             builder.AppendSeparation();
-                            builder.AppendLine("/// <inheritdoc cref=\"SmoothDamp{T}\"/>");
+                            builder.AppendLine("/// <inheritdoc cref=\"SmoothDamp{T}(T,T,T,T,ref T)\"/>");
                             using (builder.EnterScope($"public static {vectorType} SmoothDamp({vectorType} current, {vectorType} target, {backingType} smoothTime, {backingType} deltaTime, ref {vectorType} currentVelocity)"))
                             {
                                 builder.AppendLine($"var result = new {vectorType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"SmoothDamp(current.{components[index]}, target.{components[index]}, smoothTime, deltaTime, ref currentVelocity.{components[index]}, {vector.SmoothDampMaxSpeed})"))});");
@@ -90,7 +90,7 @@ public class MathUtilitiesVectorsGenerator
                             }
 
                             builder.AppendSeparation();
-                            builder.AppendLine("/// <inheritdoc cref=\"SmoothDamp{T}\"/>");
+                            builder.AppendLine("/// <inheritdoc cref=\"SmoothDamp{T}(T,T,T,T,ref T,T)\"/>");
                             using (builder.EnterScope($"public static {vectorType} SmoothDamp({vectorType} current, {vectorType} target, {backingType} smoothTime, {backingType} deltaTime, ref {vectorType} currentVelocity, {backingType} maxSpeed)"))
                             {
                                 builder.AppendLine($"var result = new {vectorType}({string.Join(", ", Enumerable.Range(0, componentCount).Select(index => $"SmoothDamp(current.{components[index]}, target.{components[index]}, smoothTime, deltaTime, ref currentVelocity.{components[index]}, maxSpeed)"))});");
@@ -138,7 +138,7 @@ public class MathUtilitiesVectorsGenerator
 
                             builder.AppendSeparation();
                             builder.AppendLine("/// <summary>");
-                            builder.AppendLine("/// Checks if two vectors are approximately the same value based on the provided <see cref=\"tolerance\"/>.");
+                            builder.AppendLine($"/// Checks if two vectors are approximately the same value using the default tolerance of {vector.ApproximatelyEqualsTolerance}.");
                             builder.AppendLine("/// </summary>");
                             using (builder.EnterScope($"public static bool ApproximatelyEquals({vectorType} a, {vectorType} b)"))
                             {
