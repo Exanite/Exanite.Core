@@ -60,6 +60,7 @@ public class FixedTests
     [Theory]
     [InlineData(0, 0, 0)]
     [InlineData(2, 0, 1.41421)]
+    [InlineData(4, 0, 2)]
     [InlineData(36, 0, 6)]
     [InlineData(72, 0, 8.48528)]
     [InlineData(123456, 0, 351.36306)]

@@ -57,7 +57,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
         }
 
         var normalizedResult = (normalizedX * y) >> Shift;
-        var finalShift = normalizeShift / 2; // TODO: This probably is losing a .5
+        var finalShift = normalizeShift / 2; // TODO: This probably is losing a .5 since sqrt(2) fails, sqrt(4) works. sqrt(36) fails, sqrt(72) works
 
         return new Fixed(finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift);
     }
