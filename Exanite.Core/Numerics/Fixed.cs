@@ -255,7 +255,7 @@ public readonly partial struct Fixed :
         return TOther.TryConvertFromChecked(decimalValue, out result);
     }
 
-    public static Fixed CreateChecked<TOther>(TOther value) where TOther : INumberBase<TOther> => TryConvertFromChecked(value, out var result) ? result : throw new OverflowException();
+    public static Fixed CreateChecked<TOther>(TOther value) where TOther : INumberBase<TOther> => TryConvertFromChecked(value, out var result) ? result : throw new NotSupportedException($"Failed to create a fixed point value from the provided value: {value}");
     public static Fixed CreateSaturating<TOther>(TOther value) where TOther : INumberBase<TOther> => CreateChecked(value);
     public static Fixed CreateTruncating<TOther>(TOther value) where TOther : INumberBase<TOther> => CreateChecked(value);
     public static bool TryConvertFromSaturating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther> => TryConvertFromChecked(value, out result);
