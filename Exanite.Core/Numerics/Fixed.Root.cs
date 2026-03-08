@@ -46,7 +46,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
             var y = (Int128)1 << (Shift * 2); // TODO: Use LUT
             while (true)
             {
-                // Inverse Newton-Raphson method:-4
+                // Inverse Newton-Raphson method:
                 // y_n+1 = (y_n * (3 - x * y_n * y_n)) >> 1
                 var xyy = (normalizedX * y * y) >> (Shift * 4);
                 var threeMinusXyy = ((Int128)3 << (Shift * 2)) - xyy;
