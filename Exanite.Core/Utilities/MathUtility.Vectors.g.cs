@@ -59,7 +59,7 @@ public static partial class M
     public static void Clamp(ref this Vector2 vector, Vector2 min, Vector2 max)
     {
         vector.X = Clamp(vector.X, min.X, max.X);
-        vector.X = Clamp(vector.Y, min.Y, max.Y);
+        vector.Y = Clamp(vector.Y, min.Y, max.Y);
     }
 
     /// <summary>
@@ -135,8 +135,8 @@ public static partial class M
     public static void Clamp(ref this Vector3 vector, Vector3 min, Vector3 max)
     {
         vector.X = Clamp(vector.X, min.X, max.X);
-        vector.X = Clamp(vector.Y, min.Y, max.Y);
-        vector.X = Clamp(vector.Z, min.Z, max.Z);
+        vector.Y = Clamp(vector.Y, min.Y, max.Y);
+        vector.Z = Clamp(vector.Z, min.Z, max.Z);
     }
 
     /// <summary>
@@ -212,9 +212,9 @@ public static partial class M
     public static void Clamp(ref this Vector4 vector, Vector4 min, Vector4 max)
     {
         vector.X = Clamp(vector.X, min.X, max.X);
-        vector.X = Clamp(vector.Y, min.Y, max.Y);
-        vector.X = Clamp(vector.Z, min.Z, max.Z);
-        vector.X = Clamp(vector.W, min.W, max.W);
+        vector.Y = Clamp(vector.Y, min.Y, max.Y);
+        vector.Z = Clamp(vector.Z, min.Z, max.Z);
+        vector.W = Clamp(vector.W, min.W, max.W);
     }
 
     /// <summary>

@@ -80,7 +80,7 @@ public class MathUtilitiesVectorsGenerator
                 {
                     for (var i = 0; i < componentCount; i++)
                     {
-                        builder.AppendLine($"vector.X = Clamp(vector.{components[i]}, min.{components[i]}, max.{components[i]});");
+                        builder.AppendLine($"vector.{components[i]} = Clamp(vector.{components[i]}, min.{components[i]}, max.{components[i]});");
                     }
                 }
                 builder.AppendLine();
