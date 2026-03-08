@@ -64,6 +64,8 @@ public class FixedTests
     [InlineData(36, 0, 6)]
     [InlineData(72, 0, 8.48528)]
     [InlineData(123456, 0, 351.36306)]
+    [InlineData(123456789, 0, 11111.11106)]
+    [InlineData(123456789012, 0, 351364.18288)]
     public void Sqrt_ReturnsExpectedValue(int integral, int fractional, double expected)
     {
         Assert.Equal(expected, (double)Fixed.Sqrt(Fixed.FromParts(integral, fractional)), Fixed.Precision - 1);
