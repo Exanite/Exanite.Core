@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
@@ -12,6 +11,7 @@ public partial struct Fixed
     public static Fixed CreateChecked<TOther>(TOther value) where TOther : INumberBase<TOther>
     {
         // Based on .NET's own implementation: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Int32.cs,718
+        // The implementation seems to be the same for all types
         Fixed result;
         if (typeof(TOther) == typeof(Fixed))
         {
@@ -28,6 +28,7 @@ public partial struct Fixed
     public static Fixed CreateSaturating<TOther>(TOther value) where TOther : INumberBase<TOther>
     {
         // Based on .NET's own implementation: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Int32.cs,718
+        // The implementation seems to be the same for all types
         Fixed result;
         if (typeof(TOther) == typeof(Fixed))
         {
@@ -44,6 +45,7 @@ public partial struct Fixed
     public static Fixed CreateTruncating<TOther>(TOther value) where TOther : INumberBase<TOther>
     {
         // Based on .NET's own implementation: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Int32.cs,718
+        // The implementation seems to be the same for all types
         Fixed result;
         if (typeof(TOther) == typeof(Fixed))
         {
@@ -129,25 +131,8 @@ public partial struct Fixed
 
     public static bool TryConvertFromTruncating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>
     {
-        // TODO
-        if (TOther.IsInteger(value))
-        {
-            var longValue = long.CreateTruncating(value);
-            result = new Fixed(longValue * OneValue);
-            return true;
-        }
-
-        try
-        {
-            var decimalValue = decimal.CreateTruncating(value);
-            result = new Fixed((long)(decimalValue * OneValue));
-            return true;
-        }
-        catch (NotSupportedException)
-        {
-            result = default;
-            return false;
-        }
+        // Not going to support truncating conversation
+        return TryConvertFromSaturating(value, out result);
     }
 
     public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
@@ -155,6 +140,16 @@ public partial struct Fixed
         var decimalValue = (decimal)value.value / OneValue;
         return TOther.TryConvertFromChecked(decimalValue, out result);
     }
-    public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther> => TryConvertToChecked(value, out result);
-    public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther> => TryConvertToChecked(value, out result);
+
+    public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
+    {
+        var decimalValue = (decimal)value.value / OneValue;
+        return TOther.TryConvertFromSaturating(decimalValue, out result);
+    }
+
+    public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
+    {
+        var decimalValue = (decimal)value.value / OneValue;
+        return TOther.TryConvertFromTruncating(decimalValue, out result);
+    }
 }
