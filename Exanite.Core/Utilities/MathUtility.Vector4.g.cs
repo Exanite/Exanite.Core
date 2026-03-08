@@ -76,6 +76,7 @@ public static partial class M
     {
         return ApproximatelyEquals(a.X, b.X, tolerance) && ApproximatelyEquals(a.Y, b.Y, tolerance) && ApproximatelyEquals(a.Z, b.Z, tolerance) && ApproximatelyEquals(a.W, b.W, tolerance);
     }
+
     /// <summary>
     /// Component-wise clamps the provided vector to the bounds given by <see cref="min"/> and <see cref="max"/>.
     /// </summary>

@@ -16,9 +16,9 @@ public class MathUtilitiesMatricesGenerator
         builder.AppendLine("using Exanite.Core.Numerics;");
         builder.AppendLine();
         builder.AppendLine("namespace Exanite.Core.Utilities;");
-        builder.AppendLine();
-        builder.AppendLine("public static partial class M");
-        using (builder.EnterScope())
+
+        builder.AppendSeparation();
+        using (builder.EnterScope("public static partial class M"))
         {
             using (builder.EnterScope("extension(Matrix4x4)"))
             {
@@ -32,6 +32,7 @@ public class MathUtilitiesMatricesGenerator
                             continue;
                         }
 
+                        builder.AppendSeparation();
                         builder.AppendLine("/// <summary>");
                         builder.AppendLine($"/// Creates a matrix for skewing positions on the {components[targetComponentI]}-axis based on the {components[basedOnComponentI]}-axis.");
                         builder.AppendLine("/// </summary>");
@@ -65,7 +66,6 @@ public class MathUtilitiesMatricesGenerator
                             }
                             builder.AppendLine(");");
                         }
-                        builder.AppendLine();
                     }
                 }
             }

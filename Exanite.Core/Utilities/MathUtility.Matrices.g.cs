@@ -178,6 +178,5 @@ public static partial class M
                 0, 0, k, 1
             );
         }
-
     }
 }

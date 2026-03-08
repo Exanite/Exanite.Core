@@ -51,6 +51,7 @@ public class MathUtilitiesVectorsGenerator
                 {
                     if (!isIntegerBacked)
                     {
+                        builder.AppendSeparation();
                         builder.AppendLine("/// <summary>");
                         builder.AppendLine("/// Interpolates from one vector to another by <see cref=\"t\"/>.");
                         builder.AppendLine("/// <see cref=\"t\"/> will be clamped in the range [0, 1]");
@@ -60,8 +61,8 @@ public class MathUtilitiesVectorsGenerator
                             builder.AppendLine("t = Clamp01(t);");
                             builder.AppendLine("return from + (to - from) * t;");
                         }
-                        builder.AppendLine();
 
+                        builder.AppendSeparation();
                         builder.AppendLine("/// <summary>");
                         builder.AppendLine("/// Interpolates from one vector to another by <see cref=\"t\"/>.");
                         builder.AppendLine("/// </summary>");
@@ -69,10 +70,10 @@ public class MathUtilitiesVectorsGenerator
                         {
                             builder.AppendLine("return from + (to - from) * t;");
                         }
-                        builder.AppendLine();
 
                         if (!isFixedBacked)
                         {
+                            builder.AppendSeparation();
                             builder.AppendLine("/// <inheritdoc cref=\"SmoothDamp{T}\"/>/>");
                             using (builder.EnterScope($"public static {vectorType} SmoothDamp({vectorType} current, {vectorType} target, {backingType} smoothTime, {backingType} deltaTime, ref {vectorType} currentVelocity, {backingType} maxSpeed = float.PositiveInfinity)"))
                             {
@@ -81,8 +82,8 @@ public class MathUtilitiesVectorsGenerator
                                 builder.AppendLine();
                                 builder.AppendLine("return result;");
                             }
-                            builder.AppendLine();
 
+                            builder.AppendSeparation();
                             builder.AppendLine("/// <summary>");
                             builder.AppendLine("/// Clamps the length of the provided vector to between [0, maxLength].");
                             builder.AppendLine("/// </summary>");
@@ -90,8 +91,8 @@ public class MathUtilitiesVectorsGenerator
                             {
                                 builder.AppendLine("return ClampMagnitude(value, 0, maxLength);");
                             }
-                            builder.AppendLine();
 
+                            builder.AppendSeparation();
                             builder.AppendLine("/// <summary>");
                             builder.AppendLine("/// Clamps the length of the provided vector to between [minLength, maxLength].");
                             builder.AppendLine("/// If a zero vector is provided, then the result is a zero vector.");
@@ -100,8 +101,8 @@ public class MathUtilitiesVectorsGenerator
                             {
                                 builder.AppendLine("return value.AsNormalizedOrDefault() * Clamp(value.Length(), minLength, maxLength);");
                             }
-                            builder.AppendLine();
 
+                            builder.AppendSeparation();
                             builder.AppendLine("/// <summary>");
                             builder.AppendLine("/// Returns the normalized version of the provided vector, or returns zero if the provided vector is zero.");
                             builder.AppendLine("/// </summary>");
@@ -109,8 +110,8 @@ public class MathUtilitiesVectorsGenerator
                             {
                                 builder.AppendLine($"return value.AsNormalizedOrDefault({vectorType}.Zero);");
                             }
-                            builder.AppendLine();
 
+                            builder.AppendSeparation();
                             builder.AppendLine("/// <summary>");
                             builder.AppendLine("/// Returns the normalized version of the provided vector, or returns the specified default value if the provided vector is zero.");
                             builder.AppendLine("/// </summary>");
@@ -118,8 +119,8 @@ public class MathUtilitiesVectorsGenerator
                             {
                                 builder.AppendLine($"return value == {vectorType}.Zero ? defaultValue : {vectorType}.Normalize(value);");
                             }
-                            builder.AppendLine();
 
+                            builder.AppendSeparation();
                             builder.AppendLine("/// <summary>");
                             builder.AppendLine("/// Checks if two vectors are approximately the same value based on the provided <see cref=\"tolerance\"/>.");
                             builder.AppendLine("/// </summary>");
@@ -130,6 +131,7 @@ public class MathUtilitiesVectorsGenerator
                         }
                     }
 
+                    builder.AppendSeparation();
                     builder.AppendLine("/// <summary>");
                     builder.AppendLine("/// Component-wise clamps the provided vector to the bounds given by <see cref=\"min\"/> and <see cref=\"max\"/>.");
                     builder.AppendLine("/// </summary>");
@@ -151,6 +153,6 @@ public class MathUtilitiesVectorsGenerator
     private readonly record struct VectorType(string Suffix, string BackingType)
     {
         public bool IsIntegerBacked { get; init; } = false;
-        public bool IsFixedBacked { get; init; } // TODO: Temporary config for excluding certain methods from fixed type vectors
+        public bool IsFixedBacked { get; init; } = false;
     }
 }
