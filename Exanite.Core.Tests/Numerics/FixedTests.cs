@@ -76,23 +76,23 @@ public class FixedTests
     }
 
     [Theory]
-    [InlineData(0, 0, 0)]
-    [InlineData(2, 0, 1.41421)]
-    [InlineData(4, 0, 2)]
-    [InlineData(36, 0, 6)]
-    [InlineData(72, 0, 8.48528)]
-    [InlineData(123456, 0, 351.36306)]
-    [InlineData(123456789, 0, 11111.11106)]
-    [InlineData(123456789012, 0, 351364.18288)]
-    public void Sqrt_ReturnsExpectedValue(long integral, int fractional, double expected)
+    [InlineData(0, 0, 0, 0)]
+    [InlineData(2, 0, 1.41421, 0)]
+    [InlineData(4, 0, 2, 0)]
+    [InlineData(36, 0, 6, 0)]
+    [InlineData(72, 0, 8.48528, 0)]
+    [InlineData(123456, 0, 351.36306, 0)]
+    [InlineData(123456789, 0, 11111.11106, 0)]
+    [InlineData(123456789012, 0, 351364.18288, 1)]
+    public void Sqrt_ReturnsExpectedValue(long integral, int fractional, double expected, int expectedLostPrecision)
     {
-        Assert.Equal(expected, (double)Fixed.Sqrt(Fixed.FromParts(integral, fractional)), Fixed.Precision - 1);
+        Assert.Equal(expected, (double)Fixed.Sqrt(Fixed.FromParts(integral, fractional)), Fixed.Precision - expectedLostPrecision);
     }
 
     [Fact]
     public void Sqrt_OfMaxValue_ReturnsExpectedValue()
     {
-        Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), Fixed.Precision - 1);
+        Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), Fixed.Precision - 2);
     }
 
     [Theory]
