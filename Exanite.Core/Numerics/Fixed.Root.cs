@@ -56,10 +56,25 @@ public partial struct Fixed // : IRootFunctions<Fixed>
             y = yNext;
         }
 
+        // We need to cancel out the normalization step we did above
         var normalizedResult = (normalizedX * y) >> Shift;
         var finalShift = normalizeShift / 2; // TODO: This probably is losing a .5 since sqrt(2) fails, sqrt(4) works. sqrt(36) fails, sqrt(72) works
 
-        return new Fixed(finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift);
+        var result = new Fixed(finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift);
+        if (int.IsOddInteger(normalizeShift))
+        {
+            // TODO: Hey look, this fixes it
+            if (normalizeShift > 0)
+            {
+                result /= (Fixed)1.41421356237;
+            }
+            else
+            {
+                result *= (Fixed)1.41421356237;
+            }
+        }
+
+        return result;
     }
 
     // AI generated code for reference
