@@ -35,7 +35,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
 
         // checked // Uncomment when debugging
         {
-            // This uses Q96.48 for better precision
+            // This uses Q96.32 for better precision
 
             // Normalize x so that it is in the range [0.5, 2) // TODO: This is now wrong (maybe?)
             var leadingZeroCount = (int)long.LeadingZeroCount(x.value) + 64;
