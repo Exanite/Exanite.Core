@@ -164,6 +164,12 @@ public static partial class M
         return MoveTowards(current, target, maxDelta);
     }
 
+    /// <inheritdoc cref="SmoothDamp{T}(T,T,T,T,ref T,T)"/>
+    public static T SmoothDamp<T>(T current, T target, T smoothTime, T deltaTime, ref T currentVelocity) where T : struct, IFloatingPointIeee754<T>
+    {
+        return SmoothDamp(current, target, smoothTime, deltaTime, ref currentVelocity, T.PositiveInfinity);
+    }
+
     /// <summary>
     /// Moves a value towards the target value over time while smoothing the movement.
     /// <br/>
@@ -176,17 +182,12 @@ public static partial class M
     /// <param name="smoothTime">The time it takes to reach the target. Smaller values result in faster movement.</param>
     /// <param name="deltaTime">The time since the last update.</param>
     /// <param name="currentVelocity">Reference to the current velocity, modified by the function.</param>
-    /// <param name="maxSpeed">Optional maximum speed. Defaults to PositiveInfinity.</param>
+    /// <param name="maxSpeed">The maximum change in value allowed.</param>
     /// <returns>The new value after applying smoothing.</returns>
-    public static T SmoothDamp<T>(T current, T target, T smoothTime, T deltaTime, ref T currentVelocity, T maxSpeed = default) where T : struct, IFloatingPointIeee754<T>
+    public static T SmoothDamp<T>(T current, T target, T smoothTime, T deltaTime, ref T currentVelocity, T maxSpeed) where T : struct, IFloatingPoint<T>
     {
         // From https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Math/Mathf.cs#L309
         // Based on Game Programming Gems 4 Chapter 1.10
-        if (maxSpeed == T.Zero)
-        {
-            maxSpeed = T.PositiveInfinity;
-        }
-
         smoothTime = Max(T.CreateTruncating(0.0001f), smoothTime);
         var omega = T.CreateTruncating(2) / smoothTime;
 
