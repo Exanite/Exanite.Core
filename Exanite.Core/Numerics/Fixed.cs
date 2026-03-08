@@ -36,6 +36,8 @@ public readonly partial struct Fixed :
     public static Fixed Pi => new(205887); // Equal to floor(pi * 2^16)
     public static Fixed Tau => new(411774); // Equal to floor(pi * 2^16) * 2
 
+    public static Fixed Epsilon => new(1);
+
     public static int Radix => 2;
 
     /// <summary>
