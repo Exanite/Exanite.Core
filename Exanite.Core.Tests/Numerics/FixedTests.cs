@@ -56,4 +56,15 @@ public class FixedTests
     {
         Assert.Equal(expected, (int)Fixed.Round(Fixed.FromParts(integral, fractional)));
     }
+
+    [Theory]
+    [InlineData(0, 0, 0)]
+    [InlineData(2, 0, 1.41421)]
+    [InlineData(36, 0, 6)]
+    [InlineData(72, 0, 8.48528)]
+    [InlineData(123456, 0, 351.36306)]
+    public void Sqrt_ReturnsExpectedValue(int integral, int fractional, double expected)
+    {
+        Assert.Equal(expected, (double)Fixed.Sqrt(Fixed.FromParts(integral, fractional)), Fixed.Precision - 1);
+    }
 }

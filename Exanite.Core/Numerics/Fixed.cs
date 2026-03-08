@@ -8,7 +8,7 @@ namespace Exanite.Core.Numerics;
 
 /// <summary>
 /// A fixed point Q48.16 value (48-bits integer, 16-bits fraction).
-/// Has a guaranteed precision of 4 decimal places.
+/// Has a precision of 4 decimal places.
 /// </summary>
 public readonly partial struct Fixed :
     INumber<Fixed>,
@@ -39,7 +39,7 @@ public readonly partial struct Fixed :
     public static int Radix => 2;
 
     /// <summary>
-    /// The number of guaranteed decimal places of precision.
+    /// The number of decimal places of precision.
     /// </summary>
     public static int Precision => 4;
 
