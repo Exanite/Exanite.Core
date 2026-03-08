@@ -28,7 +28,7 @@ public class FixedTests
     [InlineData(-1, 1, -1.1)]
     [InlineData(3, 14159, 3.14159)]
     [InlineData(-3, 14159, -3.14159)]
-    public void CreateParts_ReturnsExpectedResult(int integral, int fractional, double expected)
+    public void CreateParts_ReturnsExpectedResult(long integral, int fractional, double expected)
     {
         Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), Fixed.Precision);
     }
@@ -38,7 +38,7 @@ public class FixedTests
     [InlineData(1, 4, 1)]
     [InlineData(3, 14159, 3)]
     [InlineData(-3, 5, -4)]
-    public void Floor_ReturnsExpectedValue(int integral, int fractional, int expected)
+    public void Floor_ReturnsExpectedValue(long integral, int fractional, int expected)
     {
         Assert.Equal(expected, (int)Fixed.Floor(Fixed.FromParts(integral, fractional)));
     }
@@ -48,7 +48,7 @@ public class FixedTests
     [InlineData(1, 4, 2)]
     [InlineData(3, 14159, 4)]
     [InlineData(-3, 5, -3)]
-    public void Ceiling_ReturnsExpectedValue(int integral, int fractional, int expected)
+    public void Ceiling_ReturnsExpectedValue(long integral, int fractional, int expected)
     {
         Assert.Equal(expected, (int)Fixed.Ceiling(Fixed.FromParts(integral, fractional)));
     }
@@ -58,7 +58,7 @@ public class FixedTests
     [InlineData(1, 4, 1)]
     [InlineData(3, 14159, 3)]
     [InlineData(-3, 5, -4)]
-    public void Round_ReturnsExpectedValue(int integral, int fractional, int expected)
+    public void Round_ReturnsExpectedValue(long integral, int fractional, int expected)
     {
         Assert.Equal(expected, (int)Fixed.Round(Fixed.FromParts(integral, fractional)));
     }
@@ -72,7 +72,7 @@ public class FixedTests
     [InlineData(123456, 0, 351.36306)]
     [InlineData(123456789, 0, 11111.11106)]
     [InlineData(123456789012, 0, 351364.18288)]
-    public void Sqrt_ReturnsExpectedValue(int integral, int fractional, double expected)
+    public void Sqrt_ReturnsExpectedValue(long integral, int fractional, double expected)
     {
         Assert.Equal(expected, (double)Fixed.Sqrt(Fixed.FromParts(integral, fractional)), Fixed.Precision - 1);
     }

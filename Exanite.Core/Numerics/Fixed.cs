@@ -72,13 +72,42 @@ public readonly partial struct Fixed :
     public static explicit operator float(Fixed value) => (float)value.value / OneValue;
     public static explicit operator double(Fixed value) => (double)value.value / OneValue;
 
-    /// <summary>
-    /// Creates a fixed point number by using combining an integral part and a fractional part.
-    /// Eg: FromParts(1, 1) -> 1.1
-    /// Eg: FromParts(1, 123) -> 1.123
-    /// </summary>
+    /// <inheritdoc cref="FromParts(long,int)"/>
     public static Fixed FromParts(int integral, int fractional)
     {
+        AssertUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
+
+        if (fractional == 0)
+        {
+            return new Fixed(integral * OneValue);
+        }
+
+        // Determine the number of digits in the fractional part
+        // Note: Not sure if a LUT is actually faster here, but I don't want to benchmark right now
+        var divisor = 10;
+        foreach (var digitLimit in DigitsLut)
+        {
+            if (fractional < digitLimit)
+            {
+                break;
+            }
+
+            divisor *= 10;
+        }
+
+        return new Fixed(integral * OneValue + long.Sign(integral) * ((fractional * OneValue) / divisor));
+    }
+
+    /// <summary>
+    /// Creates a fixed point number by using combining an integral part and a fractional part.
+    /// <br/>
+    /// Eg: FromParts(1, 1) -> 1.1
+    /// <br/>
+    /// Eg: FromParts(1, 123) -> 1.123
+    /// </summary>
+    public static Fixed FromParts(long integral, int fractional)
+    {
+        AssertUtility.IsTrue(integral <= (1L << 48) , "Integral part must be less than or equal to 2^48");
         AssertUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
 
         if (fractional == 0)
