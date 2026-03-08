@@ -127,9 +127,15 @@ public readonly struct Fixed : INumber<Fixed>, IMinMaxValue<Fixed>, ISignedNumbe
     // Creation methods
     public static bool TryConvertFromChecked<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>
     {
-        if (TryConvertToDouble<TOther, double>(value, out var doubleValue))
+        if (TOther.IsInteger(value) && TryConvertToLong<TOther, long>(value, out var longValue))
         {
-            result = new Fixed((long)(doubleValue * OneValue));
+            result = new Fixed(longValue * OneValue);
+            return true;
+        }
+
+        if (TryConvertToDecimal<TOther, decimal>(value, out var decimalValue))
+        {
+            result = new Fixed((long)(decimalValue * OneValue));
             return true;
         }
 
@@ -137,17 +143,24 @@ public readonly struct Fixed : INumber<Fixed>, IMinMaxValue<Fixed>, ISignedNumbe
         return false;
     }
 
-    private static bool TryConvertToDouble<TOther, TDouble>(TOther value, out double result)
+    private static bool TryConvertToLong<TOther, TDecimal>(TOther value, out long result)
         where TOther : INumberBase<TOther>
-        where TDouble : INumberBase<double>
+        where TDecimal : INumberBase<long>
     {
-        return TDouble.TryConvertFromChecked(value, out result);
+        return TDecimal.TryConvertFromChecked(value, out result);
+    }
+
+    private static bool TryConvertToDecimal<TOther, TDecimal>(TOther value, out decimal result)
+        where TOther : INumberBase<TOther>
+        where TDecimal : INumberBase<decimal>
+    {
+        return TDecimal.TryConvertFromChecked(value, out result);
     }
 
     public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var doubleValue = (double)value.value / OneValue;
-        return TOther.TryConvertFromChecked(doubleValue, out result);
+        var decimalValue = (decimal)value.value / OneValue;
+        return TOther.TryConvertFromChecked(decimalValue, out result);
     }
 
     public static Fixed CreateChecked<TOther>(TOther value) where TOther : INumberBase<TOther> => TryConvertFromChecked(value, out var result) ? result : throw new OverflowException();
@@ -161,22 +174,28 @@ public readonly struct Fixed : INumber<Fixed>, IMinMaxValue<Fixed>, ISignedNumbe
     // Formatting
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
-        return ((double)value / OneValue).ToString(format, formatProvider);
+        return ((decimal)value / OneValue).ToString(format, formatProvider);
     }
 
     public override string ToString() => ToString(null, null);
 
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
-        return ((double)value / OneValue).TryFormat(destination, out charsWritten, format, provider);
+        return ((decimal)value / OneValue).TryFormat(destination, out charsWritten, format, provider);
     }
 
     // Parsing
     public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed result)
     {
-        if (double.TryParse(s, style, provider, out var doubleValue))
+        if (long.TryParse(s, style, provider, out var longValue))
         {
-            result = new Fixed((long)(doubleValue * OneValue));
+            result = new Fixed(longValue * OneValue);
+            return true;
+        }
+
+        if (decimal.TryParse(s, style, provider, out var decimalValue))
+        {
+            result = new Fixed((long)(decimalValue * OneValue));
             return true;
         }
 
