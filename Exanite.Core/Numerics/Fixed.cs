@@ -54,10 +54,10 @@ public readonly partial struct Fixed :
     public static implicit operator Fixed(byte value) => new((long)value << Shift);
     public static implicit operator Fixed(short value) => new((long)value << Shift);
     public static implicit operator Fixed(int value) => new((long)value << Shift);
-    public static implicit operator Fixed(decimal value) => new((long)value * OneValue);
 
-    // Conversion: Potentially unsafe - Can exceed 48-bit integer range
+    // Conversion: Potentially unsafe - Can exceed range
     public static explicit operator Fixed(long value) => new(value << Shift);
+    public static explicit operator Fixed(decimal value) => new((long)value * OneValue);
 
     // Conversion: Unsafe - Non-deterministic
     // Consider using FromFraction or FromParts instead
