@@ -242,7 +242,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector2 to a Vector3 by adding components.
+    /// Converts a <see cref="Vector2"/> to a <see cref="Vector3"/> by adding components.
     /// </summary>
     public static Vector3 Xy0(this Vector2 value)
     {
@@ -250,7 +250,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector2 to a Vector3 by adding components.
+    /// Converts a <see cref="Vector2"/> to a <see cref="Vector3"/> by adding components.
     /// </summary>
     public static Vector3 Xy1(this Vector2 value)
     {
@@ -258,7 +258,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector2 to a Vector4 by adding components.
+    /// Converts a <see cref="Vector2"/> to a <see cref="Vector4"/> by adding components.
     /// </summary>
     public static Vector4 Xy00(this Vector2 value)
     {
@@ -266,7 +266,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector2 to a Vector4 by adding components.
+    /// Converts a <see cref="Vector2"/> to a <see cref="Vector4"/> by adding components.
     /// </summary>
     public static Vector4 Xy01(this Vector2 value)
     {
@@ -274,7 +274,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector2 to a Vector4 by adding components.
+    /// Converts a <see cref="Vector2"/> to a <see cref="Vector4"/> by adding components.
     /// </summary>
     public static Vector4 Xy10(this Vector2 value)
     {
@@ -282,7 +282,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector2 to a Vector4 by adding components.
+    /// Converts a <see cref="Vector2"/> to a <see cref="Vector4"/> by adding components.
     /// </summary>
     public static Vector4 Xy11(this Vector2 value)
     {
@@ -290,7 +290,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector3 to a Vector2 by dropping components.
+    /// Converts a <see cref="Vector3"/> to a <see cref="Vector2"/> by dropping components.
     /// </summary>
     public static Vector2 Xy(this Vector3 value)
     {
@@ -298,7 +298,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector3 to a Vector4 by adding components.
+    /// Converts a <see cref="Vector3"/> to a <see cref="Vector4"/> by adding components.
     /// </summary>
     public static Vector4 Xyz0(this Vector3 value)
     {
@@ -306,7 +306,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector3 to a Vector4 by adding components.
+    /// Converts a <see cref="Vector3"/> to a <see cref="Vector4"/> by adding components.
     /// </summary>
     public static Vector4 Xyz1(this Vector3 value)
     {
@@ -314,7 +314,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector4 to a Vector2 by dropping components.
+    /// Converts a <see cref="Vector4"/> to a <see cref="Vector2"/> by dropping components.
     /// </summary>
     public static Vector2 Xy(this Vector4 value)
     {
@@ -322,7 +322,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector4 to a Vector3 by dropping components.
+    /// Converts a <see cref="Vector4"/> to a <see cref="Vector3"/> by dropping components.
     /// </summary>
     public static Vector3 Xyz(this Vector4 value)
     {
@@ -330,7 +330,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector2Int to a Vector3Int by adding components.
+    /// Converts a <see cref="Vector2Int"/> to a <see cref="Vector3Int"/> by adding components.
     /// </summary>
     public static Vector3Int Xy0(this Vector2Int value)
     {
@@ -338,7 +338,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector2Int to a Vector3Int by adding components.
+    /// Converts a <see cref="Vector2Int"/> to a <see cref="Vector3Int"/> by adding components.
     /// </summary>
     public static Vector3Int Xy1(this Vector2Int value)
     {
@@ -346,7 +346,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector2Int to a Vector4Int by adding components.
+    /// Converts a <see cref="Vector2Int"/> to a <see cref="Vector4Int"/> by adding components.
     /// </summary>
     public static Vector4Int Xy00(this Vector2Int value)
     {
@@ -354,7 +354,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector2Int to a Vector4Int by adding components.
+    /// Converts a <see cref="Vector2Int"/> to a <see cref="Vector4Int"/> by adding components.
     /// </summary>
     public static Vector4Int Xy01(this Vector2Int value)
     {
@@ -362,7 +362,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector2Int to a Vector4Int by adding components.
+    /// Converts a <see cref="Vector2Int"/> to a <see cref="Vector4Int"/> by adding components.
     /// </summary>
     public static Vector4Int Xy10(this Vector2Int value)
     {
@@ -370,7 +370,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector2Int to a Vector4Int by adding components.
+    /// Converts a <see cref="Vector2Int"/> to a <see cref="Vector4Int"/> by adding components.
     /// </summary>
     public static Vector4Int Xy11(this Vector2Int value)
     {
@@ -378,7 +378,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector3Int to a Vector2Int by dropping components.
+    /// Converts a <see cref="Vector3Int"/> to a <see cref="Vector2Int"/> by dropping components.
     /// </summary>
     public static Vector2Int Xy(this Vector3Int value)
     {
@@ -386,7 +386,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector3Int to a Vector4Int by adding components.
+    /// Converts a <see cref="Vector3Int"/> to a <see cref="Vector4Int"/> by adding components.
     /// </summary>
     public static Vector4Int Xyz0(this Vector3Int value)
     {
@@ -394,7 +394,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector3Int to a Vector4Int by adding components.
+    /// Converts a <see cref="Vector3Int"/> to a <see cref="Vector4Int"/> by adding components.
     /// </summary>
     public static Vector4Int Xyz1(this Vector3Int value)
     {
@@ -402,7 +402,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector4Int to a Vector2Int by dropping components.
+    /// Converts a <see cref="Vector4Int"/> to a <see cref="Vector2Int"/> by dropping components.
     /// </summary>
     public static Vector2Int Xy(this Vector4Int value)
     {
@@ -410,7 +410,7 @@ public static partial class M
     }
 
     /// <summary>
-    /// Converts a Vector4Int to a Vector3Int by dropping components.
+    /// Converts a <see cref="Vector4Int"/> to a <see cref="Vector3Int"/> by dropping components.
     /// </summary>
     public static Vector3Int Xyz(this Vector4Int value)
     {

@@ -140,7 +140,7 @@ public class MathUtilitiesVectorsGenerator
                         {
                             builder.AppendLine();
                             builder.AppendLine("/// <summary>");
-                            builder.AppendLine($"/// Converts a Vector{fromCount}{suffix} to a Vector{toCount}{suffix} by dropping components.");
+                            builder.AppendLine($"/// Converts a <see cref=\"Vector{fromCount}{suffix}\"/> to a <see cref=\"Vector{toCount}{suffix}\"/> by dropping components.");
                             builder.AppendLine("/// </summary>");
                             using (builder.EnterScope($"public static Vector{toCount}{suffix} {name}(this Vector{fromCount}{suffix} value)"))
                             {
@@ -168,7 +168,7 @@ public class MathUtilitiesVectorsGenerator
                             {
                                 builder.AppendLine();
                                 builder.AppendLine("/// <summary>");
-                                builder.AppendLine($"/// Converts a Vector{fromCount}{suffix} to a Vector{toCount}{suffix} by adding components.");
+                                builder.AppendLine($"/// Converts a <see cref=\"Vector{fromCount}{suffix}\"/> to a <see cref=\"Vector{toCount}{suffix}\"/> by adding components.");
                                 builder.AppendLine("/// </summary>");
                                 using (builder.EnterScope($"public static Vector{toCount}{suffix} {name}{addedComponent}(this Vector{fromCount}{suffix} value)"))
                                 {
