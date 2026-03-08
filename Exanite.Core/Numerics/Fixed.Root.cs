@@ -5,20 +5,9 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed // : IRootFunctions<Fixed>
 {
-    // public static Fixed Cbrt(Fixed x)
-    // {
-    //     throw new System.NotImplementedException();
-    // }
-    //
-    // public static Fixed Hypot(Fixed x, Fixed y)
-    // {
-    //     throw new System.NotImplementedException();
-    // }
-    //
-    // public static Fixed RootN(Fixed x, int n)
-    // {
-    //     throw new System.NotImplementedException();
-    // }
+    // public static Fixed Cbrt(Fixed x);
+    // public static Fixed Hypot(Fixed x, Fixed y);
+    // public static Fixed RootN(Fixed x, int n);
 
     public static Fixed Sqrt(Fixed x)
     {
