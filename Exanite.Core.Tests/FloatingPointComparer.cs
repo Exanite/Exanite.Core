@@ -14,7 +14,7 @@ public class FloatingPointComparer : IEqualityComparer<float>, IEqualityComparer
 
     public static FloatingPointComparer FromTolerance(decimal tolerance)
     {
-        return new FloatingPointComparer(tolerance);
+        return new FloatingPointComparer(M.Abs(tolerance));
     }
 
     public static FloatingPointComparer FromPrecision(int precision)

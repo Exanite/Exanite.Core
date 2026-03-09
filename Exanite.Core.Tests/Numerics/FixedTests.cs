@@ -1,5 +1,6 @@
 using System;
 using Exanite.Core.Numerics;
+using Exanite.Core.Utilities;
 using Xunit;
 
 namespace Exanite.Core.Tests.Numerics;
@@ -246,9 +247,25 @@ public class FixedTests
         {
             current *= multiplier;
 
-            // TODO: Adjust the expected precision
-            AssertEqual(i, current, double.Tan(current), (double)Fixed.Tan((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision - 4));
-            AssertEqual(i, -current, double.Tan(-current), (double)Fixed.Tan((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision - 4));
+            Assert(current);
+            Assert(-current);
+
+            continue;
+
+            void Assert(double input)
+            {
+                var expected = double.Tan(input);
+                var comparer = expected switch
+                {
+                    _ when M.Abs(expected) > 100 => FloatingPointComparer.FromTolerance((decimal)expected * 0.1M), // Slope is >= 10001 at this point
+                    _ when M.Abs(expected) > 10 => FloatingPointComparer.FromTolerance((decimal)expected * 0.01M), // Slope is >= 101 at this point
+                    _ when M.Abs(expected) > 1 => FloatingPointComparer.FromPrecision(Fixed.Precision - 2), // Slope is >= 2 at this point
+                    _ when M.Abs(expected) > 0.75 => FloatingPointComparer.FromPrecision(Fixed.Precision - 1), // Slope is >= 1.5625 at this point
+                    _ => FloatingPointComparer.FromPrecision(Fixed.Precision),
+                };
+
+                AssertEqual(i, input, expected, (double)Fixed.Tan((Fixed)input), comparer);
+            }
         }
     }
 
@@ -259,6 +276,7 @@ public class FixedTests
             Input:       {input}
             Expected:    {expected}
             Actual:      {actual}
+            Difference:  {(decimal)M.Abs(expected - actual)}
             Tolerance:   {comparer.Tolerance}
             """);
     }
