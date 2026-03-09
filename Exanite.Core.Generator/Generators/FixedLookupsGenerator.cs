@@ -104,7 +104,7 @@ public class FixedLookupsGenerator
             // Sine lookup
             // This stores sine values for the range [0pi, pi/2)
             {
-                var lookupBits = 12;
+                var lookupBits = 7;
                 var lookupEntryCount = 1 << lookupBits;
 
                 var sineValues = Enumerable.Range(0, lookupEntryCount)
