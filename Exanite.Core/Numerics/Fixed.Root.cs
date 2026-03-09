@@ -36,7 +36,8 @@ public partial struct Fixed // : IRootFunctions<Fixed>
             // 2 is represented with 32 + 2 bits, but we are exclusive of 2
             const int availableBitCount = 32 + 2 - 1;
             var lutIndex = (int)(normalizedX >> (availableBitCount - SqrtLutBits));
-            var y = (Int128)SqrtLut[lutIndex] << Shift;
+            var y = (Int128)SqrtLut[lutIndex - SqrtLutOffset] << Shift;
+
             while (true)
             {
                 // Inverse Newton-Raphson method:

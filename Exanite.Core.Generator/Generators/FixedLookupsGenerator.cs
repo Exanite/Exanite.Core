@@ -65,37 +65,37 @@ public class FixedLookupsGenerator
                 builder.AppendLine("];");
             }
 
-            // TODO: This is my initial guess at what we need to do
             // Sqrt lookup
             // This stores initial guesses for y for the Inverse Newton-Raphsom method
             // The guesses have the value 1 / sqrt(x_normalized) and are indexed using the upper n bits of x_normalized
-            // x_normalized is in the range [0.25, 2)
+            // x_normalized is in the range [0.5, 2)
             {
-                var lookupBits = 4; // TODO: Increase
+                // Note that we drop the first quarter of the table here
+                var lookupBits = 10;
                 var lookupEntryCount = 1 << lookupBits;
+                var lookupOffset = lookupEntryCount / 4;
+                lookupEntryCount -= lookupOffset;
 
-                var doubleEntries = new List<double>();
-                for (var i = 0; i < lookupEntryCount; i++)
-                {
-                    // TODO: This is probably wrong
-                    var t = (double)i / (lookupEntryCount + 1);
-                    var xNormalized = M.Lerp(0.5, 2, t);
-                    var inverseSqrt = 1 / double.Sqrt(xNormalized);
+                var xNormalizedValues = Enumerable.Range(0, lookupEntryCount)
+                    .Select(i => M.Lerp(0.5, 2, (double)i / lookupEntryCount))
+                    .ToList();
 
-                    doubleEntries.Add(inverseSqrt);
-                }
+                var inverseRootValues = xNormalizedValues
+                    .Select(x => 1 / double.Sqrt(x))
+                    .ToList();
 
-                var fixedEntries = doubleEntries.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).Select(x => x.ToString()).ToList();
-                var entryMaxLength = fixedEntries.Max(x => x.Length);
+                var tableEntries = inverseRootValues.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).Select(x => x.ToString()).ToList();
+                var entryMaxLength = tableEntries.Max(x => x.Length);
                 var valuesPerLine = 8;
 
                 builder.AppendSeparation();
                 builder.AppendLine($"public const int SqrtLutBits = {lookupBits};");
+                builder.AppendLine($"public const int SqrtLutOffset = {lookupOffset};");
                 using (builder.Indent("public static readonly ImmutableArray<int> SqrtLut = ["))
                 {
-                    for (var i = 0; i < fixedEntries.Count; i++)
+                    for (var i = 0; i < tableEntries.Count; i++)
                     {
-                        var entry = fixedEntries[i];
+                        var entry = tableEntries[i];
                         builder.Append($"{entry.PadLeft(entryMaxLength)}");
                         if (i % valuesPerLine == valuesPerLine - 1)
                         {
