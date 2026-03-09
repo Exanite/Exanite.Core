@@ -1,7 +1,7 @@
 ﻿using Exanite.Core.Collections;
 using Xunit;
 
-namespace Exanite.Core.Tests;
+namespace Exanite.Core.Tests.Collections;
 
 public class TwoWayDictionaryTests
 {
