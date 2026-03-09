@@ -22,10 +22,12 @@ public class FloatingPointComparer : IEqualityComparer<float>, IEqualityComparer
         return new FloatingPointComparer((decimal)double.Pow(0.1, precision));
     }
 
-    public bool Equals(float left, float right) => M.ApproximatelyEquals(left, right, (float)Tolerance);
-    public bool Equals(double left, double right) => M.ApproximatelyEquals(left, right, (double)Tolerance);
-    public bool Equals(decimal left, decimal right) => M.ApproximatelyEquals(left, right, Tolerance);
+    // Assumes left is expected and right is actual since this is designed for XUnit
+    public bool Equals(float expected, float actual) => M.ApproximatelyEquals(expected, actual, (float)Tolerance);
+    public bool Equals(double expected, double actual) => M.ApproximatelyEquals(expected, actual, (double)Tolerance);
+    public bool Equals(decimal expected, decimal actual) => M.ApproximatelyEquals(expected, actual, Tolerance);
 
+    // Unused
     public int GetHashCode(float value) => 0;
     public int GetHashCode(double value) => 0;
     public int GetHashCode(decimal value) => 0;
