@@ -202,6 +202,8 @@ public class FixedTests
     [InlineData(3 * double.Pi / 2, -1)]
     [InlineData(2 * double.Pi, 0)]
     [InlineData(1.04719, 0.86602)] // pi/3
+    [InlineData(123456, -0.74028)]
+    [InlineData(123456789, 0.99011)]
     public void Sin_ReturnsExpectedValue(double input, double expected)
     {
         Assert.Equal(expected, (double)Fixed.Sin((Fixed)input), FloatingPointComparer.FromPrecision(Fixed.Precision));

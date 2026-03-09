@@ -33,12 +33,14 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         }
 
         // Handle mirrored portion
-        if (normalizedX > Pi.value / 2)
+        var halfPi = Pi.value / 2;
+        if (normalizedX > halfPi)
         {
             normalizedX = Pi.value - normalizedX;
         }
 
-        var rawIndex = (normalizedX << Shift) * (1 << SinLutBits) / (Pi.value / 2);
+        // Calculate index into LUT
+        var rawIndex = normalizedX * (1 << (SinLutBits + Shift)) / halfPi;
         var index = (int)(rawIndex >> Shift);
         var fraction = (int)(rawIndex & Mask);
         if (index >= ((1 << SinLutBits) - 1))
@@ -46,11 +48,10 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
             return isNegative ? -One : One;
         }
 
+        // Get values and interpolate
         var y0 = SinLut[index];
         var y1 = SinLut[index + 1];
-
         var result = y0 + (((y1 - y0) * fraction) >> Shift);
-
-        return new Fixed(isNegative ? -result : result); // TODO
+        return new Fixed(isNegative ? -result : result);
     }
 }
