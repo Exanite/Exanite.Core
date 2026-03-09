@@ -18,20 +18,24 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
     private const long PiPreciseRaw = 3622009729038557687;
     private const int PiPreciseShift = 60;
 
-    // public static Fixed Acos(Fixed x);
-    // public static Fixed AcosPi(Fixed x);
-    // public static Fixed Asin(Fixed x);
-    // public static Fixed AsinPi(Fixed x);
-    // public static Fixed Atan(Fixed x);
-    // public static Fixed AtanPi(Fixed x);
+    // public static Fixed Tan(Fixed x);
     // public static Fixed Cos(Fixed x);
-    // public static Fixed CosPi(Fixed x);
     // public static Fixed Sin(Fixed x);
+
+    // public static Fixed TanPi(Fixed x);
+    // public static Fixed CosPi(Fixed x);
+    // public static Fixed SinPi(Fixed x);
+
     // public static (Fixed Sin, Fixed Cos) SinCos(Fixed x);
     // public static (Fixed SinPi, Fixed CosPi) SinCosPi(Fixed x);
-    // public static Fixed SinPi(Fixed x);
-    // public static Fixed Tan(Fixed x);
-    // public static Fixed TanPi(Fixed x);
+
+    // public static Fixed Atan(Fixed x);
+    // public static Fixed Acos(Fixed x);
+    // public static Fixed Asin(Fixed x);
+
+    // public static Fixed AtanPi(Fixed x);
+    // public static Fixed AcosPi(Fixed x);
+    // public static Fixed AsinPi(Fixed x);
 
     public static Fixed Tan(Fixed x)
     {
