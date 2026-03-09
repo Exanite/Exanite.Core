@@ -22,6 +22,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
         }
 
         // This uses Q88.40 for better precision
+        // This must be even
         const int internalShift = 40;
 
         // Normalize x using an even shift so that the shift can be safely halved later
