@@ -214,11 +214,23 @@ public class FixedTests
     {
         var current = 1.0;
         var multiplier = 1.025;
+        var precision = FloatingPointComparer.FromPrecision(Fixed.Precision);
+
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            Assert.Equal(double.Sin(current), (double)Fixed.Sin((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
-            Assert.Equal(double.Sin(-current), (double)Fixed.Sin((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+
+            {
+                var expected = double.Sin(current);
+                var actual = (double)Fixed.Sin((Fixed)current);
+                Assert.True(precision.Equals(expected, actual), $"Failed at i: {i}\nInput:    {current}\nExpected: {expected}\nActual:   {actual}");
+            }
+
+            {
+                var expected = double.Sin(-current);
+                var actual = (double)Fixed.Sin((Fixed)(-current));
+                Assert.True(precision.Equals(expected, actual), $"Failed at i: {i}\nInput:    {current}\nExpected: {expected}\nActual:   {actual}");
+            }
         }
     }
 }

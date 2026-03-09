@@ -19,7 +19,7 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 
     public static Fixed Sin(Fixed x)
     {
-        var normalizedX = x.value % Tau.value;
+        var normalizedX = x.value % Tau.value; // TODO: This is losing precision
         if (normalizedX < 0)
         {
             normalizedX += Tau.value;
