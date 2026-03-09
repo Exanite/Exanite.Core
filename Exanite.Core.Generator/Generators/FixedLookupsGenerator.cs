@@ -135,7 +135,7 @@ public class FixedLookupsGenerator
             // Tangent lookup
             // This stores tangent values for the range [0pi, pi/2)
             {
-                var lookupBits = 6; // TODO: Fine tune this
+                var lookupBits = 13;
                 var lookupEntryCount = 1 << lookupBits;
 
                 var tangentValues = Enumerable.Range(0, lookupEntryCount)
