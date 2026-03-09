@@ -28,21 +28,25 @@ public readonly partial struct Fixed :
     /// <summary>
     /// Equal to round(e * 2^16).
     /// </summary>
+    // Generated using: (long)decimal.Round((decimal)double.E * (1L << Shift))
     private const long ERaw = 178145;
 
     /// <summary>
     /// Equal to round(pi * 2^16).
     /// </summary>
+    // Generated using: (long)decimal.Round((decimal)double.Pi * (1L << Shift))
     private const long PiRaw = 205887;
 
     /// <summary>
     /// Equal to round(pi * 2^16 / 2).
     /// </summary>
+    // Generated using: (long)decimal.Round((decimal)(double.Pi / 2) * (1L << Shift))
     private const long PiHalfRaw = 102944;
 
     /// <summary>
     /// Equal to round(pi * 2^16 * 2).
     /// </summary>
+    // Generated using: (long)decimal.Round((decimal)double.Tau * (1L << Shift))
     private const long TauRaw = 411775;
 
     public static Fixed One => new(OneValue);
