@@ -85,9 +85,9 @@ public class FixedLookupsGenerator
                     doubleEntries.Add(inverseSqrt);
                 }
 
-                var fixedEntries = doubleEntries.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).ToList();
+                var fixedEntries = doubleEntries.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).Select(x => x.ToString()).ToList();
+                var entryMaxLength = fixedEntries.Max(x => x.Length);
                 var valuesPerLine = 8;
-                var padDigits = 6;
 
                 builder.AppendSeparation();
                 builder.AppendLine($"public const int SqrtLutBits = {lookupBits};");
@@ -96,7 +96,7 @@ public class FixedLookupsGenerator
                     for (var i = 0; i < fixedEntries.Count; i++)
                     {
                         var entry = fixedEntries[i];
-                        builder.Append($"{entry.ToString().PadLeft(padDigits)}");
+                        builder.Append($"{entry.PadLeft(entryMaxLength)}");
                         if (i % valuesPerLine == valuesPerLine - 1)
                         {
                             builder.AppendLine(",");
