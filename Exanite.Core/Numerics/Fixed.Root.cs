@@ -27,8 +27,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
             // TODO: 96 is probably extremely excessive since the values are normalized
 
             // Normalize x using an even shift so that the shift can be safely halved later
-            // This leads to x being in the interval [0.25, 1) or [0.5, 2)
-            // [0.5, 2) is the interval if the shift was always supposed to be even
+            // This leads to x being in the interval [0.5, 2)
             var leadingZeroCount = (int)long.LeadingZeroCount(x.value) + 64;
             var evenNormalizeShift = (leadingZeroCount - (128 - 1 - Shift * 2)) & ~1;
             var normalizedX = evenNormalizeShift >= 0 ? (Int128)x.value << evenNormalizeShift : (Int128)x.value >> -evenNormalizeShift;

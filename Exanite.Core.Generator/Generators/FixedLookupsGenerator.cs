@@ -79,7 +79,7 @@ public class FixedLookupsGenerator
                 {
                     // TODO: This is probably wrong
                     var t = (double)i / (lookupEntryCount + 1);
-                    var xNormalized = M.Lerp(0.25, 2, t);
+                    var xNormalized = M.Lerp(0.5, 2, t);
                     var inverseSqrt = 1 / double.Sqrt(xNormalized);
 
                     doubleEntries.Add(inverseSqrt);
