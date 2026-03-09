@@ -35,7 +35,7 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 
     public static Fixed Tan(Fixed x)
     {
-        var normalizedX = (long)((((Int128)x.value << (PiPreciseShift - Shift)) % PiPreciseRaw) >> PiPreciseShift - Shift);
+        var normalizedX = (long)((((Int128)x.raw << (PiPreciseShift - Shift)) % PiPreciseRaw) >> PiPreciseShift - Shift);
         if (normalizedX < 0)
         {
             normalizedX += PiRaw;
@@ -77,7 +77,7 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 
     public static Fixed Sin(Fixed x)
     {
-        var normalizedX = (long)((((Int128)x.value << (TauPreciseShift - Shift)) % TauPreciseRaw) >> TauPreciseShift - Shift);
+        var normalizedX = (long)((((Int128)x.raw << (TauPreciseShift - Shift)) % TauPreciseRaw) >> TauPreciseShift - Shift);
         if (normalizedX < 0)
         {
             normalizedX += TauRaw;

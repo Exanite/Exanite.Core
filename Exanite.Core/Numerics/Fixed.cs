@@ -73,11 +73,11 @@ public readonly partial struct Fixed :
     /// </summary>
     public static int Precision => 4;
 
-    private readonly long value;
+    private readonly long raw;
 
-    private Fixed(long value)
+    private Fixed(long raw)
     {
-        this.value = value;
+        this.raw = raw;
     }
 
     // Conversion: Safe - No precision loss possible
@@ -96,15 +96,15 @@ public readonly partial struct Fixed :
     public static explicit operator Fixed(double value) => new((long)(value * OneValue));
 
     // Conversion: Loss of fraction / sign
-    public static explicit operator int(Fixed value) => (int)(value.value >> Shift);
-    public static explicit operator uint(Fixed value) => (uint)(value.value >> Shift);
-    public static explicit operator long(Fixed value) => value.value >> Shift;
-    public static explicit operator ulong(Fixed value) => (ulong)(value.value >> Shift);
+    public static explicit operator int(Fixed value) => (int)(value.raw >> Shift);
+    public static explicit operator uint(Fixed value) => (uint)(value.raw >> Shift);
+    public static explicit operator long(Fixed value) => value.raw >> Shift;
+    public static explicit operator ulong(Fixed value) => (ulong)(value.raw >> Shift);
 
     // Conversion: Loss of precision / determinism
-    public static explicit operator float(Fixed value) => (float)value.value / OneValue;
-    public static explicit operator double(Fixed value) => (double)value.value / OneValue;
-    public static explicit operator decimal(Fixed value) => (decimal)value.value / OneValue;
+    public static explicit operator float(Fixed value) => (float)value.raw / OneValue;
+    public static explicit operator double(Fixed value) => (double)value.raw / OneValue;
+    public static explicit operator decimal(Fixed value) => (decimal)value.raw / OneValue;
 
     /// <inheritdoc cref="FromParts(long,int)"/>
     public static Fixed FromParts(int integral, int fractional)
@@ -180,7 +180,7 @@ public readonly partial struct Fixed :
     /// </summary>
     public static Fixed Floor(Fixed value)
     {
-        return new Fixed(value.value & ~Mask);
+        return new Fixed(value.raw & ~Mask);
     }
 
     /// <summary>
@@ -188,7 +188,7 @@ public readonly partial struct Fixed :
     /// </summary>
     public static Fixed Ceiling(Fixed value)
     {
-        var fractional = value.value & Mask;
+        var fractional = value.raw & Mask;
         return fractional == 0 ? value : Floor(value) + One;
     }
 
@@ -198,8 +198,8 @@ public readonly partial struct Fixed :
     /// </summary>
     public static Fixed Round(Fixed value)
     {
-        var integral = value.value & ~Mask;
-        var fractional = value.value & Mask;
+        var integral = value.raw & ~Mask;
+        var fractional = value.raw & Mask;
 
         if (fractional < HalfValue)
         {
@@ -215,48 +215,48 @@ public readonly partial struct Fixed :
     }
 
     // Operators
-    public static Fixed operator +(Fixed left, Fixed right) => new(left.value + right.value);
-    public static Fixed operator -(Fixed left, Fixed right) => new(left.value - right.value);
-    public static Fixed operator %(Fixed left, Fixed right) => new(left.value % right.value);
+    public static Fixed operator +(Fixed left, Fixed right) => new(left.raw + right.raw);
+    public static Fixed operator -(Fixed left, Fixed right) => new(left.raw - right.raw);
+    public static Fixed operator %(Fixed left, Fixed right) => new(left.raw % right.raw);
 
     public static Fixed operator *(Fixed left, Fixed right)
     {
-        return new Fixed((long)(((Int128)left.value * right.value) >> Shift));
+        return new Fixed((long)(((Int128)left.raw * right.raw) >> Shift));
     }
 
     public static Fixed operator /(Fixed left, Fixed right)
     {
-        return new Fixed((long)(((Int128)left.value << Shift) / right.value));
+        return new Fixed((long)(((Int128)left.raw << Shift) / right.raw));
     }
 
     public static Fixed operator +(Fixed value) => value;
-    public static Fixed operator -(Fixed value) => new(-value.value);
+    public static Fixed operator -(Fixed value) => new(-value.raw);
     public static Fixed operator --(Fixed value) => value - One;
     public static Fixed operator ++(Fixed value) => value + One;
 
     // Comparisons
-    public static bool operator ==(Fixed left, Fixed right) => left.value == right.value;
-    public static bool operator !=(Fixed left, Fixed right) => left.value != right.value;
-    public static bool operator <(Fixed left, Fixed right) => left.value < right.value;
-    public static bool operator >(Fixed left, Fixed right) => left.value > right.value;
-    public static bool operator <=(Fixed left, Fixed right) => left.value <= right.value;
-    public static bool operator >=(Fixed left, Fixed right) => left.value >= right.value;
+    public static bool operator ==(Fixed left, Fixed right) => left.raw == right.raw;
+    public static bool operator !=(Fixed left, Fixed right) => left.raw != right.raw;
+    public static bool operator <(Fixed left, Fixed right) => left.raw < right.raw;
+    public static bool operator >(Fixed left, Fixed right) => left.raw > right.raw;
+    public static bool operator <=(Fixed left, Fixed right) => left.raw <= right.raw;
+    public static bool operator >=(Fixed left, Fixed right) => left.raw >= right.raw;
 
     public int CompareTo(object? obj) => obj is Fixed other ? CompareTo(other) : throw new ArgumentException();
-    public int CompareTo(Fixed other) => value.CompareTo(other.value);
+    public int CompareTo(Fixed other) => raw.CompareTo(other.raw);
 
     public override bool Equals(object? obj) => obj is Fixed other && Equals(other);
-    public bool Equals(Fixed other) => value == other.value;
-    public override int GetHashCode() => value.GetHashCode();
+    public bool Equals(Fixed other) => raw == other.raw;
+    public override int GetHashCode() => raw.GetHashCode();
 
     // Properties
-    public static bool IsZero(Fixed value) => value.value == 0;
-    public static bool IsPositive(Fixed value) => value.value >= 0; // Int32.IsPositive uses >=
-    public static bool IsNegative(Fixed value) => value.value < 0;
+    public static bool IsZero(Fixed value) => value.raw == 0;
+    public static bool IsPositive(Fixed value) => value.raw >= 0; // Int32.IsPositive uses >=
+    public static bool IsNegative(Fixed value) => value.raw < 0;
 
-    public static bool IsInteger(Fixed value) => (value.value & (OneValue - 1)) == 0;
-    public static bool IsEvenInteger(Fixed value) => IsInteger(value) && (value.value >> Shift) % 2 == 0;
-    public static bool IsOddInteger(Fixed value) => IsInteger(value) && (value.value >> Shift) % 2 != 0;
+    public static bool IsInteger(Fixed value) => (value.raw & (OneValue - 1)) == 0;
+    public static bool IsEvenInteger(Fixed value) => IsInteger(value) && (value.raw >> Shift) % 2 == 0;
+    public static bool IsOddInteger(Fixed value) => IsInteger(value) && (value.raw >> Shift) % 2 != 0;
 
     public static bool IsRealNumber(Fixed value) => true;
     public static bool IsComplexNumber(Fixed value) => false;
@@ -267,13 +267,13 @@ public readonly partial struct Fixed :
     public static bool IsPositiveInfinity(Fixed value) => false;
     public static bool IsNegativeInfinity(Fixed value) => false;
 
-    public static bool IsNormal(Fixed value) => value.value != 0;
+    public static bool IsNormal(Fixed value) => value.raw != 0;
     public static bool IsCanonical(Fixed value) => true;
     public static bool IsNaN(Fixed value) => false;
     public static bool IsSubnormal(Fixed value) => false;
 
     // Magnitude methods
-    public static Fixed Abs(Fixed value) => new(long.Abs(value.value));
+    public static Fixed Abs(Fixed value) => new(long.Abs(value.raw));
     public static Fixed MaxMagnitude(Fixed x, Fixed y) => Abs(x) > Abs(y) ? x : y;
     public static Fixed MaxMagnitudeNumber(Fixed x, Fixed y) => MaxMagnitude(x, y);
     public static Fixed MinMagnitude(Fixed x, Fixed y) => Abs(x) < Abs(y) ? x : y;
@@ -282,14 +282,14 @@ public readonly partial struct Fixed :
     // Formatting
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
-        return ((decimal)value / OneValue).ToString(format, formatProvider);
+        return ((decimal)raw / OneValue).ToString(format, formatProvider);
     }
 
     public override string ToString() => ToString(null, null);
 
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
-        return ((decimal)value / OneValue).TryFormat(destination, out charsWritten, format, provider);
+        return ((decimal)raw / OneValue).TryFormat(destination, out charsWritten, format, provider);
     }
 
     // Parsing

@@ -27,9 +27,9 @@ public partial struct Fixed // : IRootFunctions<Fixed>
 
         // Normalize x using an even shift so that the shift can be safely halved later
         // This leads to x being in the interval [0.5, 2)
-        var leadingZeroCount = (int)long.LeadingZeroCount(x.value) + 64;
+        var leadingZeroCount = (int)long.LeadingZeroCount(x.raw) + 64;
         var evenNormalizeShift = (leadingZeroCount - (128 - 1 - internalShift)) & ~1;
-        var normalizedX = evenNormalizeShift >= 0 ? (Int128)x.value << evenNormalizeShift : (Int128)x.value >> -evenNormalizeShift;
+        var normalizedX = evenNormalizeShift >= 0 ? (Int128)x.raw << evenNormalizeShift : (Int128)x.raw >> -evenNormalizeShift;
 
         // Calculate LUT index of initial guess
         // 2 is represented with 41 + 2 bits, but we are exclusive of 2

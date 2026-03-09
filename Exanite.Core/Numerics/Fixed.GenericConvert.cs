@@ -137,19 +137,19 @@ public partial struct Fixed
 
     public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var decimalValue = (decimal)value.value / OneValue;
+        var decimalValue = (decimal)value.raw / OneValue;
         return TOther.TryConvertFromChecked(decimalValue, out result) || TryConvertFromCheckedFromDecimal<TOther, decimal>(decimalValue, out result);
     }
 
     public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var decimalValue = (decimal)value.value / OneValue;
+        var decimalValue = (decimal)value.raw / OneValue;
         return TOther.TryConvertFromSaturating(decimalValue, out result) || TryConvertFromSaturatingFromDecimal<TOther, decimal>(decimalValue, out result);
     }
 
     public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var decimalValue = (decimal)value.value / OneValue;
+        var decimalValue = (decimal)value.raw / OneValue;
         return TOther.TryConvertFromTruncating(decimalValue, out result) || TryConvertFromTruncatingFromDecimal<TOther, decimal>(decimalValue, out result);
     }
 
