@@ -25,6 +25,12 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
     // public static Fixed Tan(Fixed x);
     // public static Fixed TanPi(Fixed x);
 
+    public static Fixed Tan(Fixed x)
+    {
+        // TODO: Proper implementation. This is horribly imprecise (fails at i=6 out of 1000 in the test cases).
+        return Sin(x) / Cos(x);
+    }
+
     public static Fixed Cos(Fixed x)
     {
         return Sin(x + PiHalf);

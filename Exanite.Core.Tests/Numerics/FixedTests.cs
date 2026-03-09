@@ -237,6 +237,20 @@ public class FixedTests
         }
     }
 
+    [Fact]
+    public void Tan_ReturnsExpectedValue_ForWideRange()
+    {
+        var current = 1.0;
+        var multiplier = 1.025;
+        for (var i = 0; i < 1000; i++)
+        {
+            current *= multiplier;
+
+            AssertEqual(i, current, double.Tan(current), (double)Fixed.Tan((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Tan(-current), (double)Fixed.Tan((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        }
+    }
+
     private void AssertEqual(int i, double input, double expected, double actual, FloatingPointComparer comparer)
     {
         Assert.True(comparer.Equals(expected, actual), $"""
