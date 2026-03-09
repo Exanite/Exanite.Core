@@ -219,7 +219,7 @@ public class FixedTests
             current *= multiplier;
 
             AssertEqual(i, current, double.Sin(current), (double)Fixed.Sin((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
-            AssertEqual(i, current, double.Sin(-current), (double)Fixed.Sin((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, -current, double.Sin(-current), (double)Fixed.Sin((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
         }
     }
 
@@ -233,7 +233,7 @@ public class FixedTests
             current *= multiplier;
 
             AssertEqual(i, current, double.Cos(current), (double)Fixed.Cos((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
-            AssertEqual(i, current, double.Cos(-current), (double)Fixed.Cos((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, -current, double.Cos(-current), (double)Fixed.Cos((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
         }
     }
 
@@ -248,7 +248,7 @@ public class FixedTests
 
             // TODO: Adjust the expected precision
             AssertEqual(i, current, double.Tan(current), (double)Fixed.Tan((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision - 4));
-            AssertEqual(i, current, double.Tan(-current), (double)Fixed.Tan((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision - 4));
+            AssertEqual(i, -current, double.Tan(-current), (double)Fixed.Tan((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision - 4));
         }
     }
 
