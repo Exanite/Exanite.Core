@@ -16,19 +16,34 @@ public readonly partial struct Fixed :
     ISignedNumber<Fixed>,
     IFloatingPointConstants<Fixed>
 {
+    // Constants
     public const int IntegralBitCount = 64 - Shift;
     public const int FractionalBitCount = Shift;
 
-    public const long ERaw = 178145; // Equal to round(e * 2^16)
-    public const long PiRaw = 205887; // Equal to round(pi * 2^16)
-    public const long PiHalfRaw = 102944; // Equal to round(pi * 2^16 / 2)
-    public const long TauRaw = 411775; // Equal to round(pi * 2^16 * 2)
-
-    // Constants
     private const int Shift = 16;
     private const int Mask = (1 << Shift) - 1;
     private const long OneValue = 1L << Shift;
     private const long HalfValue = OneValue / 2;
+
+    /// <summary>
+    /// Equal to round(e * 2^16).
+    /// </summary>
+    private const long ERaw = 178145;
+
+    /// <summary>
+    /// Equal to round(pi * 2^16).
+    /// </summary>
+    private const long PiRaw = 205887;
+
+    /// <summary>
+    /// Equal to round(pi * 2^16 / 2).
+    /// </summary>
+    private const long PiHalfRaw = 102944;
+
+    /// <summary>
+    /// Equal to round(pi * 2^16 * 2).
+    /// </summary>
+    private const long TauRaw = 411775;
 
     public static Fixed One => new(OneValue);
     public static Fixed Zero => new(0);
@@ -40,10 +55,10 @@ public readonly partial struct Fixed :
     public static Fixed MaxValue => new(long.MaxValue);
     public static Fixed MinValue => new(long.MinValue + 1);
 
-    public static Fixed E => new(ERaw); // Equal to round(e * 2^16)
-    public static Fixed Pi => new(PiRaw); // Equal to round(pi * 2^16)
-    public static Fixed PiHalf => new(PiHalfRaw); // Equal to round(pi * 2^16 / 2)
-    public static Fixed Tau => new(TauRaw); // Equal to round(pi * 2^16 * 2)
+    public static Fixed E => new(ERaw);
+    public static Fixed Pi => new(PiRaw);
+    public static Fixed PiHalf => new(PiHalfRaw);
+    public static Fixed Tau => new(TauRaw);
 
     public static Fixed Epsilon => new(1);
 

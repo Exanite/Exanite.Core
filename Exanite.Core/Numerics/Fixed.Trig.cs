@@ -4,7 +4,9 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 {
-    // Q4.60
+    /// <summary>
+    /// Q4.60 format. Equal to round(tau * 2^60).
+    /// </summary>
     private const long TauPreciseRaw = 7244019458077126904;
     private const int TauPreciseShift = 60;
 
