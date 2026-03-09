@@ -86,25 +86,16 @@ public class FixedLookupsGenerator
 
                 var tableEntries = inverseRootValues.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).Select(x => x.ToString()).ToList();
                 var entryMaxLength = tableEntries.Max(x => x.Length);
-                var valuesPerLine = 8;
+                var valuesPerLine = 16;
 
                 builder.AppendSeparation();
                 builder.AppendLine($"public const int SqrtLutBits = {lookupBits};");
                 builder.AppendLine($"public const int SqrtLutOffset = {lookupOffset};");
                 using (builder.Indent("public static readonly ImmutableArray<int> SqrtLut = ["))
                 {
-                    for (var i = 0; i < tableEntries.Count; i++)
+                    foreach (var chunk in tableEntries.Chunk(valuesPerLine))
                     {
-                        var entry = tableEntries[i];
-                        builder.Append($"{entry.PadLeft(entryMaxLength)}");
-                        if (i % valuesPerLine == valuesPerLine - 1)
-                        {
-                            builder.AppendLine(",");
-                        }
-                        else
-                        {
-                            builder.Append(", ");
-                        }
+                        builder.AppendLine($"{string.Join(", ", chunk.Select(x => x.PadLeft(entryMaxLength)))},");
                     }
                 }
                 builder.AppendLine("];");
