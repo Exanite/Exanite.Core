@@ -19,6 +19,11 @@ public readonly partial struct Fixed :
     public const int IntegralBitCount = 64 - Shift;
     public const int FractionalBitCount = Shift;
 
+    public const long ERaw = 178145; // Equal to round(e * 2^16)
+    public const long PiRaw = 205887; // Equal to round(pi * 2^16)
+    public const long PiHalfRaw = 102944; // Equal to round(pi * 2^16 / 2)
+    public const long TauRaw = 411775; // Equal to round(pi * 2^16 * 2)
+
     // Constants
     private const int Shift = 16;
     private const int Mask = (1 << Shift) - 1;
@@ -35,10 +40,10 @@ public readonly partial struct Fixed :
     public static Fixed MaxValue => new(long.MaxValue);
     public static Fixed MinValue => new(long.MinValue + 1);
 
-    public static Fixed E => new(178145); // Equal to round(e * 2^16)
-    public static Fixed Pi => new(205887); // Equal to round(pi * 2^16)
-    public static Fixed PiHalf => new(102944); // Equal to round(pi * 2^16 / 2)
-    public static Fixed Tau => new(411775); // Equal to round(pi * 2^16 * 2)
+    public static Fixed E => new(ERaw); // Equal to round(e * 2^16)
+    public static Fixed Pi => new(PiRaw); // Equal to round(pi * 2^16)
+    public static Fixed PiHalf => new(PiHalfRaw); // Equal to round(pi * 2^16 / 2)
+    public static Fixed Tau => new(TauRaw); // Equal to round(pi * 2^16 * 2)
 
     public static Fixed Epsilon => new(1);
 

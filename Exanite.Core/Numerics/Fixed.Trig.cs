@@ -5,7 +5,7 @@ namespace Exanite.Core.Numerics;
 public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 {
     // Q4.60
-    private const long TauPrecise = 7244019458077126904;
+    private const long TauPreciseRaw = 7244019458077126904;
     private const int TauPreciseShift = 60;
 
     // public static Fixed Acos(Fixed x);
@@ -30,27 +30,27 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 
     public static Fixed Sin(Fixed x)
     {
-        var normalizedX = (long)((((Int128)x.value << (TauPreciseShift - Shift)) % TauPrecise) >> TauPreciseShift - Shift);
+        var normalizedX = (long)((((Int128)x.value << (TauPreciseShift - Shift)) % TauPreciseRaw) >> TauPreciseShift - Shift);
         if (normalizedX < 0)
         {
-            normalizedX += Tau.value;
+            normalizedX += TauRaw;
         }
 
         // Handle negative portion
-        var isNegative = normalizedX > Pi.value;
+        var isNegative = normalizedX > PiRaw;
         if (isNegative)
         {
-            normalizedX -= Pi.value;
+            normalizedX -= PiRaw;
         }
 
         // Handle mirrored portion
-        if (normalizedX > PiHalf.value)
+        if (normalizedX > PiHalfRaw)
         {
-            normalizedX = Pi.value - normalizedX;
+            normalizedX = PiRaw - normalizedX;
         }
 
         // Calculate index into LUT
-        var rawIndex = normalizedX * (1 << (SinLutBits + Shift)) / PiHalf.value;
+        var rawIndex = normalizedX * (1 << (SinLutBits + Shift)) / PiHalfRaw;
         var index = (int)(rawIndex >> Shift);
         var fraction = (int)(rawIndex & Mask);
         if (index >= ((1 << SinLutBits) - 1))
