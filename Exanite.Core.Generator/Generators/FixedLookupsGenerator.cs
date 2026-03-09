@@ -126,6 +126,32 @@ public class FixedLookupsGenerator
                 }
                 builder.AppendLine("];");
             }
+
+            // // Tangent lookup
+            // // This stores tangent values for the range [0pi, pi/2)
+            // {
+            //     var lookupBits = 12;
+            //     var lookupEntryCount = 1 << lookupBits;
+            //
+            //     var tangentValues = Enumerable.Range(0, lookupEntryCount)
+            //         .Select(i => double.Tan(i * (double.Pi / 2) / lookupEntryCount))
+            //         .ToList();
+            //
+            //     var tableEntries = tangentValues.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).Select(x => x.ToString()).ToList();
+            //     var entryMaxLength = tableEntries.Max(x => x.Length);
+            //     var valuesPerLine = 16;
+            //
+            //     builder.AppendSeparation();
+            //     builder.AppendLine($"public const int TanLutBits = {lookupBits};");
+            //     using (builder.Indent("public static readonly ImmutableArray<ushort> TanLut = ["))
+            //     {
+            //         foreach (var chunk in tableEntries.Chunk(valuesPerLine))
+            //         {
+            //             builder.AppendLine($"{string.Join(", ", chunk.Select(x => x.PadLeft(entryMaxLength)))},");
+            //         }
+            //     }
+            //     builder.AppendLine("];");
+            // }
         }
 
         var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / "Fixed.Lookup.g.cs";
