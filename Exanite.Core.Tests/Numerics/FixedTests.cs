@@ -239,6 +239,12 @@ public class FixedTests
 
     private void AssertEqual(int i, double input, double expected, double actual, FloatingPointComparer comparer)
     {
-        Assert.True(comparer.Equals(expected, actual), $"Failed at i: {i}\nInput:    {input}\nExpected: {expected}\nActual:   {actual}");
+        Assert.True(comparer.Equals(expected, actual), $"""
+            Failed at i: {i}
+            Input:       {input}
+            Expected:    {expected}
+            Actual:      {actual}
+            Tolerance:   {comparer.Tolerance}
+            """);
     }
 }

@@ -5,11 +5,11 @@ namespace Exanite.Core.Tests;
 
 public class FloatingPointComparer : IEqualityComparer<float>, IEqualityComparer<double>, IEqualityComparer<decimal>
 {
-    private readonly decimal tolerance;
+    public readonly decimal Tolerance;
 
     private FloatingPointComparer(decimal tolerance)
     {
-        this.tolerance = tolerance;
+        this.Tolerance = tolerance;
     }
 
     public static FloatingPointComparer FromTolerance(decimal tolerance)
@@ -22,9 +22,9 @@ public class FloatingPointComparer : IEqualityComparer<float>, IEqualityComparer
         return new FloatingPointComparer((decimal)double.Pow(0.1, precision));
     }
 
-    public bool Equals(float left, float right) => M.ApproximatelyEquals(left, right, (float)tolerance);
-    public bool Equals(double left, double right) => M.ApproximatelyEquals(left, right, (double)tolerance);
-    public bool Equals(decimal left, decimal right) => M.ApproximatelyEquals(left, right, tolerance);
+    public bool Equals(float left, float right) => M.ApproximatelyEquals(left, right, (float)Tolerance);
+    public bool Equals(double left, double right) => M.ApproximatelyEquals(left, right, (double)Tolerance);
+    public bool Equals(decimal left, decimal right) => M.ApproximatelyEquals(left, right, Tolerance);
 
     public int GetHashCode(float value) => 0;
     public int GetHashCode(double value) => 0;
