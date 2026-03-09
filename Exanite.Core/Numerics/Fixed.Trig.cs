@@ -1,7 +1,13 @@
+using System;
+
 namespace Exanite.Core.Numerics;
 
 public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 {
+    // Q4.60
+    private const long TauPrecise = 7244019458077126904;
+    private const int TauPreciseShift = 60;
+
     // public static Fixed Acos(Fixed x);
     // public static Fixed AcosPi(Fixed x);
     // public static Fixed Asin(Fixed x);
@@ -19,7 +25,7 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 
     public static Fixed Sin(Fixed x)
     {
-        var normalizedX = x.value % Tau.value; // TODO: This is losing precision
+        var normalizedX = (long)((((Int128)x.value << (TauPreciseShift - Shift)) % TauPrecise) >> TauPreciseShift - Shift);
         if (normalizedX < 0)
         {
             normalizedX += Tau.value;
