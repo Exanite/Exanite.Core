@@ -7,7 +7,7 @@ using Exanite.Core.Utilities;
 namespace Exanite.Core.Numerics;
 
 /// <summary>
-/// A fixed point Q48.16 value (48-bits integer, 16-bits fraction).
+/// A fixed point Q48.16 value (48-bits signed integer, 16-bits fraction).
 /// Has a precision of 4 decimal places.
 /// </summary>
 public readonly partial struct Fixed :
@@ -16,6 +16,9 @@ public readonly partial struct Fixed :
     ISignedNumber<Fixed>,
     IFloatingPointConstants<Fixed>
 {
+    public const int IntegralBitCount = 64 - Shift;
+    public const int FractionalBitCount = Shift;
+
     // Constants
     private const int Shift = 16;
     private const int Mask = (1 << Shift) - 1;
