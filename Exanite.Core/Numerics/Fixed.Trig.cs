@@ -35,8 +35,39 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 
     public static Fixed Tan(Fixed x)
     {
-        // TODO: Proper implementation. This is horribly imprecise (fails at i=6 out of 1000 in the test cases).
-        return Sin(x) / Cos(x);
+        var normalizedX = (long)((((Int128)x.value << (PiPreciseShift - Shift)) % PiPreciseRaw) >> PiPreciseShift - Shift);
+        if (normalizedX < 0)
+        {
+            normalizedX += PiRaw;
+        }
+
+        // Handle inverted portion
+        var isInverted = normalizedX > PiHalfRaw;
+        if (isInverted)
+        {
+            normalizedX = PiRaw - normalizedX;
+        }
+
+        // Precalculate reciprocal so we can multiply instead of divide
+        // This also incorporates the shift for the LUT
+        // Shifting before dividing is more efficient and precise than shifting after
+        const int piHalfReciprocalShift = 32;
+        const long piHalfReciprocalRaw = (1L << (TanLutBits + Shift + piHalfReciprocalShift)) / PiHalfRaw;
+
+        // Calculate index into LUT
+        var rawIndex = (normalizedX * piHalfReciprocalRaw) >> piHalfReciprocalShift;
+        var index = (int)(rawIndex >> Shift);
+        var fraction = (int)(rawIndex & Mask);
+        if (index >= ((1 << TanLutBits) - 1))
+        {
+            return isInverted ? MinValue : MaxValue;
+        }
+
+        // Get values and interpolate
+        var y0 = TanLut[index];
+        var y1 = TanLut[index + 1];
+        var result = y0 + (((y1 - y0) * fraction) >> Shift);
+        return new Fixed(isInverted ? -result : result);
     }
 
     public static Fixed Cos(Fixed x)
