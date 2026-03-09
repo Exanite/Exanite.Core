@@ -49,8 +49,14 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
             normalizedX = PiRaw - normalizedX;
         }
 
+        // Precalculate reciprocal so we can multiply instead of divide
+        // This also incorporates the shift for the LUT
+        // Shifting before dividing is more efficient and precise than shifting after
+        const int piHalfReciprocalShift = 32;
+        const long piHalfReciprocalRaw = (1L << (SinLutBits + Shift + piHalfReciprocalShift)) / PiHalfRaw;
+
         // Calculate index into LUT
-        var rawIndex = normalizedX * (1 << (SinLutBits + Shift)) / PiHalfRaw;
+        var rawIndex = (normalizedX * piHalfReciprocalRaw) >> piHalfReciprocalShift;
         var index = (int)(rawIndex >> Shift);
         var fraction = (int)(rawIndex & Mask);
         if (index >= ((1 << SinLutBits) - 1))
