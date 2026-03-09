@@ -83,6 +83,11 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
             normalizedX += TauRaw;
         }
 
+        return SinFromNormalized(normalizedX);
+    }
+
+    private static Fixed SinFromNormalized(long normalizedX)
+    {
         // Handle negative portion
         var isNegative = normalizedX > PiRaw;
         if (isNegative)
