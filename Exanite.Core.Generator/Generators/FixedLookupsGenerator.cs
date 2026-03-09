@@ -69,6 +69,9 @@ public class FixedLookupsGenerator
             // This stores initial guesses for y for the Inverse Newton-Raphsom method
             // The guesses have the value 1 / sqrt(x_normalized) and are indexed using the upper n bits of x_normalized
             // x_normalized is in the range [0.5, 2)
+            //
+            // The size of the LUT affects performance
+            // The size does not affect precision
             {
                 // Note that we drop the first quarter of the table here
                 var lookupBits = 10;
@@ -103,6 +106,8 @@ public class FixedLookupsGenerator
 
             // Sine lookup
             // This stores sine values for the range [0pi, pi/2)
+            //
+            // The size of the LUT affects precision
             {
                 var lookupBits = 7;
                 var lookupEntryCount = 1 << lookupBits;
