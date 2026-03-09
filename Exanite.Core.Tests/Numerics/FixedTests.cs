@@ -19,7 +19,7 @@ public class FixedTests
     [InlineData(-314159, 100000, -3.14159)]
     public void FromFraction_ReturnsExpectedResult(int numerator, int denominator, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.FromFraction(numerator, denominator), Fixed.Precision);
+        Assert.Equal(expected, (double)Fixed.FromFraction(numerator, denominator), FloatingPointComparer.FromPrecision(Fixed.Precision));
     }
 
     [Theory]
@@ -35,7 +35,7 @@ public class FixedTests
     [InlineData(-3, 14159, -3.14159)]
     public void FromParts_ReturnsExpectedResult_IntOverload(int integral, int fractional, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), Fixed.Precision);
+        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), FloatingPointComparer.FromPrecision(Fixed.Precision));
     }
 
     [Theory]
@@ -51,7 +51,7 @@ public class FixedTests
     [InlineData(-3, 14159, -3.14159)]
     public void CreateParts_ReturnsExpectedResult_LongOverload(long integral, int fractional, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), Fixed.Precision);
+        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), FloatingPointComparer.FromPrecision(Fixed.Precision));
     }
 
     [Theory]
@@ -60,7 +60,7 @@ public class FixedTests
     [InlineData(123.456)]
     public void CreateChecked_ReturnsExpectedValue(double input)
     {
-        Assert.Equal(input, (double)Fixed.CreateChecked(input), Fixed.Precision);
+        Assert.Equal(input, (double)Fixed.CreateChecked(input), FloatingPointComparer.FromPrecision(Fixed.Precision));
     }
 
     [Fact]
@@ -151,29 +151,29 @@ public class FixedTests
     }
 
     [Theory]
-    [InlineData(0, 0, 0, 0)]
-    [InlineData(0, 25, 0.5, 0)]
-    [InlineData(2, 0, 1.41421, 0)]
-    [InlineData(4, 0, 2, 0)]
-    [InlineData(36, 0, 6, 0)]
-    [InlineData(72, 0, 8.48528, 0)]
-    [InlineData(123456, 0, 351.36306, 0)]
-    [InlineData(123456789, 0, 11111.11106, 0)]
-    [InlineData(123456789012, 0, 351364.18288, 1)]
-    public void Sqrt_ReturnsExpectedValue(long integral, int fractional, double expected, int expectedLostPrecision)
+    [InlineData(0, 0, 0)]
+    [InlineData(0, 25, 0.5)]
+    [InlineData(2, 0, 1.41421)]
+    [InlineData(4, 0, 2)]
+    [InlineData(36, 0, 6)]
+    [InlineData(72, 0, 8.48528)]
+    [InlineData(123456, 0, 351.36306)]
+    [InlineData(123456789, 0, 11111.11106)]
+    [InlineData(123456789012, 0, 351364.18288)]
+    public void Sqrt_ReturnsExpectedValue(long integral, int fractional, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.Sqrt(Fixed.FromParts(integral, fractional)), Fixed.Precision - expectedLostPrecision);
+        Assert.Equal(expected, (double)Fixed.Sqrt(Fixed.FromParts(integral, fractional)), FloatingPointComparer.FromPrecision(Fixed.Precision));
     }
 
     [Fact]
     public void Sqrt_ReturnsExpectedValue_ForGreaterThanOne()
     {
         var current = 1.0;
-        var multiplier = 1.25;
-        for (var i = 0; i < 100; i++)
+        var multiplier = 1.025;
+        for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            Assert.Equal(double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), Fixed.Precision - 2);
+            Assert.Equal(double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
         }
     }
 
@@ -181,17 +181,17 @@ public class FixedTests
     public void Sqrt_ReturnsExpectedValue_ForLessThanOne()
     {
         var current = 1.0;
-        var multiplier = 0.95;
-        for (var i = 0; i < 100; i++)
+        var multiplier = 0.905;
+        for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            Assert.Equal(double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), Fixed.Precision - 2);
+            Assert.Equal(double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
         }
     }
 
     [Fact]
     public void Sqrt_OfMaxValue_ReturnsExpectedValue()
     {
-        Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), Fixed.Precision - 2);
+        Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
     }
 }
