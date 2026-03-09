@@ -52,7 +52,7 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         // This also incorporates the shift for the LUT
         // Shifting before dividing is more efficient and precise than shifting after
         const int piHalfReciprocalShift = 32;
-        const long piHalfReciprocalRaw = (1L << (TanLutBits + Shift + piHalfReciprocalShift)) / PiHalfRaw;
+        const long piHalfReciprocalRaw = (1L << (TanLutBits + Shift + piHalfReciprocalShift)) / PiHalfRaw; // Q(TanLutBits + piHalfReciprocalShift)
 
         // Calculate index into LUT
         var rawIndex = (normalizedX * piHalfReciprocalRaw) >> piHalfReciprocalShift;
@@ -100,7 +100,7 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         // This also incorporates the shift for the LUT
         // Shifting before dividing is more efficient and precise than shifting after
         const int piHalfReciprocalShift = 32;
-        const long piHalfReciprocalRaw = (1L << (SinLutBits + Shift + piHalfReciprocalShift)) / PiHalfRaw;
+        const long piHalfReciprocalRaw = (1L << (SinLutBits + Shift + piHalfReciprocalShift)) / PiHalfRaw; // Q(SinLutBits + piHalfReciprocalShift)
 
         // Calculate index into LUT
         var rawIndex = (normalizedX * piHalfReciprocalRaw) >> piHalfReciprocalShift;
