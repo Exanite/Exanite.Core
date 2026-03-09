@@ -94,7 +94,7 @@ public class FixedLookupsGenerator
                 builder.AppendSeparation();
                 builder.AppendLine($"public const int SqrtLutBits = {lookupBits};");
                 builder.AppendLine($"public const int SqrtLutOffset = {lookupOffset};");
-                using (builder.Indent("public static readonly ImmutableArray<int> SqrtLut = ["))
+                using (builder.Indent("public static readonly ImmutableArray<uint> SqrtLut = ["))
                 {
                     foreach (var chunk in tableEntries.Chunk(valuesPerLine))
                     {
@@ -148,7 +148,7 @@ public class FixedLookupsGenerator
 
                 builder.AppendSeparation();
                 builder.AppendLine($"public const int TanLutBits = {lookupBits};");
-                using (builder.Indent("public static readonly ImmutableArray<int> TanLut = ["))
+                using (builder.Indent("public static readonly ImmutableArray<uint> TanLut = ["))
                 {
                     foreach (var chunk in tableEntries.Chunk(valuesPerLine))
                     {

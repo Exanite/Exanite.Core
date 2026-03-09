@@ -22,7 +22,7 @@ public partial struct Fixed
 
     public const int SqrtLutBits = 10;
     public const int SqrtLutOffset = 256;
-    public static readonly ImmutableArray<int> SqrtLut = [
+    public static readonly ImmutableArray<uint> SqrtLut = [
         92681, 92501, 92321, 92143, 91966, 91789, 91614, 91440, 91266, 91094, 90923, 90752, 90583, 90414, 90247, 90080,
         89914, 89749, 89585, 89422, 89260, 89099, 88939, 88779, 88620, 88463, 88306, 88149, 87994, 87840, 87686, 87533,
         87381, 87230, 87079, 86929, 86780, 86632, 86485, 86338, 86192, 86047, 85902, 85758, 85615, 85473, 85331, 85190,
@@ -86,7 +86,7 @@ public partial struct Fixed
     ];
 
     public const int TanLutBits = 6;
-    public static readonly ImmutableArray<int> TanLut = [
+    public static readonly ImmutableArray<uint> TanLut = [
               0,    1608,    3219,    4834,    6454,    8083,    9721,   11371,   13035,   14716,   16415,   18136,   19880,   21650,   23449,   25280,
           27145,   29050,   30996,   32988,   35029,   37125,   39280,   41500,   43789,   46155,   48604,   51144,   53784,   56531,   59398,   62395,
           65535,   68834,   72307,   75974,   79855,   83976,   88365,   93053,   98081,  103492,  109340,  115687,  122609,  130197,  138564,  147846,
