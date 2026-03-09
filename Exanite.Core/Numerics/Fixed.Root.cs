@@ -32,7 +32,11 @@ public partial struct Fixed // : IRootFunctions<Fixed>
             var evenNormalizeShift = (leadingZeroCount - (128 - 1 - Shift * 2)) & ~1;
             var normalizedX = evenNormalizeShift >= 0 ? (Int128)x.value << evenNormalizeShift : (Int128)x.value >> -evenNormalizeShift;
 
-            var y = (Int128)1 << (Shift * 2); // TODO: Use LUT
+            // Calculate LUT index of initial guess
+            // 2 is represented with 32 + 2 bits, but we are exclusive of 2
+            const int availableBitCount = 32 + 2 - 1;
+            var lutIndex = (int)(normalizedX >> (availableBitCount - SqrtLutBits));
+            var y = (Int128)SqrtLut[lutIndex] << Shift;
             while (true)
             {
                 // Inverse Newton-Raphson method:

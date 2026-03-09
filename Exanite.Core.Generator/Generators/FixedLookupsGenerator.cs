@@ -72,11 +72,12 @@ public class FixedLookupsGenerator
             // x_normalized is in the range [0.25, 2)
             {
                 var lookupBits = 4; // TODO: Increase
-                var lookupEntryCount = 1 << 8;
+                var lookupEntryCount = 1 << lookupBits;
 
                 var doubleEntries = new List<double>();
                 for (var i = 0; i < lookupEntryCount; i++)
                 {
+                    // TODO: This is probably wrong
                     var t = (double)i / (lookupEntryCount + 1);
                     var xNormalized = M.Lerp(0.25, 2, t);
                     var inverseSqrt = 1 / double.Sqrt(xNormalized);
