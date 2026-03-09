@@ -194,4 +194,29 @@ public class FixedTests
     {
         Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), FloatingPointComparer.FromPrecision(Fixed.Precision));
     }
+
+    [Theory]
+    [InlineData(0, 0)]
+    [InlineData(double.Pi / 2, 1)]
+    [InlineData(double.Pi, 0)]
+    [InlineData(3 * double.Pi / 2, -1)]
+    [InlineData(2 * double.Pi, 0)]
+    [InlineData(1.04719, 0.86602)] // pi/3
+    public void Sin_ReturnsExpectedValue(double input, double expected)
+    {
+        Assert.Equal(expected, (double)Fixed.Sin((Fixed)input), FloatingPointComparer.FromPrecision(Fixed.Precision));
+    }
+
+    [Fact]
+    public void Sin_ReturnsExpectedValue_ForWideRange()
+    {
+        var current = 1.0;
+        var multiplier = 1.025;
+        for (var i = 0; i < 1000; i++)
+        {
+            current *= multiplier;
+            Assert.Equal(double.Sin(current), (double)Fixed.Sin((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            Assert.Equal(double.Sin(-current), (double)Fixed.Sin((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        }
+    }
 }
