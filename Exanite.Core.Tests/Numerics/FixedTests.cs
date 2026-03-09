@@ -181,17 +181,17 @@ public class FixedTests
     public void Sqrt_ReturnsExpectedValue_ForLessThanOne()
     {
         var current = 1.0;
-        var multiplier = 0.905;
+        var multiplier = 0.995;
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            Assert.Equal(double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
+            Assert.Equal(double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
         }
     }
 
     [Fact]
     public void Sqrt_OfMaxValue_ReturnsExpectedValue()
     {
-        Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
+        Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), FloatingPointComparer.FromPrecision(Fixed.Precision));
     }
 }
