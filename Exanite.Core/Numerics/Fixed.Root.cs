@@ -24,6 +24,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
         // checked // Uncomment when debugging
         {
             // This uses Q96.32 for better precision
+            // TODO: 96 is probably extremely excessive since the values are normalized
 
             // Normalize x using an even shift so that the shift can be safely halved later
             // This leads to x being in the interval [0.25, 1) or [0.5, 2)
