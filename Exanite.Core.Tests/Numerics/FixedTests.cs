@@ -241,9 +241,9 @@ public class FixedTests
     [Fact]
     public void Tan_ReturnsExpectedValue_ForWideRange()
     {
-        var current = 1.0;
+        var current = 0.0001;
         var multiplier = 1.025;
-        for (var i = 0; i < 1000; i++)
+        for (var i = 0; i < 1350; i++)
         {
             current *= multiplier;
 
@@ -260,8 +260,8 @@ public class FixedTests
                     _ when M.Abs(expected) > 100 => FloatingPointComparer.FromTolerance((decimal)expected * 0.1M), // Slope is >= 10001 at this point
                     _ when M.Abs(expected) > 10 => FloatingPointComparer.FromTolerance((decimal)expected * 0.01M), // Slope is >= 101 at this point
                     _ when M.Abs(expected) > 1 => FloatingPointComparer.FromPrecision(Fixed.Precision - 2), // Slope is >= 2 at this point
-                    _ when M.Abs(expected) > 0.75 => FloatingPointComparer.FromPrecision(Fixed.Precision - 1), // Slope is >= 1.5625 at this point
-                    _ => FloatingPointComparer.FromPrecision(Fixed.Precision),
+                    _ when M.Abs(expected) > 0.5 => FloatingPointComparer.FromPrecision(Fixed.Precision - 1), // Slope is >= 1.25 at this point
+                    _ => FloatingPointComparer.FromPrecision(Fixed.Precision), // Slope is always >= 1
                 };
 
                 AssertEqual(i, input, expected, (double)Fixed.Tan((Fixed)input), comparer);
