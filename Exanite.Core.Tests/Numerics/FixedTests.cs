@@ -173,7 +173,7 @@ public class FixedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            Assert.Equal(double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
         }
     }
 
@@ -185,7 +185,7 @@ public class FixedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            Assert.Equal(double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
         }
     }
 
@@ -214,23 +214,17 @@ public class FixedTests
     {
         var current = 1.0;
         var multiplier = 1.025;
-        var precision = FloatingPointComparer.FromPrecision(Fixed.Precision);
-
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
 
-            {
-                var expected = double.Sin(current);
-                var actual = (double)Fixed.Sin((Fixed)current);
-                Assert.True(precision.Equals(expected, actual), $"Failed at i: {i}\nInput:    {current}\nExpected: {expected}\nActual:   {actual}");
-            }
-
-            {
-                var expected = double.Sin(-current);
-                var actual = (double)Fixed.Sin((Fixed)(-current));
-                Assert.True(precision.Equals(expected, actual), $"Failed at i: {i}\nInput:    {current}\nExpected: {expected}\nActual:   {actual}");
-            }
+            AssertEqual(i, current, double.Sin(current), (double)Fixed.Sin((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Sin(-current), (double)Fixed.Sin((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
         }
+    }
+
+    private void AssertEqual(int i, double input, double expected, double actual, FloatingPointComparer comparer)
+    {
+        Assert.True(comparer.Equals(expected, actual), $"Failed at i: {i}\nInput:    {input}\nExpected: {expected}\nActual:   {actual}");
     }
 }
