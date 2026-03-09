@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Exanite.Core.Numerics;
 
@@ -39,11 +40,7 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 
     public static Fixed Tan(Fixed x)
     {
-        var normalizedX = (long)((((Int128)x.raw << (PiPreciseShift - Shift)) % PiPreciseRaw) >> PiPreciseShift - Shift);
-        if (normalizedX < 0)
-        {
-            normalizedX += PiRaw;
-        }
+        var normalizedX = WrapToPiRange(x.raw);
 
         // Handle inverted portion
         var isInverted = normalizedX > PiHalfRaw;
@@ -81,16 +78,47 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 
     public static Fixed Sin(Fixed x)
     {
-        var normalizedX = (long)((((Int128)x.raw << (TauPreciseShift - Shift)) % TauPreciseRaw) >> TauPreciseShift - Shift);
+        var normalizedX = WrapToTauRange(x.raw);
+        return new Fixed(SinFromNormalized(normalizedX));
+    }
+
+    /// <summary>
+    /// Reduces the input value to be in the range [0, pi).
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static long WrapToPiRange(long x)
+    {
+        var normalizedX = (long)((((Int128)x << (PiPreciseShift - Shift)) % PiPreciseRaw) >> PiPreciseShift - Shift);
+        if (normalizedX < 0)
+        {
+            normalizedX += PiRaw;
+        }
+
+        return normalizedX;
+    }
+
+    /// <summary>
+    /// Reduces the input value to be in the range [0, 2pi).
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static long WrapToTauRange(long x)
+    {
+        var normalizedX = (long)((((Int128)x << (TauPreciseShift - Shift)) % TauPreciseRaw) >> TauPreciseShift - Shift);
         if (normalizedX < 0)
         {
             normalizedX += TauRaw;
         }
 
-        return SinFromNormalized(normalizedX);
+        return normalizedX;
     }
 
-    private static Fixed SinFromNormalized(long normalizedX)
+    /// <summary>
+    /// Calculates the sine of the provided value.
+    /// The provided value must be in the range [0, 2pi).
+    /// See <see cref="WrapToTauRange"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static long SinFromNormalized(long normalizedX)
     {
         // Handle negative portion
         var isNegative = normalizedX > PiRaw;
@@ -117,13 +145,13 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         var fraction = (int)(rawIndex & Mask);
         if (index >= ((1 << SinLutBits) - 1))
         {
-            return isNegative ? -One : One;
+            return isNegative ? -OneRaw : OneRaw;
         }
 
         // Get values and interpolate
         var y0 = SinLut[index];
         var y1 = SinLut[index + 1];
         var result = y0 + (((y1 - y0) * fraction) >> Shift);
-        return new Fixed(isNegative ? -result : result);
+        return isNegative ? -result : result;
     }
 }

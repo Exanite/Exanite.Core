@@ -63,14 +63,14 @@ public partial struct Fixed
         if (TOther.IsInteger(value))
         {
             var longValue = long.CreateChecked(value);
-            result = new Fixed(checked(longValue * OneValue));
+            result = new Fixed(checked(longValue * OneRaw));
             return true;
         }
 
         try
         {
             var decimalValue = decimal.CreateChecked(value);
-            result = new Fixed(checked((long)(decimalValue * OneValue)));
+            result = new Fixed(checked((long)(decimalValue * OneRaw)));
             return true;
         }
         catch (NotSupportedException)
@@ -97,7 +97,7 @@ public partial struct Fixed
                 return true;
             }
 
-            result = new Fixed(longValue * OneValue);
+            result = new Fixed(longValue * OneRaw);
             return true;
         }
 
@@ -116,7 +116,7 @@ public partial struct Fixed
                 return true;
             }
 
-            result = new Fixed((long)(decimalValue * OneValue));
+            result = new Fixed((long)(decimalValue * OneRaw));
             return true;
         }
         catch (NotSupportedException)
@@ -137,19 +137,19 @@ public partial struct Fixed
 
     public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var decimalValue = (decimal)value.raw / OneValue;
+        var decimalValue = (decimal)value.raw / OneRaw;
         return TOther.TryConvertFromChecked(decimalValue, out result) || TryConvertFromCheckedFromDecimal<TOther, decimal>(decimalValue, out result);
     }
 
     public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var decimalValue = (decimal)value.raw / OneValue;
+        var decimalValue = (decimal)value.raw / OneRaw;
         return TOther.TryConvertFromSaturating(decimalValue, out result) || TryConvertFromSaturatingFromDecimal<TOther, decimal>(decimalValue, out result);
     }
 
     public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var decimalValue = (decimal)value.raw / OneValue;
+        var decimalValue = (decimal)value.raw / OneRaw;
         return TOther.TryConvertFromTruncating(decimalValue, out result) || TryConvertFromTruncatingFromDecimal<TOther, decimal>(decimalValue, out result);
     }
 

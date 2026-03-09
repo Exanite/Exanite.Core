@@ -22,8 +22,9 @@ public readonly partial struct Fixed :
 
     private const int Shift = 16;
     private const int Mask = (1 << Shift) - 1;
-    private const long OneValue = 1L << Shift;
-    private const long HalfValue = OneValue / 2;
+
+    private const long OneRaw = 1L << Shift;
+    private const long HalfRaw = OneRaw / 2;
 
     /// <summary>
     /// Equal to round(e * 2^16).
@@ -49,9 +50,9 @@ public readonly partial struct Fixed :
     // Generated using: (long)decimal.Round((decimal)double.Tau * (1L << Shift))
     private const long TauRaw = 411775;
 
-    public static Fixed One => new(OneValue);
+    public static Fixed One => new(OneRaw);
     public static Fixed Zero => new(0);
-    public static Fixed NegativeOne => new(-OneValue);
+    public static Fixed NegativeOne => new(-OneRaw);
 
     public static Fixed AdditiveIdentity => Zero;
     public static Fixed MultiplicativeIdentity => One;
@@ -88,12 +89,12 @@ public readonly partial struct Fixed :
 
     // Conversion: Potentially unsafe - Can exceed range
     public static explicit operator Fixed(long value) => new(value << Shift);
-    public static explicit operator Fixed(decimal value) => new((long)value * OneValue);
+    public static explicit operator Fixed(decimal value) => new((long)value * OneRaw);
 
     // Conversion: Unsafe - Non-deterministic
     // Consider using FromFraction or FromParts instead
-    public static explicit operator Fixed(float value) => new((long)(value * OneValue));
-    public static explicit operator Fixed(double value) => new((long)(value * OneValue));
+    public static explicit operator Fixed(float value) => new((long)(value * OneRaw));
+    public static explicit operator Fixed(double value) => new((long)(value * OneRaw));
 
     // Conversion: Loss of fraction / sign
     public static explicit operator int(Fixed value) => (int)(value.raw >> Shift);
@@ -102,9 +103,9 @@ public readonly partial struct Fixed :
     public static explicit operator ulong(Fixed value) => (ulong)(value.raw >> Shift);
 
     // Conversion: Loss of precision / determinism
-    public static explicit operator float(Fixed value) => (float)value.raw / OneValue;
-    public static explicit operator double(Fixed value) => (double)value.raw / OneValue;
-    public static explicit operator decimal(Fixed value) => (decimal)value.raw / OneValue;
+    public static explicit operator float(Fixed value) => (float)value.raw / OneRaw;
+    public static explicit operator double(Fixed value) => (double)value.raw / OneRaw;
+    public static explicit operator decimal(Fixed value) => (decimal)value.raw / OneRaw;
 
     /// <inheritdoc cref="FromParts(long,int)"/>
     public static Fixed FromParts(int integral, int fractional)
@@ -113,7 +114,7 @@ public readonly partial struct Fixed :
 
         if (fractional == 0)
         {
-            return new Fixed(integral * OneValue);
+            return new Fixed(integral * OneRaw);
         }
 
         // Determine the number of digits in the fractional part
@@ -129,7 +130,7 @@ public readonly partial struct Fixed :
             divisor *= 10;
         }
 
-        return new Fixed(integral * OneValue + ((integral >> 31) | 1) * ((fractional * OneValue) / divisor));
+        return new Fixed(integral * OneRaw + ((integral >> 31) | 1) * ((fractional * OneRaw) / divisor));
     }
 
     /// <summary>
@@ -146,7 +147,7 @@ public readonly partial struct Fixed :
 
         if (fractional == 0)
         {
-            return new Fixed(integral * OneValue);
+            return new Fixed(integral * OneRaw);
         }
 
         // Determine the number of digits in the fractional part
@@ -162,7 +163,7 @@ public readonly partial struct Fixed :
             divisor *= 10;
         }
 
-        return new Fixed(integral * OneValue + ((integral >> 63) | 1) * ((fractional * OneValue) / divisor));
+        return new Fixed(integral * OneRaw + ((integral >> 63) | 1) * ((fractional * OneRaw) / divisor));
     }
 
     /// <summary>
@@ -201,17 +202,17 @@ public readonly partial struct Fixed :
         var integral = value.raw & ~Mask;
         var fractional = value.raw & Mask;
 
-        if (fractional < HalfValue)
+        if (fractional < HalfRaw)
         {
             return new Fixed(integral);
         }
 
-        if (fractional > HalfValue)
+        if (fractional > HalfRaw)
         {
-            return new Fixed(integral + OneValue);
+            return new Fixed(integral + OneRaw);
         }
 
-        return IsEvenInteger(new Fixed(integral)) ? new Fixed(integral) : new Fixed(integral + OneValue);
+        return IsEvenInteger(new Fixed(integral)) ? new Fixed(integral) : new Fixed(integral + OneRaw);
     }
 
     // Operators
@@ -254,7 +255,7 @@ public readonly partial struct Fixed :
     public static bool IsPositive(Fixed value) => value.raw >= 0; // Int32.IsPositive uses >=
     public static bool IsNegative(Fixed value) => value.raw < 0;
 
-    public static bool IsInteger(Fixed value) => (value.raw & (OneValue - 1)) == 0;
+    public static bool IsInteger(Fixed value) => (value.raw & (OneRaw - 1)) == 0;
     public static bool IsEvenInteger(Fixed value) => IsInteger(value) && (value.raw >> Shift) % 2 == 0;
     public static bool IsOddInteger(Fixed value) => IsInteger(value) && (value.raw >> Shift) % 2 != 0;
 
@@ -282,14 +283,14 @@ public readonly partial struct Fixed :
     // Formatting
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
-        return ((decimal)raw / OneValue).ToString(format, formatProvider);
+        return ((decimal)raw / OneRaw).ToString(format, formatProvider);
     }
 
     public override string ToString() => ToString(null, null);
 
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
-        return ((decimal)raw / OneValue).TryFormat(destination, out charsWritten, format, provider);
+        return ((decimal)raw / OneRaw).TryFormat(destination, out charsWritten, format, provider);
     }
 
     // Parsing
@@ -297,13 +298,13 @@ public readonly partial struct Fixed :
     {
         if (long.TryParse(s, style, provider, out var longValue))
         {
-            result = new Fixed(longValue * OneValue);
+            result = new Fixed(longValue * OneRaw);
             return true;
         }
 
         if (decimal.TryParse(s, style, provider, out var decimalValue))
         {
-            result = new Fixed((long)(decimalValue * OneValue));
+            result = new Fixed((long)(decimalValue * OneRaw));
             return true;
         }
 
