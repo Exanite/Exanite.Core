@@ -23,6 +23,11 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
     // public static Fixed Tan(Fixed x);
     // public static Fixed TanPi(Fixed x);
 
+    public static Fixed Cos(Fixed x)
+    {
+        return Sin(x + PiHalf);
+    }
+
     public static Fixed Sin(Fixed x)
     {
         var normalizedX = (long)((((Int128)x.value << (TauPreciseShift - Shift)) % TauPrecise) >> TauPreciseShift - Shift);
@@ -39,14 +44,13 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         }
 
         // Handle mirrored portion
-        var halfPi = Pi.value / 2;
-        if (normalizedX > halfPi)
+        if (normalizedX > PiHalf.value)
         {
             normalizedX = Pi.value - normalizedX;
         }
 
         // Calculate index into LUT
-        var rawIndex = normalizedX * (1 << (SinLutBits + Shift)) / halfPi;
+        var rawIndex = normalizedX * (1 << (SinLutBits + Shift)) / PiHalf.value;
         var index = (int)(rawIndex >> Shift);
         var fraction = (int)(rawIndex & Mask);
         if (index >= ((1 << SinLutBits) - 1))

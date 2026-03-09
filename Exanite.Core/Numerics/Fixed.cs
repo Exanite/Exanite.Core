@@ -37,6 +37,7 @@ public readonly partial struct Fixed :
 
     public static Fixed E => new(178145); // Equal to round(e * 2^16)
     public static Fixed Pi => new(205887); // Equal to round(pi * 2^16)
+    public static Fixed PiHalf => new(102944); // Equal to round(pi * 2^16 / 2)
     public static Fixed Tau => new(411775); // Equal to round(pi * 2^16 * 2)
 
     public static Fixed Epsilon => new(1);
