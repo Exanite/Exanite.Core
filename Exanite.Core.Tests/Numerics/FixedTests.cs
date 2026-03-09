@@ -17,24 +17,32 @@ public class FixedTests
     [InlineData(-1, 1, -1)]
     [InlineData(314159, 100000, 3.14159)]
     [InlineData(-314159, 100000, -3.14159)]
-    public void CreateFraction_ReturnsExpectedResult(int numerator, int denominator, double expected)
+    public void FromFraction_ReturnsExpectedResult(int numerator, int denominator, double expected)
     {
         Assert.Equal(expected, (double)Fixed.FromFraction(numerator, denominator), Fixed.Precision);
     }
 
     [Theory]
+    [InlineData(0, 0, 0)]
+    [InlineData(0, 1, 0.1)]
+    [InlineData(0, 2, 0.2)]
+    [InlineData(0, 25, 0.25)]
     [InlineData(1, 0, 1)]
     [InlineData(-1, 0, -1)]
     [InlineData(1, 1, 1.1)]
     [InlineData(-1, 1, -1.1)]
     [InlineData(3, 14159, 3.14159)]
     [InlineData(-3, 14159, -3.14159)]
-    public void CreateParts_ReturnsExpectedResult_IntOverload(int integral, int fractional, double expected)
+    public void FromParts_ReturnsExpectedResult_IntOverload(int integral, int fractional, double expected)
     {
         Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), Fixed.Precision);
     }
 
     [Theory]
+    [InlineData(0, 0, 0)]
+    [InlineData(0, 1, 0.1)]
+    [InlineData(0, 2, 0.2)]
+    [InlineData(0, 25, 0.25)]
     [InlineData(1, 0, 1)]
     [InlineData(-1, 0, -1)]
     [InlineData(1, 1, 1.1)]
@@ -144,6 +152,7 @@ public class FixedTests
 
     [Theory]
     [InlineData(0, 0, 0, 0)]
+    [InlineData(0, 25, 0.5, 0)]
     [InlineData(2, 0, 1.41421, 0)]
     [InlineData(4, 0, 2, 0)]
     [InlineData(36, 0, 6, 0)]

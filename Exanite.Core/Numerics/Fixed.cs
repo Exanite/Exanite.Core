@@ -104,7 +104,7 @@ public readonly partial struct Fixed :
             divisor *= 10;
         }
 
-        return new Fixed(integral * OneValue + long.Sign(integral) * ((fractional * OneValue) / divisor));
+        return new Fixed(integral * OneValue + ((integral >> 31) | 1) * ((fractional * OneValue) / divisor));
     }
 
     /// <summary>
@@ -137,7 +137,7 @@ public readonly partial struct Fixed :
             divisor *= 10;
         }
 
-        return new Fixed(integral * OneValue + long.Sign(integral) * ((fractional * OneValue) / divisor));
+        return new Fixed(integral * OneValue + ((integral >> 63) | 1) * ((fractional * OneValue) / divisor));
     }
 
     /// <summary>
