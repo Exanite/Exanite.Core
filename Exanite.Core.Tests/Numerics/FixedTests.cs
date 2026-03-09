@@ -213,9 +213,9 @@ public class FixedTests
     [Fact]
     public void Sin_ReturnsExpectedValue_ForWideRange()
     {
-        var current = 1.0;
+        var current = 0.0001;
         var multiplier = 1.025;
-        for (var i = 0; i < 1000; i++)
+        for (var i = 0; i < 1350; i++)
         {
             current *= multiplier;
 
@@ -227,9 +227,9 @@ public class FixedTests
     [Fact]
     public void Cos_ReturnsExpectedValue_ForWideRange()
     {
-        var current = 1.0;
+        var current = 0.0001;
         var multiplier = 1.025;
-        for (var i = 0; i < 1000; i++)
+        for (var i = 0; i < 1350; i++)
         {
             current *= multiplier;
 
