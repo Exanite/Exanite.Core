@@ -285,10 +285,11 @@ public class FixedTests
                 var expected = double.Tan(input);
                 var comparer = expected switch
                 {
+                    // Slope is equal to tan(x)^2 + 1
                     _ when M.Abs(expected) > 100 => FloatingPointComparer.FromTolerance((decimal)expected * 0.1M), // Slope is >= 10001 at this point
                     _ when M.Abs(expected) > 10 => FloatingPointComparer.FromTolerance((decimal)expected * 0.01M), // Slope is >= 101 at this point
-                    _ when M.Abs(expected) > 1 => FloatingPointComparer.FromPrecision(Fixed.Precision - 2), // Slope is >= 2 at this point
-                    _ when M.Abs(expected) > 0.5 => FloatingPointComparer.FromPrecision(Fixed.Precision - 1), // Slope is >= 1.25 at this point
+                    _ when M.Abs(expected) > 2 => FloatingPointComparer.FromPrecision(Fixed.Precision - 2), // Slope is >= 5 at this point
+                    _ when M.Abs(expected) > 1 => FloatingPointComparer.FromPrecision(Fixed.Precision - 1), // Slope is >= 2 at this point
                     _ => FloatingPointComparer.FromPrecision(Fixed.Precision), // Slope is always >= 1
                 };
 
@@ -316,10 +317,11 @@ public class FixedTests
                 var expected = double.TanPi(input);
                 var comparer = expected switch
                 {
+                    // Slope is equal to tan(x)^2 + 1
                     _ when M.Abs(expected) > 100 => FloatingPointComparer.FromTolerance((decimal)expected * 0.1M), // Slope is >= 10001 at this point
                     _ when M.Abs(expected) > 10 => FloatingPointComparer.FromTolerance((decimal)expected * 0.01M), // Slope is >= 101 at this point
-                    _ when M.Abs(expected) > 1 => FloatingPointComparer.FromPrecision(Fixed.Precision - 2), // Slope is >= 2 at this point
-                    _ when M.Abs(expected) > 0.5 => FloatingPointComparer.FromPrecision(Fixed.Precision - 1), // Slope is >= 1.25 at this point
+                    _ when M.Abs(expected) > 2 => FloatingPointComparer.FromPrecision(Fixed.Precision - 2), // Slope is >= 5 at this point
+                    _ when M.Abs(expected) > 1 => FloatingPointComparer.FromPrecision(Fixed.Precision - 1), // Slope is >= 2 at this point
                     _ => FloatingPointComparer.FromPrecision(Fixed.Precision), // Slope is always >= 1
                 };
 
