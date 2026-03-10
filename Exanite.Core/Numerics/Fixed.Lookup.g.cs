@@ -7,7 +7,7 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed
 {
-    public static readonly ImmutableArray<int> DigitsLut = [
+    private static readonly ImmutableArray<int> DigitsLut = [
         9,
         99,
         999,
@@ -20,8 +20,8 @@ public partial struct Fixed
         2147483647,
     ];
 
-    public const int SinLutBits = 7;
-    public static readonly ImmutableArray<ushort> SinLut = [
+    private const int SinLutBits = 7;
+    private static readonly ImmutableArray<ushort> SinLut = [
             0,   804,  1608,  2412,  3215,  4018,  4821,  5622,  6423,  7223,  8022,  8819,  9616, 10410, 11204, 11995,
         12785, 13573, 14359, 15142, 15923, 16702, 17479, 18253, 19024, 19792, 20557, 21319, 22078, 22833, 23586, 24334,
         25079, 25820, 26557, 27291, 28020, 28745, 29465, 30181, 30893, 31600, 32302, 32999, 33692, 34379, 35061, 35738,
@@ -32,8 +32,8 @@ public partial struct Fixed
         64276, 64428, 64571, 64703, 64826, 64939, 65043, 65136, 65220, 65294, 65358, 65412, 65457, 65491, 65516, 65531,
     ];
 
-    public const int TanLutBits = 13;
-    public static readonly ImmutableArray<uint> TanLut = [
+    private const int TanLutBits = 13;
+    private static readonly ImmutableArray<uint> TanLut = [
                 0,        12,        25,        37,        50,        62,        75,        87,       100,       113,       125,       138,       150,       163,       175,       188,
               201,       213,       226,       238,       251,       263,       276,       289,       301,       314,       326,       339,       351,       364,       376,       389,
               402,       414,       427,       439,       452,       464,       477,       490,       502,       515,       527,       540,       552,       565,       578,       590,
@@ -548,8 +548,8 @@ public partial struct Fixed
          21361347,  22785446,  24412986,  26290917,  28481836,  31071102,  34178221,  37975810,  42722796,  48826061,  56963747,  68356506,  85445642, 113927533, 170891310, 341782633,
     ];
 
-    public const int AtanLutBits = 6;
-    public static readonly ImmutableArray<ushort> AtanLut = [
+    private const int AtanLutBits = 6;
+    private static readonly ImmutableArray<ushort> AtanLut = [
             0,  1023,  2047,  3069,  4090,  5109,  6126,  7139,  8149,  9155, 10157, 11155, 12146, 13133, 14113, 15087,
         16054, 17015, 17967, 18912, 19849, 20778, 21698, 22610, 23512, 24405, 25289, 26163, 27027, 27882, 28726, 29561,
         30385, 31199, 32003, 32796, 33579, 34352, 35114, 35866, 36608, 37339, 38060, 38771, 39471, 40161, 40841, 41512,
