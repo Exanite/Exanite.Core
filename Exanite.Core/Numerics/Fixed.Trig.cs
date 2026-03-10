@@ -38,6 +38,8 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
     // public static Fixed AcosPi(Fixed x);
     // public static Fixed AsinPi(Fixed x);
 
+    // TODO: Also do Atan2 since it's useful
+
     public static Fixed Sin(Fixed x)
     {
         var normalizedX = WrapToTauRange(x.raw);
