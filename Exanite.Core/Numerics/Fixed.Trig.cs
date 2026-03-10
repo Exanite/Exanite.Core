@@ -134,18 +134,32 @@ public partial struct Fixed
 
     public static Fixed Atan2(Fixed y, Fixed x)
     {
-        if (x > Zero)
+        if (x == Zero && y == Zero)
         {
-            return Atan(y / x);
+            return Zero;
         }
 
-        if (x < Zero)
+        var absX = Abs(x);
+        var absY = Abs(y);
+
+        // Divide by the bigger value for numerical stability
+        Fixed result;
+        if (absX >= absY)
         {
-            return Atan(y / x) + SignNonZero(y) * Pi;
+            // Handle quadrants where x is negative
+            result = Atan(y / x);
+            if (x < Zero)
+            {
+                result += SignNonZero(y) * Pi;
+            }
+        }
+        else
+        {
+            var atanReciprocal = Atan(x / y);
+            result = (SignNonZero(y) * PiHalf) - atanReciprocal;
         }
 
-        // Case: x == 0
-        return Sign(y) * PiHalf;
+        return result;
     }
 
     public static Fixed Atan(Fixed x)
