@@ -225,6 +225,20 @@ public class FixedTests
     }
 
     [Fact]
+    public void SinPi_ReturnsExpectedValue_ForWideRange()
+    {
+        var current = 0.0001;
+        var multiplier = 1.025;
+        for (var i = 0; i < 1350; i++)
+        {
+            current *= multiplier;
+
+            AssertEqual(i, current, double.SinPi(current), (double)Fixed.SinPi((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, -current, double.SinPi(-current), (double)Fixed.SinPi((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        }
+    }
+
+    [Fact]
     public void Cos_ReturnsExpectedValue_ForWideRange()
     {
         var current = 0.0001;
@@ -235,6 +249,20 @@ public class FixedTests
 
             AssertEqual(i, current, double.Cos(current), (double)Fixed.Cos((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
             AssertEqual(i, -current, double.Cos(-current), (double)Fixed.Cos((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        }
+    }
+
+    [Fact]
+    public void CosPi_ReturnsExpectedValue_ForWideRange()
+    {
+        var current = 0.0001;
+        var multiplier = 1.025;
+        for (var i = 0; i < 1350; i++)
+        {
+            current *= multiplier;
+
+            AssertEqual(i, current, double.CosPi(current), (double)Fixed.CosPi((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, -current, double.CosPi(-current), (double)Fixed.CosPi((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
         }
     }
 

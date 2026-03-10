@@ -23,10 +23,10 @@ public readonly partial struct Fixed :
     private const int Shift = 16;
     private const int Mask = (int)(OneRaw - 1);
 
-    private const long OneRaw = 1L << Shift;
-
     private const long HalfRaw = OneRaw / 2;
     private const long HalfMask = HalfRaw - 1;
+
+    private const long OneRaw = 1L << Shift;
 
     private const long TwoRaw = OneRaw * 2;
     private const long TwoMask = TwoRaw - 1;
@@ -55,8 +55,10 @@ public readonly partial struct Fixed :
     // Generated using: (long)decimal.Round((decimal)double.Tau * (1L << Shift))
     private const long TauRaw = 411775;
 
-    public static Fixed One => new(OneRaw);
     public static Fixed Zero => new(0);
+    public static Fixed Half => new(HalfRaw);
+    public static Fixed One => new(OneRaw);
+    public static Fixed Two => new(TwoRaw);
     public static Fixed NegativeOne => new(-OneRaw);
 
     public static Fixed AdditiveIdentity => Zero;

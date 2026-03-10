@@ -38,6 +38,28 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
     // public static Fixed AcosPi(Fixed x);
     // public static Fixed AsinPi(Fixed x);
 
+    public static Fixed Sin(Fixed x)
+    {
+        var normalizedX = WrapToTauRange(x.raw);
+        return new Fixed(SinFromNormalized(normalizedX));
+    }
+
+    public static Fixed SinPi(Fixed x)
+    {
+        var normalizedX = WrapToTwoRange(x.raw);
+        return new Fixed(SinPiFromNormalized(normalizedX));
+    }
+
+    public static Fixed Cos(Fixed x)
+    {
+        return Sin(x + PiHalf);
+    }
+
+    public static Fixed CosPi(Fixed x)
+    {
+        return SinPi(x + Half);
+    }
+
     public static Fixed Tan(Fixed x)
     {
         var normalizedX = WrapToPiRange(x.raw);
@@ -71,17 +93,6 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         return new Fixed(isInverted ? -result : result);
     }
 
-    public static Fixed Cos(Fixed x)
-    {
-        return Sin(x + PiHalf);
-    }
-
-    public static Fixed Sin(Fixed x)
-    {
-        var normalizedX = WrapToTauRange(x.raw);
-        return new Fixed(SinFromNormalized(normalizedX));
-    }
-
     public static (Fixed Sin, Fixed Cos) SinCos(Fixed x)
     {
         var sinNormalizedX = WrapToTauRange(x.raw);
@@ -95,6 +106,15 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         var cosRaw = SinFromNormalized(cosNormalizedX);
 
         return (new Fixed(sinRaw), new Fixed(cosRaw));
+    }
+
+    /// <summary>
+    /// Reduces the input value to be in the range [0, 2).
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static long WrapToTwoRange(long x)
+    {
+        return x & TwoMask;
     }
 
     /// <summary>
@@ -156,6 +176,44 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 
         // Calculate index into LUT
         var rawIndex = (normalizedX * piHalfReciprocalRaw) >> piHalfReciprocalShift;
+        var index = (int)(rawIndex >> Shift);
+        var fraction = (int)(rawIndex & Mask);
+        if (index >= ((1 << SinLutBits) - 1))
+        {
+            return isNegative ? -OneRaw : OneRaw;
+        }
+
+        // Get values and interpolate
+        var y0 = SinLut[index];
+        var y1 = SinLut[index + 1];
+        var result = y0 + (((y1 - y0) * fraction) >> Shift);
+        return isNegative ? -result : result;
+    }
+
+    /// <summary>
+    /// Calculates the sine of the provided value after multiplying by pi.
+    /// The provided value must be in the range [0, 2)
+    /// See <see cref="WrapToTwoRange"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static long SinPiFromNormalized(long normalizedX)
+    {
+        // Handle negative portion
+        var isNegative = normalizedX > OneRaw;
+        if (isNegative)
+        {
+            normalizedX -= OneRaw;
+        }
+
+        // Handle mirrored portion
+        if (normalizedX > HalfRaw)
+        {
+            normalizedX = OneRaw - normalizedX;
+        }
+
+        // Calculate index into LUT
+        // We do this by simply using the top bits of x as the index and the rest as the fraction
+        var rawIndex = normalizedX << (SinLutBits + 1);
         var index = (int)(rawIndex >> Shift);
         var fraction = (int)(rawIndex & Mask);
         if (index >= ((1 << SinLutBits) - 1))
