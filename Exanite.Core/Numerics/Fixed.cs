@@ -75,6 +75,7 @@ public readonly partial struct Fixed :
 
     public static Fixed E => new(ERaw);
     public static Fixed Pi => new(PiRaw);
+    public static Fixed PiHalf => new(PiHalfRaw);
     public static Fixed Tau => new(TauRaw);
 
     public static Fixed Epsilon => new(1);
