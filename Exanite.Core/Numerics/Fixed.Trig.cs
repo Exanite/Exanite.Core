@@ -350,9 +350,9 @@ public partial struct Fixed
     /// </summary>
     private static long AtanFromNormalized(long x)
     {
-        // x is guaranteed [0, 1] here
-        // Map [0, 1] to AtanLut
-        var rawIndex = (x << AtanLutBits);
+        // Calculate index into LUT
+        // We do this by simply using the top bits of x as the index and the rest as the fraction
+        var rawIndex = x << AtanLutBits;
         var index = (int)(rawIndex >> Shift);
         var fraction = (int)(rawIndex & Mask);
 
