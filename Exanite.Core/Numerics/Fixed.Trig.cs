@@ -172,29 +172,6 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
     }
 
     /// <summary>
-    /// Calculates the arctangent of the provided value.
-    /// The provided value must be in the range [0, 1].
-    /// </summary>
-    private static long AtanFromNormalized(long x)
-    {
-        // x is guaranteed [0, 1] here
-        // Map [0, 1] to AtanLut
-        var rawIndex = (x << AtanLutBits);
-        var index = (int)(rawIndex >> Shift);
-        var fraction = (int)(rawIndex & Mask);
-
-        if (index >= ((1 << AtanLutBits) - 1))
-        {
-            return PiFourthRaw;
-        }
-
-        var y0 = AtanLut[index];
-        var y1 = AtanLut[index + 1];
-        var result = y0 + (((y1 - y0) * fraction) >> Shift);
-        return result;
-    }
-
-    /// <summary>
     /// Reduces the input value to be in the range [0, 1).
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -321,5 +298,28 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         var y1 = SinLut[index + 1];
         var result = y0 + (((y1 - y0) * fraction) >> Shift);
         return isNegative ? -result : result;
+    }
+
+    /// <summary>
+    /// Calculates the arctangent of the provided value.
+    /// The provided value must be in the range [0, 1].
+    /// </summary>
+    private static long AtanFromNormalized(long x)
+    {
+        // x is guaranteed [0, 1] here
+        // Map [0, 1] to AtanLut
+        var rawIndex = (x << AtanLutBits);
+        var index = (int)(rawIndex >> Shift);
+        var fraction = (int)(rawIndex & Mask);
+
+        if (index >= ((1 << AtanLutBits) - 1))
+        {
+            return PiFourthRaw;
+        }
+
+        var y0 = AtanLut[index];
+        var y1 = AtanLut[index + 1];
+        var result = y0 + (((y1 - y0) * fraction) >> Shift);
+        return result;
     }
 }
