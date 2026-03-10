@@ -213,9 +213,25 @@ public class FixedTests
     }
 
     [Fact]
+    public void Sqrt_ReturnsExpectedValue_PerfectSquares()
+    {
+        for (var i = 0; i < 1000000; i++)
+        {
+            var input = (long)i * i;
+            AssertEqual(i, input, double.Sqrt(input), (double)Fixed.Sqrt((Fixed)input), FloatingPointComparer.FromTolerance(Fixed.Precision));
+        }
+    }
+
+    [Fact]
     public void Sqrt_OfMaxValue_ReturnsExpectedValue()
     {
         Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), FloatingPointComparer.FromPrecision(Fixed.Precision));
+    }
+
+    [Fact]
+    public void Sqrt_OfEpsilon_ReturnsExpectedValue()
+    {
+        Assert.Equal(double.Sqrt((double)Fixed.Epsilon), (double)Fixed.Sqrt(Fixed.Epsilon), FloatingPointComparer.FromPrecision(Fixed.Precision));
     }
 
     [Fact]
