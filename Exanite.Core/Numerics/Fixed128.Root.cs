@@ -56,9 +56,15 @@ public partial struct Fixed128
         }
 
         // We need to cancel out the normalization step we did above
-        var normalizedResult = (normalizedX * y) >> internalShift;
-        var finalShift = (evenNormalizeShift - (internalShift - Shift)) / 2;
+        // The finalShift was originally 3 shifts
+        // This declares the shifts in the order they originally occurred in
+        const int shiftDueToMultiplication = internalShift;
+        var shiftDueToDenormalization = ((evenNormalizeShift - (internalShift - Shift)) / 2);
+        const int shiftFromInternalToOutput = internalShift - Shift;
+        var finalShift = shiftDueToMultiplication + shiftDueToDenormalization + shiftFromInternalToOutput;
+
+        var normalizedResult = normalizedX * y;
         var fixed128Value = finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift;
-        return new Fixed128(fixed128Value >> (internalShift - Shift));
+        return new Fixed128(fixed128Value);
     }
 }
