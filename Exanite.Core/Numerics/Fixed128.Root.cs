@@ -21,7 +21,7 @@ public partial struct Fixed128
             return 0;
         }
 
-        // This uses Q88.40 for better precision
+        // Use Q88.40 for better precision
         // This must be even
         const int internalShift = 40;
 
@@ -32,7 +32,7 @@ public partial struct Fixed128
         var normalizedX = normalizeShift >= 0 ? x.Raw << normalizeShift : x.Raw >> -normalizeShift;
 
         // Calculate LUT index of initial guess
-        // 2 is represented with 41 + 2 bits, but we are exclusive of 2
+        // 2 is represented with (internalShift + 2) bits, but we are exclusive of 2
         const int availableBitCount = internalShift + 2 - 1;
         var lutIndex = (int)(normalizedX >> (availableBitCount - SqrtLutBits));
         var y = (Int128)SqrtLut[lutIndex - SqrtLutOffset] << (internalShift - Fixed.Shift);
@@ -79,34 +79,46 @@ public partial struct Fixed128
             return 0;
         }
 
-        // This uses Q86.42 for better precision
+        // Handle negative inputs
+        var isNegative = IsNegative(x);
+        var absX = isNegative ? -x.Raw : x.Raw;
+
+        // Use Q86.42 for better precision
         // This must be a multiple of 3
         const int internalShift = 42;
 
         // TODO
-        // Normalize x using an even shift so that the shift can be safely halved later
-        // This leads to x being in the interval [0.5, 2)
-        var leadingZeroCount = (int)Int128.LeadingZeroCount(x.Raw);
-        var evenNormalizeShift = (leadingZeroCount - (128 - 1 - internalShift)) & ~1;
-        var normalizedX = evenNormalizeShift >= 0 ? x.Raw << evenNormalizeShift : x.Raw >> -evenNormalizeShift;
+        // Normalize x to be in the interval [0.125, 1)
+        var leadingZeroCount = (int)Int128.LeadingZeroCount(absX);
+        var normalizeShift = leadingZeroCount - (128 - 1 - internalShift);
+        normalizeShift = normalizeShift % 3;
+        if (normalizeShift < 0)
+        {
+            normalizeShift += 3;
+        }
+
+        var normalizedX = normalizeShift >= 0 ? absX << normalizeShift : absX >> -normalizeShift;
 
         // TODO
         // Calculate LUT index of initial guess
-        // 2 is represented with 41 + 2 bits, but we are exclusive of 2
-        const int availableBitCount = internalShift + 2 - 1;
-        var lutIndex = (int)(normalizedX >> (availableBitCount - SqrtLutBits));
-        var y = (Int128)SqrtLut[lutIndex - SqrtLutOffset] << (internalShift - Fixed.Shift);
+        // 1 is represented with (internalShift + 1) bits, but we are exclusive of 1
+        // const int availableBitCount = internalShift + 1 - 1;
+        // var lutIndex = (int)(normalizedX >> (availableBitCount - SqrtLutBits));
+        // var y = (Int128)SqrtLut[lutIndex - SqrtLutOffset] << (internalShift - Fixed.Shift);
 
-        // TODO
+        // TODO: Temporary initial guess
+        var y = (Int128)1 << internalShift;
+
         // Direct Newton-Raphson method:
-        // y = 1/3 * (2y + x/y^2)
-        var three = (Int128)3 << internalShift;
-        const int maxIterationCount = 3;
+        // y = (2y + x/y^2) / 3
+        var threeReciprocal = ((Int128)1 << (internalShift * 2)) / ((Int128)3 << internalShift);
+        const int maxIterationCount = 10; // TODO: Lower this
         for (var i = 0; i < maxIterationCount; i++)
         {
-            var xyy = (normalizedX * y * y) >> (internalShift * 2);
-            var threeMinusXyy = three - xyy;
-            var yNext = (y * threeMinusXyy) >> (internalShift + 1);
+            var yy = (y * y) >> internalShift;
+            var xOverYy = (normalizedX << internalShift) / yy;
+            var twoY = y << 1;
+            var yNext = ((twoY + xOverYy) * threeReciprocal) >> internalShift;
             if (yNext == y)
             {
                 break;
@@ -120,7 +132,7 @@ public partial struct Fixed128
         // The finalShift was originally 3 shifts
         // This declares the shifts in the order they originally occurred in
         const int shiftDueToMultiplication = internalShift;
-        var shiftDueToDenormalization = ((evenNormalizeShift - (internalShift - Shift)) / 2);
+        var shiftDueToDenormalization = ((normalizeShift - (internalShift - Shift)) / 2);
         const int shiftFromInternalToOutput = internalShift - Shift;
         var finalShift = shiftDueToMultiplication + shiftDueToDenormalization + shiftFromInternalToOutput;
 
