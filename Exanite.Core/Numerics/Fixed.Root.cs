@@ -5,10 +5,20 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed // : IRootFunctions<Fixed>
 {
+    private const int Sqrt128InputShift = 32;
+
     // public static Fixed Cbrt(Fixed x);
     // public static Fixed RootN(Fixed x, int n);
 
     public static Fixed Sqrt(Fixed x)
+    {
+        return Sqrt((Int128)x.raw << (Sqrt128InputShift - Shift));
+    }
+
+    /// <summary>
+    /// Calculates the square root of a Q96.32 fixed point number and returns it as a Q48.16 number.
+    /// </summary>
+    private static Fixed Sqrt(Int128 x)
     {
         if (x < 0)
         {
@@ -26,9 +36,9 @@ public partial struct Fixed // : IRootFunctions<Fixed>
 
         // Normalize x using an even shift so that the shift can be safely halved later
         // This leads to x being in the interval [0.5, 2)
-        var leadingZeroCount = (int)long.LeadingZeroCount(x.raw) + 64;
+        var leadingZeroCount = (int)Int128.LeadingZeroCount(x);
         var evenNormalizeShift = (leadingZeroCount - (128 - 1 - internalShift)) & ~1;
-        var normalizedX = evenNormalizeShift >= 0 ? (Int128)x.raw << evenNormalizeShift : (Int128)x.raw >> -evenNormalizeShift;
+        var normalizedX = evenNormalizeShift >= 0 ? x << evenNormalizeShift : x >> -evenNormalizeShift;
 
         // Calculate LUT index of initial guess
         // 2 is represented with 41 + 2 bits, but we are exclusive of 2
@@ -54,7 +64,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
 
         // We need to cancel out the normalization step we did above
         var normalizedResult = (normalizedX * y) >> internalShift;
-        var finalShift = (evenNormalizeShift - (internalShift - Shift)) / 2;
+        var finalShift = (evenNormalizeShift - (internalShift - Sqrt128InputShift)) / 2;
         var fixed128Value = finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift;
         return new Fixed((long)(fixed128Value >> (internalShift - Shift)));
     }
@@ -63,8 +73,8 @@ public partial struct Fixed // : IRootFunctions<Fixed>
     {
         var x2 = (Int128)x.raw * x.raw;
         var y2 = (Int128)y.raw * y.raw;
-        var sum = (x2 + y2) >> Shift;
-        return Sqrt(new Fixed((long)sum));
+        var sum = x2 + y2;
+        return Sqrt(sum);
     }
 
     public static Fixed Hypot(Fixed x, Fixed y, Fixed z)
@@ -72,8 +82,8 @@ public partial struct Fixed // : IRootFunctions<Fixed>
         var x2 = (Int128)x.raw * x.raw;
         var y2 = (Int128)y.raw * y.raw;
         var z2 = (Int128)z.raw * z.raw;
-        var sum = (x2 + y2 + z2) >> Shift;
-        return Sqrt(new Fixed((long)sum));
+        var sum = x2 + y2 + z2;
+        return Sqrt(sum);
     }
 
     public static Fixed Hypot(Fixed x, Fixed y, Fixed z, Fixed w)
@@ -82,7 +92,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
         var y2 = (Int128)y.raw * y.raw;
         var z2 = (Int128)z.raw * z.raw;
         var w2 = (Int128)w.raw * w.raw;
-        var sum = (x2 + y2 + z2 + w2) >> Shift;
-        return Sqrt(new Fixed((long)sum));
+        var sum = x2 + y2 + z2 + w2;
+        return Sqrt(sum);
     }
 }

@@ -218,6 +218,33 @@ public class FixedTests
         Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), FloatingPointComparer.FromPrecision(Fixed.Precision));
     }
 
+    [Fact]
+    public void Hypot_ReturnsExpectedValue_ForWideRange()
+    {
+        var radiusMultiplier = 1.025;
+        var angleDelta = 0.234;
+        var currentRadius = 0.0001;
+        var currentAngle = 0.0;
+        for (var i = 0; i < 1650; i++)
+        {
+            var x = M.Cos(currentAngle) * currentRadius;
+            var y = M.Sin(currentAngle) * currentRadius;
+
+            var expected = double.Hypot(y, x);
+            var comparer = i switch
+            {
+                _ when M.Abs(i) > 1500 => FloatingPointComparer.FromTolerance((decimal)expected * 0.0000000001M),
+                _ when M.Abs(i) > 1000 => FloatingPointComparer.FromTolerance((decimal)expected * 0.00000000001M),
+                _ => FloatingPointComparer.FromPrecision(Fixed.Precision),
+            };
+
+            AssertEqual(i, x, y, expected, (double)Fixed.Hypot((Fixed)y, (Fixed)x), comparer);
+
+            currentRadius *= radiusMultiplier;
+            currentAngle += angleDelta;
+        }
+    }
+
     [Theory]
     [InlineData(0, 0)]
     [InlineData(double.Pi / 2, 1)]
