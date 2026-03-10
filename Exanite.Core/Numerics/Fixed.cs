@@ -166,7 +166,7 @@ public readonly partial struct Fixed :
     /// </summary>
     public static Fixed FromParts(long integral, int fractional)
     {
-        AssertUtility.IsTrue(integral <= (1L << 48) , "Integral part must be less than or equal to 2^48");
+        AssertUtility.IsTrue(integral <= (1L << IntegralBitCount) , "Integral part must be less than or equal to 2^48");
         AssertUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
 
         if (fractional == 0)

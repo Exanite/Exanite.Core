@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
@@ -91,6 +92,39 @@ public readonly partial struct Fixed128 :
     public static explicit operator float(Fixed128 value) => (float)value.Raw / OneRaw;
     public static explicit operator double(Fixed128 value) => (double)value.Raw / OneRaw;
     public static explicit operator decimal(Fixed128 value) => (decimal)value.Raw / OneRaw;
+
+    /// <summary>
+    /// Creates a fixed point number by using combining an integral part and a fractional part.
+    /// <br/>
+    /// Eg: FromParts(1, 1) -> 1.1
+    /// <br/>
+    /// Eg: FromParts(1, 123) -> 1.123
+    /// </summary>
+    public static Fixed128 FromParts(Int128 integral, int fractional)
+    {
+        AssertUtility.IsTrue(integral <= ((Int128)1L << IntegralBitCount) , "Integral part must be less than or equal to 2^96");
+        AssertUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
+
+        if (fractional == 0)
+        {
+            return new Fixed128(integral * OneRaw);
+        }
+
+        // Determine the number of digits in the fractional part
+        // Note: Not sure if a LUT is actually faster here, but I don't want to benchmark right now
+        var divisor = 10;
+        foreach (var digitLimit in DigitsLut)
+        {
+            if (fractional < digitLimit)
+            {
+                break;
+            }
+
+            divisor *= 10;
+        }
+
+        return new Fixed128(integral * OneRaw + ((integral >> 127) | 1) * ((fractional * OneRaw) / divisor));
+    }
 
     /// <summary>
     /// Creates a fixed point number by dividing the numerator by the denominator.
