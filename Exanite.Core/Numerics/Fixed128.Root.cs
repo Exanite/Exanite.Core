@@ -38,7 +38,8 @@ public partial struct Fixed128
         var y = (Int128)SqrtLut[lutIndex - SqrtLutOffset] << (internalShift - Fixed.Shift);
 
         // Inverse Newton-Raphson method:
-        // y_n+1 = (y_n * (3 - x * y_n * y_n)) >> 1
+        // y = (y * (3 - x * y * y)) >> 1
+        // y = 1 / sqrt(x)
         var three = (Int128)3 << internalShift;
         const int maxIterationCount = 3;
         for (var i = 0; i < maxIterationCount; i++)
@@ -74,6 +75,9 @@ public partial struct Fixed128
         // Normalize shift is a multiple of 3 instead of 2
         // Use of direct Newton-Raphson (instead of the inverse) to avoid overflow when cubing y
 
+        // TODO
+        checked
+        {
         if (x == 0)
         {
             return 0;
@@ -111,8 +115,9 @@ public partial struct Fixed128
 
         // Direct Newton-Raphson method:
         // y = (2y + x/y^2) / 3
+        // y = cbrt(x)
         var threeReciprocal = ((Int128)1 << (internalShift * 2)) / ((Int128)3 << internalShift);
-        const int maxIterationCount = 10; // TODO: Lower this
+        const int maxIterationCount = 100; // TODO: Lower this
         for (var i = 0; i < maxIterationCount; i++)
         {
             var yy = (y * y) >> internalShift;
@@ -131,13 +136,14 @@ public partial struct Fixed128
         // We need to cancel out the normalization step we did above
         // The finalShift was originally 3 shifts
         // This declares the shifts in the order they originally occurred in
-        const int shiftDueToMultiplication = internalShift;
-        var shiftDueToDenormalization = ((normalizeShift - (internalShift - Shift)) / 2);
+        var shiftDueToDenormalization = (normalizeShift - (internalShift - Shift)) / 3;
         const int shiftFromInternalToOutput = internalShift - Shift;
-        var finalShift = shiftDueToMultiplication + shiftDueToDenormalization + shiftFromInternalToOutput;
+        var finalShift = shiftDueToDenormalization + shiftFromInternalToOutput;
 
-        var normalizedResult = normalizedX * y;
+        var normalizedResult = y;
         var fixed128Value = finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift;
+        fixed128Value = isNegative ? -fixed128Value : fixed128Value;
         return new Fixed128(fixed128Value);
+        }
     }
 }

@@ -235,6 +235,30 @@ public class FixedTests
     }
 
     [Fact]
+    public void Cbrt_ReturnsExpectedValue_ForGreaterThanOne()
+    {
+        var current = 1.0;
+        var multiplier = 1.025;
+        for (var i = 0; i < 1000; i++)
+        {
+            current *= multiplier;
+            AssertEqual(i, current, double.Cbrt(current), (double)Fixed.Cbrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        }
+    }
+
+    [Fact]
+    public void Cbrt_ReturnsExpectedValue_ForLessThanOne()
+    {
+        var current = 1.0;
+        var multiplier = 0.995;
+        for (var i = 0; i < 1000; i++)
+        {
+            current *= multiplier;
+            AssertEqual(i, current, double.Cbrt(current), (double)Fixed.Cbrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        }
+    }
+
+    [Fact]
     public void Hypot_ReturnsExpectedValue_ForWideRange()
     {
         var radiusMultiplier = 1.025;

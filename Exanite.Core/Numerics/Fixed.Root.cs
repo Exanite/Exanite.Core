@@ -4,12 +4,16 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed // : IRootFunctions<Fixed>
 {
-    // public static Fixed Cbrt(Fixed x);
     // public static Fixed RootN(Fixed x, int n);
 
     public static Fixed Sqrt(Fixed x)
     {
         return (Fixed)Fixed128.SqrtFast(x);
+    }
+
+    public static Fixed Cbrt(Fixed x)
+    {
+        return (Fixed)Fixed128.CbrtFast(x);
     }
 
     public static Fixed Hypot(Fixed x, Fixed y)
