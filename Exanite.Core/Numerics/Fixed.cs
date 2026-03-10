@@ -287,6 +287,7 @@ public readonly partial struct Fixed :
     public static bool IsSubnormal(Fixed value) => false;
 
     // Magnitude methods
+    public static Fixed Sign(Fixed value) => new(long.Sign(value.raw) * OneRaw);
     public static Fixed Abs(Fixed value) => new(long.Abs(value.raw));
     public static Fixed MaxMagnitude(Fixed x, Fixed y) => Abs(x) > Abs(y) ? x : y;
     public static Fixed MaxMagnitudeNumber(Fixed x, Fixed y) => MaxMagnitude(x, y);

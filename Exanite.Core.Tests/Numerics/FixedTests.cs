@@ -122,6 +122,17 @@ public class FixedTests
     }
 
     [Theory]
+    [InlineData(1, 1)]
+    [InlineData(0, 0)]
+    [InlineData(-1, -1)]
+    [InlineData(123.456, 1)]
+    [InlineData(-123.456, -1)]
+    public void Sign_ReturnsExpectedValue(double input, int expected)
+    {
+        Assert.Equal(expected, (int)Fixed.Sign((Fixed)input));
+    }
+
+    [Theory]
     [InlineData(1, 5, 1)]
     [InlineData(1, 4, 1)]
     [InlineData(3, 14159, 3)]
