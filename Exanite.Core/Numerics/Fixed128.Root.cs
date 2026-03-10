@@ -5,8 +5,10 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed128
 {
-    // This is called "fast" because it's designed to be used for Q48.16,
-    // which does not need as much precision
+    // Implementation note:
+    // The fast methods are called "fast" because they are designed
+    // to be used for Q48.16, which does not need as much precision
+    
     public static Fixed128 SqrtFast(Fixed128 x)
     {
         if (x < 0)
