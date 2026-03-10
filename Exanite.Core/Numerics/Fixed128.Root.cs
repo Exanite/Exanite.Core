@@ -8,7 +8,7 @@ public partial struct Fixed128
     // Implementation note:
     // The fast methods are called "fast" because they are designed
     // to be used for Q48.16, which does not need as much precision
-    
+
     public static Fixed128 SqrtFast(Fixed128 x)
     {
         if (x < 0)
@@ -22,18 +22,14 @@ public partial struct Fixed128
         }
 
         // This uses Q88.40 for better precision
-        // However, note that this was originally designed for Fixed (Q48.16)
-        // (and still is intended to be primarily used for Q48.16),
-        // so the benefits aren't as big for Fixed128 (Q96.32)
-        //
         // This must be even
         const int internalShift = 40;
 
         // Normalize x using an even shift so that the shift can be safely halved later
         // This leads to x being in the interval [0.5, 2)
         var leadingZeroCount = (int)Int128.LeadingZeroCount(x.Raw);
-        var evenNormalizeShift = (leadingZeroCount - (128 - 1 - internalShift)) & ~1;
-        var normalizedX = evenNormalizeShift >= 0 ? x.Raw << evenNormalizeShift : x.Raw >> -evenNormalizeShift;
+        var normalizeShift = (leadingZeroCount - (128 - 1 - internalShift)) & ~1;
+        var normalizedX = normalizeShift >= 0 ? x.Raw << normalizeShift : x.Raw >> -normalizeShift;
 
         // Calculate LUT index of initial guess
         // 2 is represented with 41 + 2 bits, but we are exclusive of 2
@@ -58,6 +54,68 @@ public partial struct Fixed128
             y = yNext;
         }
 
+        // We need to cancel out the normalization step we did above
+        // The finalShift was originally 3 shifts
+        // This declares the shifts in the order they originally occurred in
+        const int shiftDueToMultiplication = internalShift;
+        var shiftDueToDenormalization = ((normalizeShift - (internalShift - Shift)) / 2);
+        const int shiftFromInternalToOutput = internalShift - Shift;
+        var finalShift = shiftDueToMultiplication + shiftDueToDenormalization + shiftFromInternalToOutput;
+
+        var normalizedResult = normalizedX * y;
+        var fixed128Value = finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift;
+        return new Fixed128(fixed128Value);
+    }
+
+    public static Fixed128 CbrtFast(Fixed128 x)
+    {
+        // This algorithm is adapted from SqrtFast
+        // Key differences:
+        // Normalize shift is a multiple of 3 instead of 2
+        // Use of direct Newton-Raphson (instead of the inverse) to avoid overflow when cubing y
+
+        if (x == 0)
+        {
+            return 0;
+        }
+
+        // This uses Q86.42 for better precision
+        // This must be a multiple of 3
+        const int internalShift = 42;
+
+        // TODO
+        // Normalize x using an even shift so that the shift can be safely halved later
+        // This leads to x being in the interval [0.5, 2)
+        var leadingZeroCount = (int)Int128.LeadingZeroCount(x.Raw);
+        var evenNormalizeShift = (leadingZeroCount - (128 - 1 - internalShift)) & ~1;
+        var normalizedX = evenNormalizeShift >= 0 ? x.Raw << evenNormalizeShift : x.Raw >> -evenNormalizeShift;
+
+        // TODO
+        // Calculate LUT index of initial guess
+        // 2 is represented with 41 + 2 bits, but we are exclusive of 2
+        const int availableBitCount = internalShift + 2 - 1;
+        var lutIndex = (int)(normalizedX >> (availableBitCount - SqrtLutBits));
+        var y = (Int128)SqrtLut[lutIndex - SqrtLutOffset] << (internalShift - Fixed.Shift);
+
+        // TODO
+        // Direct Newton-Raphson method:
+        // y = 1/3 * (2y + x/y^2)
+        var three = (Int128)3 << internalShift;
+        const int maxIterationCount = 3;
+        for (var i = 0; i < maxIterationCount; i++)
+        {
+            var xyy = (normalizedX * y * y) >> (internalShift * 2);
+            var threeMinusXyy = three - xyy;
+            var yNext = (y * threeMinusXyy) >> (internalShift + 1);
+            if (yNext == y)
+            {
+                break;
+            }
+
+            y = yNext;
+        }
+
+        // TODO
         // We need to cancel out the normalization step we did above
         // The finalShift was originally 3 shifts
         // This declares the shifts in the order they originally occurred in
