@@ -7,7 +7,7 @@ using Exanite.Core.Utilities;
 namespace Exanite.Core.Numerics;
 
 /// <summary>
-/// A fixed point Q48.16 value (48-bits signed integer, 16-bits fraction).
+/// A fixed point Q96.32 value (96-bits signed integer, 32-bits fraction).
 /// Has a precision of 9 decimal places.
 /// </summary>
 public readonly partial struct Fixed128 :
