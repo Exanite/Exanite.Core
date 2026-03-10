@@ -298,6 +298,37 @@ public class FixedTests
     }
 
     [Fact]
+    public void TanPi_ReturnsExpectedValue_ForWideRange()
+    {
+        var current = 0.0001;
+        var multiplier = 1.025;
+        for (var i = 0; i < 1350; i++)
+        {
+            current *= multiplier;
+
+            Assert(current);
+            Assert(-current);
+
+            continue;
+
+            void Assert(double input)
+            {
+                var expected = double.TanPi(input);
+                var comparer = expected switch
+                {
+                    _ when M.Abs(expected) > 100 => FloatingPointComparer.FromTolerance((decimal)expected * 0.1M), // Slope is >= 10001 at this point
+                    _ when M.Abs(expected) > 10 => FloatingPointComparer.FromTolerance((decimal)expected * 0.01M), // Slope is >= 101 at this point
+                    _ when M.Abs(expected) > 1 => FloatingPointComparer.FromPrecision(Fixed.Precision - 2), // Slope is >= 2 at this point
+                    _ when M.Abs(expected) > 0.5 => FloatingPointComparer.FromPrecision(Fixed.Precision - 1), // Slope is >= 1.25 at this point
+                    _ => FloatingPointComparer.FromPrecision(Fixed.Precision), // Slope is always >= 1
+                };
+
+                AssertEqual(i, input, expected, (double)Fixed.TanPi((Fixed)input), comparer);
+            }
+        }
+    }
+
+    [Fact]
     public void SinCos_ReturnsExpectedValue_ForWideRange()
     {
         var comparer = FloatingPointComparer.FromPrecision(Fixed.Precision);

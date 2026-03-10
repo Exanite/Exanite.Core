@@ -93,6 +93,33 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         return new Fixed(isInverted ? -result : result);
     }
 
+    public static Fixed TanPi(Fixed x)
+    {
+        var normalizedX = WrapToOneRange(x.raw);
+
+        // Handle inverted portion
+        var isInverted = normalizedX > HalfRaw;
+        if (isInverted)
+        {
+            normalizedX = OneRaw - normalizedX;
+        }
+
+        // Calculate index into LUT
+        var rawIndex = normalizedX << (TanLutBits + 1);
+        var index = (int)(rawIndex >> Shift);
+        var fraction = (int)(rawIndex & Mask);
+        if (index >= ((1 << TanLutBits) - 1))
+        {
+            return isInverted ? MinValue : MaxValue;
+        }
+
+        // Get values and interpolate
+        var y0 = TanLut[index];
+        var y1 = TanLut[index + 1];
+        var result = y0 + (((y1 - y0) * fraction) >> Shift);
+        return new Fixed(isInverted ? -result : result);
+    }
+
     public static (Fixed Sin, Fixed Cos) SinCos(Fixed x)
     {
         var sinNormalizedX = WrapToTauRange(x.raw);
@@ -106,6 +133,15 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         var cosRaw = SinFromNormalized(cosNormalizedX);
 
         return (new Fixed(sinRaw), new Fixed(cosRaw));
+    }
+
+    /// <summary>
+    /// Reduces the input value to be in the range [0, 1).
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static long WrapToOneRange(long x)
+    {
+        return x & Mask;
     }
 
     /// <summary>
