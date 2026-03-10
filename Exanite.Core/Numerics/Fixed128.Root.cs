@@ -5,7 +5,7 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed128
 {
-    public static Fixed128 Sqrt(Fixed128 x)
+    public static Fixed128 SqrtFast(Fixed128 x)
     {
         if (x < 0)
         {

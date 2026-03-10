@@ -9,7 +9,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
 
     public static Fixed Sqrt(Fixed x)
     {
-        return (Fixed)Fixed128.Sqrt(x);
+        return (Fixed)Fixed128.SqrtFast(x);
     }
 
     public static Fixed Hypot(Fixed x, Fixed y)
@@ -17,7 +17,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
         var x2 = (Int128)x.Raw * x.Raw;
         var y2 = (Int128)y.Raw * y.Raw;
         var sum = x2 + y2;
-        return (Fixed)Fixed128.Sqrt(new Fixed128(sum));
+        return (Fixed)Fixed128.SqrtFast(new Fixed128(sum));
     }
 
     public static Fixed Hypot(Fixed x, Fixed y, Fixed z)
@@ -26,7 +26,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
         var y2 = (Int128)y.Raw * y.Raw;
         var z2 = (Int128)z.Raw * z.Raw;
         var sum = x2 + y2 + z2;
-        return (Fixed)Fixed128.Sqrt(new Fixed128(sum));
+        return (Fixed)Fixed128.SqrtFast(new Fixed128(sum));
     }
 
     public static Fixed Hypot(Fixed x, Fixed y, Fixed z, Fixed w)
@@ -36,6 +36,6 @@ public partial struct Fixed // : IRootFunctions<Fixed>
         var z2 = (Int128)z.Raw * z.Raw;
         var w2 = (Int128)w.Raw * w.Raw;
         var sum = x2 + y2 + z2 + w2;
-        return (Fixed)Fixed128.Sqrt(new Fixed128(sum));
+        return (Fixed)Fixed128.SqrtFast(new Fixed128(sum));
     }
 }
