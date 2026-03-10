@@ -54,12 +54,12 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
 
     public static Fixed Cos(Fixed x)
     {
-        return Sin(x + PiHalf);
+        return Sin(new Fixed(x.raw + PiHalfRaw));
     }
 
     public static Fixed CosPi(Fixed x)
     {
-        return SinPi(x + Half);
+        return SinPi(new Fixed(x.raw + HalfRaw));
     }
 
     public static Fixed Tan(Fixed x)

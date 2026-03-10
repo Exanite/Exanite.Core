@@ -50,6 +50,12 @@ public readonly partial struct Fixed :
     private const long PiHalfRaw = 102944;
 
     /// <summary>
+    /// Equal to round(pi * 2^16 / 4).
+    /// </summary>
+    // Generated using: (long)decimal.Round((decimal)(double.Pi / 4) * (1L << Shift))
+    private const long PiFourthRaw = 51472;
+
+    /// <summary>
     /// Equal to round(pi * 2^16 * 2).
     /// </summary>
     // Generated using: (long)decimal.Round((decimal)double.Tau * (1L << Shift))
@@ -69,7 +75,6 @@ public readonly partial struct Fixed :
 
     public static Fixed E => new(ERaw);
     public static Fixed Pi => new(PiRaw);
-    public static Fixed PiHalf => new(PiHalfRaw);
     public static Fixed Tau => new(TauRaw);
 
     public static Fixed Epsilon => new(1);
