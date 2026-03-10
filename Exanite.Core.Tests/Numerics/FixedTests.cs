@@ -424,6 +424,20 @@ public class FixedTests
     }
 
     [Theory]
+    [InlineData(10, 1)]
+    [InlineData(1, 10)]
+    [InlineData(-1, 10)]
+    [InlineData(-10, 1)]
+    [InlineData(-10, -1)]
+    [InlineData(-1, -10)]
+    [InlineData(1, -10)]
+    [InlineData(10, -1)]
+    public void Atan2_ReturnsExpectedValue_ForReciprocalCases(double x, double y)
+    {
+        AssertEqual(x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision));
+    }
+
+    [Theory]
     [InlineData(0, 0)]
     [InlineData(1, 0)]
     [InlineData(-1, 0)]
@@ -431,7 +445,7 @@ public class FixedTests
     [InlineData(0, -1)]
     public void Atan2_ReturnsExpectedValue_ForPointsOnAxes(double x, double y)
     {
-        AssertEqual(x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
+        AssertEqual(x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision));
     }
 
     [Fact]
