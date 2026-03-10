@@ -39,11 +39,12 @@ public partial struct Fixed128
         var lutIndex = (int)(normalizedX >> (availableBitCount - SqrtLutBits));
         var y = (Int128)SqrtLut[lutIndex - SqrtLutOffset] << (internalShift - Fixed.Shift);
 
+        // Inverse Newton-Raphson method:
+        // y_n+1 = (y_n * (3 - x * y_n * y_n)) >> 1
         var three = (Int128)3 << internalShift;
-        while (true)
+        const int maxIterationCount = 3;
+        for (var i = 0; i < maxIterationCount; i++)
         {
-            // Inverse Newton-Raphson method:
-            // y_n+1 = (y_n * (3 - x * y_n * y_n)) >> 1
             var xyy = (normalizedX * y * y) >> (internalShift * 2);
             var threeMinusXyy = three - xyy;
             var yNext = (y * threeMinusXyy) >> (internalShift + 1);
