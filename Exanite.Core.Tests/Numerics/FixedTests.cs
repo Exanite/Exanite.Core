@@ -218,7 +218,7 @@ public class FixedTests
         for (var i = 0; i < 1000000; i++)
         {
             var input = (long)i * i;
-            AssertEqual(i, input, double.Sqrt(input), (double)Fixed.Sqrt((Fixed)input), FloatingPointComparer.FromTolerance(Fixed.Precision));
+            AssertEqual(i, input, double.Sqrt(input), (double)Fixed.Sqrt((Fixed)input), FloatingPointComparer.FromPrecision(Fixed.Precision));
         }
     }
 
