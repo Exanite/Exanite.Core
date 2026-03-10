@@ -152,6 +152,48 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         return (new Fixed(sinRaw), new Fixed(cosRaw));
     }
 
+    public static Fixed Atan(Fixed x)
+    {
+        var isNegative = x.raw < 0;
+        var absX = Abs(x);
+
+        long result;
+        if (absX <= One)
+        {
+            result = AtanFromNormalized(absX.raw);
+        }
+        else
+        {
+            // Use identity: atan(x) = pi/2 - atan(1/x)
+            result = PiHalfRaw - AtanFromNormalized((One / absX).raw);
+        }
+
+        return new Fixed(isNegative ? -result : result);
+    }
+
+    /// <summary>
+    /// Calculates the arctangent of the provided value.
+    /// The provided value must be in the range [0, 1].
+    /// </summary>
+    private static long AtanFromNormalized(long x)
+    {
+        // x is guaranteed [0, 1] here
+        // Map [0, 1] to AtanLut
+        var rawIndex = (x << AtanLutBits);
+        var index = (int)(rawIndex >> Shift);
+        var fraction = (int)(rawIndex & Mask);
+
+        if (index >= ((1 << AtanLutBits) - 1))
+        {
+            return PiFourthRaw;
+        }
+
+        var y0 = AtanLut[index];
+        var y1 = AtanLut[index + 1];
+        var result = y0 + (((y1 - y0) * fraction) >> Shift);
+        return result;
+    }
+
     /// <summary>
     /// Reduces the input value to be in the range [0, 1).
     /// </summary>
