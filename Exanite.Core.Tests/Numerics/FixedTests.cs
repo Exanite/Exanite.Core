@@ -269,6 +269,32 @@ public class FixedTests
         }
     }
 
+    [Fact]
+    public void SinCos_ReturnsExpectedValue_ForWideRange()
+    {
+        var comparer = FloatingPointComparer.FromPrecision(Fixed.Precision);
+        var current = 0.0001;
+        var multiplier = 1.025;
+        for (var i = 0; i < 1350; i++)
+        {
+            current *= multiplier;
+
+            Assert(current);
+            Assert(-current);
+
+            continue;
+
+            void Assert(double input)
+            {
+                var expected = double.SinCos(input);
+                var actual = Fixed.SinCos((Fixed)input);
+
+                AssertEqual(i, input, expected.Sin, (double)actual.Sin, comparer);
+                AssertEqual(i, input, expected.Cos, (double)actual.Cos, comparer);
+            }
+        }
+    }
+
     private void AssertEqual(int i, double input, double expected, double actual, FloatingPointComparer comparer)
     {
         Assert.True(comparer.Equals(expected, actual), $"""
