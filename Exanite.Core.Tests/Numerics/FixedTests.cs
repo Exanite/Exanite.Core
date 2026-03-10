@@ -354,6 +354,32 @@ public class FixedTests
         }
     }
 
+    [Fact]
+    public void SinCosPi_ReturnsExpectedValue_ForWideRange()
+    {
+        var comparer = FloatingPointComparer.FromPrecision(Fixed.Precision);
+        var current = 0.0001;
+        var multiplier = 1.025;
+        for (var i = 0; i < 1350; i++)
+        {
+            current *= multiplier;
+
+            Assert(current);
+            Assert(-current);
+
+            continue;
+
+            void Assert(double input)
+            {
+                var expected = double.SinCosPi(input);
+                var actual = Fixed.SinCosPi((Fixed)input);
+
+                AssertEqual(i, input, expected.SinPi, (double)actual.SinPi, comparer);
+                AssertEqual(i, input, expected.CosPi, (double)actual.CosPi, comparer);
+            }
+        }
+    }
+
     private void AssertEqual(int i, double input, double expected, double actual, FloatingPointComparer comparer)
     {
         Assert.True(comparer.Equals(expected, actual), $"""

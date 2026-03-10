@@ -135,6 +135,21 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         return (new Fixed(sinRaw), new Fixed(cosRaw));
     }
 
+    public static (Fixed SinPi, Fixed CosPi) SinCosPi(Fixed x)
+    {
+        var sinNormalizedX = WrapToTwoRange(x.raw);
+        var sinRaw = SinPiFromNormalized(sinNormalizedX);
+
+        var cosNormalizedX = sinNormalizedX + HalfRaw;
+        if (cosNormalizedX >= TwoRaw)
+        {
+            cosNormalizedX -= TwoRaw;
+        }
+        var cosRaw = SinPiFromNormalized(cosNormalizedX);
+
+        return (new Fixed(sinRaw), new Fixed(cosRaw));
+    }
+
     /// <summary>
     /// Reduces the input value to be in the range [0, 1).
     /// </summary>
