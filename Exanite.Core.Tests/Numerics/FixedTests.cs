@@ -394,6 +394,25 @@ public class FixedTests
     }
 
     [Fact]
+    public void Atan2_ReturnsExpectedValue_ForWideRange()
+    {
+        var radiusDelta = 0.0234;
+        var angleDelta = 0.234;
+        var currentRadius = 0.0;
+        var currentAngle = 0.0;
+        for (var i = 0; i < 1234; i++)
+        {
+            var x = M.Cos(currentAngle) * currentRadius;
+            var y = M.Sin(currentAngle) * currentRadius;
+
+            AssertEqual(i, x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
+
+            currentRadius += radiusDelta;
+            currentAngle += angleDelta;
+        }
+    }
+
+    [Fact]
     public void Atan_ReturnsExpectedValue_ForWideRange()
     {
         var current = 0.0001;
@@ -438,6 +457,18 @@ public class FixedTests
         Assert.True(comparer.Equals(expected, actual), $"""
             Failed at i: {i}
             Input:       {input}
+            Expected:    {expected}
+            Actual:      {actual}
+            Difference:  {(decimal)M.Abs(expected - actual)}
+            Tolerance:   {comparer.Tolerance}
+            """);
+    }
+
+    private void AssertEqual(int i, double x, double y, double expected, double actual, FloatingPointComparer comparer)
+    {
+        Assert.True(comparer.Equals(expected, actual), $"""
+            Failed at i: {i}
+            Input:       ({x}, {y})
             Expected:    {expected}
             Actual:      {actual}
             Difference:  {(decimal)M.Abs(expected - actual)}

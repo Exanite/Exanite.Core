@@ -14,7 +14,7 @@ public readonly partial struct Fixed :
     INumber<Fixed>,
     IMinMaxValue<Fixed>,
     ISignedNumber<Fixed>,
-    IFloatingPointConstants<Fixed>
+    ITrigonometricFunctions<Fixed>
 {
     // Constants
     public const int IntegralBitCount = 64 - Shift;
@@ -56,6 +56,12 @@ public readonly partial struct Fixed :
     private const long PiFourthRaw = 51472;
 
     /// <summary>
+    /// Equal to round((1 / pi) * 2^16).
+    /// </summary>
+    // Generated using: (long)decimal.Round((decimal)(1 / double.Pi) * (1L << Shift))
+    private const long PiInverseRaw = 20861;
+
+    /// <summary>
     /// Equal to round(pi * 2^16 * 2).
     /// </summary>
     // Generated using: (long)decimal.Round((decimal)double.Tau * (1L << Shift))
@@ -76,6 +82,7 @@ public readonly partial struct Fixed :
     public static Fixed E => new(ERaw);
     public static Fixed Pi => new(PiRaw);
     public static Fixed PiHalf => new(PiHalfRaw);
+    public static Fixed PiInverse => new(PiInverseRaw);
     public static Fixed Tau => new(TauRaw);
 
     public static Fixed Epsilon => new(1);

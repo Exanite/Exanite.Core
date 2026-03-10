@@ -4,7 +4,7 @@ using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
-public partial struct Fixed// : ITrigonometricFunctions<Fixed>
+public partial struct Fixed
 {
     /// <summary>
     /// Q4.60 format. Equal to round(tau * 2^60).
@@ -19,27 +19,6 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
     // Generated using: (long)decimal.Round((decimal)double.Pi * (1L << 60))
     private const long PiPreciseRaw = 3622009729038557687;
     private const int PiPreciseShift = 60;
-
-    // public static Fixed Tan(Fixed x);
-    // public static Fixed Cos(Fixed x);
-    // public static Fixed Sin(Fixed x);
-
-    // public static Fixed TanPi(Fixed x);
-    // public static Fixed CosPi(Fixed x);
-    // public static Fixed SinPi(Fixed x);
-
-    // public static (Fixed Sin, Fixed Cos) SinCos(Fixed x);
-    // public static (Fixed SinPi, Fixed CosPi) SinCosPi(Fixed x);
-
-    // public static Fixed Atan(Fixed x);
-    // public static Fixed Acos(Fixed x);
-    // public static Fixed Asin(Fixed x);
-
-    // public static Fixed AtanPi(Fixed x);
-    // public static Fixed AcosPi(Fixed x);
-    // public static Fixed AsinPi(Fixed x);
-
-    // TODO: Also do Atan2 since it's useful
 
     public static Fixed Sin(Fixed x)
     {
@@ -153,6 +132,22 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         return (new Fixed(sinRaw), new Fixed(cosRaw));
     }
 
+    public static Fixed Atan2(Fixed y, Fixed x)
+    {
+        if (x > Zero)
+        {
+            return Atan(y / x);
+        }
+
+        if (x < Zero)
+        {
+            return Atan(y / x) + Sign(y) * Pi;
+        }
+
+        // Case: x == 0
+        return Sign(y) * PiHalf;
+    }
+
     public static Fixed Atan(Fixed x)
     {
         var isNegative = x.raw < 0;
@@ -200,6 +195,11 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         // Use identity: acos(x) = pi/2 - asin(x)
         return PiHalf - Asin(x);
     }
+
+    public static Fixed Atan2Pi(Fixed y, Fixed x) => Atan2(y, x) * PiInverse;
+    public static Fixed AtanPi(Fixed x) => Atan(x) * PiInverse;
+    public static Fixed AsinPi(Fixed x) => Asin(x) * PiInverse;
+    public static Fixed AcosPi(Fixed x) => Acos(x) * PiInverse;
 
     /// <summary>
     /// Reduces the input value to be in the range [0, 1).
