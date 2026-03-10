@@ -22,13 +22,13 @@ public partial struct Fixed
 
     public static Fixed Sin(Fixed x)
     {
-        var normalizedX = WrapToTauRange(x.raw);
+        var normalizedX = WrapToTauRange(x.Raw);
         return new Fixed(SinFromNormalized(normalizedX));
     }
 
     public static Fixed SinPi(Fixed x)
     {
-        var normalizedX = WrapToTwoRange(x.raw);
+        var normalizedX = WrapToTwoRange(x.Raw);
         return new Fixed(SinPiFromNormalized(normalizedX));
     }
 
@@ -44,7 +44,7 @@ public partial struct Fixed
 
     public static Fixed Tan(Fixed x)
     {
-        var normalizedX = WrapToPiRange(x.raw);
+        var normalizedX = WrapToPiRange(x.Raw);
 
         // Handle inverted portion
         var isInverted = normalizedX > PiHalfRaw;
@@ -77,7 +77,7 @@ public partial struct Fixed
 
     public static Fixed TanPi(Fixed x)
     {
-        var normalizedX = WrapToOneRange(x.raw);
+        var normalizedX = WrapToOneRange(x.Raw);
 
         // Handle inverted portion
         var isInverted = normalizedX > HalfRaw;
@@ -104,7 +104,7 @@ public partial struct Fixed
 
     public static (Fixed Sin, Fixed Cos) SinCos(Fixed x)
     {
-        var sinNormalizedX = WrapToTauRange(x.raw);
+        var sinNormalizedX = WrapToTauRange(x.Raw);
         var sinRaw = SinFromNormalized(sinNormalizedX);
 
         var cosNormalizedX = sinNormalizedX + PiHalfRaw;
@@ -119,7 +119,7 @@ public partial struct Fixed
 
     public static (Fixed SinPi, Fixed CosPi) SinCosPi(Fixed x)
     {
-        var sinNormalizedX = WrapToTwoRange(x.raw);
+        var sinNormalizedX = WrapToTwoRange(x.Raw);
         var sinRaw = SinPiFromNormalized(sinNormalizedX);
 
         var cosNormalizedX = sinNormalizedX + HalfRaw;
@@ -164,18 +164,18 @@ public partial struct Fixed
 
     public static Fixed Atan(Fixed x)
     {
-        var isNegative = x.raw < 0;
+        var isNegative = x.Raw < 0;
         var absX = Abs(x);
 
         long result;
         if (absX <= One)
         {
-            result = AtanFromNormalized(absX.raw);
+            result = AtanFromNormalized(absX.Raw);
         }
         else
         {
             // Use identity: atan(x) = pi/2 - atan(1/x)
-            result = PiHalfRaw - AtanFromNormalized((One / absX).raw);
+            result = PiHalfRaw - AtanFromNormalized((One / absX).Raw);
         }
 
         return new Fixed(isNegative ? -result : result);

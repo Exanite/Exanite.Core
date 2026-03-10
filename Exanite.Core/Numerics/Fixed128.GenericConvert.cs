@@ -4,19 +4,19 @@ using System.Numerics;
 
 namespace Exanite.Core.Numerics;
 
-public partial struct Fixed
+public partial struct Fixed128
 {
     // Create
     // These are based on .NET's own implementation: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Int32.cs,718
     // The implementation seems to be the same for all types
     // Note how we have to check both directions
 
-    public static Fixed CreateChecked<TOther>(TOther value) where TOther : INumberBase<TOther>
+    public static Fixed128 CreateChecked<TOther>(TOther value) where TOther : INumberBase<TOther>
     {
-        Fixed result;
-        if (typeof(TOther) == typeof(Fixed))
+        Fixed128 result;
+        if (typeof(TOther) == typeof(Fixed128))
         {
-            result = (Fixed)(object)value;
+            result = (Fixed128)(object)value;
         }
         else if (!TryConvertFromChecked(value, out result) && !TOther.TryConvertToChecked(value, out result))
         {
@@ -26,12 +26,12 @@ public partial struct Fixed
         return result;
     }
 
-    public static Fixed CreateSaturating<TOther>(TOther value) where TOther : INumberBase<TOther>
+    public static Fixed128 CreateSaturating<TOther>(TOther value) where TOther : INumberBase<TOther>
     {
-        Fixed result;
-        if (typeof(TOther) == typeof(Fixed))
+        Fixed128 result;
+        if (typeof(TOther) == typeof(Fixed128))
         {
-            result = (Fixed)(object)value;
+            result = (Fixed128)(object)value;
         }
         else if (!TryConvertFromSaturating(value, out result) && !TOther.TryConvertToSaturating(value, out result))
         {
@@ -41,12 +41,12 @@ public partial struct Fixed
         return result;
     }
 
-    public static Fixed CreateTruncating<TOther>(TOther value) where TOther : INumberBase<TOther>
+    public static Fixed128 CreateTruncating<TOther>(TOther value) where TOther : INumberBase<TOther>
     {
-        Fixed result;
-        if (typeof(TOther) == typeof(Fixed))
+        Fixed128 result;
+        if (typeof(TOther) == typeof(Fixed128))
         {
-            result = (Fixed)(object)value;
+            result = (Fixed128)(object)value;
         }
         else if (!TryConvertFromTruncating(value, out result) && !TOther.TryConvertToTruncating(value, out result))
         {
@@ -64,19 +64,19 @@ public partial struct Fixed
 
     // TryConvertFrom
 
-    public static bool TryConvertFromChecked<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>
+    public static bool TryConvertFromChecked<TOther>(TOther value, out Fixed128 result) where TOther : INumberBase<TOther>
     {
         if (TOther.IsInteger(value))
         {
-            var longValue = long.CreateChecked(value);
-            result = new Fixed(checked(longValue * OneRaw));
+            var int128Value = Int128.CreateChecked(value);
+            result = new Fixed128(checked(int128Value * OneRaw));
             return true;
         }
 
         try
         {
             var decimalValue = decimal.CreateChecked(value);
-            result = new Fixed(checked((long)(decimalValue * OneRaw)));
+            result = new Fixed128(checked((Int128)(decimalValue * OneRaw)));
             return true;
         }
         catch (NotSupportedException)
@@ -86,24 +86,24 @@ public partial struct Fixed
         }
     }
 
-    public static bool TryConvertFromSaturating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>
+    public static bool TryConvertFromSaturating<TOther>(TOther value, out Fixed128 result) where TOther : INumberBase<TOther>
     {
         if (TOther.IsInteger(value))
         {
-            var longValue = long.CreateSaturating(value);
-            if (longValue > (long)MaxValue)
+            var int128Value = Int128.CreateSaturating(value);
+            if (int128Value > (Int128)MaxValue)
             {
                 result = MaxValue;
                 return true;
             }
 
-            if (longValue < (long)MinValue)
+            if (int128Value < (Int128)MinValue)
             {
                 result = MinValue;
                 return true;
             }
 
-            result = new Fixed(longValue * OneRaw);
+            result = new Fixed128(int128Value * OneRaw);
             return true;
         }
 
@@ -122,7 +122,7 @@ public partial struct Fixed
                 return true;
             }
 
-            result = new Fixed((long)(decimalValue * OneRaw));
+            result = new Fixed128((Int128)(decimalValue * OneRaw));
             return true;
         }
         catch (NotSupportedException)
@@ -132,7 +132,7 @@ public partial struct Fixed
         }
     }
 
-    public static bool TryConvertFromTruncating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>
+    public static bool TryConvertFromTruncating<TOther>(TOther value, out Fixed128 result) where TOther : INumberBase<TOther>
     {
         // Not going to support truncating conversation
         return TryConvertFromSaturating(value, out result);
@@ -141,19 +141,19 @@ public partial struct Fixed
     // TryConvertTo
     // Similar to the Create methods, we have to check both directions here
 
-    public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
+    public static bool TryConvertToChecked<TOther>(Fixed128 value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
         var decimalValue = (decimal)value.Raw / OneRaw;
         return TOther.TryConvertFromChecked(decimalValue, out result) || TryConvertFromCheckedFromDecimal<TOther, decimal>(decimalValue, out result);
     }
 
-    public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
+    public static bool TryConvertToSaturating<TOther>(Fixed128 value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
         var decimalValue = (decimal)value.Raw / OneRaw;
         return TOther.TryConvertFromSaturating(decimalValue, out result) || TryConvertFromSaturatingFromDecimal<TOther, decimal>(decimalValue, out result);
     }
 
-    public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
+    public static bool TryConvertToTruncating<TOther>(Fixed128 value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
         var decimalValue = (decimal)value.Raw / OneRaw;
         return TOther.TryConvertFromTruncating(decimalValue, out result) || TryConvertFromTruncatingFromDecimal<TOther, decimal>(decimalValue, out result);

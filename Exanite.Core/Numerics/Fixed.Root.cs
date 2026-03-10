@@ -12,7 +12,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
 
     public static Fixed Sqrt(Fixed x)
     {
-        return Sqrt((Int128)x.raw << (Sqrt128InputShift - Shift));
+        return Sqrt((Int128)x.Raw << (Sqrt128InputShift - Shift));
     }
 
     /// <summary>
@@ -71,27 +71,27 @@ public partial struct Fixed // : IRootFunctions<Fixed>
 
     public static Fixed Hypot(Fixed x, Fixed y)
     {
-        var x2 = (Int128)x.raw * x.raw;
-        var y2 = (Int128)y.raw * y.raw;
+        var x2 = (Int128)x.Raw * x.Raw;
+        var y2 = (Int128)y.Raw * y.Raw;
         var sum = x2 + y2;
         return Sqrt(sum);
     }
 
     public static Fixed Hypot(Fixed x, Fixed y, Fixed z)
     {
-        var x2 = (Int128)x.raw * x.raw;
-        var y2 = (Int128)y.raw * y.raw;
-        var z2 = (Int128)z.raw * z.raw;
+        var x2 = (Int128)x.Raw * x.Raw;
+        var y2 = (Int128)y.Raw * y.Raw;
+        var z2 = (Int128)z.Raw * z.Raw;
         var sum = x2 + y2 + z2;
         return Sqrt(sum);
     }
 
     public static Fixed Hypot(Fixed x, Fixed y, Fixed z, Fixed w)
     {
-        var x2 = (Int128)x.raw * x.raw;
-        var y2 = (Int128)y.raw * y.raw;
-        var z2 = (Int128)z.raw * z.raw;
-        var w2 = (Int128)w.raw * w.raw;
+        var x2 = (Int128)x.Raw * x.Raw;
+        var y2 = (Int128)y.Raw * y.Raw;
+        var z2 = (Int128)z.Raw * z.Raw;
+        var w2 = (Int128)w.Raw * w.Raw;
         var sum = x2 + y2 + z2 + w2;
         return Sqrt(sum);
     }
