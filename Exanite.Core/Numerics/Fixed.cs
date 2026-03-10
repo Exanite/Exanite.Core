@@ -295,6 +295,7 @@ public readonly partial struct Fixed :
 
     // Magnitude methods
     public static Fixed Sign(Fixed value) => new(long.Sign(value.raw) * OneRaw);
+    public static Fixed SignNonZero(Fixed value) => new(((value.raw >> 63) | 1) * OneRaw);
     public static Fixed Abs(Fixed value) => new(long.Abs(value.raw));
     public static Fixed MaxMagnitude(Fixed x, Fixed y) => Abs(x) > Abs(y) ? x : y;
     public static Fixed MaxMagnitudeNumber(Fixed x, Fixed y) => MaxMagnitude(x, y);

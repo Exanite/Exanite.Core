@@ -141,7 +141,7 @@ public partial struct Fixed
 
         if (x < Zero)
         {
-            return Atan(y / x) + Sign(y) * Pi;
+            return Atan(y / x) + SignNonZero(y) * Pi;
         }
 
         // Case: x == 0

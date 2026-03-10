@@ -133,6 +133,17 @@ public class FixedTests
     }
 
     [Theory]
+    [InlineData(1, 1)]
+    [InlineData(0, 1)]
+    [InlineData(-1, -1)]
+    [InlineData(123.456, 1)]
+    [InlineData(-123.456, -1)]
+    public void SignNonZero_ReturnsExpectedValue(double input, int expected)
+    {
+        Assert.Equal(expected, (int)Fixed.SignNonZero((Fixed)input));
+    }
+
+    [Theory]
     [InlineData(1, 5, 1)]
     [InlineData(1, 4, 1)]
     [InlineData(3, 14159, 3)]
@@ -412,6 +423,17 @@ public class FixedTests
         }
     }
 
+    [Theory]
+    [InlineData(0, 0)]
+    [InlineData(1, 0)]
+    [InlineData(-1, 0)]
+    [InlineData(0, 1)]
+    [InlineData(0, -1)]
+    public void Atan2_ReturnsExpectedValue_ForPointsOnAxes(double x, double y)
+    {
+        AssertEqual(x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
+    }
+
     [Fact]
     public void Atan_ReturnsExpectedValue_ForWideRange()
     {
@@ -461,6 +483,17 @@ public class FixedTests
             Actual:      {actual}
             Difference:  {(decimal)M.Abs(expected - actual)}
             Tolerance:   {comparer.Tolerance}
+            """);
+    }
+
+    private void AssertEqual(double x, double y, double expected, double actual, FloatingPointComparer comparer)
+    {
+        Assert.True(comparer.Equals(expected, actual), $"""
+            Failed for input: ({x}, {y})
+            Expected:   {expected}
+            Actual:     {actual}
+            Difference: {(decimal)M.Abs(expected - actual)}
+            Tolerance:  {comparer.Tolerance}
             """);
     }
 
