@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
@@ -169,6 +170,35 @@ public partial struct Fixed// : ITrigonometricFunctions<Fixed>
         }
 
         return new Fixed(isNegative ? -result : result);
+    }
+
+    public static Fixed Asin(Fixed x)
+    {
+        if (x > One || x < -One)
+        {
+            GuardUtility.Throw("Input must be in the range [-1, 1]");
+        }
+
+        if (x == One)
+        {
+            return PiHalf;
+        }
+
+        if (x == -One)
+        {
+            return -PiHalf;
+        }
+
+        // Use identity: asin(x) = atan(x / sqrt(1 - x^2))
+        var x2 = x * x;
+        var divisor = Sqrt(One - x2);
+        return Atan(x / divisor);
+    }
+
+    public static Fixed Acos(Fixed x)
+    {
+        // Use identity: acos(x) = pi/2 - asin(x)
+        return PiHalf - Asin(x);
     }
 
     /// <summary>

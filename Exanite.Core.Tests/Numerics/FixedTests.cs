@@ -407,6 +407,32 @@ public class FixedTests
         }
     }
 
+    [Fact]
+    public void Asin_ReturnsExpectedValue_ForWideRange()
+    {
+        var iterations = 1234;
+        var from = -1.0;
+        var to = 1.0;
+        for (var i = 0; i < iterations; i++)
+        {
+            var input = M.Lerp(from, to, (double)i / (iterations - 1));
+            AssertEqual(i, input, double.Asin(input), (double)Fixed.Asin((Fixed)input), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
+        }
+    }
+
+    [Fact]
+    public void Acos_ReturnsExpectedValue_ForWideRange()
+    {
+        var iterations = 1234;
+        var from = -1.0;
+        var to = 1.0;
+        for (var i = 0; i < iterations; i++)
+        {
+            var input = M.Lerp(from, to, (double)i / (iterations - 1));
+            AssertEqual(i, input, double.Acos(input), (double)Fixed.Acos((Fixed)input), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
+        }
+    }
+
     private void AssertEqual(int i, double input, double expected, double actual, FloatingPointComparer comparer)
     {
         Assert.True(comparer.Equals(expected, actual), $"""
