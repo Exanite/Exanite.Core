@@ -291,4 +291,16 @@ public readonly partial struct Fixed128 :
     public static Fixed128 Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider);
     public static Fixed128 Parse(string s, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, provider);
     public static Fixed128 Parse(string s, NumberStyles style, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, style, provider);
+
+    // ToFromRaw
+
+    public Int128 ToRaw()
+    {
+        return Raw;
+    }
+
+    public static Fixed128 FromRaw(Int128 raw)
+    {
+        return new Fixed128(raw);
+    }
 }

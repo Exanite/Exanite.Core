@@ -355,4 +355,16 @@ public readonly partial struct Fixed :
     public static Fixed Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider);
     public static Fixed Parse(string s, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, provider);
     public static Fixed Parse(string s, NumberStyles style, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, style, provider);
+
+    // ToFromRaw
+
+    public long ToRaw()
+    {
+        return Raw;
+    }
+
+    public static Fixed FromRaw(long raw)
+    {
+        return new Fixed(raw);
+    }
 }
