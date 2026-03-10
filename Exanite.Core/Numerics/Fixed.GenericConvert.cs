@@ -20,7 +20,7 @@ public partial struct Fixed
         }
         else if (!TryConvertFromChecked(value, out result) && !TOther.TryConvertToChecked(value, out result))
         {
-            throw new NotSupportedException($"Failed to create a fixed point value from the provided value: {value}");
+            ThrowNotSupportedExceptionForCreate(value);
         }
 
         return result;
@@ -35,7 +35,7 @@ public partial struct Fixed
         }
         else if (!TryConvertFromSaturating(value, out result) && !TOther.TryConvertToSaturating(value, out result))
         {
-            throw new NotSupportedException($"Failed to create a fixed point value from the provided value: {value}");
+            ThrowNotSupportedExceptionForCreate(value);
         }
 
         return result;
@@ -50,10 +50,16 @@ public partial struct Fixed
         }
         else if (!TryConvertFromTruncating(value, out result) && !TOther.TryConvertToTruncating(value, out result))
         {
-            throw new NotSupportedException($"Failed to create a fixed point value from the provided value: {value}");
+            ThrowNotSupportedExceptionForCreate(value);
         }
 
         return result;
+    }
+
+    [DoesNotReturn]
+    private static void ThrowNotSupportedExceptionForCreate<TOther>(TOther value) where TOther : INumberBase<TOther>
+    {
+        throw new NotSupportedException($"Failed to create a fixed point value from the provided value: {value}");
     }
 
     // TryConvertFrom
