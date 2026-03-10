@@ -5,6 +5,8 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed128
 {
+    // This is called "fast" because it's designed to be used for Q48.16,
+    // which does not need as much precision
     public static Fixed128 SqrtFast(Fixed128 x)
     {
         if (x < 0)
@@ -18,8 +20,10 @@ public partial struct Fixed128
         }
 
         // This uses Q88.40 for better precision
-        // However, note that this was originally designed for Fixed (Q48.16),
+        // However, note that this was originally designed for Fixed (Q48.16)
+        // (and still is intended to be primarily used for Q48.16),
         // so the benefits aren't as big for Fixed128 (Q96.32)
+        //
         // This must be even
         const int internalShift = 40;
 
