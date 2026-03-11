@@ -1,11 +1,10 @@
 using System;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
 public partial struct Fixed // : IRootFunctions<Fixed>
 {
-    // public static Fixed RootN(Fixed x, int n);
-
     public static Fixed Sqrt(Fixed x)
     {
         return (Fixed)Fixed128.SqrtFast(x);
@@ -14,6 +13,39 @@ public partial struct Fixed // : IRootFunctions<Fixed>
     public static Fixed Cbrt(Fixed x)
     {
         return (Fixed)Fixed128.CbrtFast(x);
+    }
+
+    public static Fixed RootN(Fixed x, int n)
+    {
+        if (x < 0 && ((n & 1) == 0))
+        {
+            GuardUtility.Throw($"Cannot take an even root of a negative number");
+        }
+
+        switch (n)
+        {
+            case 0:
+            {
+                GuardUtility.Throw("Cannot take the 0th root of a number");
+                return 0;
+            }
+            case 1:
+            {
+                return x;
+            }
+            case 2:
+            {
+                return Sqrt(x);
+            }
+            case 3:
+            {
+                return Cbrt(x);
+            }
+        }
+
+        // Use identity:
+        // root_n(x) = 2^(log2(x) / n)
+        return Exp2(Log2(x) / n);
     }
 
     public static Fixed Hypot(Fixed x, Fixed y)

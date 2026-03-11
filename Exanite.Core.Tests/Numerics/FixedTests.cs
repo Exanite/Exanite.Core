@@ -691,6 +691,50 @@ public class FixedTests
         }
     }
 
+    [Fact]
+    public void RootN_ReturnsExpectedValue_ForWideRange()
+    {
+        var current = 0.25;
+        var multiplier = 1.025;
+        for (var i = 0; i < 150; i++)
+        {
+            current *= multiplier;
+            var root = (int)(current * 100) % 10;
+            if (root == 0)
+            {
+                root = 1;
+            }
+
+            var expected = double.RootN(current, root);
+            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.00003M);
+            AssertEqualRootN(i, current, root, expected, (double)Fixed.RootN((Fixed)current, root), comparer);
+        }
+    }
+
+    [Fact]
+    public void RootN_BehavesForBoundaryValues()
+    {
+        Assert.Throws<GuardException>(() =>
+        {
+            Fixed.RootN(1, 0);
+        });
+
+        Assert.Throws<GuardException>(() =>
+        {
+            Fixed.RootN(-1, 2);
+        });
+
+        Assert.Throws<GuardException>(() =>
+        {
+            Fixed.RootN(-1, 4);
+        });
+
+        Assert.Throws<GuardException>(() =>
+        {
+            Fixed.RootN(-1, 6);
+        });
+    }
+
     private void AssertEqual(int i, double input, double expected, double actual, FloatingPointComparer comparer)
     {
         Assert.True(comparer.Equals(expected, actual), $"""
@@ -743,6 +787,18 @@ public class FixedTests
         Assert.True(comparer.Equals(expected, actual), $"""
             Failed at i: {i}
             Input:       Pow({powBase}, {exponent})
+            Expected:    {expected}
+            Actual:      {actual}
+            Difference:  {(decimal)M.Abs(expected - actual)}
+            Tolerance:   {comparer.Tolerance}
+            """);
+    }
+
+    private void AssertEqualRootN(int i, double input, double root, double expected, double actual, FloatingPointComparer comparer)
+    {
+        Assert.True(comparer.Equals(expected, actual), $"""
+            Failed at i: {i}
+            Input:       RootN({input}, {root})
             Expected:    {expected}
             Actual:      {actual}
             Difference:  {(decimal)M.Abs(expected - actual)}
