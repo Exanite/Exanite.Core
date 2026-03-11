@@ -16,11 +16,12 @@ public partial struct Fixed
     private const int Log10TwoRaw = 19728;
 
     // Exp2 Taylor Series Constants
-    private const ushort Exp2Term1 = 45427;
-    private const ushort Exp2Term2 = 15744;
-    private const ushort Exp2Term3 = 3638;
-    private const ushort Exp2Term4 = 631;
-    private const ushort Exp2Term5 = 88;
+    private const int Exp2TermShift = 32;
+    private const uint Exp2Term1 = 2977044472;
+    private const uint Exp2Term2 = 1031764992;
+    private const uint Exp2Term3 = 238388332;
+    private const uint Exp2Term4 = 41309550;
+    private const uint Exp2Term5 = 5726720;
 
     /// <summary>
     /// Q4.60 format.
