@@ -682,6 +682,30 @@ public class FixedTests
     }
 
     [Fact]
+    public void Pow_ReturnsExpectedValue_ForSmallIntegerExponents()
+    {
+        for (var exponent = -3; exponent <= 3; exponent++)
+        {
+            var current = 0.25;
+            var multiplier = 1.025;
+            for (var i = 0; i < 150; i++)
+            {
+                current *= multiplier;
+
+                {
+                    var expected = double.Pow(current, exponent);
+                    AssertEqualPowBase(i, current, exponent, expected, (double)Fixed.Pow((Fixed)current, exponent), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+                }
+
+                {
+                    var expected = double.Pow(-current, exponent);
+                    AssertEqualPowBase(i, -current, exponent, expected, (double)Fixed.Pow((Fixed)(-current), exponent), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+                }
+            }
+        }
+    }
+
+    [Fact]
     public void RootN_ReturnsExpectedValue_ForWideRange()
     {
         var current = 0.25;
@@ -710,6 +734,36 @@ public class FixedTests
                     var expected = double.RootN(-current, root);
                     var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.00006M, FloatingPointComparer.ToleranceFromPrecision(BaseExpectedPrecision));
                     AssertEqualRootN(i, -current, root, expected, (double)Fixed.RootN((Fixed)(-current), root), comparer);
+                }
+            }
+        }
+    }
+
+    [Fact]
+    public void RootN_ReturnsExpectedValue_ForSmallIntegerExponents()
+    {
+        for (var root = -3; root <= 3; root++)
+        {
+            if (root == 0)
+            {
+                continue;
+            }
+
+            var current = 0.25;
+            var multiplier = 1.025;
+            for (var i = 0; i < 150; i++)
+            {
+                current *= multiplier;
+
+                {
+                    var expected = double.RootN(current, root);
+                    AssertEqualPowBase(i, current, root, expected, (double)Fixed.RootN((Fixed)current, root), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+                }
+
+                if (!int.IsEvenInteger(root))
+                {
+                    var expected = double.RootN(-current, root);
+                    AssertEqualPowBase(i, -current, root, expected, (double)Fixed.RootN((Fixed)(-current), root), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
                 }
             }
         }
