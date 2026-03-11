@@ -5,21 +5,23 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed
 {
-    private const long ERaw = 178145;
-    private const long PiRaw = 205887;
-    private const long PiHalfRaw = 102944;
-    private const long PiFourthRaw = 51472;
-    private const long PiInverseRaw = 20861;
-    private const long TauRaw = 411775;
+    private const int ERaw = 178145;
+    private const int PiRaw = 205887;
+    private const int PiHalfRaw = 102944;
+    private const int PiFourthRaw = 51472;
+    private const int PiInverseRaw = 20861;
+    private const int TauRaw = 411775;
 
-    private const long LogETwoRaw = 45426;
-    private const long Log10TwoRaw = 19728;
+    private const int LogETwoRaw = 45426;
+    private const int Log10TwoRaw = 19728;
 
     // Exp2 Taylor Series Constants
-    private const long Exp2Term1 = 45426;
-    private const long Exp2Term2 = 15743;
-    private const long Exp2Term3 = 3638;
-    private const long Exp2Term4 = 630;
+    private const ushort Exp2Term1 = 45427;
+    private const ushort Exp2Term2 = 15744;
+    private const ushort Exp2Term3 = 3638;
+    private const ushort Exp2Term4 = 631;
+    private const ushort Exp2Term5 = 88;
+    private const ushort Exp2Term6 = 11;
 
     /// <summary>
     /// Q4.60 format.

@@ -39,22 +39,31 @@ public class FixedLookupsGenerator
         using (builder.EnterScope("public partial struct Fixed"))
         {
             builder.AppendBlock($"""
-                private const long ERaw = {CalculateRaw(double.E)};
-                private const long PiRaw = {CalculateRaw(double.Pi)};
-                private const long PiHalfRaw = {CalculateRaw(double.Pi / 2)};
-                private const long PiFourthRaw = {CalculateRaw(double.Pi / 4)};
-                private const long PiInverseRaw = {CalculateRaw(1 / double.Pi)};
-                private const long TauRaw = {CalculateRaw(double.Tau)};
+                private const int ERaw = {CalculateRaw(double.E)};
+                private const int PiRaw = {CalculateRaw(double.Pi)};
+                private const int PiHalfRaw = {CalculateRaw(double.Pi / 2)};
+                private const int PiFourthRaw = {CalculateRaw(double.Pi / 4)};
+                private const int PiInverseRaw = {CalculateRaw(1 / double.Pi)};
+                private const int TauRaw = {CalculateRaw(double.Tau)};
 
-                private const long LogETwoRaw = {CalculateRaw(double.Log(2))};
-                private const long Log10TwoRaw = {CalculateRaw(double.Log10(2))};
+                private const int LogETwoRaw = {CalculateRaw(double.Log(2))};
+                private const int Log10TwoRaw = {CalculateRaw(double.Log10(2))};
+                """);
 
+            // These round up instead since Taylor series will always underestimate
+            builder.AppendSeparation();
+            builder.AppendBlock($"""
                 // Exp2 Taylor Series Constants
-                private const long Exp2Term1 = {CalculateRaw(double.Log(2))};
-                private const long Exp2Term2 = {CalculateRaw(double.Pow(double.Log(2), 2) / 2)};
-                private const long Exp2Term3 = {CalculateRaw(double.Pow(double.Log(2), 3) / 6)};
-                private const long Exp2Term4 = {CalculateRaw(double.Pow(double.Log(2), 4) / 24)};
+                private const ushort Exp2Term1 = {CalculateRawCeiling(double.Log(2))};
+                private const ushort Exp2Term2 = {CalculateRawCeiling(double.Pow(double.Log(2), 2) / 2)};
+                private const ushort Exp2Term3 = {CalculateRawCeiling(double.Pow(double.Log(2), 3) / 6)};
+                private const ushort Exp2Term4 = {CalculateRawCeiling(double.Pow(double.Log(2), 4) / 24)};
+                private const ushort Exp2Term5 = {CalculateRawCeiling(double.Pow(double.Log(2), 5) / 120)};
+                private const ushort Exp2Term6 = {CalculateRawCeiling(double.Pow(double.Log(2), 6) / 720)};
+                """);
 
+            builder.AppendSeparation();
+            builder.AppendBlock($"""
                 /// <summary>
                 /// Q4.60 format.
                 /// </summary>
@@ -77,6 +86,11 @@ public class FixedLookupsGenerator
         long CalculateRaw(double constant)
         {
             return (long)double.Round(constant * (1L << Fixed.Shift));
+        }
+
+        long CalculateRawCeiling(double constant)
+        {
+            return (long)double.Ceiling(constant * (1L << Fixed.Shift));
         }
     }
 
