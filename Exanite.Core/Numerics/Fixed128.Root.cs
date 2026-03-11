@@ -22,9 +22,9 @@ public partial struct Fixed128
             return 0;
         }
 
-        // Use Q88.40 for better precision
+        // Use Q86.42 for better precision
         // This must be even
-        const int internalShift = 40;
+        const int internalShift = 42;
 
         // Normalize x using an even shift so that the shift can be safely halved later
         // This leads to x being in the interval [0.5, 2)
