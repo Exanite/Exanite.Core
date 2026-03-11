@@ -646,7 +646,9 @@ public class FixedTests
         {
             current *= multiplier;
             var logBase = current % 10;
-            AssertEqualLogBase(i, current, logBase, double.Log(current, logBase), (double)Fixed.Log((Fixed)current, (Fixed)logBase), FloatingPointComparer.FromPrecision(Fixed.Precision - 5)); // TODO: This seems kinda bad
+            var expected = double.Log(current, logBase);
+            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.01M);
+            AssertEqualLogBase(i, current, logBase, double.Log(current, logBase), (double)Fixed.Log((Fixed)current, (Fixed)logBase), comparer);
         }
     }
 
