@@ -322,7 +322,7 @@ public class FixedLookupsGenerator
                 builder.AppendSeparation();
                 builder.AppendLine($"private const int SqrtLutBits = {lookupBits};");
                 builder.AppendLine($"private const int SqrtLutOffset = {lookupOffset};");
-                builder.AppendLine("private const int SqrtLutShift = 16;");
+                builder.AppendLine($"private const int SqrtLutShift = {Fixed.FractionalBitCount};");
                 using (builder.Indent("private static readonly ImmutableArray<uint> SqrtLut = ["))
                 {
                     foreach (var chunk in tableEntries.Chunk(valuesPerLine))
