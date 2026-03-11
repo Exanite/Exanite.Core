@@ -645,7 +645,7 @@ public class FixedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            var logBase = current % 10;
+            var logBase = (current * 100) % 10;
             var expected = double.Log(current, logBase);
             var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.01M);
             AssertEqualLogBase(i, current, logBase, expected, (double)Fixed.Log((Fixed)current, (Fixed)logBase), comparer);
@@ -677,14 +677,14 @@ public class FixedTests
     }
 
     [Fact]
-    public void Pow2_ReturnsExpectedValue_ForWideRange()
+    public void Pow_ReturnsExpectedValue_ForWideRange()
     {
         var current = 0.25;
         var multiplier = 1.025;
         for (var i = 0; i < 150; i++)
         {
             current *= multiplier;
-            var exponent = current % 10;
+            var exponent = (current * 100) % 10;
             var expected = double.Pow(current, exponent);
             var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0005M);
             AssertEqualPowBase(i, current, exponent, expected, (double)Fixed.Pow((Fixed)current, (Fixed)exponent), comparer);
