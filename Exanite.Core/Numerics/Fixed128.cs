@@ -20,7 +20,7 @@ public readonly partial struct Fixed128 :
     public const int IntegralBitCount = BitCount - Shift;
     public const int FractionalBitCount = Shift;
 
-    public const int Shift = 32;
+    public const int Shift = Fixed.Shift * 2;
     private const long Mask = OneRaw - 1;
 
     private const long HalfRaw = OneRaw / 2;
