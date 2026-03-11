@@ -34,7 +34,7 @@ public partial struct Fixed128
         var shiftNormalize = distanceToOneBit & ~1;
         var shiftInitial = shiftInputToInternal + shiftNormalize;
 
-        var normalizedX = shiftInitial >= 0 ? x.Raw << shiftInitial : x.Raw >> -shiftInitial;
+        var normalizedX = shiftInitial < 0 ? x.Raw >> -shiftInitial : x.Raw << shiftInitial;
         AssertExpectedRange(normalizedX, internalShift, 0.5M, 2M);
 
         // Calculate LUT index of initial guess
@@ -68,7 +68,7 @@ public partial struct Fixed128
         var shiftFinal = shiftMultiplication + shiftDenormalize + shiftInternalToOutput;
 
         var normalizedResult = normalizedX * y;
-        var fixed128Value = shiftFinal >= 0 ? normalizedResult >> shiftFinal : normalizedResult << -shiftFinal;
+        var fixed128Value = shiftFinal < 0 ? normalizedResult << -shiftFinal : normalizedResult >> shiftFinal;
         return new Fixed128(fixed128Value);
     }
 
@@ -99,7 +99,7 @@ public partial struct Fixed128
         var shiftNormalize = distanceToOneBit - (distanceToOneBit % 3 + 3) % 3;
         var shiftInitial = shiftInputToInternal + shiftNormalize;
 
-        var normalizedX = shiftInitial >= 0 ? absX << shiftInitial : absX >> -shiftInitial;
+        var normalizedX = shiftInitial < 0 ? absX >> -shiftInitial : absX << shiftInitial;
         AssertExpectedRange(normalizedX, internalShift, 0.25M, 2M);
 
         // TODO
@@ -139,7 +139,7 @@ public partial struct Fixed128
         var shiftFinal = shiftDenormalize + shiftInternalToOutput;
 
         var normalizedResult = y;
-        var fixed128Value = shiftFinal >= 0 ? normalizedResult >> shiftFinal : normalizedResult << -shiftFinal;
+        var fixed128Value = shiftFinal < 0 ? normalizedResult << -shiftFinal : normalizedResult >> shiftFinal;
         fixed128Value = isNegative ? -fixed128Value : fixed128Value;
         return new Fixed128(fixed128Value);
     }
