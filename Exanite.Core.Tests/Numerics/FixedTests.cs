@@ -40,9 +40,9 @@ public class FixedTests
     [InlineData(-1, 1, 1, -1.1)]
     [InlineData(3, 14159, 5, 3.14159)]
     [InlineData(-3, 14159, 5, -3.14159)]
-    public void FromParts_ReturnsExpectedResult_IntOverload(int integral, int fractional, int decimalPlaces, double expected)
+    public void FromDecimal_ReturnsExpectedResult_IntOverload(int integral, int fractional, int decimalPlaces, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional, decimalPlaces), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+        Assert.Equal(expected, (double)Fixed.FromDecimal(integral, fractional, decimalPlaces), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Theory]
@@ -56,9 +56,9 @@ public class FixedTests
     [InlineData(-1, 1, 1, -1.1)]
     [InlineData(3, 14159, 5, 3.14159)]
     [InlineData(-3, 14159, 5, -3.14159)]
-    public void CreateParts_ReturnsExpectedResult_LongOverload(long integral, int fractional, int decimalPlaces, double expected)
+    public void FromDecimal_ReturnsExpectedResult_LongOverload(long integral, int fractional, int decimalPlaces, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional, decimalPlaces), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+        Assert.Equal(expected, (double)Fixed.FromDecimal(integral, fractional, decimalPlaces), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Theory]

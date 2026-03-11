@@ -122,8 +122,8 @@ public readonly partial struct Fixed :
     public static explicit operator double(Fixed value) => (double)value.Raw / OneRaw;
     public static explicit operator decimal(Fixed value) => (decimal)value.Raw / OneRaw;
 
-    /// <inheritdoc cref="FromParts(long,int,int)"/>
-    public static Fixed FromParts(int integral, int fractional, int decimalPlaces)
+    /// <inheritdoc cref="FromDecimal(long,int,int)"/>
+    public static Fixed FromDecimal(int integral, int fractional, int decimalPlaces)
     {
         GuardUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
         GuardUtility.IsFalse(decimalPlaces <= 0 && fractional != 0, "Decimal places must be strictly positive when the fractional part is non-zero");
@@ -149,7 +149,7 @@ public readonly partial struct Fixed :
     /// <br/>
     /// Eg: FromParts(1, 123, 3) -> 1.123
     /// </summary>
-    public static Fixed FromParts(long integral, int fractional, int decimalPlaces)
+    public static Fixed FromDecimal(long integral, int fractional, int decimalPlaces)
     {
         GuardUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
         GuardUtility.IsFalse(decimalPlaces <= 0 && fractional != 0, "Decimal places must be strictly positive when the fractional part is non-zero");

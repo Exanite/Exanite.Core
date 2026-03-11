@@ -119,7 +119,7 @@ public readonly partial struct Fixed128 :
     /// <br/>
     /// Eg: FromParts(1, 123, 3) -> 1.123
     /// </summary>
-    public static Fixed128 FromParts(Int128 integral, int fractional, int decimalPlaces)
+    public static Fixed128 FromDecimal(Int128 integral, int fractional, int decimalPlaces)
     {
         GuardUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
         GuardUtility.IsFalse(decimalPlaces <= 0 && fractional != 0, "Decimal places must be strictly positive when the fractional part is non-zero");
