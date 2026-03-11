@@ -559,12 +559,12 @@ public class FixedTests
     }
 
     [Fact]
-    public void Log2_ReturnsRoughly16ForEpsilon()
+    public void Log2_ReturnsRoughlyShiftForEpsilon()
     {
-        // Note it does not actually return 16
+        // Note it does not actually return the Shift value
         var result = (double)Fixed.Log2(Fixed.Epsilon);
-        Assert.Equal(-16, result, FloatingPointComparer.FromPrecision(Fixed.Precision));
-        Assert.NotEqual(-16, result);
+        Assert.Equal(-Fixed.Shift, result, FloatingPointComparer.FromPrecision(Fixed.Precision));
+        Assert.NotEqual(-Fixed.Shift, result);
     }
 
     [Fact]
