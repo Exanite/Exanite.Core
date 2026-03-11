@@ -206,7 +206,7 @@ public class FixedLookupsGenerator
             // x_normalized is in the range [0.5, 2)
             //
             // The size of the LUT affects performance
-            // The size does not affect precision
+            // The size does not affect precision (unless we don't have enough iterations to convert)
             {
                 // Note that we drop the first quarter of the table here
                 var lookupBits = 10;
@@ -218,11 +218,11 @@ public class FixedLookupsGenerator
                     .Select(i => M.Lerp(0.5, 2, (double)i / lookupEntryCount))
                     .ToList();
 
-                var inverseRootValues = xNormalizedValues
+                var inverseSqrtValues = xNormalizedValues
                     .Select(x => 1 / double.Sqrt(x))
                     .ToList();
 
-                var tableEntries = inverseRootValues.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).Select(x => x.ToString()).ToList();
+                var tableEntries = inverseSqrtValues.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).Select(x => x.ToString()).ToList();
                 var entryMaxLength = tableEntries.Max(x => x.Length);
                 var valuesPerLine = 16;
 
@@ -231,6 +231,46 @@ public class FixedLookupsGenerator
                 builder.AppendLine($"private const int SqrtLutOffset = {lookupOffset};");
                 builder.AppendLine("private const int SqrtLutShift = 16;");
                 using (builder.Indent("private static readonly ImmutableArray<uint> SqrtLut = ["))
+                {
+                    foreach (var chunk in tableEntries.Chunk(valuesPerLine))
+                    {
+                        builder.AppendLine($"{string.Join(", ", chunk.Select(x => x.PadLeft(entryMaxLength)))},");
+                    }
+                }
+                builder.AppendLine("];");
+            }
+
+            // Cbrt lookup
+            // This stores initial guesses for y for the Direct Newton-Raphsom method
+            // The guesses have the value cbrt(x_normalized) and are indexed using the upper n bits of x_normalized
+            // x_normalized is in the range [0.25, 2)
+            //
+            // The size of the LUT affects performance
+            // The size does not affect precision (unless we don't have enough iterations to convert)
+            {
+                // Note that we drop the first eighth of the table here
+                var lookupBits = 10;
+                var lookupEntryCount = 1 << lookupBits;
+                var lookupOffset = lookupEntryCount / 8;
+                lookupEntryCount -= lookupOffset;
+
+                var xNormalizedValues = Enumerable.Range(0, lookupEntryCount)
+                    .Select(i => M.Lerp(0.25, 2, (double)i / lookupEntryCount))
+                    .ToList();
+
+                var cbrtValues = xNormalizedValues
+                    .Select(x => double.Cbrt(x))
+                    .ToList();
+
+                var tableEntries = cbrtValues.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).Select(x => x.ToString()).ToList();
+                var entryMaxLength = tableEntries.Max(x => x.Length);
+                var valuesPerLine = 16;
+
+                builder.AppendSeparation();
+                builder.AppendLine($"private const int CbrtLutBits = {lookupBits};");
+                builder.AppendLine($"private const int CbrtLutOffset = {lookupOffset};");
+                builder.AppendLine("private const int CbrtLutShift = 16;");
+                using (builder.Indent("private static readonly ImmutableArray<uint> CbrtLut = ["))
                 {
                     foreach (var chunk in tableEntries.Chunk(valuesPerLine))
                     {
