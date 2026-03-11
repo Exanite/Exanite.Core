@@ -648,7 +648,7 @@ public class FixedTests
             var logBase = current % 10;
             var expected = double.Log(current, logBase);
             var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.01M);
-            AssertEqualLogBase(i, current, logBase, double.Log(current, logBase), (double)Fixed.Log((Fixed)current, (Fixed)logBase), comparer);
+            AssertEqualLogBase(i, current, logBase, expected, (double)Fixed.Log((Fixed)current, (Fixed)logBase), comparer);
         }
     }
 
@@ -662,7 +662,7 @@ public class FixedTests
             current *= multiplier;
             var expected = double.Exp2(current);
             var comparer = FloatingPointComparer.FromTolerance(decimal.Max((decimal)expected * 0.0000105M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision)));
-            AssertEqual(i, current, double.Exp2(current), (double)Fixed.Exp2((Fixed)current), comparer);
+            AssertEqual(i, current, expected, (double)Fixed.Exp2((Fixed)current), comparer);
         }
     }
 
@@ -676,23 +676,26 @@ public class FixedTests
         Assert.Equal(0, Fixed.Exp2(-100));
     }
 
+    [Fact]
+    public void Pow2_ReturnsExpectedValue_ForWideRange()
+    {
+        var current = 0.25;
+        var multiplier = 1.025;
+        for (var i = 0; i < 150; i++)
+        {
+            current *= multiplier;
+            var exponent = current % 10;
+            var expected = double.Pow(current, exponent);
+            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0005M);
+            AssertEqualPowBase(i, current, exponent, expected, (double)Fixed.Pow((Fixed)current, (Fixed)exponent), comparer);
+        }
+    }
+
     private void AssertEqual(int i, double input, double expected, double actual, FloatingPointComparer comparer)
     {
         Assert.True(comparer.Equals(expected, actual), $"""
             Failed at i: {i}
             Input:       {input}
-            Expected:    {expected}
-            Actual:      {actual}
-            Difference:  {(decimal)M.Abs(expected - actual)}
-            Tolerance:   {comparer.Tolerance}
-            """);
-    }
-
-    private void AssertEqualLogBase(int i, double input, double logBase, double expected, double actual, FloatingPointComparer comparer)
-    {
-        Assert.True(comparer.Equals(expected, actual), $"""
-            Failed at i: {i}
-            Input:       Log({input}, {logBase})
             Expected:    {expected}
             Actual:      {actual}
             Difference:  {(decimal)M.Abs(expected - actual)}
@@ -716,6 +719,30 @@ public class FixedTests
         Assert.True(comparer.Equals(expected, actual), $"""
             Failed at i: {i}
             Input:       ({x}, {y})
+            Expected:    {expected}
+            Actual:      {actual}
+            Difference:  {(decimal)M.Abs(expected - actual)}
+            Tolerance:   {comparer.Tolerance}
+            """);
+    }
+
+    private void AssertEqualLogBase(int i, double input, double logBase, double expected, double actual, FloatingPointComparer comparer)
+    {
+        Assert.True(comparer.Equals(expected, actual), $"""
+            Failed at i: {i}
+            Input:       Log({input}, {logBase})
+            Expected:    {expected}
+            Actual:      {actual}
+            Difference:  {(decimal)M.Abs(expected - actual)}
+            Tolerance:   {comparer.Tolerance}
+            """);
+    }
+
+    private void AssertEqualPowBase(int i, double powBase, double exponent, double expected, double actual, FloatingPointComparer comparer)
+    {
+        Assert.True(comparer.Equals(expected, actual), $"""
+            Failed at i: {i}
+            Input:       Pow({powBase}, {exponent})
             Expected:    {expected}
             Actual:      {actual}
             Difference:  {(decimal)M.Abs(expected - actual)}

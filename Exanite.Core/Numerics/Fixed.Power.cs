@@ -4,7 +4,12 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed// : IPowerFunctions<Fixed>
 {
-    // public static Fixed Pow(Fixed x, Fixed y);
+    public static Fixed Pow(Fixed x, Fixed y)
+    {
+        // Use identity:
+        // x^y = 2^(y * log2(x))
+        return Exp2(y * Log2(x));
+    }
 
     public static Fixed Exp2(Fixed x)
     {
