@@ -310,17 +310,17 @@ public static partial class M
     /// <summary>
     /// Returns true if the value is even.
     /// </summary>
-    public static bool IsEven<T>(this T value) where T : IBinaryInteger<T>
+    public static bool IsEvenInteger<T>(this T value) where T : INumber<T>
     {
-        return value % T.CreateTruncating(2) == T.Zero;
+        return T.IsEvenInteger(value);
     }
 
     /// <summary>
     /// Returns true if the value is odd.
     /// </summary>
-    public static bool IsOdd<T>(this T value) where T : IBinaryInteger<T>
+    public static bool IsOddInteger<T>(this T value) where T : INumber<T>
     {
-        return value % T.CreateTruncating(2) != T.Zero;
+        return T.IsOddInteger(value);
     }
 
     /// <summary>
