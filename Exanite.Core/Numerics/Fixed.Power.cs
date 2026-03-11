@@ -42,7 +42,7 @@ public partial struct Fixed// : IPowerFunctions<Fixed>
 
         // Calculate the final product:
         // result * 2^n
-        return new Fixed(n < 0 ? result << n : result >> -n);
+        return new Fixed(n < 0 ? result >> -n : result << n);
     }
 
 }
