@@ -116,8 +116,11 @@ public readonly partial struct Fixed128 :
     /// </summary>
     public static Fixed128 FromParts(Int128 integral, int fractional)
     {
-        AssertUtility.IsTrue(integral <= ((Int128)1L << IntegralBitCount) , "Integral part must be less than or equal to 2^96");
-        AssertUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
+        GuardUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
+        if (integral > ((Int128)1L << IntegralBitCount))
+        {
+            GuardUtility.Throw($"Integral part must be less than or equal to 2^{IntegralBitCount}");
+        }
 
         if (fractional == 0)
         {

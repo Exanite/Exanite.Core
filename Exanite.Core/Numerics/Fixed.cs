@@ -121,7 +121,7 @@ public readonly partial struct Fixed :
     /// <inheritdoc cref="FromParts(long,int)"/>
     public static Fixed FromParts(int integral, int fractional)
     {
-        AssertUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
+        GuardUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
 
         if (fractional == 0)
         {
@@ -153,8 +153,11 @@ public readonly partial struct Fixed :
     /// </summary>
     public static Fixed FromParts(long integral, int fractional)
     {
-        AssertUtility.IsTrue(integral <= (1L << IntegralBitCount) , "Integral part must be less than or equal to 2^47");
-        AssertUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
+        GuardUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
+        if (integral > (1L << IntegralBitCount))
+        {
+            GuardUtility.Throw($"Integral part must be less than or equal to 2^{IntegralBitCount}");
+        }
 
         if (fractional == 0)
         {
