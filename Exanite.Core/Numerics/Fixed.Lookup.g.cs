@@ -7,19 +7,6 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed
 {
-    private static readonly ImmutableArray<int> DigitsLut = [
-        9,
-        99,
-        999,
-        9999,
-        99999,
-        999999,
-        9999999,
-        99999999,
-        999999999,
-        2147483647,
-    ];
-
     private const int SinLutBits = 7;
     private static readonly ImmutableArray<ushort> SinLut = [
             0,   804,  1608,  2412,  3215,  4018,  4821,  5622,  6423,  7223,  8022,  8819,  9616, 10410, 11204, 11995,

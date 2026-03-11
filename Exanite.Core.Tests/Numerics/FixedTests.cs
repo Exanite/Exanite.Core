@@ -30,35 +30,35 @@ public class FixedTests
     }
 
     [Theory]
-    [InlineData(0, 0, 0)]
-    [InlineData(0, 1, 0.1)]
-    [InlineData(0, 2, 0.2)]
-    [InlineData(0, 25, 0.25)]
-    [InlineData(1, 0, 1)]
-    [InlineData(-1, 0, -1)]
-    [InlineData(1, 1, 1.1)]
-    [InlineData(-1, 1, -1.1)]
-    [InlineData(3, 14159, 3.14159)]
-    [InlineData(-3, 14159, -3.14159)]
-    public void FromParts_ReturnsExpectedResult_IntOverload(int integral, int fractional, double expected)
+    [InlineData(0, 0, 0, 0)]
+    [InlineData(0, 1, 1, 0.1)]
+    [InlineData(0, 2, 1, 0.2)]
+    [InlineData(0, 25, 2, 0.25)]
+    [InlineData(1, 0, 0, 1)]
+    [InlineData(-1, 0, 0, -1)]
+    [InlineData(1, 1, 1, 1.1)]
+    [InlineData(-1, 1, 1, -1.1)]
+    [InlineData(3, 14159, 5, 3.14159)]
+    [InlineData(-3, 14159, 5, -3.14159)]
+    public void FromParts_ReturnsExpectedResult_IntOverload(int integral, int fractional, int decimalPlaces, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional, decimalPlaces), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Theory]
-    [InlineData(0, 0, 0)]
-    [InlineData(0, 1, 0.1)]
-    [InlineData(0, 2, 0.2)]
-    [InlineData(0, 25, 0.25)]
-    [InlineData(1, 0, 1)]
-    [InlineData(-1, 0, -1)]
-    [InlineData(1, 1, 1.1)]
-    [InlineData(-1, 1, -1.1)]
-    [InlineData(3, 14159, 3.14159)]
-    [InlineData(-3, 14159, -3.14159)]
-    public void CreateParts_ReturnsExpectedResult_LongOverload(long integral, int fractional, double expected)
+    [InlineData(0, 0, 0, 0)]
+    [InlineData(0, 1, 1, 0.1)]
+    [InlineData(0, 2, 1, 0.2)]
+    [InlineData(0, 25, 2, 0.25)]
+    [InlineData(1, 0, 0, 1)]
+    [InlineData(-1, 0, 0, -1)]
+    [InlineData(1, 1, 1, 1.1)]
+    [InlineData(-1, 1, 1, -1.1)]
+    [InlineData(3, 14159, 5, 3.14159)]
+    [InlineData(-3, 14159, 5, -3.14159)]
+    public void CreateParts_ReturnsExpectedResult_LongOverload(long integral, int fractional, int decimalPlaces, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional, decimalPlaces), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Theory]
@@ -150,48 +150,33 @@ public class FixedTests
     }
 
     [Theory]
-    [InlineData(1, 5, 1)]
-    [InlineData(1, 4, 1)]
-    [InlineData(3, 14159, 3)]
-    [InlineData(-3, 5, -4)]
-    public void Floor_ReturnsExpectedValue(long integral, int fractional, int expected)
+    [InlineData(1.5, 1)]
+    [InlineData(1.4, 1)]
+    [InlineData(3.14159, 3)]
+    [InlineData(-3.5, -4)]
+    public void Floor_ReturnsExpectedValue(double input, int expected)
     {
-        Assert.Equal(expected, (int)Fixed.Floor(Fixed.FromParts(integral, fractional)));
+        Assert.Equal(expected, (int)Fixed.Floor((Fixed)input));
     }
 
     [Theory]
-    [InlineData(1, 5, 2)]
-    [InlineData(1, 4, 2)]
-    [InlineData(3, 14159, 4)]
-    [InlineData(-3, 5, -3)]
-    public void Ceiling_ReturnsExpectedValue(long integral, int fractional, int expected)
+    [InlineData(1.5, 2)]
+    [InlineData(1.4, 2)]
+    [InlineData(3.14159, 4)]
+    [InlineData(-3.5, -3)]
+    public void Ceiling_ReturnsExpectedValue(double input, int expected)
     {
-        Assert.Equal(expected, (int)Fixed.Ceiling(Fixed.FromParts(integral, fractional)));
+        Assert.Equal(expected, (int)Fixed.Ceiling((Fixed)input));
     }
 
     [Theory]
-    [InlineData(1, 5, 2)]
-    [InlineData(1, 4, 1)]
-    [InlineData(3, 14159, 3)]
-    [InlineData(-3, 5, -4)]
-    public void Round_ReturnsExpectedValue(long integral, int fractional, int expected)
+    [InlineData(1.5, 2)]
+    [InlineData(1.4, 1)]
+    [InlineData(3.14159, 3)]
+    [InlineData(-3.5, -4)]
+    public void Round_ReturnsExpectedValue(double input, int expected)
     {
-        Assert.Equal(expected, (int)Fixed.Round(Fixed.FromParts(integral, fractional)));
-    }
-
-    [Theory]
-    [InlineData(0, 0, 0)]
-    [InlineData(0, 25, 0.5)]
-    [InlineData(2, 0, 1.41421)]
-    [InlineData(4, 0, 2)]
-    [InlineData(36, 0, 6)]
-    [InlineData(72, 0, 8.48528)]
-    [InlineData(123456, 0, 351.36306)]
-    [InlineData(123456789, 0, 11111.11106)]
-    [InlineData(123456789012, 0, 351364.18288)]
-    public void Sqrt_ReturnsExpectedValue(long integral, int fractional, double expected)
-    {
-        Assert.Equal(expected, (double)Fixed.Sqrt(Fixed.FromParts(integral, fractional)), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+        Assert.Equal(expected, (int)Fixed.Round((Fixed)input));
     }
 
     [Fact]

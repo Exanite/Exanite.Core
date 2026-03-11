@@ -122,26 +122,20 @@ public readonly partial struct Fixed :
     public static explicit operator double(Fixed value) => (double)value.Raw / OneRaw;
     public static explicit operator decimal(Fixed value) => (decimal)value.Raw / OneRaw;
 
-    /// <inheritdoc cref="FromParts(long,int)"/>
-    public static Fixed FromParts(int integral, int fractional)
+    /// <inheritdoc cref="FromParts(long,int,int)"/>
+    public static Fixed FromParts(int integral, int fractional, int decimalPlaces)
     {
         GuardUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
+        GuardUtility.IsFalse(decimalPlaces <= 0 && fractional != 0, "Decimal places must be strictly positive when the fractional part is non-zero");
 
         if (fractional == 0)
         {
             return new Fixed(integral * OneRaw);
         }
 
-        // Determine the number of digits in the fractional part
-        // Note: Not sure if a LUT is actually faster here, but I don't want to benchmark right now
         var divisor = 10;
-        foreach (var digitLimit in DigitsLut)
+        for (var i = 1; i < decimalPlaces; i++)
         {
-            if (fractional < digitLimit)
-            {
-                break;
-            }
-
             divisor *= 10;
         }
 
@@ -151,13 +145,14 @@ public readonly partial struct Fixed :
     /// <summary>
     /// Creates a fixed point number by using combining an integral part and a fractional part.
     /// <br/>
-    /// Eg: FromParts(1, 1) -> 1.1
+    /// Eg: FromParts(1, 1, 1) -> 1.1
     /// <br/>
-    /// Eg: FromParts(1, 123) -> 1.123
+    /// Eg: FromParts(1, 123, 3) -> 1.123
     /// </summary>
-    public static Fixed FromParts(long integral, int fractional)
+    public static Fixed FromParts(long integral, int fractional, int decimalPlaces)
     {
         GuardUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
+        GuardUtility.IsFalse(decimalPlaces <= 0 && fractional != 0, "Decimal places must be strictly positive when the fractional part is non-zero");
         if (integral > (1L << IntegralBitCount))
         {
             GuardUtility.Throw($"Integral part must be less than or equal to 2^{IntegralBitCount}");
@@ -168,16 +163,9 @@ public readonly partial struct Fixed :
             return new Fixed(integral * OneRaw);
         }
 
-        // Determine the number of digits in the fractional part
-        // Note: Not sure if a LUT is actually faster here, but I don't want to benchmark right now
         var divisor = 10;
-        foreach (var digitLimit in DigitsLut)
+        for (var i = 1; i < decimalPlaces; i++)
         {
-            if (fractional < digitLimit)
-            {
-                break;
-            }
-
             divisor *= 10;
         }
 

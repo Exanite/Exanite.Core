@@ -7,19 +7,6 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed128
 {
-    private static readonly ImmutableArray<int> DigitsLut = [
-        9,
-        99,
-        999,
-        9999,
-        99999,
-        999999,
-        9999999,
-        99999999,
-        999999999,
-        2147483647,
-    ];
-
     private const int SqrtLutBits = 10;
     private const int SqrtLutOffset = 256;
     private const int SqrtLutShift = 16;

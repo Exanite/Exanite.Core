@@ -106,38 +106,6 @@ public class FixedLookupsGenerator
         builder.AppendSeparation();
         using (builder.EnterScope("public partial struct Fixed"))
         {
-            // Digit lookup
-            // This stores max values corresponding to each digit count
-            {
-                var entries = new List<int>();
-                var limit = 10;
-                try
-                {
-                    checked
-                    {
-                        while (true)
-                        {
-                            entries.Add(limit - 1);
-                            limit *= 10;
-                        }
-                    }
-                }
-                catch
-                {
-                    entries.Add(int.MaxValue);
-                }
-
-                builder.AppendSeparation();
-                using (builder.Indent("private static readonly ImmutableArray<int> DigitsLut = ["))
-                {
-                    foreach (var entry in entries)
-                    {
-                        builder.AppendLine($"{entry.ToString()},");
-                    }
-                }
-                builder.AppendLine("];");
-            }
-
             // Sine lookup
             // This stores sine values for the range [0pi, pi/2)
             //
@@ -235,38 +203,6 @@ public class FixedLookupsGenerator
         builder.AppendSeparation();
         using (builder.EnterScope("public partial struct Fixed128"))
         {
-            // Digit lookup
-            // This stores max values corresponding to each digit count
-            {
-                var entries = new List<int>();
-                var limit = 10;
-                try
-                {
-                    checked
-                    {
-                        while (true)
-                        {
-                            entries.Add(limit - 1);
-                            limit *= 10;
-                        }
-                    }
-                }
-                catch
-                {
-                    entries.Add(int.MaxValue);
-                }
-
-                builder.AppendSeparation();
-                using (builder.Indent("private static readonly ImmutableArray<int> DigitsLut = ["))
-                {
-                    foreach (var entry in entries)
-                    {
-                        builder.AppendLine($"{entry.ToString()},");
-                    }
-                }
-                builder.AppendLine("];");
-            }
-
             // Sqrt lookup
             // This stores initial guesses for y for the Inverse Newton-Raphson method
             // The guesses have the value 1 / sqrt(x_normalized) and are indexed using the upper n bits of x_normalized
