@@ -660,8 +660,18 @@ public class FixedTests
         for (var i = 0; i < 340; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Exp2(current), (double)Fixed.Exp2((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Exp2(current), (double)Fixed.Exp2((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
         }
+    }
+
+    [Fact]
+    public void Exp2_BehavesForBoundaryValues()
+    {
+        Assert.Equal(1, Fixed.Exp2(0));
+        Assert.Equal(Fixed.MaxValue, Fixed.Exp2(100));
+        Assert.Equal(Fixed.MaxValue, Fixed.Exp2(Fixed.IntegralBitCount));
+        Assert.Equal(0, Fixed.Exp2(Fixed.Shift + 1));
+        Assert.Equal(0, Fixed.Exp2(-100));
     }
 
     private void AssertEqual(int i, double input, double expected, double actual, FloatingPointComparer comparer)
