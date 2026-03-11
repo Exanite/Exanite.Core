@@ -753,9 +753,9 @@ public class FixedTests
     {
         Assert.True(comparer.Equals(expected, actual), $"""
             Failed at i: {i}
-            Input:       {input}
-            Expected:    {expected}
-            Actual:      {actual}
+            Input:       {(decimal)input}
+            Expected:    {(decimal)expected}
+            Actual:      {(decimal)actual}
             Difference:  {(decimal)M.Abs(expected - actual)}
             Tolerance:   {comparer.Tolerance}
             """);
@@ -764,9 +764,9 @@ public class FixedTests
     private void AssertEqualCoord(double x, double y, double expected, double actual, FloatingPointComparer comparer)
     {
         Assert.True(comparer.Equals(expected, actual), $"""
-            Failed for input: ({x}, {y})
-            Expected:   {expected}
-            Actual:     {actual}
+            Failed for input: ({(decimal)x}, {(decimal)y})
+            Expected:   {(decimal)expected}
+            Actual:     {(decimal)actual}
             Difference: {(decimal)M.Abs(expected - actual)}
             Tolerance:  {comparer.Tolerance}
             """);
@@ -776,9 +776,9 @@ public class FixedTests
     {
         Assert.True(comparer.Equals(expected, actual), $"""
             Failed at i: {i}
-            Input:       ({x}, {y})
-            Expected:    {expected}
-            Actual:      {actual}
+            Input:       ({(decimal)x}, {(decimal)y})
+            Expected:    {(decimal)expected}
+            Actual:      {(decimal)actual}
             Difference:  {(decimal)M.Abs(expected - actual)}
             Tolerance:   {comparer.Tolerance}
             """);
@@ -788,9 +788,9 @@ public class FixedTests
     {
         Assert.True(comparer.Equals(expected, actual), $"""
             Failed at i: {i}
-            Input:       Log({input}, {logBase})
-            Expected:    {expected}
-            Actual:      {actual}
+            Input:       Log({(decimal)input}, {(decimal)logBase})
+            Expected:    {(decimal)expected}
+            Actual:      {(decimal)actual}
             Difference:  {(decimal)M.Abs(expected - actual)}
             Tolerance:   {comparer.Tolerance}
             """);
@@ -800,9 +800,9 @@ public class FixedTests
     {
         Assert.True(comparer.Equals(expected, actual), $"""
             Failed at i: {i}
-            Input:       Pow({powBase}, {exponent})
-            Expected:    {expected}
-            Actual:      {actual}
+            Input:       Pow({(decimal)powBase}, {(decimal)exponent})
+            Expected:    {(decimal)expected}
+            Actual:      {(decimal)actual}
             Difference:  {(decimal)M.Abs(expected - actual)}
             Tolerance:   {comparer.Tolerance}
             """);
@@ -812,9 +812,9 @@ public class FixedTests
     {
         Assert.True(comparer.Equals(expected, actual), $"""
             Failed at i: {i}
-            Input:       RootN({input}, {root})
-            Expected:    {expected}
-            Actual:      {actual}
+            Input:       RootN({(decimal)input}, {(decimal)root})
+            Expected:    {(decimal)expected}
+            Actual:      {(decimal)actual}
             Difference:  {(decimal)M.Abs(expected - actual)}
             Tolerance:   {comparer.Tolerance}
             """);
