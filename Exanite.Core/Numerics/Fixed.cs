@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
@@ -340,5 +341,14 @@ public readonly partial struct Fixed :
     public static Fixed FromRaw(long raw)
     {
         return new Fixed(raw);
+    }
+
+    // Internal
+
+    [Conditional("DEBUG")]
+    private static void AssertExpectedRange(long x, decimal inclusiveMin, decimal exclusiveMax)
+    {
+        AssertUtility.IsFalse((decimal)x / (1L << Shift) < inclusiveMin, "Internal: Value is less than the required minimum");
+        AssertUtility.IsFalse((decimal)x / (1L << Shift) >= exclusiveMax, "Internal: Value is greater than the required maximum");
     }
 }

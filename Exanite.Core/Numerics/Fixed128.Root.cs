@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
@@ -132,12 +131,5 @@ public partial struct Fixed128
         var fixed128Value = shiftFinal < 0 ? normalizedResult << -shiftFinal : normalizedResult >> shiftFinal;
         fixed128Value = isNegative ? -fixed128Value : fixed128Value;
         return new Fixed128(fixed128Value);
-    }
-
-    [Conditional("DEBUG")]
-    private static void AssertExpectedRange(Int128 x, int shift, decimal inclusiveMin, decimal exclusiveMax)
-    {
-        AssertUtility.IsFalse((decimal)x / (1L << shift) < inclusiveMin, "Internal: Value is less than the required minimum");
-        AssertUtility.IsFalse((decimal)x / (1L << shift) >= exclusiveMax, "Internal: Value is greater than the required maximum");
     }
 }

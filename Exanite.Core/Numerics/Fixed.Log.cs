@@ -1,6 +1,3 @@
-using System.Diagnostics;
-using Exanite.Core.Utilities;
-
 namespace Exanite.Core.Numerics;
 
 public partial struct Fixed
@@ -16,11 +13,4 @@ public partial struct Fixed
     // This is very inaccurate
     // Might revisit later
     public static Fixed Log(Fixed x, Fixed newBase) => Log2(x) / Log2(newBase);
-
-    [Conditional("DEBUG")]
-    private static void AssertExpectedRange(long x, decimal inclusiveMin, decimal exclusiveMax)
-    {
-        AssertUtility.IsFalse((decimal)x / (1L << Shift) < inclusiveMin, "Internal: Value is less than the required minimum");
-        AssertUtility.IsFalse((decimal)x / (1L << Shift) >= exclusiveMax, "Internal: Value is greater than the required maximum");
-    }
 }
