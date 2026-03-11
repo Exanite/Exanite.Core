@@ -10,6 +10,12 @@ namespace Exanite.Core.Numerics;
 /// A fixed point Q48.16 value (48-bits signed integer, 16-bits fraction).
 /// Has a precision of 4 decimal places.
 /// </summary>
+/// <remarks>
+/// Be aware that more complex operations tend to lose precision very fast.
+/// See the test cases to understand roughly how precise each method is.
+/// Also note that the precision for the most part can be improved,
+/// either by improved algorithms or increased performance/memory cost.
+/// </remarks>
 public readonly partial struct Fixed :
     INumber<Fixed>,
     IMinMaxValue<Fixed>,
