@@ -46,9 +46,10 @@ public partial struct Fixed// : ILogarithmicFunctions<Fixed>
         return new Fixed(normalizedResult) - shiftNormalize;
     }
 
-    //public static Fixed Log(Fixed x);
+    public static Fixed Log(Fixed x) => Log2(x) * new Fixed(LogETwoRaw);
+    public static Fixed Log10(Fixed x) => Log2(x) * new Fixed(Log10TwoRaw);
+
     //public static Fixed Log(Fixed x, Fixed newBase);
-    //public static Fixed Log10(Fixed x);
 
     [Conditional("DEBUG")]
     private static void AssertExpectedRange(long x, decimal inclusiveMin, decimal exclusiveMax)

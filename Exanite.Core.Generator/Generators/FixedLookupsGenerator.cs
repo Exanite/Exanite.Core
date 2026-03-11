@@ -46,6 +46,9 @@ public class FixedLookupsGenerator
                 private const long PiInverseRaw = {(long)decimal.Round((decimal)(1 / double.Pi) * (1L << Fixed.Shift))};
                 private const long TauRaw = {(long)decimal.Round((decimal)double.Tau * (1L << Fixed.Shift))};
 
+                private const long LogETwoRaw = {(long)decimal.Round((decimal)double.Log(2) * (1L << Fixed.Shift))};
+                private const long Log10TwoRaw = {(long)decimal.Round((decimal)double.Log10(2) * (1L << Fixed.Shift))};
+
                 /// <summary>
                 /// Q4.60 format.
                 /// </summary>

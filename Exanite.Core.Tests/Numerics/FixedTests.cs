@@ -613,6 +613,30 @@ public class FixedTests
         }
     }
 
+    [Fact]
+    public void Log_ReturnsExpectedValue_ForWideRange()
+    {
+        var current = 0.25;
+        var multiplier = 1.025;
+        for (var i = 0; i < 1000; i++)
+        {
+            current *= multiplier;
+            AssertEqual(i, current, double.Log(current), (double)Fixed.Log((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        }
+    }
+
+    [Fact]
+    public void Log10_ReturnsExpectedValue_ForWideRange()
+    {
+        var current = 0.25;
+        var multiplier = 1.025;
+        for (var i = 0; i < 1000; i++)
+        {
+            current *= multiplier;
+            AssertEqual(i, current, double.Log10(current), (double)Fixed.Log10((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision - 1));
+        }
+    }
+
     private void AssertEqual(int i, double input, double expected, double actual, FloatingPointComparer comparer)
     {
         Assert.True(comparer.Equals(expected, actual), $"""

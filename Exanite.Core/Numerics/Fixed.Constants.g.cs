@@ -12,6 +12,9 @@ public partial struct Fixed
     private const long PiInverseRaw = 20861;
     private const long TauRaw = 411775;
 
+    private const long LogETwoRaw = 45426;
+    private const long Log10TwoRaw = 19728;
+
     /// <summary>
     /// Q4.60 format.
     /// </summary>
