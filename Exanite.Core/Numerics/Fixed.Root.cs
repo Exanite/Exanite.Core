@@ -24,6 +24,10 @@ public partial struct Fixed
 
         switch (n)
         {
+            case -1:
+            {
+                return 1 / x;
+            }
             case 0:
             {
                 GuardUtility.Throw("Cannot take the 0th root of a number");
@@ -42,7 +46,6 @@ public partial struct Fixed
                 return Cbrt(x);
             }
         }
-
 
         // Use identity:
         // root_n(x) = 2^(log2(x) / n)
