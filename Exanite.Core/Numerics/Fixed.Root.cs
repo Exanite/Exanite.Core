@@ -19,7 +19,7 @@ public partial struct Fixed // : IRootFunctions<Fixed>
     {
         if (x < 0 && ((n & 1) == 0))
         {
-            GuardUtility.Throw($"Cannot take an even root of a negative number");
+            GuardUtility.Throw("Cannot take an even root of a negative number");
         }
 
         switch (n)
@@ -43,9 +43,12 @@ public partial struct Fixed // : IRootFunctions<Fixed>
             }
         }
 
+
         // Use identity:
         // root_n(x) = 2^(log2(x) / n)
-        return Exp2(Log2(x) / n);
+        var result = Exp2(Log2(Abs(x)) / n);
+        var isNegative = IsNegative(x);
+        return isNegative ? -result : result;
     }
 
     public static Fixed Hypot(Fixed x, Fixed y)

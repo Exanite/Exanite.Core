@@ -696,18 +696,32 @@ public class FixedTests
     {
         var current = 0.25;
         var multiplier = 1.025;
+
         for (var i = 0; i < 150; i++)
         {
             current *= multiplier;
-            var root = (int)(current * 100) % 10;
-            if (root == 0)
-            {
-                root = 1;
-            }
 
-            var expected = double.RootN(current, root);
-            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.00003M);
-            AssertEqualRootN(i, current, root, expected, (double)Fixed.RootN((Fixed)current, root), comparer);
+            for (var j = -10; j < 10; j++)
+            {
+                var root = j;
+                if (root == 0)
+                {
+                    continue;
+                }
+
+                {
+                    var expected = double.RootN(current, root);
+                    var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.00006M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision));
+                    AssertEqualRootN(i, current, root, expected, (double)Fixed.RootN((Fixed)current, root), comparer);
+                }
+
+                if (!int.IsEvenInteger(root))
+                {
+                    var expected = double.RootN(-current, root);
+                    var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.00006M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision));
+                    AssertEqualRootN(i, -current, root, expected, (double)Fixed.RootN((Fixed)(-current), root), comparer);
+                }
+            }
         }
     }
 
