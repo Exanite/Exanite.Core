@@ -24,7 +24,7 @@ public readonly partial struct Fixed :
     public const int IntegralBitCount = BitCount - Shift - 1;
     public const int FractionalBitCount = Shift;
 
-    public const int Shift = 16;
+    public const int Shift = 18;
     private const int Mask = (int)(OneRaw - 1);
 
     private const long HalfRaw = OneRaw / 2;

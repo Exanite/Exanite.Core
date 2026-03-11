@@ -156,7 +156,7 @@ public class FixedLookupsGenerator
 
                 builder.AppendSeparation();
                 builder.AppendLine($"private const int SinLutBits = {lookupBits};");
-                using (builder.Indent("private static readonly ImmutableArray<ushort> SinLut = ["))
+                using (builder.Indent("private static readonly ImmutableArray<int> SinLut = ["))
                 {
                     foreach (var chunk in tableEntries.Chunk(valuesPerLine))
                     {
@@ -208,7 +208,7 @@ public class FixedLookupsGenerator
 
                 builder.AppendSeparation();
                 builder.AppendLine($"private const int AtanLutBits = {lookupBits};");
-                using (builder.Indent("private static readonly ImmutableArray<ushort> AtanLut = ["))
+                using (builder.Indent("private static readonly ImmutableArray<int> AtanLut = ["))
                 {
                     foreach (var chunk in tableEntries.Chunk(valuesPerLine))
                     {
@@ -234,7 +234,7 @@ public class FixedLookupsGenerator
 
                 builder.AppendSeparation();
                 builder.AppendLine($"private const int Log2LutBits = {lookupBits};");
-                using (builder.Indent("private static readonly ImmutableArray<ushort> Log2Lut = ["))
+                using (builder.Indent("private static readonly ImmutableArray<long> Log2Lut = ["))
                 {
                     foreach (var chunk in tableEntries.Chunk(valuesPerLine))
                     {

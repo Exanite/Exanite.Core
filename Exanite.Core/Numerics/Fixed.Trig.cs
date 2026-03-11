@@ -43,7 +43,7 @@ public partial struct Fixed
         // This also incorporates the shift for the LUT
         // Shifting before dividing is more efficient and precise than shifting after
         const int piHalfReciprocalShift = 32;
-        const long piHalfReciprocalRaw = (1L << (TanLutBits + Shift + piHalfReciprocalShift)) / PiHalfRaw; // Q(TanLutBits + piHalfReciprocalShift)
+        var piHalfReciprocalRaw = ((Int128)1L << (TanLutBits + Shift + piHalfReciprocalShift)) / PiHalfRaw; // Q(TanLutBits + piHalfReciprocalShift)
 
         // Calculate index into LUT
         var rawIndex = (normalizedX * piHalfReciprocalRaw) >> piHalfReciprocalShift;
