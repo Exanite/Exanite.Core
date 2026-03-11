@@ -39,44 +39,21 @@ public class FixedLookupsGenerator
         using (builder.EnterScope("public partial struct Fixed"))
         {
             builder.AppendBlock($"""
-                /// <summary>
-                /// Equal to round(e * 2^16).
-                /// </summary>
                 private const long ERaw = {(long)decimal.Round((decimal)double.E * (1L << Fixed.Shift))};
-
-                /// <summary>
-                /// Equal to round(pi * 2^16).
-                /// </summary>
                 private const long PiRaw = {(long)decimal.Round((decimal)double.Pi * (1L << Fixed.Shift))};
-
-                /// <summary>
-                /// Equal to round(pi * 2^16 / 2).
-                /// </summary>
                 private const long PiHalfRaw = {(long)decimal.Round((decimal)(double.Pi / 2) * (1L << Fixed.Shift))};
-
-                /// <summary>
-                /// Equal to round(pi * 2^16 / 4).
-                /// </summary>
                 private const long PiFourthRaw = {(long)decimal.Round((decimal)(double.Pi / 4) * (1L << Fixed.Shift))};
-
-                /// <summary>
-                /// Equal to round((1 / pi) * 2^16).
-                /// </summary>
                 private const long PiInverseRaw = {(long)decimal.Round((decimal)(1 / double.Pi) * (1L << Fixed.Shift))};
-
-                /// <summary>
-                /// Equal to round(pi * 2^16 * 2).
-                /// </summary>
                 private const long TauRaw = {(long)decimal.Round((decimal)double.Tau * (1L << Fixed.Shift))};
 
                 /// <summary>
-                /// Q4.60 format. Equal to round(tau * 2^60).
+                /// Q4.60 format.
                 /// </summary>
                 private const long TauPreciseRaw = {(long)decimal.Round((decimal)double.Tau * (1L << 60))};
                 private const int TauPreciseShift = 60;
 
                 /// <summary>
-                /// Q4.60 format. Equal to round(pi * 2^60).
+                /// Q4.60 format.
                 /// </summary>
                 private const long PiPreciseRaw = {(long)decimal.Round((decimal)double.Pi * (1L << 60))};
                 private const int PiPreciseShift = 60;
