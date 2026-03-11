@@ -39,15 +39,21 @@ public class FixedLookupsGenerator
         using (builder.EnterScope("public partial struct Fixed"))
         {
             builder.AppendBlock($"""
-                private const long ERaw = {(long)decimal.Round((decimal)double.E * (1L << Fixed.Shift))};
-                private const long PiRaw = {(long)decimal.Round((decimal)double.Pi * (1L << Fixed.Shift))};
-                private const long PiHalfRaw = {(long)decimal.Round((decimal)(double.Pi / 2) * (1L << Fixed.Shift))};
-                private const long PiFourthRaw = {(long)decimal.Round((decimal)(double.Pi / 4) * (1L << Fixed.Shift))};
-                private const long PiInverseRaw = {(long)decimal.Round((decimal)(1 / double.Pi) * (1L << Fixed.Shift))};
-                private const long TauRaw = {(long)decimal.Round((decimal)double.Tau * (1L << Fixed.Shift))};
+                private const long ERaw = {CalculateRaw(double.E)};
+                private const long PiRaw = {CalculateRaw(double.Pi)};
+                private const long PiHalfRaw = {CalculateRaw(double.Pi / 2)};
+                private const long PiFourthRaw = {CalculateRaw(double.Pi / 4)};
+                private const long PiInverseRaw = {CalculateRaw(1 / double.Pi)};
+                private const long TauRaw = {CalculateRaw(double.Tau)};
 
-                private const long LogETwoRaw = {(long)decimal.Round((decimal)double.Log(2) * (1L << Fixed.Shift))};
-                private const long Log10TwoRaw = {(long)decimal.Round((decimal)double.Log10(2) * (1L << Fixed.Shift))};
+                private const long LogETwoRaw = {CalculateRaw(double.Log(2))};
+                private const long Log10TwoRaw = {CalculateRaw(double.Log10(2))};
+
+                // Exp2 Taylor Series Constants
+                private const long Exp2Term1 = {CalculateRaw(double.Log(2))};
+                private const long Exp2Term2 = {CalculateRaw(double.Pow(double.Log(2), 2) / 2)};
+                private const long Exp2Term3 = {CalculateRaw(double.Pow(double.Log(2), 3) / 6)};
+                private const long Exp2Term4 = {CalculateRaw(double.Pow(double.Log(2), 4) / 24)};
 
                 /// <summary>
                 /// Q4.60 format.
@@ -65,6 +71,13 @@ public class FixedLookupsGenerator
 
         var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / "Fixed.Constants.g.cs";
         outputPath.WriteAllText(builder.ToString());
+
+        return;
+
+        long CalculateRaw(double constant)
+        {
+            return (long)double.Round(constant * (1L << Fixed.Shift));
+        }
     }
 
     private void GenerateFixedLookups()

@@ -15,6 +15,12 @@ public partial struct Fixed
     private const long LogETwoRaw = 45426;
     private const long Log10TwoRaw = 19728;
 
+    // Exp2 Taylor Series Constants
+    private const long Exp2Term1 = 45426;
+    private const long Exp2Term2 = 15743;
+    private const long Exp2Term3 = 3638;
+    private const long Exp2Term4 = 630;
+
     /// <summary>
     /// Q4.60 format.
     /// </summary>

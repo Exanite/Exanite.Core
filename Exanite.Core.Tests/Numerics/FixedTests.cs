@@ -652,6 +652,18 @@ public class FixedTests
         }
     }
 
+    [Fact]
+    public void Exp2_ReturnsExpectedValue_ForWideRange()
+    {
+        var current = 0.01;
+        var multiplier = 1.025;
+        for (var i = 0; i < 340; i++)
+        {
+            current *= multiplier;
+            AssertEqual(i, current, double.Exp2(current), (double)Fixed.Exp2((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        }
+    }
+
     private void AssertEqual(int i, double input, double expected, double actual, FloatingPointComparer comparer)
     {
         Assert.True(comparer.Equals(expected, actual), $"""
