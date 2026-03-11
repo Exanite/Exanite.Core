@@ -95,18 +95,13 @@ public partial struct Fixed128
         // This must be a multiple of 3
         const int internalShift = 42;
 
-        // TODO
-        // Normalize x to be in the interval [0.125, 1)
+        // Normalize x to be in the interval [0.25, 2)
         var leadingZeroCount = (int)Int128.LeadingZeroCount(absX);
         var normalizeShift = leadingZeroCount - (128 - 1 - internalShift);
-        normalizeShift = normalizeShift % 3;
-        if (normalizeShift < 0)
-        {
-            normalizeShift += 3;
-        }
+        normalizeShift -= normalizeShift % 3; // TODO: Adjust in the correct direction
 
         var normalizedX = normalizeShift >= 0 ? absX << normalizeShift : absX >> -normalizeShift;
-        AssertExpectedRange(normalizedX, internalShift, 0.125M, 1M);
+        AssertExpectedRange(normalizedX, internalShift, 0.25M, 2M);
 
         // TODO
         // Calculate LUT index of initial guess
@@ -133,6 +128,8 @@ public partial struct Fixed128
             {
                 break;
             }
+
+            AssertUtility.IsFalse(i == maxIterationCount - 1, "Didn't converge"); // TODO: Remove
 
             y = yNext;
         }
