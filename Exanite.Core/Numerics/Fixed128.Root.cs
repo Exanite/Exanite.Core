@@ -116,7 +116,7 @@ public partial struct Fixed128
         // y = (2y + x/y^2) / 3
         // y = cbrt(x)
         var threeReciprocal = ((Int128)1 << (internalShift * 2)) / ((Int128)3 << internalShift);
-        const int maxIterationCount = 100; // TODO: Lower this
+        const int maxIterationCount = 7; // TODO: Lower this
         for (var i = 0; i < maxIterationCount; i++)
         {
             var yy = y * y;
@@ -128,8 +128,7 @@ public partial struct Fixed128
                 break;
             }
 
-            // AssertUtility.IsFalse(i == maxIterationCount - 1, "Didn't converge"); // TODO: Remove
-
+            AssertUtility.IsFalse(i == maxIterationCount - 1, "Didn't converge"); // TODO: Remove. This technically restricts iterations to maxIterationsCount - 1
             y = yNext;
         }
 
