@@ -119,8 +119,8 @@ public partial struct Fixed128
         const int maxIterationCount = 100; // TODO: Lower this
         for (var i = 0; i < maxIterationCount; i++)
         {
-            var yy = (y * y) >> internalShift;
-            var xOverYy = (normalizedX << internalShift) / yy;
+            var yy = y * y;
+            var xOverYy = (normalizedX << (internalShift * 2)) / yy;
             var twoY = y << 1;
             var yNext = ((twoY + xOverYy) * threeReciprocal) >> internalShift;
             if (yNext == y)
