@@ -17,7 +17,7 @@ public partial struct Fixed
                     var xx = (Int128)x.Raw * x.Raw;
                     var xxx = (xx >> Shift) * x.Raw;
 
-                    const int oneShift = 62;
+                    const int oneShift = 126;
                     var result = (((Int128)1 << oneShift) / xxx) >> (oneShift - xxShift - Shift);
                     return new Fixed((long)result);
                 }
@@ -27,13 +27,15 @@ public partial struct Fixed
                     const int xxShift = Shift * 2;
                     var xx = (Int128)x.Raw * x.Raw;
 
-                    const int oneShift = 62;
+                    const int oneShift = 126;
                     var result = (((Int128)1 << oneShift) / xx) >> (oneShift - xxShift - Shift);
                     return new Fixed((long)result);
                 }
                 case -1:
                 {
-                    return 1 / x;
+                    const int oneShift = 126;
+                    var result = (((Int128)1 << oneShift) / x.Raw) >> (oneShift - Shift - Shift);
+                    return new Fixed((long)result);
                 }
                 case 0:
                 {
