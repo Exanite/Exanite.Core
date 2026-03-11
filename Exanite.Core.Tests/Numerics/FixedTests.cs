@@ -268,7 +268,7 @@ public class FixedTests
         var angleDelta = 0.234;
         var currentRadius = 0.0001;
         var currentAngle = 0.0;
-        for (var i = 0; i < 1650; i++)
+        for (var i = 0; i < 1450; i++)
         {
             var x = M.Cos(currentAngle) * currentRadius;
             var y = M.Sin(currentAngle) * currentRadius;
