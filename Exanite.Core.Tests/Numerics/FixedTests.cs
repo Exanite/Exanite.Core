@@ -281,7 +281,7 @@ public class FixedTests
                 _ => FloatingPointComparer.FromPrecision(Fixed.Precision),
             };
 
-            AssertEqual(i, x, y, expected, (double)Fixed.Hypot((Fixed)y, (Fixed)x), comparer);
+            AssertEqualIndexCoord(i, x, y, expected, (double)Fixed.Hypot((Fixed)y, (Fixed)x), comparer);
 
             currentRadius *= radiusMultiplier;
             currentAngle += angleDelta;
@@ -486,7 +486,7 @@ public class FixedTests
             var x = M.Cos(currentAngle) * currentRadius;
             var y = M.Sin(currentAngle) * currentRadius;
 
-            AssertEqual(i, x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
+            AssertEqualIndexCoord(i, x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
 
             currentRadius += radiusDelta;
             currentAngle += angleDelta;
@@ -504,7 +504,7 @@ public class FixedTests
     [InlineData(10, -1)]
     public void Atan2_ReturnsExpectedValue_ForReciprocalCases(double x, double y)
     {
-        AssertEqual(x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        AssertEqualCoord(x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision));
     }
 
     [Theory]
@@ -515,7 +515,7 @@ public class FixedTests
     [InlineData(0, -1)]
     public void Atan2_ReturnsExpectedValue_ForPointsOnAxes(double x, double y)
     {
-        AssertEqual(x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        AssertEqualCoord(x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision));
     }
 
     [Fact]
@@ -637,6 +637,19 @@ public class FixedTests
         }
     }
 
+    [Fact]
+    public void LogBase_ReturnsExpectedValue_ForWideRange()
+    {
+        var current = 0.25;
+        var multiplier = 1.025;
+        for (var i = 0; i < 1000; i++)
+        {
+            current *= multiplier;
+            var logBase = current % 10;
+            AssertEqualLogBase(i, current, logBase, double.Log(current, logBase), (double)Fixed.Log((Fixed)current, (Fixed)logBase), FloatingPointComparer.FromPrecision(Fixed.Precision - 5)); // TODO: This seems kinda bad
+        }
+    }
+
     private void AssertEqual(int i, double input, double expected, double actual, FloatingPointComparer comparer)
     {
         Assert.True(comparer.Equals(expected, actual), $"""
@@ -649,7 +662,19 @@ public class FixedTests
             """);
     }
 
-    private void AssertEqual(double x, double y, double expected, double actual, FloatingPointComparer comparer)
+    private void AssertEqualLogBase(int i, double input, double logBase, double expected, double actual, FloatingPointComparer comparer)
+    {
+        Assert.True(comparer.Equals(expected, actual), $"""
+            Failed at i: {i}
+            Input:       Log({input}, {logBase})
+            Expected:    {expected}
+            Actual:      {actual}
+            Difference:  {(decimal)M.Abs(expected - actual)}
+            Tolerance:   {comparer.Tolerance}
+            """);
+    }
+
+    private void AssertEqualCoord(double x, double y, double expected, double actual, FloatingPointComparer comparer)
     {
         Assert.True(comparer.Equals(expected, actual), $"""
             Failed for input: ({x}, {y})
@@ -660,7 +685,7 @@ public class FixedTests
             """);
     }
 
-    private void AssertEqual(int i, double x, double y, double expected, double actual, FloatingPointComparer comparer)
+    private void AssertEqualIndexCoord(int i, double x, double y, double expected, double actual, FloatingPointComparer comparer)
     {
         Assert.True(comparer.Equals(expected, actual), $"""
             Failed at i: {i}
