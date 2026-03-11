@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
@@ -30,6 +31,7 @@ public partial struct Fixed128
         var leadingZeroCount = (int)Int128.LeadingZeroCount(x.Raw);
         var normalizeShift = (leadingZeroCount - (128 - 1 - internalShift)) & ~1;
         var normalizedX = normalizeShift >= 0 ? x.Raw << normalizeShift : x.Raw >> -normalizeShift;
+        AssertExpectedRange(normalizedX, internalShift, 0.5M, 2M);
 
         // Calculate LUT index of initial guess
         // 2 is represented with (internalShift + 2) bits, but we are exclusive of 2
@@ -102,6 +104,7 @@ public partial struct Fixed128
         }
 
         var normalizedX = normalizeShift >= 0 ? absX << normalizeShift : absX >> -normalizeShift;
+        AssertExpectedRange(normalizedX, internalShift, 0.125M, 1M);
 
         // TODO
         // Calculate LUT index of initial guess
@@ -145,5 +148,12 @@ public partial struct Fixed128
         fixed128Value = isNegative ? -fixed128Value : fixed128Value;
         return new Fixed128(fixed128Value);
         }
+    }
+
+    [Conditional("DEBUG")]
+    private static void AssertExpectedRange(Int128 x, int shift, decimal inclusiveMin, decimal exclusiveMax)
+    {
+        AssertUtility.IsFalse((decimal)x / (1L << shift) < inclusiveMin, "Internal: Value is less than the required minimum");
+        AssertUtility.IsFalse((decimal)x / (1L << shift) >= exclusiveMax, "Internal: Value is greater than the required maximum");
     }
 }
