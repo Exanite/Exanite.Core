@@ -77,7 +77,7 @@ public partial struct Fixed128
         // This algorithm is adapted from SqrtFast
         // Key differences:
         // Normalize shift is a multiple of 3 instead of 2
-        // Use of direct Newton-Raphson (instead of the inverse) to avoid overflow when cubing y
+        // Use of direct Newton-Raphson (instead of the inverse) to avoid overflow when calculating xyyy
 
         if (x == 0)
         {
