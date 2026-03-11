@@ -50,17 +50,16 @@ public class FixedLookupsGenerator
                 private const int Log10TwoRaw = {CalculateRaw(double.Log10(2))};
                 """);
 
-            // These round up instead since Taylor series will always underestimate
             builder.AppendSeparation();
             builder.AppendBlock($"""
-                // Exp2 Taylor Series Constants
+                // Exp2 Taylor series constants (minimax)
                 private const int Exp2TermShift = 32;
-                private const uint Exp2Term1 = {CalculateExp2TermRaw(double.Log(2))};
-                private const uint Exp2Term2 = {CalculateExp2TermRaw(double.Pow(double.Log(2), 2) / 2)};
-                private const uint Exp2Term3 = {CalculateExp2TermRaw(double.Pow(double.Log(2), 3) / 6)};
-                private const uint Exp2Term4 = {CalculateExp2TermRaw(double.Pow(double.Log(2), 4) / 24)};
-                private const uint Exp2Term5 = {CalculateExp2TermRaw(double.Pow(double.Log(2), 5) / 120)};
-                private const uint Exp2Term6 = {CalculateExp2TermRaw(double.Pow(double.Log(2), 5) / 720)};
+                private const uint Exp2Term1 = {CalculateExp2TermRaw(0.69314720)};
+                private const uint Exp2Term2 = {CalculateExp2TermRaw(0.24022312)};
+                private const uint Exp2Term3 = {CalculateExp2TermRaw(0.05552311)};
+                private const uint Exp2Term4 = {CalculateExp2TermRaw(0.00958189)};
+                private const uint Exp2Term5 = {CalculateExp2TermRaw(0.00140733)};
+                private const uint Exp2Term6 = {CalculateExp2TermRaw(0.00011624)};
                 """);
 
             builder.AppendSeparation();
