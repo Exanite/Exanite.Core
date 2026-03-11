@@ -3,7 +3,7 @@ using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
-public partial struct Fixed // : IRootFunctions<Fixed>
+public partial struct Fixed
 {
     public static Fixed Sqrt(Fixed x)
     {
