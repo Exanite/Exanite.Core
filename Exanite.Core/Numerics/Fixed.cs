@@ -19,7 +19,7 @@ public readonly partial struct Fixed :
 {
     // Constants
     public const int BitCount = 64;
-    public const int IntegralBitCount = BitCount - Shift;
+    public const int IntegralBitCount = BitCount - Shift - 1;
     public const int FractionalBitCount = Shift;
 
     public const int Shift = 16;
@@ -132,7 +132,7 @@ public readonly partial struct Fixed :
     /// </summary>
     public static Fixed FromParts(long integral, int fractional)
     {
-        AssertUtility.IsTrue(integral <= (1L << IntegralBitCount) , "Integral part must be less than or equal to 2^48");
+        AssertUtility.IsTrue(integral <= (1L << IntegralBitCount) , "Integral part must be less than or equal to 2^47");
         AssertUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
 
         if (fractional == 0)
