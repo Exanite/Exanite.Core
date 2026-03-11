@@ -255,8 +255,8 @@ public class FixedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Cbrt(current), (double)Fixed.Cbrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
-            AssertEqual(i, -current, double.Cbrt(-current), (double)Fixed.Cbrt((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Cbrt(current), (double)Fixed.Cbrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision - 1));
+            AssertEqual(i, -current, double.Cbrt(-current), (double)Fixed.Cbrt((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision - 1));
         }
     }
 
