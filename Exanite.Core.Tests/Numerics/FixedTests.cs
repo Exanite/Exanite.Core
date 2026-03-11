@@ -647,7 +647,7 @@ public class FixedTests
             current *= multiplier;
             var logBase = (current * 100) % 10;
             var expected = double.Log(current, logBase);
-            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.01M);
+            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.01M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision));
             AssertEqualLogBase(i, current, logBase, expected, (double)Fixed.Log((Fixed)current, (Fixed)logBase), comparer);
         }
     }
@@ -661,7 +661,7 @@ public class FixedTests
         {
             current *= multiplier;
             var expected = double.Exp2(current);
-            var comparer = FloatingPointComparer.FromTolerance(decimal.Max((decimal)expected * 0.0000105M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision)));
+            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0000105M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision));
             AssertEqual(i, current, expected, (double)Fixed.Exp2((Fixed)current), comparer);
         }
     }
@@ -686,7 +686,7 @@ public class FixedTests
             current *= multiplier;
             var exponent = (current * 100) % 10;
             var expected = double.Pow(current, exponent);
-            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0005M);
+            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0005M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision));
             AssertEqualPowBase(i, current, exponent, expected, (double)Fixed.Pow((Fixed)current, (Fixed)exponent), comparer);
         }
     }

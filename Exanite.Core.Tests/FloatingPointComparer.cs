@@ -12,6 +12,14 @@ public class FloatingPointComparer : IEqualityComparer<float>, IEqualityComparer
         this.Tolerance = tolerance;
     }
 
+    /// <summary>
+    /// Convenience overload that takes the max of the absolute value of the two provided tolerances.
+    /// </summary>
+    public static FloatingPointComparer FromTolerance(decimal tolerance, decimal tolerance2)
+    {
+        return new FloatingPointComparer(M.Max(M.Abs(tolerance), M.Abs(tolerance2)));
+    }
+
     public static FloatingPointComparer FromTolerance(decimal tolerance)
     {
         return new FloatingPointComparer(M.Abs(tolerance));
