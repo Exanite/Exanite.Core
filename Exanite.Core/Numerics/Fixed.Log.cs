@@ -7,43 +7,7 @@ public partial struct Fixed
 {
     public static Fixed Log2(Fixed x)
     {
-        if (x <= 0)
-        {
-            if (x == 0)
-            {
-                GuardUtility.Throw("Cannot take the logarithm of 0");
-            }
-
-            GuardUtility.Throw("Cannot take the logarithm of a negative number");
-        }
-
-        var leadingZeroCount = (int)long.LeadingZeroCount(x.Raw);
-        var distanceToOneBit = leadingZeroCount - (BitCount - 1 - Shift);
-        var shiftNormalize = distanceToOneBit;
-        var shiftInitial = shiftNormalize;
-
-        var normalizedX = shiftInitial < 0 ? x.Raw >> -shiftInitial : x.Raw << shiftInitial;
-        AssertExpectedRange(normalizedX, 1M, 2M);
-
-        // Calculate index into LUT
-        var rawIndex = (normalizedX - OneRaw) << Log2LutBits;
-        var index = (int)(rawIndex >> Shift);
-        var fraction = (int)(rawIndex & Mask);
-
-        long normalizedResult;
-        if (index >= ((1 << Log2LutBits) - 1))
-        {
-            normalizedResult = OneRaw;
-        }
-        else
-        {
-            // Get values and interpolate
-            var y0 = Log2Lut[index];
-            var y1 = Log2Lut[index + 1];
-            normalizedResult = y0 + (((y1 - y0) * fraction) >> Shift);
-        }
-
-        return new Fixed(normalizedResult) - shiftNormalize;
+        return (Fixed)Fixed128.Log2Fast(x);
     }
 
     public static Fixed Log(Fixed x) => Log2(x) * new Fixed(LogETwoRaw);
