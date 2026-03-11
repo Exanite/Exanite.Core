@@ -154,11 +154,11 @@ public class FixedLookupsGenerator
             // Log2 lookup
             // This stores log2 values for the range [1, 2)
             {
-                var lookupBits = 6;
+                var lookupBits = 13;
                 var lookupEntryCount = 1 << lookupBits;
 
                 var log2Values = Enumerable.Range(0, lookupEntryCount)
-                    .Select(i => double.Log2(M.Lerp(1, 2, (double)i / lookupEntryCount)))
+                    .Select(i => double.Log2(M.Lerp(1, 2, (i + 0.5) / lookupEntryCount)))
                     .ToList();
 
                 var tableEntries = log2Values.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).Select(x => x.ToString()).ToList();

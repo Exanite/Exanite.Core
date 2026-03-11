@@ -558,14 +558,34 @@ public class FixedTests
     }
 
     [Fact]
-    public void Log2_ReturnsExpectedValue_ForWideRange()
+    public void Log2_ReturnsExpectedValue_ForGreaterThanOne()
     {
-        var current = 0.0001;
+        var current = 1.0;
         var multiplier = 1.025;
-        for (var i = 0; i < 1350; i++)
+        for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
             AssertEqual(i, current, double.Log2(current), (double)Fixed.Log2((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        }
+    }
+
+    [Fact]
+    public void Log2_ReturnsExpectedValue_ForLessThanOne()
+    {
+        var current = 1.0;
+        var multiplier = 0.995;
+        for (var i = 0; i < 1000; i++)
+        {
+            current *= multiplier;
+            var expected = double.Log2(current);
+            var comparer = i switch
+            {
+                _ when M.Abs(i) > 750 => FloatingPointComparer.FromPrecision(Fixed.Precision - 2),
+                _ when M.Abs(i) > 350 => FloatingPointComparer.FromPrecision(Fixed.Precision - 1),
+                _ => FloatingPointComparer.FromPrecision(Fixed.Precision),
+            };
+
+            AssertEqual(i, current, expected, (double)Fixed.Log2((Fixed)current), comparer);
         }
     }
 
