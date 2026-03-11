@@ -38,6 +38,7 @@ public partial struct Fixed// : IPowerFunctions<Fixed>
         var f3 = (f2 * f) >> internalShift;
         var f4 = (f2 * f2) >> internalShift;
         var f5 = (f3 * f2) >> internalShift;
+        var f6 = (f3 * f3) >> internalShift;
 
         // Fractional results are stored as Q84
         Int128 fractionalResult = 0;
@@ -46,6 +47,7 @@ public partial struct Fixed// : IPowerFunctions<Fixed>
         fractionalResult += Exp2Term3 * f3;
         fractionalResult += Exp2Term4 * f4;
         fractionalResult += Exp2Term5 * f5;
+        fractionalResult += Exp2Term6 * f6;
 
         // Result is stored as Q42
         var result = ((Int128)1 << internalShift) + (fractionalResult >> Exp2TermShift);

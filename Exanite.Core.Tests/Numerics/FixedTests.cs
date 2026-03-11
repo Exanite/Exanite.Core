@@ -661,7 +661,7 @@ public class FixedTests
         {
             current *= multiplier;
             var expected = double.Exp2(current);
-            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0001M);
+            var comparer = FloatingPointComparer.FromTolerance(decimal.Max((decimal)expected * 0.00002M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision)));
             AssertEqual(i, current, double.Exp2(current), (double)Fixed.Exp2((Fixed)current), comparer);
         }
     }

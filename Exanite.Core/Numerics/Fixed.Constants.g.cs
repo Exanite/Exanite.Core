@@ -22,6 +22,7 @@ public partial struct Fixed
     private const uint Exp2Term3 = 238388332;
     private const uint Exp2Term4 = 41309550;
     private const uint Exp2Term5 = 5726720;
+    private const uint Exp2Term6 = 954454;
 
     /// <summary>
     /// Q4.60 format.

@@ -60,6 +60,7 @@ public class FixedLookupsGenerator
                 private const uint Exp2Term3 = {CalculateExp2TermRaw(double.Pow(double.Log(2), 3) / 6)};
                 private const uint Exp2Term4 = {CalculateExp2TermRaw(double.Pow(double.Log(2), 4) / 24)};
                 private const uint Exp2Term5 = {CalculateExp2TermRaw(double.Pow(double.Log(2), 5) / 120)};
+                private const uint Exp2Term6 = {CalculateExp2TermRaw(double.Pow(double.Log(2), 5) / 720)};
                 """);
 
             builder.AppendSeparation();

@@ -19,7 +19,12 @@ public class FloatingPointComparer : IEqualityComparer<float>, IEqualityComparer
 
     public static FloatingPointComparer FromPrecision(int precision)
     {
-        return new FloatingPointComparer((decimal)double.Pow(0.1, precision));
+        return new FloatingPointComparer(ToleranceFromPrecision(precision));
+    }
+
+    public static decimal ToleranceFromPrecision(int precision)
+    {
+        return (decimal)double.Pow(0.1, precision);
     }
 
     // Assumes left is expected and right is actual since this is designed for XUnit
