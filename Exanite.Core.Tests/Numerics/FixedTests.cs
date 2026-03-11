@@ -281,7 +281,7 @@ public class FixedTests
                 _ => FloatingPointComparer.FromPrecision(Fixed.Precision),
             };
 
-            AssertEqualIndexCoord(i, x, y, expected, (double)Fixed.Hypot((Fixed)y, (Fixed)x), comparer);
+            AssertEqualIndexCoord(i, x, y, expected, (double)Fixed.Hypot((Fixed)x, (Fixed)y), comparer);
 
             currentRadius *= radiusMultiplier;
             currentAngle += angleDelta;
