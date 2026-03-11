@@ -25,14 +25,16 @@ public partial struct Fixed128
         // Use Q86.42 for better precision
         // This must be even
         const int internalShift = 42;
+        const int shiftInputToInternal = internalShift - Shift;
 
         // Normalize x using an even shift so that the shift can be safely halved later
         // This leads to x being in the interval [0.5, 2)
-        var leadingZeroCount = (int)Int128.LeadingZeroCount(x.Raw);
+        var leadingZeroCount = (int)Int128.LeadingZeroCount(x.Raw) - shiftInputToInternal;
         var distanceToOneBit = leadingZeroCount - (BitCount - 1 - internalShift);
-        var normalizeShift = distanceToOneBit & ~1;
+        var shiftNormalize = distanceToOneBit & ~1;
+        var shiftInitial = shiftInputToInternal + shiftNormalize;
 
-        var normalizedX = normalizeShift >= 0 ? x.Raw << normalizeShift : x.Raw >> -normalizeShift;
+        var normalizedX = shiftInitial >= 0 ? x.Raw << shiftInitial : x.Raw >> -shiftInitial;
         AssertExpectedRange(normalizedX, internalShift, 0.5M, 2M);
 
         // Calculate LUT index of initial guess
@@ -59,16 +61,14 @@ public partial struct Fixed128
             y = yNext;
         }
 
-        // We need to cancel out the normalization step we did above
-        // The finalShift was originally 3 shifts
-        // This declares the shifts in the order they originally occurred in
-        const int shiftDueToMultiplication = internalShift;
-        var shiftDueToDenormalization = ((normalizeShift - (internalShift - Shift)) / 2);
-        const int shiftFromInternalToOutput = internalShift - Shift;
-        var finalShift = shiftDueToMultiplication + shiftDueToDenormalization + shiftFromInternalToOutput;
+        // Cancel out normalization and conversion to internal
+        const int shiftMultiplication = internalShift;
+        var shiftDenormalize = shiftNormalize / 2;
+        const int shiftInternalToOutput = internalShift - Shift;
+        var shiftFinal = shiftMultiplication + shiftDenormalize + shiftInternalToOutput;
 
         var normalizedResult = normalizedX * y;
-        var fixed128Value = finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift;
+        var fixed128Value = shiftFinal >= 0 ? normalizedResult >> shiftFinal : normalizedResult << -shiftFinal;
         return new Fixed128(fixed128Value);
     }
 
@@ -79,28 +79,27 @@ public partial struct Fixed128
         // Normalize shift is a multiple of 3 instead of 2
         // Use of direct Newton-Raphson (instead of the inverse) to avoid overflow when cubing y
 
-        // TODO
-        checked
-        {
         if (x == 0)
         {
             return 0;
         }
 
+        // Use Q86.42 for better precision
+        // This must be a multiple of 3
+        const int internalShift = 42;
+        const int shiftInputToInternal = internalShift - Shift;
+
         // Handle negative inputs
         var isNegative = IsNegative(x);
         var absX = isNegative ? -x.Raw : x.Raw;
 
-        // Use Q86.42 for better precision
-        // This must be a multiple of 3
-        const int internalShift = 42;
-
         // Normalize x to be in the interval [0.25, 2)
-        var leadingZeroCount = (int)Int128.LeadingZeroCount(absX);
+        var leadingZeroCount = (int)Int128.LeadingZeroCount(absX) - shiftInputToInternal;
         var distanceToOneBit = leadingZeroCount - (BitCount - 1 - internalShift);
-        var normalizeShift = distanceToOneBit - (distanceToOneBit % 3 + 3) % 3;
+        var shiftNormalize = distanceToOneBit - (distanceToOneBit % 3 + 3) % 3;
+        var shiftInitial = shiftInputToInternal + shiftNormalize;
 
-        var normalizedX = normalizeShift >= 0 ? absX << normalizeShift : absX >> -normalizeShift;
+        var normalizedX = shiftInitial >= 0 ? absX << shiftInitial : absX >> -shiftInitial;
         AssertExpectedRange(normalizedX, internalShift, 0.25M, 2M);
 
         // TODO
@@ -129,24 +128,20 @@ public partial struct Fixed128
                 break;
             }
 
-            AssertUtility.IsFalse(i == maxIterationCount - 1, "Didn't converge"); // TODO: Remove
+            // AssertUtility.IsFalse(i == maxIterationCount - 1, "Didn't converge"); // TODO: Remove
 
             y = yNext;
         }
 
-        // TODO
-        // We need to cancel out the normalization step we did above
-        // The finalShift was originally 3 shifts
-        // This declares the shifts in the order they originally occurred in
-        var shiftDueToDenormalization = (normalizeShift - (internalShift - Shift)) / 3;
-        const int shiftFromInternalToOutput = internalShift - Shift;
-        var finalShift = shiftDueToDenormalization + shiftFromInternalToOutput;
+        // Cancel out normalization and conversion to internal
+        var shiftDenormalize = shiftNormalize / 3;
+        const int shiftInternalToOutput = internalShift - Shift;
+        var shiftFinal = shiftDenormalize + shiftInternalToOutput;
 
         var normalizedResult = y;
-        var fixed128Value = finalShift >= 0 ? normalizedResult >> finalShift : normalizedResult << -finalShift;
+        var fixed128Value = shiftFinal >= 0 ? normalizedResult >> shiftFinal : normalizedResult << -shiftFinal;
         fixed128Value = isNegative ? -fixed128Value : fixed128Value;
         return new Fixed128(fixed128Value);
-        }
     }
 
     [Conditional("DEBUG")]
