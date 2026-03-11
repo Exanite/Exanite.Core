@@ -559,6 +559,15 @@ public class FixedTests
     }
 
     [Fact]
+    public void Log2_ReturnsRoughly16ForEpsilon()
+    {
+        // Note it does not actually return 16
+        var result = (double)Fixed.Log2(Fixed.Epsilon);
+        Assert.Equal(-16, result, FloatingPointComparer.FromPrecision(Fixed.Precision));
+        Assert.NotEqual(-16, result);
+    }
+
+    [Fact]
     public void Log2_ThrowsForInvalidInputs()
     {
         Assert.Throws<GuardException>(() =>
