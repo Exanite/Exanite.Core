@@ -29,8 +29,8 @@ public partial struct Fixed128
         // Normalize x using an even shift so that the shift can be safely halved later
         // This leads to x being in the interval [0.5, 2)
         var leadingZeroCount = (int)Int128.LeadingZeroCount(x.Raw);
-        var normalizeShift = leadingZeroCount - (128 - 1 - internalShift);
-        normalizeShift &= ~1;
+        var distanceToOneBit = leadingZeroCount - (BitCount - 1 - internalShift);
+        var normalizeShift = distanceToOneBit & ~1;
 
         var normalizedX = normalizeShift >= 0 ? x.Raw << normalizeShift : x.Raw >> -normalizeShift;
         AssertExpectedRange(normalizedX, internalShift, 0.5M, 2M);
@@ -97,8 +97,8 @@ public partial struct Fixed128
 
         // Normalize x to be in the interval [0.25, 2)
         var leadingZeroCount = (int)Int128.LeadingZeroCount(absX);
-        var normalizeShift = leadingZeroCount - (128 - 1 - internalShift);
-        normalizeShift -= normalizeShift % 3; // TODO: Adjust in the correct direction
+        var distanceToOneBit = leadingZeroCount - (BitCount - 1 - internalShift);
+        var normalizeShift = distanceToOneBit - (distanceToOneBit % 3 + 3) % 3;
 
         var normalizedX = normalizeShift >= 0 ? absX << normalizeShift : absX >> -normalizeShift;
         AssertExpectedRange(normalizedX, internalShift, 0.25M, 2M);
