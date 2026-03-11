@@ -210,22 +210,24 @@ public readonly partial struct Fixed :
     // Operators
     public static Fixed operator +(Fixed left, Fixed right) => new(left.Raw + right.Raw);
     public static Fixed operator -(Fixed left, Fixed right) => new(left.Raw - right.Raw);
+    public static Fixed operator *(Fixed left, Fixed right) => new((long)(((Int128)left.Raw * right.Raw) >> Shift));
+    public static Fixed operator /(Fixed left, Fixed right) => new((long)(((Int128)left.Raw << Shift) / right.Raw));
     public static Fixed operator %(Fixed left, Fixed right) => new(left.Raw % right.Raw);
-
-    public static Fixed operator *(Fixed left, Fixed right)
-    {
-        return new Fixed((long)(((Int128)left.Raw * right.Raw) >> Shift));
-    }
-
-    public static Fixed operator /(Fixed left, Fixed right)
-    {
-        return new Fixed((long)(((Int128)left.Raw << Shift) / right.Raw));
-    }
 
     public static Fixed operator +(Fixed value) => value;
     public static Fixed operator -(Fixed value) => new(-value.Raw);
     public static Fixed operator --(Fixed value) => value - One;
     public static Fixed operator ++(Fixed value) => value + One;
+
+    // Checked operators
+    public static Fixed operator checked +(Fixed left, Fixed right) => new(checked(left.Raw + right.Raw));
+    public static Fixed operator checked -(Fixed left, Fixed right) => new(checked(left.Raw - right.Raw));
+    public static Fixed operator checked *(Fixed left, Fixed right) => new(checked((long)(((Int128)left.Raw * right.Raw) >> Shift)));
+    public static Fixed operator checked /(Fixed left, Fixed right) => new(checked((long)(((Int128)left.Raw << Shift) / right.Raw)));
+
+    public static Fixed operator checked -(Fixed value) => new(checked(-value.Raw));
+    public static Fixed operator checked --(Fixed value) => checked(value - One);
+    public static Fixed operator checked ++(Fixed value) => checked(value + One);
 
     // Comparisons
     public static bool operator ==(Fixed left, Fixed right) => left.Raw == right.Raw;

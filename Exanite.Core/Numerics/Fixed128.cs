@@ -179,22 +179,24 @@ public readonly partial struct Fixed128 :
     // Operators
     public static Fixed128 operator +(Fixed128 left, Fixed128 right) => new(left.Raw + right.Raw);
     public static Fixed128 operator -(Fixed128 left, Fixed128 right) => new(left.Raw - right.Raw);
+    public static Fixed128 operator *(Fixed128 left, Fixed128 right) => new((left.Raw * right.Raw) >> Shift);
+    public static Fixed128 operator /(Fixed128 left, Fixed128 right) => new((left.Raw << Shift) / right.Raw);
     public static Fixed128 operator %(Fixed128 left, Fixed128 right) => new(left.Raw % right.Raw);
-
-    public static Fixed128 operator *(Fixed128 left, Fixed128 right)
-    {
-        return new Fixed128((left.Raw * right.Raw) >> Shift);
-    }
-
-    public static Fixed128 operator /(Fixed128 left, Fixed128 right)
-    {
-        return new Fixed128((left.Raw << Shift) / right.Raw);
-    }
 
     public static Fixed128 operator +(Fixed128 value) => value;
     public static Fixed128 operator -(Fixed128 value) => new(-value.Raw);
     public static Fixed128 operator --(Fixed128 value) => value - One;
     public static Fixed128 operator ++(Fixed128 value) => value + One;
+
+    // Checked operators
+    public static Fixed128 operator checked +(Fixed128 left, Fixed128 right) => new(checked(left.Raw + right.Raw));
+    public static Fixed128 operator checked -(Fixed128 left, Fixed128 right) => new(checked(left.Raw - right.Raw));
+    public static Fixed128 operator checked *(Fixed128 left, Fixed128 right) => new(checked((left.Raw * right.Raw) >> Shift));
+    public static Fixed128 operator checked /(Fixed128 left, Fixed128 right) => new(checked((left.Raw << Shift) / right.Raw));
+
+    public static Fixed128 operator checked -(Fixed128 value) => new(checked(-value.Raw));
+    public static Fixed128 operator checked --(Fixed128 value) => checked(value - One);
+    public static Fixed128 operator checked ++(Fixed128 value) => checked(value + One);
 
     // Comparisons
     public static bool operator ==(Fixed128 left, Fixed128 right) => left.Raw == right.Raw;
