@@ -8,6 +8,11 @@ namespace Exanite.Core.Tests.Numerics;
 
 public class FixedTests
 {
+    /// <summary>
+    /// The default decimal places of precision that is expected.
+    /// </summary>
+    public static int BaseExpectedPrecision => 4;
+
     [Fact]
     public void MinMax_AreSymmetric()
     {
@@ -21,7 +26,7 @@ public class FixedTests
     [InlineData(-314159, 100000, -3.14159)]
     public void FromFraction_ReturnsExpectedResult(int numerator, int denominator, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.FromFraction(numerator, denominator), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        Assert.Equal(expected, (double)Fixed.FromFraction(numerator, denominator), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Theory]
@@ -37,7 +42,7 @@ public class FixedTests
     [InlineData(-3, 14159, -3.14159)]
     public void FromParts_ReturnsExpectedResult_IntOverload(int integral, int fractional, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Theory]
@@ -53,7 +58,7 @@ public class FixedTests
     [InlineData(-3, 14159, -3.14159)]
     public void CreateParts_ReturnsExpectedResult_LongOverload(long integral, int fractional, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        Assert.Equal(expected, (double)Fixed.FromParts(integral, fractional), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Theory]
@@ -62,7 +67,7 @@ public class FixedTests
     [InlineData(123.456)]
     public void CreateChecked_ReturnsExpectedValue(double input)
     {
-        Assert.Equal(input, (double)Fixed.CreateChecked(input), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        Assert.Equal(input, (double)Fixed.CreateChecked(input), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Fact]
@@ -186,7 +191,7 @@ public class FixedTests
     [InlineData(123456789012, 0, 351364.18288)]
     public void Sqrt_ReturnsExpectedValue(long integral, int fractional, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.Sqrt(Fixed.FromParts(integral, fractional)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        Assert.Equal(expected, (double)Fixed.Sqrt(Fixed.FromParts(integral, fractional)), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Fact]
@@ -197,7 +202,7 @@ public class FixedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
         }
     }
 
@@ -209,7 +214,7 @@ public class FixedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
         }
     }
 
@@ -219,20 +224,20 @@ public class FixedTests
         for (var i = 0; i < 1000000; i++)
         {
             var input = (long)i * i;
-            AssertEqual(i, input, double.Sqrt(input), (double)Fixed.Sqrt((Fixed)input), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, input, double.Sqrt(input), (double)Fixed.Sqrt((Fixed)input), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
         }
     }
 
     [Fact]
     public void Sqrt_OfMaxValue_ReturnsExpectedValue()
     {
-        Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Fact]
     public void Sqrt_OfEpsilon_ReturnsExpectedValue()
     {
-        Assert.Equal(double.Sqrt((double)Fixed.Epsilon), (double)Fixed.Sqrt(Fixed.Epsilon), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        Assert.Equal(double.Sqrt((double)Fixed.Epsilon), (double)Fixed.Sqrt(Fixed.Epsilon), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Fact]
@@ -243,8 +248,8 @@ public class FixedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Cbrt(current), (double)Fixed.Cbrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
-            AssertEqual(i, -current, double.Cbrt(-current), (double)Fixed.Cbrt((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Cbrt(current), (double)Fixed.Cbrt((Fixed)current), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+            AssertEqual(i, -current, double.Cbrt(-current), (double)Fixed.Cbrt((Fixed)(-current)), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
         }
     }
 
@@ -256,8 +261,8 @@ public class FixedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Cbrt(current), (double)Fixed.Cbrt((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision - 1));
-            AssertEqual(i, -current, double.Cbrt(-current), (double)Fixed.Cbrt((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision - 1));
+            AssertEqual(i, current, double.Cbrt(current), (double)Fixed.Cbrt((Fixed)current), FloatingPointComparer.FromPrecision(BaseExpectedPrecision - 1));
+            AssertEqual(i, -current, double.Cbrt(-current), (double)Fixed.Cbrt((Fixed)(-current)), FloatingPointComparer.FromPrecision(BaseExpectedPrecision - 1));
         }
     }
 
@@ -278,7 +283,7 @@ public class FixedTests
             {
                 _ when M.Abs(i) > 1500 => FloatingPointComparer.FromTolerance((decimal)expected * 0.0000000001M),
                 _ when M.Abs(i) > 1000 => FloatingPointComparer.FromTolerance((decimal)expected * 0.00000000001M),
-                _ => FloatingPointComparer.FromPrecision(Fixed.Precision),
+                _ => FloatingPointComparer.FromPrecision(BaseExpectedPrecision),
             };
 
             AssertEqualIndexCoord(i, x, y, expected, (double)Fixed.Hypot((Fixed)x, (Fixed)y), comparer);
@@ -299,7 +304,7 @@ public class FixedTests
     [InlineData(123456789, 0.99011)]
     public void Sin_ReturnsExpectedValue(double input, double expected)
     {
-        Assert.Equal(expected, (double)Fixed.Sin((Fixed)input), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        Assert.Equal(expected, (double)Fixed.Sin((Fixed)input), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Fact]
@@ -311,8 +316,8 @@ public class FixedTests
         {
             current *= multiplier;
 
-            AssertEqual(i, current, double.Sin(current), (double)Fixed.Sin((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
-            AssertEqual(i, -current, double.Sin(-current), (double)Fixed.Sin((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Sin(current), (double)Fixed.Sin((Fixed)current), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+            AssertEqual(i, -current, double.Sin(-current), (double)Fixed.Sin((Fixed)(-current)), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
         }
     }
 
@@ -325,8 +330,8 @@ public class FixedTests
         {
             current *= multiplier;
 
-            AssertEqual(i, current, double.SinPi(current), (double)Fixed.SinPi((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
-            AssertEqual(i, -current, double.SinPi(-current), (double)Fixed.SinPi((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.SinPi(current), (double)Fixed.SinPi((Fixed)current), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+            AssertEqual(i, -current, double.SinPi(-current), (double)Fixed.SinPi((Fixed)(-current)), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
         }
     }
 
@@ -339,8 +344,8 @@ public class FixedTests
         {
             current *= multiplier;
 
-            AssertEqual(i, current, double.Cos(current), (double)Fixed.Cos((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
-            AssertEqual(i, -current, double.Cos(-current), (double)Fixed.Cos((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Cos(current), (double)Fixed.Cos((Fixed)current), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+            AssertEqual(i, -current, double.Cos(-current), (double)Fixed.Cos((Fixed)(-current)), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
         }
     }
 
@@ -353,8 +358,8 @@ public class FixedTests
         {
             current *= multiplier;
 
-            AssertEqual(i, current, double.CosPi(current), (double)Fixed.CosPi((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
-            AssertEqual(i, -current, double.CosPi(-current), (double)Fixed.CosPi((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.CosPi(current), (double)Fixed.CosPi((Fixed)current), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+            AssertEqual(i, -current, double.CosPi(-current), (double)Fixed.CosPi((Fixed)(-current)), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
         }
     }
 
@@ -380,9 +385,9 @@ public class FixedTests
                     // Slope is equal to tan(x)^2 + 1
                     _ when M.Abs(expected) > 100 => FloatingPointComparer.FromTolerance((decimal)expected * 0.1M), // Slope is >= 10001 at this point
                     _ when M.Abs(expected) > 10 => FloatingPointComparer.FromTolerance((decimal)expected * 0.01M), // Slope is >= 101 at this point
-                    _ when M.Abs(expected) > 2 => FloatingPointComparer.FromPrecision(Fixed.Precision - 2), // Slope is >= 5 at this point
-                    _ when M.Abs(expected) > 1 => FloatingPointComparer.FromPrecision(Fixed.Precision - 1), // Slope is >= 2 at this point
-                    _ => FloatingPointComparer.FromPrecision(Fixed.Precision), // Slope is always >= 1
+                    _ when M.Abs(expected) > 2 => FloatingPointComparer.FromPrecision(BaseExpectedPrecision - 2), // Slope is >= 5 at this point
+                    _ when M.Abs(expected) > 1 => FloatingPointComparer.FromPrecision(BaseExpectedPrecision - 1), // Slope is >= 2 at this point
+                    _ => FloatingPointComparer.FromPrecision(BaseExpectedPrecision), // Slope is always >= 1
                 };
 
                 AssertEqual(i, input, expected, (double)Fixed.Tan((Fixed)input), comparer);
@@ -412,9 +417,9 @@ public class FixedTests
                     // Slope is equal to tan(x)^2 + 1
                     _ when M.Abs(expected) > 100 => FloatingPointComparer.FromTolerance((decimal)expected * 0.1M), // Slope is >= 10001 at this point
                     _ when M.Abs(expected) > 10 => FloatingPointComparer.FromTolerance((decimal)expected * 0.01M), // Slope is >= 101 at this point
-                    _ when M.Abs(expected) > 2 => FloatingPointComparer.FromPrecision(Fixed.Precision - 2), // Slope is >= 5 at this point
-                    _ when M.Abs(expected) > 1 => FloatingPointComparer.FromPrecision(Fixed.Precision - 1), // Slope is >= 2 at this point
-                    _ => FloatingPointComparer.FromPrecision(Fixed.Precision), // Slope is always >= 1
+                    _ when M.Abs(expected) > 2 => FloatingPointComparer.FromPrecision(BaseExpectedPrecision - 2), // Slope is >= 5 at this point
+                    _ when M.Abs(expected) > 1 => FloatingPointComparer.FromPrecision(BaseExpectedPrecision - 1), // Slope is >= 2 at this point
+                    _ => FloatingPointComparer.FromPrecision(BaseExpectedPrecision), // Slope is always >= 1
                 };
 
                 AssertEqual(i, input, expected, (double)Fixed.TanPi((Fixed)input), comparer);
@@ -425,7 +430,7 @@ public class FixedTests
     [Fact]
     public void SinCos_ReturnsExpectedValue_ForWideRange()
     {
-        var comparer = FloatingPointComparer.FromPrecision(Fixed.Precision);
+        var comparer = FloatingPointComparer.FromPrecision(BaseExpectedPrecision);
         var current = 0.0001;
         var multiplier = 1.025;
         for (var i = 0; i < 1350; i++)
@@ -451,7 +456,7 @@ public class FixedTests
     [Fact]
     public void SinCosPi_ReturnsExpectedValue_ForWideRange()
     {
-        var comparer = FloatingPointComparer.FromPrecision(Fixed.Precision);
+        var comparer = FloatingPointComparer.FromPrecision(BaseExpectedPrecision);
         var current = 0.0001;
         var multiplier = 1.025;
         for (var i = 0; i < 1350; i++)
@@ -486,7 +491,7 @@ public class FixedTests
             var x = M.Cos(currentAngle) * currentRadius;
             var y = M.Sin(currentAngle) * currentRadius;
 
-            AssertEqualIndexCoord(i, x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
+            AssertEqualIndexCoord(i, x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(BaseExpectedPrecision - 2));
 
             currentRadius += radiusDelta;
             currentAngle += angleDelta;
@@ -504,7 +509,7 @@ public class FixedTests
     [InlineData(10, -1)]
     public void Atan2_ReturnsExpectedValue_ForReciprocalCases(double x, double y)
     {
-        AssertEqualCoord(x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        AssertEqualCoord(x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Theory]
@@ -515,7 +520,7 @@ public class FixedTests
     [InlineData(0, -1)]
     public void Atan2_ReturnsExpectedValue_ForPointsOnAxes(double x, double y)
     {
-        AssertEqualCoord(x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(Fixed.Precision));
+        AssertEqualCoord(x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
     }
 
     [Fact]
@@ -527,8 +532,8 @@ public class FixedTests
         {
             current *= multiplier;
 
-            AssertEqual(i, current, double.Atan(current), (double)Fixed.Atan((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
-            AssertEqual(i, -current, double.Atan(-current), (double)Fixed.Atan((Fixed)(-current)), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Atan(current), (double)Fixed.Atan((Fixed)current), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
+            AssertEqual(i, -current, double.Atan(-current), (double)Fixed.Atan((Fixed)(-current)), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
         }
     }
 
@@ -541,7 +546,7 @@ public class FixedTests
         for (var i = 0; i < iterations; i++)
         {
             var input = M.Lerp(from, to, (double)i / (iterations - 1));
-            AssertEqual(i, input, double.Asin(input), (double)Fixed.Asin((Fixed)input), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
+            AssertEqual(i, input, double.Asin(input), (double)Fixed.Asin((Fixed)input), FloatingPointComparer.FromPrecision(BaseExpectedPrecision - 2));
         }
     }
 
@@ -554,7 +559,7 @@ public class FixedTests
         for (var i = 0; i < iterations; i++)
         {
             var input = M.Lerp(from, to, (double)i / (iterations - 1));
-            AssertEqual(i, input, double.Acos(input), (double)Fixed.Acos((Fixed)input), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
+            AssertEqual(i, input, double.Acos(input), (double)Fixed.Acos((Fixed)input), FloatingPointComparer.FromPrecision(BaseExpectedPrecision - 2));
         }
     }
 
@@ -563,7 +568,7 @@ public class FixedTests
     {
         // Note it does not actually return the Shift value
         var result = (double)Fixed.Log2(Fixed.Epsilon);
-        Assert.Equal(-Fixed.Shift, result, FloatingPointComparer.FromPrecision(Fixed.Precision));
+        Assert.Equal(-Fixed.Shift, result, FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
         Assert.NotEqual(-Fixed.Shift, result);
     }
 
@@ -589,7 +594,7 @@ public class FixedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Log2(current), (double)Fixed.Log2((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Log2(current), (double)Fixed.Log2((Fixed)current), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
         }
     }
 
@@ -604,9 +609,9 @@ public class FixedTests
             var expected = double.Log2(current);
             var comparer = i switch
             {
-                _ when M.Abs(i) > 750 => FloatingPointComparer.FromPrecision(Fixed.Precision - 2),
-                _ when M.Abs(i) > 350 => FloatingPointComparer.FromPrecision(Fixed.Precision - 1),
-                _ => FloatingPointComparer.FromPrecision(Fixed.Precision),
+                _ when M.Abs(i) > 750 => FloatingPointComparer.FromPrecision(BaseExpectedPrecision - 2),
+                _ when M.Abs(i) > 350 => FloatingPointComparer.FromPrecision(BaseExpectedPrecision - 1),
+                _ => FloatingPointComparer.FromPrecision(BaseExpectedPrecision),
             };
 
             AssertEqual(i, current, expected, (double)Fixed.Log2((Fixed)current), comparer);
@@ -621,7 +626,7 @@ public class FixedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Log(current), (double)Fixed.Log((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            AssertEqual(i, current, double.Log(current), (double)Fixed.Log((Fixed)current), FloatingPointComparer.FromPrecision(BaseExpectedPrecision));
         }
     }
 
@@ -633,7 +638,7 @@ public class FixedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Log10(current), (double)Fixed.Log10((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision - 1));
+            AssertEqual(i, current, double.Log10(current), (double)Fixed.Log10((Fixed)current), FloatingPointComparer.FromPrecision(BaseExpectedPrecision - 1));
         }
     }
 
@@ -647,7 +652,7 @@ public class FixedTests
             current *= multiplier;
             var logBase = (current * 100) % 10;
             var expected = double.Log(current, logBase);
-            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.01M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision));
+            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.01M, FloatingPointComparer.ToleranceFromPrecision(BaseExpectedPrecision));
             AssertEqualLogBase(i, current, logBase, expected, (double)Fixed.Log((Fixed)current, (Fixed)logBase), comparer);
         }
     }
@@ -661,7 +666,7 @@ public class FixedTests
         {
             current *= multiplier;
             var expected = double.Exp2(current);
-            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0000105M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision));
+            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0000105M, FloatingPointComparer.ToleranceFromPrecision(BaseExpectedPrecision));
             AssertEqual(i, current, expected, (double)Fixed.Exp2((Fixed)current), comparer);
         }
     }
@@ -686,7 +691,7 @@ public class FixedTests
             current *= multiplier;
             var exponent = (current * 100) % 10;
             var expected = double.Pow(current, exponent);
-            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0005M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision));
+            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0005M, FloatingPointComparer.ToleranceFromPrecision(BaseExpectedPrecision));
             AssertEqualPowBase(i, current, exponent, expected, (double)Fixed.Pow((Fixed)current, (Fixed)exponent), comparer);
         }
     }
@@ -711,14 +716,14 @@ public class FixedTests
 
                 {
                     var expected = double.RootN(current, root);
-                    var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.00006M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision));
+                    var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.00006M, FloatingPointComparer.ToleranceFromPrecision(BaseExpectedPrecision));
                     AssertEqualRootN(i, current, root, expected, (double)Fixed.RootN((Fixed)current, root), comparer);
                 }
 
                 if (!int.IsEvenInteger(root))
                 {
                     var expected = double.RootN(-current, root);
-                    var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.00006M, FloatingPointComparer.ToleranceFromPrecision(Fixed.Precision));
+                    var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.00006M, FloatingPointComparer.ToleranceFromPrecision(BaseExpectedPrecision));
                     AssertEqualRootN(i, -current, root, expected, (double)Fixed.RootN((Fixed)(-current), root), comparer);
                 }
             }

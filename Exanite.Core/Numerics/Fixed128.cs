@@ -47,11 +47,6 @@ public readonly partial struct Fixed128 :
 
     public static int Radix => 2;
 
-    /// <summary>
-    /// The number of decimal places of precision.
-    /// </summary>
-    public static int Precision => 9;
-
     internal readonly Int128 Raw;
 
     internal Fixed128(Int128 raw)
