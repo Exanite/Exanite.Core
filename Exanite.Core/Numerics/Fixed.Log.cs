@@ -40,7 +40,7 @@ public partial struct Fixed
             // Get values and interpolate
             var y0 = Log2Lut[index];
             var y1 = Log2Lut[index + 1];
-            normalizedResult = y0 + (((y1 - y0) * fraction) >> Shift);
+            normalizedResult = (long)(y0 + (((Int128)(y1 - y0) * fraction) >> Shift));
         }
 
         return new Fixed(normalizedResult) - shiftNormalize;

@@ -57,7 +57,7 @@ public partial struct Fixed
         // Get values and interpolate
         var y0 = TanLut[index];
         var y1 = TanLut[index + 1];
-        var result = y0 + (((y1 - y0) * fraction) >> Shift);
+        var result = (long)(y0 + (((Int128)(y1 - y0) * fraction) >> Shift));
         return new Fixed(isInverted ? -result : result);
     }
 
@@ -84,7 +84,7 @@ public partial struct Fixed
         // Get values and interpolate
         var y0 = TanLut[index];
         var y1 = TanLut[index + 1];
-        var result = y0 + (((y1 - y0) * fraction) >> Shift);
+        var result = (long)(y0 + (((Int128)(y1 - y0) * fraction) >> Shift));
         return new Fixed(isInverted ? -result : result);
     }
 
@@ -288,7 +288,7 @@ public partial struct Fixed
         // Get values and interpolate
         var y0 = SinLut[index];
         var y1 = SinLut[index + 1];
-        var result = y0 + (((y1 - y0) * fraction) >> Shift);
+        var result = (long)(y0 + (((Int128)(y1 - y0) * fraction) >> Shift));
         return isNegative ? -result : result;
     }
 
@@ -326,7 +326,7 @@ public partial struct Fixed
         // Get values and interpolate
         var y0 = SinLut[index];
         var y1 = SinLut[index + 1];
-        var result = y0 + (((y1 - y0) * fraction) >> Shift);
+        var result = (long)(y0 + (((Int128)(y1 - y0) * fraction) >> Shift));
         return isNegative ? -result : result;
     }
 
@@ -349,7 +349,7 @@ public partial struct Fixed
 
         var y0 = AtanLut[index];
         var y1 = AtanLut[index + 1];
-        var result = y0 + (((y1 - y0) * fraction) >> Shift);
+        var result = (long)(y0 + (((Int128)(y1 - y0) * fraction) >> Shift));
         return result;
     }
 }
