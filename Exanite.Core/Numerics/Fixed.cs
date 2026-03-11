@@ -79,20 +79,32 @@ public readonly partial struct Fixed :
 
     // Conversion: Can exceed range
     public static explicit operator Fixed(long value) => new(value << Shift);
-    public static explicit operator Fixed(decimal value) => new((long)value * OneRaw);
+    public static explicit operator checked Fixed(long value) => new(checked(value << Shift));
+
+    public static explicit operator Fixed(decimal value) => new((long)(value * OneRaw));
+    public static explicit operator checked Fixed(decimal value) => new(checked((long)(value * OneRaw)));
 
     // Conversion: Unsafe - Non-deterministic
     // Consider using FromFraction or FromParts instead
     public static explicit operator Fixed(float value) => new((long)(value * OneRaw));
+    public static explicit operator checked Fixed(float value) => new(checked((long)(value * OneRaw)));
+
     public static explicit operator Fixed(double value) => new((long)(value * OneRaw));
+    public static explicit operator checked Fixed(double value) => new(checked((long)(value * OneRaw)));
 
     // From Fixed
 
     // Conversion: Loss of fraction / sign
     public static explicit operator int(Fixed value) => (int)(value.Raw >> Shift);
+    public static explicit operator checked int(Fixed value) => checked((int)(value.Raw >> Shift));
+
     public static explicit operator uint(Fixed value) => (uint)(value.Raw >> Shift);
+    public static explicit operator checked uint(Fixed value) => checked((uint)(value.Raw >> Shift));
+
     public static explicit operator long(Fixed value) => value.Raw >> Shift;
+
     public static explicit operator ulong(Fixed value) => (ulong)(value.Raw >> Shift);
+    public static explicit operator checked ulong(Fixed value) => checked((ulong)(value.Raw >> Shift));
 
     // Conversion: Loss of precision / determinism
     public static explicit operator float(Fixed value) => (float)value.Raw / OneRaw;

@@ -69,25 +69,39 @@ public readonly partial struct Fixed128 :
     public static implicit operator Fixed128(Fixed value) => new((Int128)value.Raw << (Shift - Fixed.Shift));
 
     // Conversion: Can exceed range
-    public static explicit operator Fixed128(long value) => new(value << Shift);
+    public static explicit operator Fixed128(long value) => new((Int128)value << Shift);
+    public static explicit operator checked Fixed128(long value) => new(checked((Int128)value << Shift));
+
     public static explicit operator Fixed128(decimal value) => new((Int128)value * OneRaw);
+    public static explicit operator checked Fixed128(decimal value) => new(checked((Int128)value * OneRaw));
 
     // Conversion: Unsafe - Non-deterministic
-    // Consider using FromFraction or FromParts instead
     public static explicit operator Fixed128(float value) => new((Int128)(value * OneRaw));
+    public static explicit operator checked Fixed128(float value) => new(checked((Int128)(value * OneRaw)));
+
     public static explicit operator Fixed128(double value) => new((Int128)(value * OneRaw));
+    public static explicit operator checked Fixed128(double value) => new(checked((Int128)(value * OneRaw)));
 
     // From Fixed128
 
     // Conversion: Loss of fraction / sign
     public static explicit operator int(Fixed128 value) => (int)(value.Raw >> Shift);
+    public static explicit operator checked int(Fixed128 value) => checked((int)(value.Raw >> Shift));
+
     public static explicit operator uint(Fixed128 value) => (uint)(value.Raw >> Shift);
+    public static explicit operator checked uint(Fixed128 value) => checked((uint)(value.Raw >> Shift));
+
     public static explicit operator long(Fixed128 value) => (long)(value.Raw >> Shift);
+    public static explicit operator checked long(Fixed128 value) => checked((long)(value.Raw >> Shift));
+
     public static explicit operator ulong(Fixed128 value) => (ulong)(value.Raw >> Shift);
+    public static explicit operator checked ulong(Fixed128 value) => checked((ulong)(value.Raw >> Shift));
+
     public static explicit operator Int128(Fixed128 value) => value.Raw >> Shift;
 
     // Conversion: Loss of precision
     public static explicit operator Fixed(Fixed128 value) => new((long)(value.Raw >> (Shift - Fixed.Shift)));
+    public static explicit operator checked Fixed(Fixed128 value) => new(checked((long)(value.Raw >> (Shift - Fixed.Shift))));
 
     // Conversion: Loss of precision / determinism
     public static explicit operator float(Fixed128 value) => (float)value.Raw / OneRaw;
