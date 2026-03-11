@@ -670,7 +670,7 @@ public class FixedTests
         Assert.Equal(1, Fixed.Exp2(0));
         Assert.Equal(Fixed.MaxValue, Fixed.Exp2(100));
         Assert.Equal(Fixed.MaxValue, Fixed.Exp2(Fixed.IntegralBitCount));
-        Assert.Equal(0, Fixed.Exp2(Fixed.Shift + 1));
+        Assert.Equal(0, Fixed.Exp2(-(Fixed.Shift + 1)));
         Assert.Equal(0, Fixed.Exp2(-100));
     }
 
