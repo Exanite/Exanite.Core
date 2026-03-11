@@ -10,6 +10,16 @@ namespace Exanite.Core.Numerics;
 /// A fixed point Q96.32 value (96-bits signed integer, 32-bits fraction).
 /// Has a precision of 9 decimal places.
 /// </summary>
+/// <remarks>
+/// This is designed to be used as an intermediate data type for operations
+/// that need more precision than what the normal <see cref="Fixed"/> type allows.
+/// <para/>
+/// As such, <see cref="Fixed128"/> does not provide a complete suite of operations.
+/// <para/>
+/// Implementation note:
+/// The fast methods are called "fast" because they are designed
+/// to be used for <see cref="Fixed"/>, which does not need as much precision.
+/// </remarks>
 public readonly partial struct Fixed128 :
     INumber<Fixed128>,
     IMinMaxValue<Fixed128>,
