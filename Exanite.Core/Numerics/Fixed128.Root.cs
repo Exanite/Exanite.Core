@@ -102,21 +102,17 @@ public partial struct Fixed128
         var normalizedX = shiftInitial < 0 ? absX >> -shiftInitial : absX << shiftInitial;
         AssertExpectedRange(normalizedX, internalShift, 0.25M, 2M);
 
-        // TODO
         // Calculate LUT index of initial guess
-        // 1 is represented with (internalShift + 1) bits, but we are exclusive of 1
-        // const int availableBitCount = internalShift + 1 - 1;
-        // var lutIndex = (int)(normalizedX >> (availableBitCount - SqrtLutBits));
-        // var y = (Int128)SqrtLut[lutIndex - SqrtLutOffset] << (internalShift - Fixed.Shift);
-
-        // TODO: Temporary initial guess
-        var y = (Int128)1 << internalShift;
+        // 2 is represented with (internalShift + 2) bits, but we are exclusive of 1
+        const int availableBitCount = internalShift + 2 - 1;
+        var lutIndex = (int)(normalizedX >> (availableBitCount - CbrtLutBits));
+        var y = (Int128)CbrtLut[lutIndex - CbrtLutOffset] << (internalShift - Fixed.Shift);
 
         // Direct Newton-Raphson method:
         // y = (2y + x/y^2) / 3
         // y = cbrt(x)
         var threeReciprocal = ((Int128)1 << (internalShift * 2)) / ((Int128)3 << internalShift);
-        const int maxIterationCount = 7; // TODO: Lower this
+        const int maxIterationCount = 3;
         for (var i = 0; i < maxIterationCount; i++)
         {
             var yy = y * y;
@@ -128,7 +124,6 @@ public partial struct Fixed128
                 break;
             }
 
-            AssertUtility.IsFalse(i == maxIterationCount - 1, "Didn't converge"); // TODO: Remove. This technically restricts iterations to maxIterationsCount - 1
             y = yNext;
         }
 
