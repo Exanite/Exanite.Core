@@ -201,7 +201,7 @@ public class FixedLookupsGenerator
             }
 
             // Sqrt lookup
-            // This stores initial guesses for y for the Inverse Newton-Raphsom method
+            // This stores initial guesses for y for the Inverse Newton-Raphson method
             // The guesses have the value 1 / sqrt(x_normalized) and are indexed using the upper n bits of x_normalized
             // x_normalized is in the range [0.5, 2)
             //
@@ -241,7 +241,7 @@ public class FixedLookupsGenerator
             }
 
             // Cbrt lookup
-            // This stores initial guesses for y for the Direct Newton-Raphsom method
+            // This stores initial guesses for y for the Direct Newton-Raphson method
             // The guesses have the value cbrt(x_normalized) and are indexed using the upper n bits of x_normalized
             // x_normalized is in the range [0.25, 2)
             //
