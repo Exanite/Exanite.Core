@@ -79,10 +79,18 @@ public readonly partial struct Fixed :
 
     // Conversion: Can exceed range
     public static explicit operator Fixed(long value) => new(value << Shift);
-    public static explicit operator checked Fixed(long value) => new(checked(value << Shift));
+    public static explicit operator checked Fixed(long value)
+    {
+        if (value > (long)MaxValue)
+        {
+            throw new OverflowException();
+        }
+
+        return new Fixed(value << Shift);
+    }
 
     public static explicit operator Fixed(decimal value) => new((long)(value * OneRaw));
-    public static explicit operator checked Fixed(decimal value) => new(checked((long)(value * OneRaw)));
+    public static explicit operator checked Fixed(decimal value) => new((long)(value * OneRaw));
 
     // Conversion: Unsafe - Non-deterministic
     // Consider using FromFraction or FromParts instead
