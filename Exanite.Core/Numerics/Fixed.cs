@@ -90,7 +90,6 @@ public readonly partial struct Fixed :
     }
 
     public static explicit operator Fixed(decimal value) => new((long)(value * OneRaw));
-    public static explicit operator checked Fixed(decimal value) => new((long)(value * OneRaw));
 
     // Conversion: Unsafe - Non-deterministic
     // Consider using FromFraction or FromParts instead
