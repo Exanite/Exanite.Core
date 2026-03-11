@@ -40,7 +40,6 @@ public partial struct Fixed// : IPowerFunctions<Fixed>
         var f3 = (f2 * f) >> internalShift;
         var f4 = (f2 * f2) >> internalShift;
         var f5 = (f3 * f2) >> internalShift;
-        var f6 = (f3 * f3) >> internalShift;
 
         // Terms are Q16
         result += (Exp2Term1 * f) >> Shift;
@@ -48,7 +47,6 @@ public partial struct Fixed// : IPowerFunctions<Fixed>
         result += (Exp2Term3 * f3) >> Shift;
         result += (Exp2Term4 * f4) >> Shift;
         result += (Exp2Term5 * f5) >> Shift;
-        result += (Exp2Term6 * f6) >> Shift;
 
         // Calculate the final product:
         // result * 2^n

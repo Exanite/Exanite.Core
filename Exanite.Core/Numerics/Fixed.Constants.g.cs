@@ -21,7 +21,6 @@ public partial struct Fixed
     private const ushort Exp2Term3 = 3638;
     private const ushort Exp2Term4 = 631;
     private const ushort Exp2Term5 = 88;
-    private const ushort Exp2Term6 = 11;
 
     /// <summary>
     /// Q4.60 format.

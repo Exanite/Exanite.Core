@@ -59,7 +59,6 @@ public class FixedLookupsGenerator
                 private const ushort Exp2Term3 = {CalculateRawCeiling(double.Pow(double.Log(2), 3) / 6)};
                 private const ushort Exp2Term4 = {CalculateRawCeiling(double.Pow(double.Log(2), 4) / 24)};
                 private const ushort Exp2Term5 = {CalculateRawCeiling(double.Pow(double.Log(2), 5) / 120)};
-                private const ushort Exp2Term6 = {CalculateRawCeiling(double.Pow(double.Log(2), 6) / 720)};
                 """);
 
             builder.AppendSeparation();
