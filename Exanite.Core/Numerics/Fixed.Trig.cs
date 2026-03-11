@@ -6,20 +6,6 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed
 {
-    /// <summary>
-    /// Q4.60 format. Equal to round(tau * 2^60).
-    /// </summary>
-    // Generated using: (long)decimal.Round((decimal)double.Tau * (1L << 60))
-    private const long TauPreciseRaw = 7244019458077126904;
-    private const int TauPreciseShift = 60;
-
-    /// <summary>
-    /// Q4.60 format. Equal to round(pi * 2^60).
-    /// </summary>
-    // Generated using: (long)decimal.Round((decimal)double.Pi * (1L << 60))
-    private const long PiPreciseRaw = 3622009729038557687;
-    private const int PiPreciseShift = 60;
-
     public static Fixed Sin(Fixed x)
     {
         var normalizedX = WrapToTauRange(x.Raw);

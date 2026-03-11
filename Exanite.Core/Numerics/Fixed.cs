@@ -32,42 +32,6 @@ public readonly partial struct Fixed :
     private const long TwoRaw = OneRaw * 2;
     private const long TwoMask = TwoRaw - 1;
 
-    /// <summary>
-    /// Equal to round(e * 2^16).
-    /// </summary>
-    // Generated using: (long)decimal.Round((decimal)double.E * (1L << Shift))
-    private const long ERaw = 178145;
-
-    /// <summary>
-    /// Equal to round(pi * 2^16).
-    /// </summary>
-    // Generated using: (long)decimal.Round((decimal)double.Pi * (1L << Shift))
-    private const long PiRaw = 205887;
-
-    /// <summary>
-    /// Equal to round(pi * 2^16 / 2).
-    /// </summary>
-    // Generated using: (long)decimal.Round((decimal)(double.Pi / 2) * (1L << Shift))
-    private const long PiHalfRaw = 102944;
-
-    /// <summary>
-    /// Equal to round(pi * 2^16 / 4).
-    /// </summary>
-    // Generated using: (long)decimal.Round((decimal)(double.Pi / 4) * (1L << Shift))
-    private const long PiFourthRaw = 51472;
-
-    /// <summary>
-    /// Equal to round((1 / pi) * 2^16).
-    /// </summary>
-    // Generated using: (long)decimal.Round((decimal)(1 / double.Pi) * (1L << Shift))
-    private const long PiInverseRaw = 20861;
-
-    /// <summary>
-    /// Equal to round(pi * 2^16 * 2).
-    /// </summary>
-    // Generated using: (long)decimal.Round((decimal)double.Tau * (1L << Shift))
-    private const long TauRaw = 411775;
-
     public static Fixed Zero => new(0);
     public static Fixed Half => new(HalfRaw);
     public static Fixed One => new(OneRaw);

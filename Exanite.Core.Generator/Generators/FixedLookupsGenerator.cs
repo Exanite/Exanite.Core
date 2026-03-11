@@ -9,22 +9,82 @@ namespace Exanite.Core.Generator.Generators;
 
 public class FixedLookupsGenerator
 {
-    private readonly bool generateLookups;
+    private readonly bool generate;
 
-    public FixedLookupsGenerator(bool generateLookups)
+    public FixedLookupsGenerator(bool generate)
     {
-        this.generateLookups = generateLookups;
+        this.generate = generate;
     }
 
     public void Run()
     {
-        if (!generateLookups)
+        if (!generate)
         {
             return;
         }
 
+        GenerateFixedConstants();
         GenerateFixedLookups();
         GenerateFixed128Lookups();
+    }
+
+    private void GenerateFixedConstants()
+    {
+        var builder = new IndentedStringBuilder();
+        builder.AppendGeneratedCodeHeader();
+
+        builder.AppendLine("namespace Exanite.Core.Numerics;");
+
+        builder.AppendSeparation();
+        using (builder.EnterScope("public partial struct Fixed"))
+        {
+            builder.AppendBlock($"""
+                /// <summary>
+                /// Equal to round(e * 2^16).
+                /// </summary>
+                private const long ERaw = {(long)decimal.Round((decimal)double.E * (1L << Fixed.Shift))};
+
+                /// <summary>
+                /// Equal to round(pi * 2^16).
+                /// </summary>
+                private const long PiRaw = {(long)decimal.Round((decimal)double.Pi * (1L << Fixed.Shift))};
+
+                /// <summary>
+                /// Equal to round(pi * 2^16 / 2).
+                /// </summary>
+                private const long PiHalfRaw = {(long)decimal.Round((decimal)(double.Pi / 2) * (1L << Fixed.Shift))};
+
+                /// <summary>
+                /// Equal to round(pi * 2^16 / 4).
+                /// </summary>
+                private const long PiFourthRaw = {(long)decimal.Round((decimal)(double.Pi / 4) * (1L << Fixed.Shift))};
+
+                /// <summary>
+                /// Equal to round((1 / pi) * 2^16).
+                /// </summary>
+                private const long PiInverseRaw = {(long)decimal.Round((decimal)(1 / double.Pi) * (1L << Fixed.Shift))};
+
+                /// <summary>
+                /// Equal to round(pi * 2^16 * 2).
+                /// </summary>
+                private const long TauRaw = {(long)decimal.Round((decimal)double.Tau * (1L << Fixed.Shift))};
+
+                /// <summary>
+                /// Q4.60 format. Equal to round(tau * 2^60).
+                /// </summary>
+                private const long TauPreciseRaw = {(long)decimal.Round((decimal)double.Tau * (1L << 60))};
+                private const int TauPreciseShift = 60;
+
+                /// <summary>
+                /// Q4.60 format. Equal to round(pi * 2^60).
+                /// </summary>
+                private const long PiPreciseRaw = {(long)decimal.Round((decimal)double.Pi * (1L << 60))};
+                private const int PiPreciseShift = 60;
+                """);
+        }
+
+        var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / "Fixed.Constants.g.cs";
+        outputPath.WriteAllText(builder.ToString());
     }
 
     private void GenerateFixedLookups()
