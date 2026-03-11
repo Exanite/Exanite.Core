@@ -55,5 +55,4 @@ public partial struct Fixed// : IPowerFunctions<Fixed>
         var finalProduct = n < 0 ? result >> -n : result << n;
         return new Fixed((long)(finalProduct >> (internalShift - Shift)));
     }
-
 }
