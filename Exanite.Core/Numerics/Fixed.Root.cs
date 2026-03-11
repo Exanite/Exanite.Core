@@ -24,6 +24,14 @@ public partial struct Fixed
 
         switch (n)
         {
+            case -3:
+            {
+                return 1 / Cbrt(x);
+            }
+            case -2:
+            {
+                return 1 / Sqrt(x);
+            }
             case -1:
             {
                 return 1 / x;

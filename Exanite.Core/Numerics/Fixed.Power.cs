@@ -6,6 +6,61 @@ public partial struct Fixed
 {
     public static Fixed Pow(Fixed x, Fixed y)
     {
+        if (IsInteger(y))
+        {
+            switch ((int)y)
+            {
+                case -3:
+                {
+                    // xx and xxx are Q(Shift * 2)
+                    const int xxShift = Shift * 2;
+                    var xx = (Int128)x.Raw * x.Raw;
+                    var xxx = (xx >> Shift) * x.Raw;
+
+                    const int oneShift = 62;
+                    var result = (((Int128)1 << oneShift) / xxx) >> (oneShift - xxShift - Shift);
+                    return new Fixed((long)result);
+                }
+                case -2:
+                {
+                    // xx is Q(Shift * 2)
+                    const int xxShift = Shift * 2;
+                    var xx = (Int128)x.Raw * x.Raw;
+
+                    const int oneShift = 62;
+                    var result = (((Int128)1 << oneShift) / xx) >> (oneShift - xxShift - Shift);
+                    return new Fixed((long)result);
+                }
+                case -1:
+                {
+                    return 1 / x;
+                }
+                case 0:
+                {
+                    return 1;
+                }
+                case 1:
+                {
+                    return x;
+                }
+                case 2:
+                {
+                    return checked(x * x);
+                }
+                case 3:
+                {
+                    checked
+                    {
+                        // xx and xxx are Q32
+                        var xx = (Int128)x.Raw * x.Raw;
+                        var xxx = (xx >> Shift) * x.Raw;
+                        var result = xxx >> Shift;
+                        return new Fixed((long)result);
+                    }
+                }
+            }
+        }
+
         // Use identity:
         // x^y = 2^(y * log2(x))
         return Exp2(y * Log2(x));
