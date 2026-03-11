@@ -17,7 +17,8 @@ public readonly partial struct Fixed :
     ITrigonometricFunctions<Fixed>
 {
     // Constants
-    public const int IntegralBitCount = 64 - Shift;
+    public const int BitCount = 64;
+    public const int IntegralBitCount = BitCount - Shift;
     public const int FractionalBitCount = Shift;
 
     public const int Shift = 16;

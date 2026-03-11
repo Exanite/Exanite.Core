@@ -16,7 +16,8 @@ public readonly partial struct Fixed128 :
     ISignedNumber<Fixed128>
 {
     // Constants
-    public const int IntegralBitCount = 128 - Shift;
+    public const int BitCount = 128;
+    public const int IntegralBitCount = BitCount - Shift;
     public const int FractionalBitCount = Shift;
 
     public const int Shift = 32;
