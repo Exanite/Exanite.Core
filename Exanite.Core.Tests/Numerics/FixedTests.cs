@@ -1,5 +1,6 @@
 using System;
 using Exanite.Core.Numerics;
+using Exanite.Core.Runtime;
 using Exanite.Core.Utilities;
 using Xunit;
 
@@ -555,6 +556,20 @@ public class FixedTests
             var input = M.Lerp(from, to, (double)i / (iterations - 1));
             AssertEqual(i, input, double.Acos(input), (double)Fixed.Acos((Fixed)input), FloatingPointComparer.FromPrecision(Fixed.Precision - 2));
         }
+    }
+
+    [Fact]
+    public void Log2_ThrowsForInvalidInputs()
+    {
+        Assert.Throws<GuardException>(() =>
+        {
+            Fixed.Log2(0);
+        });
+
+        Assert.Throws<GuardException>(() =>
+        {
+            Fixed.Log2(-1);
+        });
     }
 
     [Fact]

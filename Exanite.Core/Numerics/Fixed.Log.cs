@@ -7,6 +7,16 @@ public partial struct Fixed// : ILogarithmicFunctions<Fixed>
 {
     public static Fixed Log2(Fixed x)
     {
+        if (x <= 0)
+        {
+            if (x == 0)
+            {
+                GuardUtility.Throw("Cannot take the logarithm of 0");
+            }
+
+            GuardUtility.Throw("Cannot take the logarithm of a negative number");
+        }
+
         var leadingZeroCount = (int)long.LeadingZeroCount(x.Raw);
         var distanceToOneBit = leadingZeroCount - (BitCount - 1 - Shift);
         var shiftNormalize = distanceToOneBit;
