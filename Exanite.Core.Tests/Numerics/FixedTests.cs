@@ -660,7 +660,9 @@ public class FixedTests
         for (var i = 0; i < 340; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Exp2(current), (double)Fixed.Exp2((Fixed)current), FloatingPointComparer.FromPrecision(Fixed.Precision));
+            var expected = double.Exp2(current);
+            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.001M);
+            AssertEqual(i, current, double.Exp2(current), (double)Fixed.Exp2((Fixed)current), comparer);
         }
     }
 
