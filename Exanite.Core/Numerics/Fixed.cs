@@ -15,7 +15,8 @@ public readonly partial struct Fixed :
     IMinMaxValue<Fixed>,
     ISignedNumber<Fixed>,
     ITrigonometricFunctions<Fixed>,
-    ILogarithmicFunctions<Fixed>
+    ILogarithmicFunctions<Fixed>,
+    IPowerFunctions<Fixed>
 {
     // Constants
     public const int BitCount = 64;
