@@ -133,12 +133,7 @@ public readonly partial struct Fixed128 :
             return new Fixed128(integral * OneRaw);
         }
 
-        var divisor = 10;
-        for (var i = 1; i < decimalPlaces; i++)
-        {
-            divisor *= 10;
-        }
-
+        var divisor = M.Exp10(decimalPlaces);
         return new Fixed128(integral * OneRaw + ((integral >> 127) | 1) * ((fractional * OneRaw) / divisor));
     }
 

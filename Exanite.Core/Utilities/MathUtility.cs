@@ -308,6 +308,40 @@ public static partial class M
     }
 
     /// <summary>
+    /// Returns true if the value is a power of 2.
+    /// </summary>
+    public static bool IsPowerOfTwo<T>(this T value) where T : IBinaryInteger<T>
+    {
+        return value > T.Zero && (value & (value - T.One)) == T.Zero;
+    }
+
+    /// <summary>
+    /// Returns 10 raised to the given power.
+    /// </summary>
+    public static int Exp10(int power)
+    {
+        switch (power)
+        {
+            case 0: return 1;
+            case 1: return 10;
+            case 2: return 100;
+            case 3: return 1000;
+            case 4: return 10000;
+            case 5: return 100000;
+            default:
+            {
+                var result = 10;
+                for (var i = 1; i < power; i++)
+                {
+                    result *= 10;
+                }
+
+                return result;
+            }
+        }
+    }
+
+    /// <summary>
     /// Returns true if the value is even.
     /// </summary>
     public static bool IsEvenInteger<T>(this T value) where T : INumber<T>
@@ -321,14 +355,6 @@ public static partial class M
     public static bool IsOddInteger<T>(this T value) where T : INumber<T>
     {
         return T.IsOddInteger(value);
-    }
-
-    /// <summary>
-    /// Returns true if the value is a power of 2.
-    /// </summary>
-    public static bool IsPowerOfTwo<T>(this T value) where T : IBinaryInteger<T>
-    {
-        return value > T.Zero && (value & (value - T.One)) == T.Zero;
     }
 
     #endregion

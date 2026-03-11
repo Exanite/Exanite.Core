@@ -133,12 +133,7 @@ public readonly partial struct Fixed :
             return new Fixed(integral * OneRaw);
         }
 
-        var divisor = 10;
-        for (var i = 1; i < decimalPlaces; i++)
-        {
-            divisor *= 10;
-        }
-
+        var divisor = M.Exp10(decimalPlaces);
         return new Fixed(integral * OneRaw + ((integral >> 31) | 1) * ((fractional * OneRaw) / divisor));
     }
 
@@ -163,12 +158,7 @@ public readonly partial struct Fixed :
             return new Fixed(integral * OneRaw);
         }
 
-        var divisor = 10;
-        for (var i = 1; i < decimalPlaces; i++)
-        {
-            divisor *= 10;
-        }
-
+        var divisor = M.Exp10(decimalPlaces);
         return new Fixed(integral * OneRaw + ((integral >> 63) | 1) * ((fractional * OneRaw) / divisor));
     }
 
