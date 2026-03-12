@@ -12,19 +12,26 @@ public partial struct Fixed
             {
                 case -3:
                 {
-                    var xx = (Int128)x.Raw * x.Raw;
-                    var xxx = (xx >> Shift) * x.Raw;
-                    return (Fixed)(1 / new Fixed128(xxx));
+                    const int oneShift = 126 - Shift;
+                    var one = (Int128)1 << oneShift;
+                    var oneOverX = (one / x.Raw) << Shift;
+                    var oneOverXx = (oneOverX / x.Raw) << Shift;
+                    var result = (oneOverXx / x.Raw) >> (oneShift - Shift - Shift);
+                    return new Fixed((long)result);
                 }
                 case -2:
                 {
-                    var xx = (Int128)x.Raw * x.Raw;
-                    return (Fixed)(1 / new Fixed128(xx));
+                    const int oneShift = 126 - Shift;
+                    var one = (Int128)1 << oneShift;
+                    var oneOverX = (one / x.Raw) << Shift;
+                    var result = (oneOverX / x.Raw) >> (oneShift - Shift - Shift);
+                    return new Fixed((long)result);
                 }
                 case -1:
                 {
-                    const int oneShift = 126;
-                    var result = (((Int128)1 << oneShift) / x.Raw) >> (oneShift - Shift - Shift);
+                    const int oneShift = 126 - Shift;
+                    var one = (Int128)1 << oneShift;
+                    var result = (one / x.Raw) >> (oneShift - Shift - Shift);
                     return new Fixed((long)result);
                 }
                 case 0:
