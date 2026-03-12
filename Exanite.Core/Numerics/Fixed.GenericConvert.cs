@@ -143,42 +143,42 @@ public partial struct Fixed
 
     public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var decimalValue = (decimal)value.Raw / OneRaw;
-        return TOther.TryConvertFromChecked(decimalValue, out result) || TryConvertFromCheckedFromDecimal<TOther, decimal>(decimalValue, out result);
+        var decimalValue = (double)value.Raw / OneRaw;
+        return TOther.TryConvertFromChecked(decimalValue, out result) || TryConvertFromCheckedFromDouble<TOther, double>(decimalValue, out result);
     }
 
     public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var decimalValue = (decimal)value.Raw / OneRaw;
-        return TOther.TryConvertFromSaturating(decimalValue, out result) || TryConvertFromSaturatingFromDecimal<TOther, decimal>(decimalValue, out result);
+        var decimalValue = (double)value.Raw / OneRaw;
+        return TOther.TryConvertFromSaturating(decimalValue, out result) || TryConvertFromSaturatingFromDouble<TOther, double>(decimalValue, out result);
     }
 
     public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var decimalValue = (decimal)value.Raw / OneRaw;
-        return TOther.TryConvertFromTruncating(decimalValue, out result) || TryConvertFromTruncatingFromDecimal<TOther, decimal>(decimalValue, out result);
+        var decimalValue = (double)value.Raw / OneRaw;
+        return TOther.TryConvertFromTruncating(decimalValue, out result) || TryConvertFromTruncatingFromDouble<TOther, double>(decimalValue, out result);
     }
 
-    // TryConvertTo_FromDecimal
+    // TryConvertTo_FromDouble
     // We can't call the relevant methods on decimal directly since these are explicit interface implementations
 
-    private static bool TryConvertFromCheckedFromDecimal<TTo, TFrom>(decimal value, [MaybeNullWhen(false)] out TTo result)
+    private static bool TryConvertFromCheckedFromDouble<TTo, TFrom>(double value, [MaybeNullWhen(false)] out TTo result)
         where TTo : INumberBase<TTo>
-        where TFrom : INumberBase<decimal>
+        where TFrom : INumberBase<double>
     {
         return TFrom.TryConvertToChecked(value, out result);
     }
 
-    private static bool TryConvertFromSaturatingFromDecimal<TTo, TFrom>(decimal value, [MaybeNullWhen(false)] out TTo result)
+    private static bool TryConvertFromSaturatingFromDouble<TTo, TFrom>(double value, [MaybeNullWhen(false)] out TTo result)
         where TTo : INumberBase<TTo>
-        where TFrom : INumberBase<decimal>
+        where TFrom : INumberBase<double>
     {
         return TFrom.TryConvertToSaturating(value, out result);
     }
 
-    private static bool TryConvertFromTruncatingFromDecimal<TTo, TFrom>(decimal value, [MaybeNullWhen(false)] out TTo result)
+    private static bool TryConvertFromTruncatingFromDouble<TTo, TFrom>(double value, [MaybeNullWhen(false)] out TTo result)
         where TTo : INumberBase<TTo>
-        where TFrom : INumberBase<decimal>
+        where TFrom : INumberBase<double>
     {
         return TFrom.TryConvertToTruncating(value, out result);
     }
