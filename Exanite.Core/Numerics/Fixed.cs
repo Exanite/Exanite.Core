@@ -191,25 +191,66 @@ public readonly partial struct Fixed :
     }
 
     /// <summary>
-    /// Rounds to the nearest integer.
-    /// If halfway between an even and odd value, returns the even value.
+    /// Rounds to the nearest integer using the specified rounding strategy.
     /// </summary>
-    public static Fixed Round(Fixed value)
+    public static Fixed Round(Fixed value, MidpointRounding rounding = MidpointRounding.ToEven)
     {
         var integral = value.Raw & ~Mask;
         var fractional = value.Raw & Mask;
 
-        if (fractional < HalfRaw)
+        if (fractional == 0)
         {
-            return new Fixed(integral);
+            return value;
         }
 
-        if (fractional > HalfRaw)
+        switch (rounding)
         {
-            return new Fixed(integral + OneRaw);
-        }
+            case MidpointRounding.ToEven:
+            {
+                if (fractional < HalfRaw)
+                {
+                    return new Fixed(integral);
+                }
 
-        return IsEvenInteger(new Fixed(integral)) ? new Fixed(integral) : new Fixed(integral + OneRaw);
+                if (fractional > HalfRaw)
+                {
+                    return new Fixed(integral + OneRaw);
+                }
+
+                return IsEvenInteger(new Fixed(integral)) ? new Fixed(integral) : new Fixed(integral + OneRaw);
+            }
+
+            case MidpointRounding.AwayFromZero:
+            {
+                if (fractional < HalfRaw)
+                {
+                    return new Fixed(integral);
+                }
+                if (fractional > HalfRaw)
+                {
+                    return new Fixed(integral + OneRaw);
+                }
+
+                return value.Raw < 0 ? new Fixed(integral) : new Fixed(integral + OneRaw);
+            }
+
+            case MidpointRounding.ToZero:
+            {
+                return value.Raw < 0 ? new Fixed(integral + OneRaw) : new Fixed(integral);
+            }
+
+            case MidpointRounding.ToNegativeInfinity:
+            {
+                return Floor(value);
+            }
+
+            case MidpointRounding.ToPositiveInfinity:
+            {
+                return Ceiling(value);
+            }
+
+            default: throw ExceptionUtility.NotSupportedEnumValue(rounding);
+        }
     }
 
     // Operators
