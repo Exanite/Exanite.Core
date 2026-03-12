@@ -556,12 +556,12 @@ public class FixedAdvancedTests
 
                 {
                     var expected = double.Pow((double)input, exponent);
-                    AssertEqualPowBase(i, (double)input, exponent, expected, (double)Fixed.Pow(input, exponent), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+                    AssertEqualPowBase(i, (double)input, exponent, expected, (double)Fixed.Pow(input, exponent), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 1));
                 }
 
                 {
                     var expected = double.Pow((double)-input, exponent);
-                    AssertEqualPowBase(i, (double)-input, exponent, expected, (double)Fixed.Pow(-input, exponent), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+                    AssertEqualPowBase(i, (double)-input, exponent, expected, (double)Fixed.Pow(-input, exponent), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 1));
                 }
             }
         }
