@@ -17,15 +17,15 @@ public class FixedQuantizationTests
     {
         var epsilon = Fixed.Epsilon;
 
-        Assert.Equal(Fixed.FromRaw(expected), (Fixed)((float)epsilon * (float)multiplier));
-        Assert.Equal(Fixed.FromRaw(expected), (Fixed)((double)epsilon * (double)multiplier));
         Assert.Equal(Fixed.FromRaw(expected), (Fixed)((decimal)epsilon * (decimal)multiplier));
+        Assert.Equal(Fixed.FromRaw(expected), (Fixed)((double)epsilon * (double)multiplier));
+        Assert.Equal(Fixed.FromRaw(expected), (Fixed)((float)epsilon * (float)multiplier));
 
         checked
         {
-            Assert.Equal(Fixed.FromRaw(expected), (Fixed)((float)epsilon * (float)multiplier));
-            Assert.Equal(Fixed.FromRaw(expected), (Fixed)((double)epsilon * (double)multiplier));
             Assert.Equal(Fixed.FromRaw(expected), (Fixed)((decimal)epsilon * (decimal)multiplier));
+            Assert.Equal(Fixed.FromRaw(expected), (Fixed)((double)epsilon * (double)multiplier));
+            Assert.Equal(Fixed.FromRaw(expected), (Fixed)((float)epsilon * (float)multiplier));
         }
     }
 
@@ -41,16 +41,16 @@ public class FixedQuantizationTests
     {
         var epsilon = Fixed.Epsilon;
 
-        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateChecked((float)epsilon * (float)multiplier));
-        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateChecked((double)epsilon * (double)multiplier));
         Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateChecked((decimal)epsilon * (decimal)multiplier));
+        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateChecked((double)epsilon * (double)multiplier));
+        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateChecked((float)epsilon * (float)multiplier));
 
-        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateSaturating((float)epsilon * (float)multiplier));
-        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateSaturating((double)epsilon * (double)multiplier));
         Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateSaturating((decimal)epsilon * (decimal)multiplier));
+        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateSaturating((double)epsilon * (double)multiplier));
+        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateSaturating((float)epsilon * (float)multiplier));
 
-        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateTruncating((float)epsilon * (float)multiplier));
-        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateTruncating((double)epsilon * (double)multiplier));
         Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateTruncating((decimal)epsilon * (decimal)multiplier));
+        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateTruncating((double)epsilon * (double)multiplier));
+        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateTruncating((float)epsilon * (float)multiplier));
     }
 }

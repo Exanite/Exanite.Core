@@ -17,15 +17,15 @@ public class Fixed128QuantizationTests
     {
         var epsilon = Fixed128.Epsilon;
 
-        Assert.Equal(Fixed128.FromRaw(expected), (Fixed128)((float)epsilon * (float)multiplier));
-        Assert.Equal(Fixed128.FromRaw(expected), (Fixed128)((double)epsilon * (double)multiplier));
         Assert.Equal(Fixed128.FromRaw(expected), (Fixed128)((decimal)epsilon * (decimal)multiplier));
+        Assert.Equal(Fixed128.FromRaw(expected), (Fixed128)((double)epsilon * (double)multiplier));
+        Assert.Equal(Fixed128.FromRaw(expected), (Fixed128)((float)epsilon * (float)multiplier));
 
         checked
         {
-            Assert.Equal(Fixed128.FromRaw(expected), (Fixed128)((float)epsilon * (float)multiplier));
-            Assert.Equal(Fixed128.FromRaw(expected), (Fixed128)((double)epsilon * (double)multiplier));
             Assert.Equal(Fixed128.FromRaw(expected), (Fixed128)((decimal)epsilon * (decimal)multiplier));
+            Assert.Equal(Fixed128.FromRaw(expected), (Fixed128)((double)epsilon * (double)multiplier));
+            Assert.Equal(Fixed128.FromRaw(expected), (Fixed128)((float)epsilon * (float)multiplier));
         }
     }
 
@@ -41,16 +41,16 @@ public class Fixed128QuantizationTests
     {
         var epsilon = Fixed128.Epsilon;
 
-        Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateChecked((float)epsilon * (float)multiplier));
-        Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateChecked((double)epsilon * (double)multiplier));
         Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateChecked((decimal)epsilon * (decimal)multiplier));
+        Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateChecked((double)epsilon * (double)multiplier));
+        Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateChecked((float)epsilon * (float)multiplier));
 
-        Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateSaturating((float)epsilon * (float)multiplier));
-        Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateSaturating((double)epsilon * (double)multiplier));
         Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateSaturating((decimal)epsilon * (decimal)multiplier));
+        Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateSaturating((double)epsilon * (double)multiplier));
+        Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateSaturating((float)epsilon * (float)multiplier));
 
-        Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateTruncating((float)epsilon * (float)multiplier));
-        Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateTruncating((double)epsilon * (double)multiplier));
         Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateTruncating((decimal)epsilon * (decimal)multiplier));
+        Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateTruncating((double)epsilon * (double)multiplier));
+        Assert.Equal(Fixed128.FromRaw(expected), Fixed128.CreateTruncating((float)epsilon * (float)multiplier));
     }
 }
