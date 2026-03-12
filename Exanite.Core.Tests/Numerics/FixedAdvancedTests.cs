@@ -583,13 +583,13 @@ public class FixedAdvancedTests
 
                 {
                     var expected = double.RootN(current, root);
-                    AssertEqualPowBase(i, current, root, expected, (double)Fixed.RootN((Fixed)current, root), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+                    AssertEqualRootN(i, current, root, expected, (double)Fixed.RootN((Fixed)current, root), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
                 }
 
                 if (!int.IsEvenInteger(root))
                 {
                     var expected = double.RootN(-current, root);
-                    AssertEqualPowBase(i, -current, root, expected, (double)Fixed.RootN((Fixed)(-current), root), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+                    AssertEqualRootN(i, -current, root, expected, (double)Fixed.RootN((Fixed)(-current), root), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
                 }
             }
         }
