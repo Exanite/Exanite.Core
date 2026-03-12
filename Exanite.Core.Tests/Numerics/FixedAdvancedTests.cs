@@ -494,7 +494,7 @@ public class FixedAdvancedTests
             var inputBase = (Fixed)logBase;
 
             var expected = double.Log((double)input, (double)inputBase);
-            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.01M, FloatingPointComparer.ToleranceFromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0008M, FloatingPointComparer.ToleranceFromPrecision(FixedTestConstants.BaseExpectedPrecision));
             AssertEqualLogBase(i, (double)input, (double)inputBase, expected, (double)Fixed.Log(input, inputBase), comparer);
         }
     }
