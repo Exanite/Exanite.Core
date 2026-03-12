@@ -77,15 +77,14 @@ public readonly partial struct Fixed128 :
     // Conversion: Can exceed range
     public static explicit operator Fixed128(long value) => new((Int128)value << Shift);
 
-    public static explicit operator Fixed128(decimal value) => new((Int128)(value * OneRaw));
-    public static explicit operator checked Fixed128(decimal value) => new(checked((Int128)(value * OneRaw)));
+    public static explicit operator Fixed128(decimal value) => new((Int128)decimal.Round(value * OneRaw, MidpointRounding.ToEven));
 
     // Conversion: Unsafe - Non-deterministic
-    public static explicit operator Fixed128(float value) => new((Int128)(value * OneRaw));
-    public static explicit operator checked Fixed128(float value) => new(checked((Int128)(value * OneRaw)));
+    public static explicit operator Fixed128(float value) => new((Int128)float.Round(value * OneRaw, MidpointRounding.ToEven));
+    public static explicit operator checked Fixed128(float value) => new(checked((Int128)float.Round(value * OneRaw, MidpointRounding.ToEven)));
 
-    public static explicit operator Fixed128(double value) => new((Int128)(value * OneRaw));
-    public static explicit operator checked Fixed128(double value) => new(checked((Int128)(value * OneRaw)));
+    public static explicit operator Fixed128(double value) => new((Int128)double.Round(value * OneRaw, MidpointRounding.ToEven));
+    public static explicit operator checked Fixed128(double value) => new(checked((Int128)double.Round(value * OneRaw, MidpointRounding.ToEven)));
 
     // From Fixed128
 

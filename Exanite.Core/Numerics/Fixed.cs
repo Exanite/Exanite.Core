@@ -94,15 +94,15 @@ public readonly partial struct Fixed :
         return new Fixed(value << Shift);
     }
 
-    public static explicit operator Fixed(decimal value) => new((long)(value * OneRaw));
+    public static explicit operator Fixed(decimal value) => new((long)decimal.Round(value * OneRaw, MidpointRounding.ToEven));
 
     // Conversion: Unsafe - Non-deterministic
     // Consider using FromFraction or FromParts instead
-    public static explicit operator Fixed(float value) => new((long)(value * OneRaw));
-    public static explicit operator checked Fixed(float value) => new(checked((long)(value * OneRaw)));
+    public static explicit operator Fixed(float value) => new((long)float.Round(value * OneRaw, MidpointRounding.ToEven));
+    public static explicit operator checked Fixed(float value) => new(checked((long)float.Round(value * OneRaw, MidpointRounding.ToEven)));
 
-    public static explicit operator Fixed(double value) => new((long)(value * OneRaw));
-    public static explicit operator checked Fixed(double value) => new(checked((long)(value * OneRaw)));
+    public static explicit operator Fixed(double value) => new((long)double.Round(value * OneRaw, MidpointRounding.ToEven));
+    public static explicit operator checked Fixed(double value) => new(checked((long)double.Round(value * OneRaw, MidpointRounding.ToEven)));
 
     // From Fixed
 
