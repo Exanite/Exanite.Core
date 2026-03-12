@@ -39,7 +39,7 @@ public class FixedQuantizationTests
     [InlineData(1.25, 1)]
     [InlineData(1.50, 2)]
     [InlineData(1.75, 2)]
-    public void GenericCreate_UsesBankersRounding_ForValuesBetweenEpsilon_ForFloatingPointInputs(decimal multiplier, int expected)
+    public void GenericCreate_UsesBankersRounding_ForValuesBetweenEpsilon(decimal multiplier, int expected)
     {
         var epsilon = (decimal)Fixed.Epsilon;
 
