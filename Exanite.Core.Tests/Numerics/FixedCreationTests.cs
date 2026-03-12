@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Exanite.Core.Tests.Numerics;
 
-public class FixedGenericCreateTests
+public class FixedCreationTests
 {
     [Theory]
     [InlineData(1, 1, 1)]
@@ -67,17 +67,47 @@ public class FixedGenericCreateTests
 
         Assert.Throws<OverflowException>(() =>
         {
-            Fixed.CreateChecked((long)Fixed.MaxValue * 2);
-        });
-
-        Assert.Throws<OverflowException>(() =>
-        {
             Fixed.CreateChecked((decimal)Fixed.MinValue * 2);
         });
 
         Assert.Throws<OverflowException>(() =>
         {
+            Fixed.CreateChecked((double)Fixed.MaxValue * 2);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            Fixed.CreateChecked((double)Fixed.MinValue * 2);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            Fixed.CreateChecked((float)Fixed.MaxValue * 2);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            Fixed.CreateChecked((float)Fixed.MinValue * 2);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            Fixed.CreateChecked((long)Fixed.MaxValue * 2);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
             Fixed.CreateChecked((long)Fixed.MinValue * 2);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            Fixed.CreateChecked(Fixed128.MaxValue);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            Fixed.CreateChecked(Fixed128.MinValue);
         });
     }
 
@@ -85,10 +115,19 @@ public class FixedGenericCreateTests
     public void CreateSaturating_HasCorrect_EndpointBehavior()
     {
         Assert.Equal(Fixed.MaxValue, Fixed.CreateSaturating((decimal)Fixed.MaxValue * 2));
-        Assert.Equal(Fixed.MaxValue, Fixed.CreateSaturating((long)Fixed.MaxValue * 2));
-
         Assert.Equal(Fixed.MinValue, Fixed.CreateSaturating((decimal)Fixed.MinValue * 2));
+
+        Assert.Equal(Fixed.MaxValue, Fixed.CreateSaturating((double)Fixed.MaxValue * 2));
+        Assert.Equal(Fixed.MinValue, Fixed.CreateSaturating((double)Fixed.MinValue * 2));
+
+        Assert.Equal(Fixed.MaxValue, Fixed.CreateSaturating((float)Fixed.MaxValue * 2));
+        Assert.Equal(Fixed.MinValue, Fixed.CreateSaturating((float)Fixed.MinValue * 2));
+
+        Assert.Equal(Fixed.MaxValue, Fixed.CreateSaturating((long)Fixed.MaxValue * 2));
         Assert.Equal(Fixed.MinValue, Fixed.CreateSaturating((long)Fixed.MinValue * 2));
+
+        Assert.Equal(Fixed.MaxValue, Fixed.CreateSaturating(Fixed128.MaxValue));
+        Assert.Equal(Fixed.MinValue, Fixed.CreateSaturating(Fixed128.MinValue));
     }
 
     [Fact]
