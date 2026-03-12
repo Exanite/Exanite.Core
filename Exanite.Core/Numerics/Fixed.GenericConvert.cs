@@ -169,20 +169,20 @@ public partial struct Fixed
 
     public static bool TryConvertToChecked<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var decimalValue = (double)value.Raw / OneRaw;
-        return TOther.TryConvertFromChecked(decimalValue, out result) || TryConvertFromCheckedFromDouble<TOther, double>(decimalValue, out result);
+        var doubleValue = (double)value.Raw / OneRaw;
+        return TOther.TryConvertFromChecked(doubleValue, out result) || TryConvertFromCheckedFromDouble<TOther, double>(doubleValue, out result);
     }
 
     public static bool TryConvertToSaturating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var decimalValue = (double)value.Raw / OneRaw;
-        return TOther.TryConvertFromSaturating(decimalValue, out result) || TryConvertFromSaturatingFromDouble<TOther, double>(decimalValue, out result);
+        var doubleValue = (double)value.Raw / OneRaw;
+        return TOther.TryConvertFromSaturating(doubleValue, out result) || TryConvertFromSaturatingFromDouble<TOther, double>(doubleValue, out result);
     }
 
     public static bool TryConvertToTruncating<TOther>(Fixed value, [MaybeNullWhen(false)] out TOther result) where TOther : INumberBase<TOther>
     {
-        var decimalValue = (double)value.Raw / OneRaw;
-        return TOther.TryConvertFromTruncating(decimalValue, out result) || TryConvertFromTruncatingFromDouble<TOther, double>(decimalValue, out result);
+        var doubleValue = (double)value.Raw / OneRaw;
+        return TOther.TryConvertFromTruncating(doubleValue, out result) || TryConvertFromTruncatingFromDouble<TOther, double>(doubleValue, out result);
     }
 
     // TryConvertTo_FromDouble
