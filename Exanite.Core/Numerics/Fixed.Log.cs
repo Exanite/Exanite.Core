@@ -24,25 +24,24 @@ public partial struct Fixed
         var normalizedX = shiftInitial < 0 ? x.Raw >> -shiftInitial : x.Raw << shiftInitial;
         AssertExpectedRange(normalizedX, 1M, 2M);
 
-        // Calculate index into LUT
-        var rawIndex = (normalizedX - OneRaw) << Log2LutBits;
-        var index = (int)(rawIndex >> Shift);
-        var fraction = (int)(rawIndex & Mask);
-
-        long normalizedResult;
-        if (index >= ((1 << Log2LutBits) - 1))
+        // From https://github.com/asik/FixedMath.Net/blob/b2adac7713eda01fdd31578dd5a1d15f8f7ba067/src/Fix64.cs#L481
+        // Iterate for the fraction portion
+        var result = -shiftInitial * OneRaw;
+        var b = 1L << (Shift - 1);
+        var z = normalizedX;
+        for (var i = 0; i < Shift; i++)
         {
-            normalizedResult = OneRaw;
-        }
-        else
-        {
-            // Get values and interpolate
-            var y0 = Log2Lut[index];
-            var y1 = Log2Lut[index + 1];
-            normalizedResult = y0 + (((y1 - y0) * fraction) >> Shift);
+            z = (z * z) >> Shift;
+            if (z >= (OneRaw << 1))
+            {
+                z >>= 1;
+                result |= b;
+            }
+
+            b >>= 1;
         }
 
-        return new Fixed(normalizedResult) - shiftNormalize;
+        return new Fixed(result);
     }
 
     public static Fixed Log(Fixed x) => Log2(x) * new Fixed(LogETwoRaw);
