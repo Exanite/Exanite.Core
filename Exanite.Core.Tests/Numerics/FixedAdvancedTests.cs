@@ -88,6 +88,36 @@ public class FixedAdvancedTests
     }
 
     [Fact]
+    public void Sqrt_RoundTrip_ReturnsOriginalValue()
+    {
+        for (long i = 1; i < 100000; i++)
+        {
+            var original = (Fixed)i;
+            var root = Fixed.Sqrt(original);
+            var square = root * root;
+            AssertEqual((int)i, (double)original, (double)original, (double)square, FloatingPointComparer.FromTolerance(0M));
+        }
+    }
+
+    [Fact]
+    public void Cbrt_RoundTrip_ReturnsOriginalValue()
+    {
+        for (long i = 1; i < 100000; i++)
+        {
+            var original = (Fixed)i;
+            var root = Fixed.Cbrt(original);
+            var cube = root * root * root;
+            AssertEqual((int)i, (double)original, (double)original, (double)cube, FloatingPointComparer.FromTolerance(0M));
+
+            // Also check negative range
+            var originalNeg = -original;
+            var rootNeg = Fixed.Cbrt(originalNeg);
+            var cubeNeg = rootNeg * rootNeg * rootNeg;
+            AssertEqual((int)i, (double)originalNeg, (double)originalNeg, (double)cubeNeg, FloatingPointComparer.FromTolerance(0M));
+        }
+    }
+
+    [Fact]
     public void Hypot_ReturnsExpectedValue_ForWideRange()
     {
         var radiusMultiplier = 1.025;
