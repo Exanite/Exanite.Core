@@ -71,4 +71,41 @@ public class FixedBasicTests
         var result = Fixed.Reciprocal(Fixed.Epsilon);
         Assert.True(result > Fixed.Zero);
     }
+
+    [Fact]
+    public void Reciprocal_IsSameAsStandardDivision_ForGreaterThanOne()
+    {
+        // This test documents that using Fixed128.Reciprocal is not worth it for Fixed.Reciprocal
+        //
+        // Note that this test is meant to simulate Fixed.Reciprocal
+        // being implemented using Fixed128.Reciprocal so the implicit cast is intended
+        var current = 1.0M;
+        var multiplier = 1.025M;
+        var lessPreciseCount = 0;
+        var morePreciseCount = 0;
+        for (var i = 0; i < 1000; i++)
+        {
+            current *= multiplier;
+
+            var doubleResult = 1 / current;
+            var naiveResult = 1 / (Fixed)current;
+            var specializedResult = (Fixed)Fixed128.Reciprocal((Fixed)current);
+
+            var naiveDifference = M.Abs(doubleResult - (decimal)naiveResult);
+            var specializedDifference = M.Abs(doubleResult - (decimal)specializedResult);
+
+            if (specializedDifference < naiveDifference)
+            {
+                morePreciseCount++;
+            }
+
+            if (specializedDifference > naiveDifference)
+            {
+                lessPreciseCount++;
+            }
+        }
+
+        Assert.Equal(0, morePreciseCount);
+        Assert.Equal(0, lessPreciseCount);
+    }
 }

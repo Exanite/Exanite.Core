@@ -284,7 +284,8 @@ public readonly partial struct Fixed :
     // Other
     public static Fixed Reciprocal(Fixed x)
     {
-        return (Fixed)Fixed128.Reciprocal(x);
+        // Using Fixed128.Reciprocal does not improve the result
+        return 1 / x;
     }
 
     // Formatting

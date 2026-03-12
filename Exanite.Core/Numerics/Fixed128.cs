@@ -261,8 +261,12 @@ public readonly partial struct Fixed128 :
     {
         // Subtract Shift to we guarantee we don't overflow
         const int oneShift = 126 - Shift;
-        var result = (((Int128)1 << oneShift) / x.Raw) >> (oneShift - Shift - Shift);
-        return new Fixed128(result);
+        const int finalDownshift = oneShift - Shift - Shift;
+
+        var numerator = (Int128)1 << oneShift;
+        var quotient = numerator / x.Raw;
+        var roundedResult = quotient + ((Int128)1 << (finalDownshift - 1)) >> finalDownshift;
+        return new Fixed128(roundedResult);
     }
 
     // Formatting
