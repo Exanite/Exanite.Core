@@ -185,6 +185,33 @@ public class FixedLookupsGenerator
                 }
                 builder.AppendLine("];");
             }
+
+            // Log2 lookup
+            // This stores log2 values for the range [1, 2)
+            {
+                var lookupBits = 13;
+                var lookupEntryCount = 1 << lookupBits;
+
+                var log2Values = Enumerable.Range(0, lookupEntryCount)
+                    .Select(i => double.Log2(M.Lerp(1, 2, (double)i / lookupEntryCount)))
+                    .ToList();
+
+                var tableEntries = log2Values.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).Select(x => x.ToString()).ToList();
+                var entryMaxLength = tableEntries.Max(x => x.Length);
+                var valuesPerLine = 16;
+
+                builder.AppendSeparation();
+                builder.AppendLine($"private const int Log2LutBits = {lookupBits};");
+                builder.AppendLine($"private const int Log2LutShift = {Fixed.FractionalBitCount};");
+                using (builder.Indent("private static readonly ImmutableArray<ushort> Log2Lut = ["))
+                {
+                    foreach (var chunk in tableEntries.Chunk(valuesPerLine))
+                    {
+                        builder.AppendLine($"{string.Join(", ", chunk.Select(x => x.PadLeft(entryMaxLength)))},");
+                    }
+                }
+                builder.AppendLine("];");
+            }
         }
 
         var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / "Fixed.Lookup.g.cs";
@@ -274,33 +301,6 @@ public class FixedLookupsGenerator
                 builder.AppendLine($"private const int CbrtLutOffset = {lookupOffset};");
                 builder.AppendLine($"private const int CbrtLutShift = {Fixed.FractionalBitCount};");
                 using (builder.Indent("private static readonly ImmutableArray<uint> CbrtLut = ["))
-                {
-                    foreach (var chunk in tableEntries.Chunk(valuesPerLine))
-                    {
-                        builder.AppendLine($"{string.Join(", ", chunk.Select(x => x.PadLeft(entryMaxLength)))},");
-                    }
-                }
-                builder.AppendLine("];");
-            }
-
-            // Log2 lookup
-            // This stores log2 values for the range [1, 2)
-            {
-                var lookupBits = 13;
-                var lookupEntryCount = 1 << lookupBits;
-
-                var log2Values = Enumerable.Range(0, lookupEntryCount)
-                    .Select(i => double.Log2(M.Lerp(1, 2, (double)i / lookupEntryCount)))
-                    .ToList();
-
-                var tableEntries = log2Values.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).Select(x => x.ToString()).ToList();
-                var entryMaxLength = tableEntries.Max(x => x.Length);
-                var valuesPerLine = 16;
-
-                builder.AppendSeparation();
-                builder.AppendLine($"private const int Log2LutBits = {lookupBits};");
-                builder.AppendLine($"private const int Log2LutShift = {Fixed.FractionalBitCount};");
-                using (builder.Indent("private static readonly ImmutableArray<ushort> Log2Lut = ["))
                 {
                     foreach (var chunk in tableEntries.Chunk(valuesPerLine))
                     {
