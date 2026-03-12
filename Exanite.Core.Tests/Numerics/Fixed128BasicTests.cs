@@ -65,26 +65,21 @@ public class Fixed128BasicTests
     }
 
     [Theory]
-    // ToEven
-    [InlineData(1.5, MidpointRounding.ToEven, 2)]
-    [InlineData(2.5, MidpointRounding.ToEven, 2)]
-    [InlineData(-1.5, MidpointRounding.ToEven, -2)]
-    [InlineData(-2.5, MidpointRounding.ToEven, -2)]
-    // AwayFromZero
-    [InlineData(1.5, MidpointRounding.AwayFromZero, 2)]
-    [InlineData(2.5, MidpointRounding.AwayFromZero, 3)]
-    [InlineData(-1.5, MidpointRounding.AwayFromZero, -2)]
-    [InlineData(-2.5, MidpointRounding.AwayFromZero, -3)]
-    // ToZero
-    [InlineData(1.9, MidpointRounding.ToZero, 1)]
-    [InlineData(-1.9, MidpointRounding.ToZero, -1)]
-    // ToNegativeInfinity
-    [InlineData(1.9, MidpointRounding.ToNegativeInfinity, 1)]
-    [InlineData(-1.1, MidpointRounding.ToNegativeInfinity, -2)]
-    // ToPositiveInfinity
-    [InlineData(1.1, MidpointRounding.ToPositiveInfinity, 2)]
-    [InlineData(-1.9, MidpointRounding.ToPositiveInfinity, -1)]
-    public void Round_WithMode_ReturnsExpectedValue(double input, MidpointRounding mode, double expected)
+    [InlineData(MidpointRounding.ToEven, 1.5, 2)]
+    [InlineData(MidpointRounding.ToEven, 2.5, 2)]
+    [InlineData(MidpointRounding.ToEven, -1.5, -2)]
+    [InlineData(MidpointRounding.ToEven, -2.5, -2)]
+    [InlineData(MidpointRounding.AwayFromZero, 1.5, 2)]
+    [InlineData(MidpointRounding.AwayFromZero, 2.5, 3)]
+    [InlineData(MidpointRounding.AwayFromZero, -1.5, -2)]
+    [InlineData(MidpointRounding.AwayFromZero, -2.5, -3)]
+    [InlineData(MidpointRounding.ToZero, 1.9, 1)]
+    [InlineData(MidpointRounding.ToZero, -1.9, -1)]
+    [InlineData(MidpointRounding.ToNegativeInfinity, 1.9, 1)]
+    [InlineData(MidpointRounding.ToNegativeInfinity, -1.1, -2)]
+    [InlineData(MidpointRounding.ToPositiveInfinity, 1.1, 2)]
+    [InlineData(MidpointRounding.ToPositiveInfinity, -1.9, -1)]
+    public void Round_WithMode_ReturnsExpectedValue(MidpointRounding mode, double input, double expected)
     {
         var value = (Fixed128)input;
         var expectedValue = (Fixed128)expected;
