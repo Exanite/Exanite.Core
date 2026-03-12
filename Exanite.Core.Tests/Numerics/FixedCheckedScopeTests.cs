@@ -18,7 +18,7 @@ public class FixedCheckedScopeTests
     [Fact]
     public void CheckedMultiplication_Throws_OnOverflow()
     {
-        var large = (Fixed.Sqrt(Fixed.MaxValue) + 10);
+        var large = Fixed.Sqrt(Fixed.MaxValue) + 10;
         Assert.Throws<OverflowException>(() =>
         {
             _ = checked(large * large);
