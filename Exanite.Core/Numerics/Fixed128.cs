@@ -72,14 +72,13 @@ public readonly partial struct Fixed128 :
     public static implicit operator Fixed128(short value) => new((Int128)value << Shift);
     public static implicit operator Fixed128(int value) => new((Int128)value << Shift);
     public static implicit operator Fixed128(uint value) => new((Int128)value << Shift);
+    public static implicit operator Fixed128(long value) => new((Int128)value << Shift);
+    public static implicit operator Fixed128(ulong value) => new((Int128)value << Shift);
     public static implicit operator Fixed128(Fixed value) => new((Int128)value.Raw << (Shift - Fixed.Shift));
 
-    // Conversion: Can exceed range
-    public static explicit operator Fixed128(long value) => new((Int128)value << Shift);
-
+    // Conversion: Unsafe - Non-deterministic
     public static explicit operator Fixed128(decimal value) => new((Int128)decimal.Round(value * OneRaw, MidpointRounding.ToEven));
 
-    // Conversion: Unsafe - Non-deterministic
     public static explicit operator Fixed128(float value) => new((Int128)float.Round(value * OneRaw, MidpointRounding.ToEven));
     public static explicit operator checked Fixed128(float value) => new(checked((Int128)float.Round(value * OneRaw, MidpointRounding.ToEven)));
 

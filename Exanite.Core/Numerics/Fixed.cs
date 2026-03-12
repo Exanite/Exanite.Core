@@ -94,6 +94,17 @@ public readonly partial struct Fixed :
         return new Fixed(value << Shift);
     }
 
+    public static explicit operator Fixed(ulong value) => new((long)(value << Shift));
+    public static explicit operator checked Fixed(ulong value)
+    {
+        if (value > (ulong)MaxValue)
+        {
+            throw new OverflowException();
+        }
+
+        return new Fixed(checked((long)(value << Shift)));
+    }
+
     public static explicit operator Fixed(decimal value) => new((long)decimal.Round(value * OneRaw, MidpointRounding.ToEven));
 
     // Conversion: Unsafe - Non-deterministic
