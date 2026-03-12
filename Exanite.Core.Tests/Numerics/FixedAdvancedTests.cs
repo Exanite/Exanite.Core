@@ -523,6 +523,13 @@ public class FixedAdvancedTests
         Assert.Equal(Fixed.MaxValue, Fixed.Exp2(Fixed.IntegralBitCount));
         Assert.Equal(0, Fixed.Exp2(-(Fixed.Shift + 1)));
         Assert.Equal(0, Fixed.Exp2(-100));
+
+        {
+            var input = Fixed.IntegralBitCount - Fixed.Epsilon;
+            var expected = double.Exp2((double)input);
+            var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.000001M);
+            Assert.Equal(double.Exp2((double)input), (double)Fixed.Exp2(input), comparer);
+        }
     }
 
     [Fact]
