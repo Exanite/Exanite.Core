@@ -26,20 +26,50 @@ public class FixedCheckedScopeTests
     }
 
     [Fact]
-    public void CheckedConversion_LongToFixed_Throws_OnOverflow()
+    public void CheckedCast_ToFixed_Throws_OnOverflow()
     {
         Assert.Throws<OverflowException>(() =>
         {
             _ = checked((Fixed)long.MaxValue);
         });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            _ = checked((Fixed)ulong.MaxValue);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            _ = checked((Fixed)float.MaxValue);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            _ = checked((Fixed)double.MaxValue);
+        });
     }
 
     [Fact]
-    public void CheckedConversion_FixedToInt_Throws_OnOverflow()
+    public void CheckedCast_FromFixed_Throws_OnOverflow()
     {
         Assert.Throws<OverflowException>(() =>
         {
+            _ = checked((short)Fixed.MaxValue);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
             _ = checked((int)Fixed.MaxValue);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            _ = checked((uint)Fixed.MaxValue);
+        });
+
+        Assert.Throws<OverflowException>(() =>
+        {
+            _ = checked((ulong)Fixed.MinValue);
         });
     }
 }
