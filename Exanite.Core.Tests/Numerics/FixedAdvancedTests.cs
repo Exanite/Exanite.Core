@@ -36,16 +36,6 @@ public class FixedAdvancedTests
     }
 
     [Fact]
-    public void Sqrt_ReturnsExpectedValue_PerfectSquares()
-    {
-        for (var i = 0; i < 1000000; i++)
-        {
-            var input = (Fixed)(long)i * i;
-            AssertEqual(i, (double)input, double.Sqrt((double)input), (double)Fixed.Sqrt(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
-        }
-    }
-
-    [Fact]
     public void Sqrt_OfMaxValue_ReturnsExpectedValue()
     {
         Assert.Equal(double.Sqrt((double)Fixed.MaxValue), (double)Fixed.Sqrt(Fixed.MaxValue), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
@@ -88,37 +78,28 @@ public class FixedAdvancedTests
     }
 
     [Fact]
-    public void Sqrt_ReturnsOriginal_AfterSquaring()
+    public void Sqrt_ReturnsOriginal_AfterSquaringIntegers()
     {
         checked
         {
-            for (var i = 1; i < 100000; i++)
+            for (var i = 1; i < 1000000; i++)
             {
-                var original = (Fixed)i;
-                var squared = original * original;
-                AssertEqual(i, (double)original, (double)original, (double)Fixed.Sqrt(squared), FloatingPointComparer.FromTolerance(0));
+                var input = (Fixed)((long)i * i);
+                AssertEqual(i, (double)input, i, (double)Fixed.Sqrt(input), FloatingPointComparer.FromTolerance(0));
             }
         }
     }
 
     [Fact]
-    public void Cbrt_ReturnsOriginal_AfterCubing()
+    public void Cbrt_ReturnsOriginal_AfterCubingIntegers()
     {
         checked
         {
             for (var i = 1; i < 10000; i++)
             {
-                {
-                    var original = (Fixed)i;
-                    var cubed = original * original * original;
-                    AssertEqual(i, (double)original, (double)original, (double)Fixed.Cbrt(cubed), FloatingPointComparer.FromTolerance(0));
-                }
-
-                {
-                    var original = -(Fixed)i;
-                    var cubed = original * original * original;
-                    AssertEqual(i, (double)original, (double)original, (double)Fixed.Cbrt(cubed), FloatingPointComparer.FromTolerance(0));
-                }
+                var input = (Fixed)((long)i * i * i);
+                AssertEqual(i, (double)input, i, (double)Fixed.Cbrt(input), FloatingPointComparer.FromTolerance(0));
+                AssertEqual(i, (double)-input, -i, (double)Fixed.Cbrt(-input), FloatingPointComparer.FromTolerance(0));
             }
         }
     }
