@@ -117,6 +117,48 @@ public class FixedAdvancedTests
         }
     }
 
+    [Fact]
+    public void Hypot_BehavesForBoundaryValues()
+    {
+        checked
+        {
+            var large = Fixed.Sqrt(Fixed.MaxValue) + Fixed.One;
+            {
+                var expected = double.Hypot((double)large, (double)large);
+                Assert.Equal(expected, (double)Fixed.Hypot(large, large), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            }
+
+            {
+                var expected = double.Sqrt((double)large * (double)large * 3);
+                Assert.Equal(expected, (double)Fixed.Hypot(large, large, large), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            }
+
+            {
+                var expected = double.Sqrt((double)large * (double)large * 4);
+                Assert.Equal(expected, (double)Fixed.Hypot(large, large, large, large), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            }
+        }
+
+        checked
+        {
+            var large = -(Fixed.Sqrt(Fixed.MaxValue) + Fixed.One);
+            {
+                var expected = double.Hypot((double)large, (double)large);
+                Assert.Equal(expected, (double)Fixed.Hypot(large, large), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            }
+
+            {
+                var expected = double.Sqrt((double)large * (double)large * 3);
+                Assert.Equal(expected, (double)Fixed.Hypot(large, large, large), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            }
+
+            {
+                var expected = double.Sqrt((double)large * (double)large * 4);
+                Assert.Equal(expected, (double)Fixed.Hypot(large, large, large, large), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            }
+        }
+    }
+
     [Theory]
     [InlineData(0, 0)]
     [InlineData(double.Pi / 2, 1)]
