@@ -64,4 +64,11 @@ public class FixedBasicTests
     {
         Assert.Equal(expected, (int)Fixed.Round((Fixed)input));
     }
+
+    [Fact]
+    public void Reciprocal_DoesNotOverflow_ForEpsilon()
+    {
+        var result = Fixed.Reciprocal(Fixed.Epsilon);
+        Assert.True(result > Fixed.Zero);
+    }
 }
