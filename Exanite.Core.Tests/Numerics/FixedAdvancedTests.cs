@@ -377,12 +377,10 @@ public class FixedAdvancedTests
     }
 
     [Fact]
-    public void Log2_ReturnsRoughlyShiftForEpsilon()
+    public void Log2_ReturnsShiftForEpsilon()
     {
-        // Note it does not actually return the Shift value
         var result = (double)Fixed.Log2(Fixed.Epsilon);
-        Assert.Equal(-Fixed.Shift, result, FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
-        Assert.NotEqual(-Fixed.Shift, result);
+        Assert.Equal(-Fixed.Shift, result);
     }
 
     [Fact]

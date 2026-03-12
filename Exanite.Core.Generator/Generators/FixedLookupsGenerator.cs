@@ -290,7 +290,7 @@ public class FixedLookupsGenerator
                 var lookupEntryCount = 1 << lookupBits;
 
                 var log2Values = Enumerable.Range(0, lookupEntryCount)
-                    .Select(i => double.Log2(M.Lerp(1, 2, (i + 0.5) / lookupEntryCount)))
+                    .Select(i => double.Log2(M.Lerp(1, 2, (double)i / lookupEntryCount)))
                     .ToList();
 
                 var tableEntries = log2Values.Select(x => (long)(x * (1 << Fixed.FractionalBitCount))).Select(x => x.ToString()).ToList();
