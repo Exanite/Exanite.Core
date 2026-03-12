@@ -15,7 +15,9 @@ public class FixedAdvancedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+
+            var input = (Fixed)current;
+            AssertEqual(i, (double)input, double.Sqrt((double)input), (double)Fixed.Sqrt(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
         }
     }
 
@@ -27,7 +29,9 @@ public class FixedAdvancedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Sqrt(current), (double)Fixed.Sqrt((Fixed)current), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+
+            var input = (Fixed)current;
+            AssertEqual(i, (double)input, double.Sqrt((double)input), (double)Fixed.Sqrt(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
         }
     }
 
@@ -36,8 +40,8 @@ public class FixedAdvancedTests
     {
         for (var i = 0; i < 1000000; i++)
         {
-            var input = (long)i * i;
-            AssertEqual(i, input, double.Sqrt(input), (double)Fixed.Sqrt((Fixed)input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            var input = (Fixed)(long)i * i;
+            AssertEqual(i, (double)input, double.Sqrt((double)input), (double)Fixed.Sqrt(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
         }
     }
 
@@ -61,8 +65,10 @@ public class FixedAdvancedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Cbrt(current), (double)Fixed.Cbrt((Fixed)current), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
-            AssertEqual(i, -current, double.Cbrt(-current), (double)Fixed.Cbrt((Fixed)(-current)), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+
+            var input = (Fixed)current;
+            AssertEqual(i, (double)input, double.Cbrt((double)input), (double)Fixed.Cbrt(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            AssertEqual(i, (double)-input, double.Cbrt((double)-input), (double)Fixed.Cbrt(-input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
         }
     }
 
@@ -74,8 +80,10 @@ public class FixedAdvancedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Cbrt(current), (double)Fixed.Cbrt((Fixed)current), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 1));
-            AssertEqual(i, -current, double.Cbrt(-current), (double)Fixed.Cbrt((Fixed)(-current)), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 1));
+
+            var input = (Fixed)current;
+            AssertEqual(i, (double)input, double.Cbrt((double)input), (double)Fixed.Cbrt(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 1));
+            AssertEqual(i, (double)-input, double.Cbrt((double)-input), (double)Fixed.Cbrt(-input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 1));
         }
     }
 
@@ -91,7 +99,10 @@ public class FixedAdvancedTests
             var x = M.Cos(currentAngle) * currentRadius;
             var y = M.Sin(currentAngle) * currentRadius;
 
-            var expected = double.Hypot(y, x);
+            var xInput = (Fixed)x;
+            var yInput = (Fixed)y;
+
+            var expected = double.Hypot((double)yInput, (double)xInput);
             var comparer = i switch
             {
                 _ when M.Abs(i) > 1500 => FloatingPointComparer.FromTolerance((decimal)expected * 0.0000000001M),
@@ -99,7 +110,7 @@ public class FixedAdvancedTests
                 _ => FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision),
             };
 
-            AssertEqualIndexCoord(i, x, y, expected, (double)Fixed.Hypot((Fixed)x, (Fixed)y), comparer);
+            AssertEqualIndexCoord(i, (double)xInput, (double)yInput, expected, (double)Fixed.Hypot(xInput, yInput), comparer);
 
             currentRadius *= radiusMultiplier;
             currentAngle += angleDelta;
@@ -129,8 +140,9 @@ public class FixedAdvancedTests
         {
             current *= multiplier;
 
-            AssertEqual(i, current, double.Sin(current), (double)Fixed.Sin((Fixed)current), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
-            AssertEqual(i, -current, double.Sin(-current), (double)Fixed.Sin((Fixed)(-current)), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            var input = (Fixed)current;
+            AssertEqual(i, (double)input, double.Sin((double)input), (double)Fixed.Sin(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            AssertEqual(i, (double)-input, double.Sin((double)-input), (double)Fixed.Sin(-input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
         }
     }
 
@@ -143,8 +155,9 @@ public class FixedAdvancedTests
         {
             current *= multiplier;
 
-            AssertEqual(i, current, double.SinPi(current), (double)Fixed.SinPi((Fixed)current), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
-            AssertEqual(i, -current, double.SinPi(-current), (double)Fixed.SinPi((Fixed)(-current)), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            var input = (Fixed)current;
+            AssertEqual(i, (double)input, double.SinPi((double)input), (double)Fixed.SinPi(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            AssertEqual(i, (double)-input, double.SinPi((double)-input), (double)Fixed.SinPi(-input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
         }
     }
 
@@ -157,8 +170,9 @@ public class FixedAdvancedTests
         {
             current *= multiplier;
 
-            AssertEqual(i, current, double.Cos(current), (double)Fixed.Cos((Fixed)current), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
-            AssertEqual(i, -current, double.Cos(-current), (double)Fixed.Cos((Fixed)(-current)), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            var input = (Fixed)current;
+            AssertEqual(i, (double)input, double.Cos((double)input), (double)Fixed.Cos(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            AssertEqual(i, (double)-input, double.Cos((double)-input), (double)Fixed.Cos(-input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
         }
     }
 
@@ -171,8 +185,9 @@ public class FixedAdvancedTests
         {
             current *= multiplier;
 
-            AssertEqual(i, current, double.CosPi(current), (double)Fixed.CosPi((Fixed)current), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
-            AssertEqual(i, -current, double.CosPi(-current), (double)Fixed.CosPi((Fixed)(-current)), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            var input = (Fixed)current;
+            AssertEqual(i, (double)input, double.CosPi((double)input), (double)Fixed.CosPi(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            AssertEqual(i, (double)-input, double.CosPi((double)-input), (double)Fixed.CosPi(-input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
         }
     }
 
@@ -185,14 +200,14 @@ public class FixedAdvancedTests
         {
             current *= multiplier;
 
-            Assert(current);
-            Assert(-current);
+            Assert((Fixed)current);
+            Assert((Fixed)(-current));
 
             continue;
 
-            void Assert(double input)
+            void Assert(Fixed input)
             {
-                var expected = double.Tan(input);
+                var expected = double.Tan((double)input);
                 var comparer = expected switch
                 {
                     // Slope is equal to tan(x)^2 + 1
@@ -203,7 +218,7 @@ public class FixedAdvancedTests
                     _ => FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision), // Slope is always >= 1
                 };
 
-                AssertEqual(i, input, expected, (double)Fixed.Tan((Fixed)input), comparer);
+                AssertEqual(i, (double)input, expected, (double)Fixed.Tan(input), comparer);
             }
         }
     }
@@ -217,14 +232,14 @@ public class FixedAdvancedTests
         {
             current *= multiplier;
 
-            Assert(current);
-            Assert(-current);
+            Assert((Fixed)current);
+            Assert((Fixed)(-current));
 
             continue;
 
-            void Assert(double input)
+            void Assert(Fixed input)
             {
-                var expected = double.TanPi(input);
+                var expected = double.TanPi((double)input);
                 var comparer = expected switch
                 {
                     // Slope is equal to tan(x)^2 + 1
@@ -235,7 +250,7 @@ public class FixedAdvancedTests
                     _ => FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision), // Slope is always >= 1
                 };
 
-                AssertEqual(i, input, expected, (double)Fixed.TanPi((Fixed)input), comparer);
+                AssertEqual(i, (double)input, expected, (double)Fixed.TanPi(input), comparer);
             }
         }
     }
@@ -250,18 +265,18 @@ public class FixedAdvancedTests
         {
             current *= multiplier;
 
-            Assert(current);
-            Assert(-current);
+            Assert((Fixed)current);
+            Assert((Fixed)(-current));
 
             continue;
 
-            void Assert(double input)
+            void Assert(Fixed input)
             {
-                var expected = double.SinCos(input);
-                var actual = Fixed.SinCos((Fixed)input);
+                var expected = double.SinCos((double)input);
+                var actual = Fixed.SinCos(input);
 
-                AssertEqual(i, input, expected.Sin, (double)actual.Sin, comparer);
-                AssertEqual(i, input, expected.Cos, (double)actual.Cos, comparer);
+                AssertEqual(i, (double)input, expected.Sin, (double)actual.Sin, comparer);
+                AssertEqual(i, (double)input, expected.Cos, (double)actual.Cos, comparer);
             }
         }
     }
@@ -276,18 +291,18 @@ public class FixedAdvancedTests
         {
             current *= multiplier;
 
-            Assert(current);
-            Assert(-current);
+            Assert((Fixed)current);
+            Assert((Fixed)(-current));
 
             continue;
 
-            void Assert(double input)
+            void Assert(Fixed input)
             {
-                var expected = double.SinCosPi(input);
-                var actual = Fixed.SinCosPi((Fixed)input);
+                var expected = double.SinCosPi((double)input);
+                var actual = Fixed.SinCosPi(input);
 
-                AssertEqual(i, input, expected.SinPi, (double)actual.SinPi, comparer);
-                AssertEqual(i, input, expected.CosPi, (double)actual.CosPi, comparer);
+                AssertEqual(i, (double)input, expected.SinPi, (double)actual.SinPi, comparer);
+                AssertEqual(i, (double)input, expected.CosPi, (double)actual.CosPi, comparer);
             }
         }
     }
@@ -304,7 +319,10 @@ public class FixedAdvancedTests
             var x = M.Cos(currentAngle) * currentRadius;
             var y = M.Sin(currentAngle) * currentRadius;
 
-            AssertEqualIndexCoord(i, x, y, double.Atan2(y, x), (double)Fixed.Atan2((Fixed)y, (Fixed)x), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 2));
+            var xInput = (Fixed)x;
+            var yInput = (Fixed)y;
+
+            AssertEqualIndexCoord(i, (double)xInput, (double)yInput, double.Atan2((double)yInput, (double)xInput), (double)Fixed.Atan2(yInput, xInput), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 2));
 
             currentRadius += radiusDelta;
             currentAngle += angleDelta;
@@ -345,8 +363,9 @@ public class FixedAdvancedTests
         {
             current *= multiplier;
 
-            AssertEqual(i, current, double.Atan(current), (double)Fixed.Atan((Fixed)current), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
-            AssertEqual(i, -current, double.Atan(-current), (double)Fixed.Atan((Fixed)(-current)), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            var input = (Fixed)current;
+            AssertEqual(i, (double)input, double.Atan((double)input), (double)Fixed.Atan(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+            AssertEqual(i, (double)-input, double.Atan((double)-input), (double)Fixed.Atan(-input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
         }
     }
 
@@ -358,8 +377,8 @@ public class FixedAdvancedTests
         var to = 1.0;
         for (var i = 0; i < iterations; i++)
         {
-            var input = M.Lerp(from, to, (double)i / (iterations - 1));
-            AssertEqual(i, input, double.Asin(input), (double)Fixed.Asin((Fixed)input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 2));
+            var input = (Fixed)M.Lerp(from, to, (double)i / (iterations - 1));
+            AssertEqual(i, (double)input, double.Asin((double)input), (double)Fixed.Asin(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 2));
         }
     }
 
@@ -371,8 +390,8 @@ public class FixedAdvancedTests
         var to = 1.0;
         for (var i = 0; i < iterations; i++)
         {
-            var input = M.Lerp(from, to, (double)i / (iterations - 1));
-            AssertEqual(i, input, double.Acos(input), (double)Fixed.Acos((Fixed)input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 2));
+            var input = (Fixed)M.Lerp(from, to, (double)i / (iterations - 1));
+            AssertEqual(i, (double)input, double.Acos((double)input), (double)Fixed.Acos(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 2));
         }
     }
 
@@ -405,7 +424,9 @@ public class FixedAdvancedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Log2(current), (double)Fixed.Log2((Fixed)current), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+
+            var input = (Fixed)current;
+            AssertEqual(i, (double)input, double.Log2((double)input), (double)Fixed.Log2(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
         }
     }
 
@@ -417,7 +438,9 @@ public class FixedAdvancedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            var expected = double.Log2(current);
+
+            var input = (Fixed)current;
+            var expected = double.Log2((double)input);
             var comparer = i switch
             {
                 _ when M.Abs(i) > 750 => FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 2),
@@ -425,7 +448,7 @@ public class FixedAdvancedTests
                 _ => FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision),
             };
 
-            AssertEqual(i, current, expected, (double)Fixed.Log2((Fixed)current), comparer);
+            AssertEqual(i, (double)input, expected, (double)Fixed.Log2(input), comparer);
         }
     }
 
@@ -437,7 +460,9 @@ public class FixedAdvancedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Log(current), (double)Fixed.Log((Fixed)current), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+
+            var input = (Fixed)current;
+            AssertEqual(i, (double)input, double.Log((double)input), (double)Fixed.Log(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
         }
     }
 
@@ -449,7 +474,9 @@ public class FixedAdvancedTests
         for (var i = 0; i < 1000; i++)
         {
             current *= multiplier;
-            AssertEqual(i, current, double.Log10(current), (double)Fixed.Log10((Fixed)current), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 1));
+
+            var input = (Fixed)current;
+            AssertEqual(i, (double)input, double.Log10((double)input), (double)Fixed.Log10(input), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision - 1));
         }
     }
 
@@ -462,9 +489,13 @@ public class FixedAdvancedTests
         {
             current *= multiplier;
             var logBase = (current * 100) % 10;
-            var expected = double.Log(current, logBase);
+
+            var input = (Fixed)current;
+            var inputBase = (Fixed)logBase;
+
+            var expected = double.Log((double)input, (double)inputBase);
             var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.01M, FloatingPointComparer.ToleranceFromPrecision(FixedTestConstants.BaseExpectedPrecision));
-            AssertEqualLogBase(i, current, logBase, expected, (double)Fixed.Log((Fixed)current, (Fixed)logBase), comparer);
+            AssertEqualLogBase(i, (double)input, (double)inputBase, expected, (double)Fixed.Log(input, inputBase), comparer);
         }
     }
 
@@ -476,9 +507,11 @@ public class FixedAdvancedTests
         for (var i = 0; i < 340; i++)
         {
             current *= multiplier;
-            var expected = double.Exp2(current);
+
+            var input = (Fixed)current;
+            var expected = double.Exp2((double)input);
             var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0000105M, FloatingPointComparer.ToleranceFromPrecision(FixedTestConstants.BaseExpectedPrecision));
-            AssertEqual(i, current, expected, (double)Fixed.Exp2((Fixed)current), comparer);
+            AssertEqual(i, (double)input, expected, (double)Fixed.Exp2(input), comparer);
         }
     }
 
@@ -500,10 +533,12 @@ public class FixedAdvancedTests
         for (var i = 0; i < 150; i++)
         {
             current *= multiplier;
+
+            var input = (Fixed)current;
             var exponent = (current * 100) % 10;
-            var expected = double.Pow(current, exponent);
+            var expected = double.Pow((double)input, exponent);
             var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.0005M, FloatingPointComparer.ToleranceFromPrecision(FixedTestConstants.BaseExpectedPrecision));
-            AssertEqualPowBase(i, current, exponent, expected, (double)Fixed.Pow((Fixed)current, (Fixed)exponent), comparer);
+            AssertEqualPowBase(i, (double)input, exponent, expected, (double)Fixed.Pow(input, (Fixed)exponent), comparer);
         }
     }
 
@@ -517,15 +552,16 @@ public class FixedAdvancedTests
             for (var i = 0; i < 150; i++)
             {
                 current *= multiplier;
+                var input = (Fixed)current;
 
                 {
-                    var expected = double.Pow(current, exponent);
-                    AssertEqualPowBase(i, current, exponent, expected, (double)Fixed.Pow((Fixed)current, exponent), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+                    var expected = double.Pow((double)input, exponent);
+                    AssertEqualPowBase(i, (double)input, exponent, expected, (double)Fixed.Pow(input, exponent), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
                 }
 
                 {
-                    var expected = double.Pow(-current, exponent);
-                    AssertEqualPowBase(i, -current, exponent, expected, (double)Fixed.Pow((Fixed)(-current), exponent), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+                    var expected = double.Pow((double)-input, exponent);
+                    AssertEqualPowBase(i, (double)-input, exponent, expected, (double)Fixed.Pow(-input, exponent), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
                 }
             }
         }
@@ -549,17 +585,19 @@ public class FixedAdvancedTests
                     continue;
                 }
 
+                var input = (Fixed)current;
+
                 {
-                    var expected = double.RootN(current, root);
+                    var expected = double.RootN((double)input, root);
                     var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.00006M, FloatingPointComparer.ToleranceFromPrecision(FixedTestConstants.BaseExpectedPrecision));
-                    AssertEqualRootN(i, current, root, expected, (double)Fixed.RootN((Fixed)current, root), comparer);
+                    AssertEqualRootN(i, (double)input, root, expected, (double)Fixed.RootN(input, root), comparer);
                 }
 
                 if (!int.IsEvenInteger(root))
                 {
-                    var expected = double.RootN(-current, root);
+                    var expected = double.RootN((double)-input, root);
                     var comparer = FloatingPointComparer.FromTolerance((decimal)expected * 0.00006M, FloatingPointComparer.ToleranceFromPrecision(FixedTestConstants.BaseExpectedPrecision));
-                    AssertEqualRootN(i, -current, root, expected, (double)Fixed.RootN((Fixed)(-current), root), comparer);
+                    AssertEqualRootN(i, (double)-input, root, expected, (double)Fixed.RootN(-input, root), comparer);
                 }
             }
         }
@@ -580,16 +618,17 @@ public class FixedAdvancedTests
             for (var i = 0; i < 150; i++)
             {
                 current *= multiplier;
+                var input = (Fixed)current;
 
                 {
-                    var expected = double.RootN(current, root);
-                    AssertEqualRootN(i, current, root, expected, (double)Fixed.RootN((Fixed)current, root), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+                    var expected = double.RootN((double)input, root);
+                    AssertEqualRootN(i, (double)input, root, expected, (double)Fixed.RootN(input, root), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
                 }
 
                 if (!int.IsEvenInteger(root))
                 {
-                    var expected = double.RootN(-current, root);
-                    AssertEqualRootN(i, -current, root, expected, (double)Fixed.RootN((Fixed)(-current), root), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+                    var expected = double.RootN((double)-input, root);
+                    AssertEqualRootN(i, (double)-input, root, expected, (double)Fixed.RootN(-input, root), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
                 }
             }
         }
