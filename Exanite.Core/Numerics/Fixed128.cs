@@ -77,8 +77,8 @@ public readonly partial struct Fixed128 :
     // Conversion: Can exceed range
     public static explicit operator Fixed128(long value) => new((Int128)value << Shift);
 
-    public static explicit operator Fixed128(decimal value) => new((Int128)value * OneRaw);
-    public static explicit operator checked Fixed128(decimal value) => new(checked((Int128)value * OneRaw));
+    public static explicit operator Fixed128(decimal value) => new((Int128)(value * OneRaw));
+    public static explicit operator checked Fixed128(decimal value) => new(checked((Int128)(value * OneRaw)));
 
     // Conversion: Unsafe - Non-deterministic
     public static explicit operator Fixed128(float value) => new((Int128)(value * OneRaw));
