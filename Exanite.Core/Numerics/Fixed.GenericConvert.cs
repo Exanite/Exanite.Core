@@ -66,6 +66,13 @@ public partial struct Fixed
 
     public static bool TryConvertFromChecked<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>
     {
+        if (typeof(TOther) == typeof(Fixed128))
+        {
+            var actualValue = (Fixed128)(object)value;
+            result = checked((Fixed)actualValue);
+            return true;
+        }
+
         if (TOther.IsInteger(value))
         {
             var longValue = long.CreateChecked(value);
@@ -88,6 +95,25 @@ public partial struct Fixed
 
     public static bool TryConvertFromSaturating<TOther>(TOther value, out Fixed result) where TOther : INumberBase<TOther>
     {
+        if (typeof(TOther) == typeof(Fixed128))
+        {
+            var actualValue = (Fixed128)(object)value;
+            if (actualValue > MaxValue)
+            {
+                result = MaxValue;
+                return true;
+            }
+
+            if (actualValue < MinValue)
+            {
+                result = MinValue;
+                return true;
+            }
+
+            result = (Fixed)actualValue;
+            return true;
+        }
+
         if (TOther.IsInteger(value))
         {
             var longValue = long.CreateSaturating(value);
