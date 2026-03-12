@@ -73,14 +73,6 @@ public partial struct Fixed
             return true;
         }
 
-        if (typeof(TOther) == typeof(decimal))
-        {
-            var decimalValue = decimal.CreateChecked(value);
-            result = new Fixed((long)decimal.Round(decimalValue * OneRaw, MidpointRounding.ToEven));
-            return true;
-        }
-
-        // Casting from float to decimal actually loses precision
         try
         {
             var doubleValue = double.CreateChecked(value);
@@ -115,26 +107,6 @@ public partial struct Fixed
             return true;
         }
 
-        if (typeof(TOther) == typeof(decimal))
-        {
-            var decimalValue = decimal.CreateSaturating(value);
-            if (decimalValue > (decimal)MaxValue)
-            {
-                result = MaxValue;
-                return true;
-            }
-
-            if (decimalValue < (decimal)MinValue)
-            {
-                result = MinValue;
-                return true;
-            }
-
-            result = new Fixed((long)decimal.Round(decimalValue * OneRaw, MidpointRounding.ToEven));
-            return true;
-        }
-
-        // Casting from float to decimal actually loses precision
         try
         {
             var doubleValue = double.CreateSaturating(value);

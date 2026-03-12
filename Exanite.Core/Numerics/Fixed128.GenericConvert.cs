@@ -75,8 +75,8 @@ public partial struct Fixed128
 
         try
         {
-            var decimalValue = decimal.CreateChecked(value);
-            result = new Fixed128(checked((Int128)(decimalValue * OneRaw)));
+            var doubleValue = double.CreateChecked(value);
+            result = new Fixed128((Int128)double.Round(doubleValue * OneRaw, MidpointRounding.ToEven));
             return true;
         }
         catch (NotSupportedException)
@@ -109,20 +109,20 @@ public partial struct Fixed128
 
         try
         {
-            var decimalValue = decimal.CreateSaturating(value);
-            if (decimalValue > (decimal)MaxValue)
+            var doubleValue = double.CreateSaturating(value);
+            if (doubleValue > (double)MaxValue)
             {
                 result = MaxValue;
                 return true;
             }
 
-            if (decimalValue < (decimal)MinValue)
+            if (doubleValue < (double)MinValue)
             {
                 result = MinValue;
                 return true;
             }
 
-            result = new Fixed128((Int128)(decimalValue * OneRaw));
+            result = new Fixed128((Int128)double.Round(doubleValue * OneRaw, MidpointRounding.ToEven));
             return true;
         }
         catch (NotSupportedException)
