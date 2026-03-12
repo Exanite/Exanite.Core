@@ -27,23 +27,7 @@ public class FixedCreationTests
     [InlineData(-1, 1, 1, -1.1)]
     [InlineData(3, 14159, 5, 3.14159)]
     [InlineData(-3, 14159, 5, -3.14159)]
-    public void FromDecimal_ReturnsExpectedResult_IntOverload(int integral, int fractional, int decimalPlaces, double expected)
-    {
-        Assert.Equal(expected, (double)Fixed.FromDecimal(integral, fractional, decimalPlaces), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
-    }
-
-    [Theory]
-    [InlineData(0, 0, 0, 0)]
-    [InlineData(0, 1, 1, 0.1)]
-    [InlineData(0, 2, 1, 0.2)]
-    [InlineData(0, 25, 2, 0.25)]
-    [InlineData(1, 0, 0, 1)]
-    [InlineData(-1, 0, 0, -1)]
-    [InlineData(1, 1, 1, 1.1)]
-    [InlineData(-1, 1, 1, -1.1)]
-    [InlineData(3, 14159, 5, 3.14159)]
-    [InlineData(-3, 14159, 5, -3.14159)]
-    public void FromDecimal_ReturnsExpectedResult_LongOverload(long integral, int fractional, int decimalPlaces, double expected)
+    public void FromDecimal_ReturnsExpectedResult(long integral, int fractional, int decimalPlaces, double expected)
     {
         Assert.Equal(expected, (double)Fixed.FromDecimal(integral, fractional, decimalPlaces), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
     }

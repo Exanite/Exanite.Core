@@ -134,21 +134,6 @@ public readonly partial struct Fixed :
     public static explicit operator double(Fixed value) => (double)value.Raw / OneRaw;
     public static explicit operator decimal(Fixed value) => (decimal)value.Raw / OneRaw;
 
-    /// <inheritdoc cref="FromDecimal(long,int,int)"/>
-    public static Fixed FromDecimal(int integral, int fractional, int decimalPlaces)
-    {
-        GuardUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
-        GuardUtility.IsFalse(decimalPlaces <= 0 && fractional != 0, "Decimal places must be strictly positive when the fractional part is non-zero");
-
-        if (fractional == 0)
-        {
-            return new Fixed(integral * OneRaw);
-        }
-
-        var divisor = M.Exp10(decimalPlaces);
-        return new Fixed(integral * OneRaw + ((integral >> 31) | 1) * ((fractional * OneRaw) / divisor));
-    }
-
     /// <summary>
     /// Creates a fixed point number by using combining an integral part and a fractional part.
     /// <br/>
