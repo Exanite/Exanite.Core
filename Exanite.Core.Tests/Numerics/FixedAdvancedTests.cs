@@ -122,7 +122,6 @@ public class FixedAdvancedTests
             var expected = double.Hypot((double)yInput, (double)xInput);
             var comparer = i switch
             {
-                _ when M.Abs(i) > 1500 => FloatingPointComparer.FromTolerance((decimal)expected * 0.0000000001M),
                 _ when M.Abs(i) > 1000 => FloatingPointComparer.FromTolerance((decimal)expected * 0.00000000001M),
                 _ => FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision),
             };
