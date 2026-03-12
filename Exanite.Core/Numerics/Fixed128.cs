@@ -256,19 +256,6 @@ public readonly partial struct Fixed128 :
     public static Fixed128 MinMagnitude(Fixed128 x, Fixed128 y) => Abs(x) < Abs(y) ? x : y;
     public static Fixed128 MinMagnitudeNumber(Fixed128 x, Fixed128 y) => MinMagnitude(x, y);
 
-    // Other
-    public static Fixed128 Reciprocal(Fixed128 x)
-    {
-        // Subtract Shift to we guarantee we don't overflow
-        const int oneShift = 126 - Shift;
-        const int finalDownshift = oneShift - Shift - Shift;
-
-        var numerator = (Int128)1 << oneShift;
-        var quotient = numerator / x.Raw;
-        var roundedResult = quotient + ((Int128)1 << (finalDownshift - 1)) >> finalDownshift;
-        return new Fixed128(roundedResult);
-    }
-
     // Formatting
     public string ToString(string? format, IFormatProvider? formatProvider)
     {

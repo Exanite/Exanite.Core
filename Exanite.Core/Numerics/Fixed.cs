@@ -281,13 +281,6 @@ public readonly partial struct Fixed :
     public static Fixed MinMagnitude(Fixed x, Fixed y) => Abs(x) < Abs(y) ? x : y;
     public static Fixed MinMagnitudeNumber(Fixed x, Fixed y) => MinMagnitude(x, y);
 
-    // Other
-    public static Fixed Reciprocal(Fixed x)
-    {
-        // Using Fixed128.Reciprocal does not improve the result
-        return 1 / x;
-    }
-
     // Formatting
     public string ToString(string? format, IFormatProvider? formatProvider)
     {

@@ -14,12 +14,12 @@ public partial struct Fixed
                 {
                     var xx = (Int128)x.Raw * x.Raw;
                     var xxx = (xx >> Shift) * x.Raw;
-                    return (Fixed)Fixed128.Reciprocal(new Fixed128(xxx));
+                    return (Fixed)(1 / new Fixed128(xxx));
                 }
                 case -2:
                 {
                     var xx = (Int128)x.Raw * x.Raw;
-                    return (Fixed)Fixed128.Reciprocal(new Fixed128(xx));
+                    return (Fixed)(1 / new Fixed128(xx));
                 }
                 case -1:
                 {
