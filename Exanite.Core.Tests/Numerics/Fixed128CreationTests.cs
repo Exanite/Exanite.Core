@@ -94,17 +94,20 @@ public class Fixed128CreationTests
         Assert.Equal(5, int.CreateChecked((Fixed128)5));
         Assert.Equal(5, float.CreateChecked((Fixed128)5));
         Assert.Equal(5, double.CreateChecked((Fixed128)5));
+        Assert.Equal(5, decimal.CreateChecked((Fixed128)5));
 
         Assert.Equal(5, byte.CreateSaturating((Fixed128)5));
         Assert.Equal(5u, uint.CreateSaturating((Fixed128)5));
         Assert.Equal(5, int.CreateSaturating((Fixed128)5));
         Assert.Equal(5, float.CreateSaturating((Fixed128)5));
         Assert.Equal(5, double.CreateSaturating((Fixed128)5));
+        Assert.Equal(5, decimal.CreateSaturating((Fixed128)5));
 
         Assert.Equal(5, byte.CreateTruncating((Fixed128)5));
         Assert.Equal(5u, uint.CreateTruncating((Fixed128)5));
         Assert.Equal(5, int.CreateTruncating((Fixed128)5));
         Assert.Equal(5, float.CreateTruncating((Fixed128)5));
         Assert.Equal(5, double.CreateTruncating((Fixed128)5));
+        Assert.Equal(5, decimal.CreateTruncating((Fixed128)5));
     }
 }

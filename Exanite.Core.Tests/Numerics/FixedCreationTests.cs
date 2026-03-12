@@ -123,17 +123,20 @@ public class FixedCreationTests
         Assert.Equal(5, int.CreateChecked((Fixed)5));
         Assert.Equal(5, float.CreateChecked((Fixed)5));
         Assert.Equal(5, double.CreateChecked((Fixed)5));
+        Assert.Equal(5, decimal.CreateChecked((Fixed)5));
 
         Assert.Equal(5, byte.CreateSaturating((Fixed)5));
         Assert.Equal(5u, uint.CreateSaturating((Fixed)5));
         Assert.Equal(5, int.CreateSaturating((Fixed)5));
         Assert.Equal(5, float.CreateSaturating((Fixed)5));
         Assert.Equal(5, double.CreateSaturating((Fixed)5));
+        Assert.Equal(5, decimal.CreateSaturating((Fixed)5));
 
         Assert.Equal(5, byte.CreateTruncating((Fixed)5));
         Assert.Equal(5u, uint.CreateTruncating((Fixed)5));
         Assert.Equal(5, int.CreateTruncating((Fixed)5));
         Assert.Equal(5, float.CreateTruncating((Fixed)5));
         Assert.Equal(5, double.CreateTruncating((Fixed)5));
+        Assert.Equal(5, decimal.CreateTruncating((Fixed)5));
     }
 }
