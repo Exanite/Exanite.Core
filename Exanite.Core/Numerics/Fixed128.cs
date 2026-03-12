@@ -104,8 +104,49 @@ public readonly partial struct Fixed128 :
     public static explicit operator Int128(Fixed128 value) => value.Raw >> Shift;
 
     // Conversion: Loss of precision
-    public static explicit operator Fixed(Fixed128 value) => new((long)(value.Raw >> (Shift - Fixed.Shift)));
-    public static explicit operator checked Fixed(Fixed128 value) => new(checked((long)(value.Raw >> (Shift - Fixed.Shift))));
+    public static explicit operator Fixed(Fixed128 value)
+    {
+        // Round to even for only the truncated portion
+        const int shiftAmount = Shift - Fixed.Shift;
+        var mask = ((Int128)1 << shiftAmount) - 1;
+        var half = (Int128)1 << (shiftAmount - 1);
+
+        var fractional = value.Raw & mask;
+        if (fractional < half)
+        {
+            return new Fixed((long)(value.Raw >> shiftAmount));
+        }
+
+        if (fractional > half)
+        {
+            return new Fixed((long)((value.Raw >> shiftAmount) + 1));
+        }
+
+        var result = (long)(value.Raw >> shiftAmount);
+        return (result & 1) == 0 ? new Fixed(result) : new Fixed(result + 1);
+    }
+
+    public static explicit operator checked Fixed(Fixed128 value)
+    {
+        // Round to even for only the truncated portion
+        const int shiftAmount = Shift - Fixed.Shift;
+        var mask = ((Int128)1 << shiftAmount) - 1;
+        var half = (Int128)1 << (shiftAmount - 1);
+
+        var fractional = value.Raw & mask;
+        if (fractional < half)
+        {
+            return new Fixed(checked((long)(value.Raw >> shiftAmount)));
+        }
+
+        if (fractional > half)
+        {
+            return new Fixed(checked((long)((value.Raw >> shiftAmount) + 1)));
+        }
+
+        var result = checked((long)(value.Raw >> shiftAmount));
+        return (result & 1) == 0 ? new Fixed(result) : new Fixed(result + 1);
+    }
 
     // Conversion: Loss of precision / determinism
     public static explicit operator float(Fixed128 value) => (float)value.Raw / OneRaw;

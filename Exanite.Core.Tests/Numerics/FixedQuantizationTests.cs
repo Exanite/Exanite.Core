@@ -13,19 +13,21 @@ public class FixedQuantizationTests
     [InlineData(1.25, 1)]
     [InlineData(1.50, 2)]
     [InlineData(1.75, 2)]
-    public void Cast_FromFloatingPoint_ToFixed_UsesBankersRounding_ForValuesBetweenEpsilon(decimal multiplier, int expected)
+    public void Cast_ToFixed_UsesBankersRounding_ForValuesBetweenEpsilon(decimal multiplier, int expected)
     {
         var epsilon = (decimal)Fixed.Epsilon;
 
         Assert.Equal(Fixed.FromRaw(expected), (Fixed)(epsilon * multiplier));
         Assert.Equal(Fixed.FromRaw(expected), (Fixed)(double)(epsilon * multiplier));
         Assert.Equal(Fixed.FromRaw(expected), (Fixed)(float)(epsilon * multiplier));
+        Assert.Equal(Fixed.FromRaw(expected), (Fixed)(Fixed128)(epsilon * multiplier));
 
         checked
         {
             Assert.Equal(Fixed.FromRaw(expected), (Fixed)(epsilon * multiplier));
             Assert.Equal(Fixed.FromRaw(expected), (Fixed)(double)(epsilon * multiplier));
             Assert.Equal(Fixed.FromRaw(expected), (Fixed)(float)(epsilon * multiplier));
+            Assert.Equal(Fixed.FromRaw(expected), (Fixed)(Fixed128)(epsilon * multiplier));
         }
     }
 
@@ -52,5 +54,9 @@ public class FixedQuantizationTests
         Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateChecked((float)(epsilon * multiplier)));
         Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateSaturating((float)(epsilon * multiplier)));
         Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateTruncating((float)(epsilon * multiplier)));
+
+        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateChecked((Fixed128)(epsilon * multiplier)));
+        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateSaturating((Fixed128)(epsilon * multiplier)));
+        Assert.Equal(Fixed.FromRaw(expected), Fixed.CreateTruncating((Fixed128)(epsilon * multiplier)));
     }
 }
