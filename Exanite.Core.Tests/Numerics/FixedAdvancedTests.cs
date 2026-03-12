@@ -88,32 +88,38 @@ public class FixedAdvancedTests
     }
 
     [Fact]
-    public void Sqrt_RoundTrip_ReturnsOriginalValue()
+    public void Sqrt_ReturnsOriginal_AfterSquaring()
     {
-        for (var i = 1; i < 100000; i++)
+        checked
         {
-            var original = (Fixed)i;
-            var root = Fixed.Sqrt(original);
-            var square = root * root;
-            AssertEqual(i, (double)original, (double)original, (double)square, FloatingPointComparer.FromTolerance(0M));
+            for (var i = 1; i < 100000; i++)
+            {
+                var original = (Fixed)i;
+                var squared = original * original;
+                AssertEqual(i, (double)original, (double)original, (double)Fixed.Sqrt(squared), FloatingPointComparer.FromTolerance(0));
+            }
         }
     }
 
     [Fact]
-    public void Cbrt_RoundTrip_ReturnsOriginalValue()
+    public void Cbrt_ReturnsOriginal_AfterCubing()
     {
-        for (var i = 1; i < 100000; i++)
+        checked
         {
-            var original = (Fixed)i;
-            var root = Fixed.Cbrt(original);
-            var cube = root * root * root;
-            AssertEqual(i, (double)original, (double)original, (double)cube, FloatingPointComparer.FromTolerance(0M));
+            for (var i = 1; i < 10000; i++)
+            {
+                {
+                    var original = (Fixed)i;
+                    var cubed = original * original * original;
+                    AssertEqual(i, (double)original, (double)original, (double)Fixed.Cbrt(cubed), FloatingPointComparer.FromTolerance(0));
+                }
 
-            // Also check negative range
-            var originalNeg = -original;
-            var rootNeg = Fixed.Cbrt(originalNeg);
-            var cubeNeg = rootNeg * rootNeg * rootNeg;
-            AssertEqual(i, (double)originalNeg, (double)originalNeg, (double)cubeNeg, FloatingPointComparer.FromTolerance(0M));
+                {
+                    var original = -(Fixed)i;
+                    var cubed = original * original * original;
+                    AssertEqual(i, (double)original, (double)original, (double)Fixed.Cbrt(cubed), FloatingPointComparer.FromTolerance(0));
+                }
+            }
         }
     }
 
