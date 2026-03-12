@@ -26,15 +26,15 @@ public partial struct Fixed
         {
             case -3:
             {
-                return 1 / Cbrt(x);
+                return Reciprocal(Cbrt(x));
             }
             case -2:
             {
-                return 1 / Sqrt(x);
+                return Reciprocal(Sqrt(x));
             }
             case -1:
             {
-                return 1 / x;
+                return Reciprocal(x);
             }
             case 0:
             {

@@ -12,24 +12,14 @@ public partial struct Fixed
             {
                 case -3:
                 {
-                    // xx and xxx are Q(Shift * 2)
-                    const int xxShift = Shift * 2;
                     var xx = (Int128)x.Raw * x.Raw;
                     var xxx = (xx >> Shift) * x.Raw;
-
-                    const int oneShift = 126;
-                    var result = (((Int128)1 << oneShift) / xxx) >> (oneShift - xxShift - Shift);
-                    return new Fixed((long)result);
+                    return (Fixed)Fixed128.Reciprocal(new Fixed128(xxx));
                 }
                 case -2:
                 {
-                    // xx is Q(Shift * 2)
-                    const int xxShift = Shift * 2;
                     var xx = (Int128)x.Raw * x.Raw;
-
-                    const int oneShift = 126;
-                    var result = (((Int128)1 << oneShift) / xx) >> (oneShift - xxShift - Shift);
-                    return new Fixed((long)result);
+                    return (Fixed)Fixed128.Reciprocal(new Fixed128(xx));
                 }
                 case -1:
                 {

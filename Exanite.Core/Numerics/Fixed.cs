@@ -272,7 +272,7 @@ public readonly partial struct Fixed :
     public static bool IsNaN(Fixed value) => false;
     public static bool IsSubnormal(Fixed value) => false;
 
-    // Magnitude methods
+    // Magnitude
     public static Fixed Sign(Fixed value) => new(long.Sign(value.Raw) * OneRaw);
     public static Fixed SignNonZero(Fixed value) => new(((value.Raw >> 63) | 1) * OneRaw);
     public static Fixed Abs(Fixed value) => new(long.Abs(value.Raw));
@@ -280,6 +280,12 @@ public readonly partial struct Fixed :
     public static Fixed MaxMagnitudeNumber(Fixed x, Fixed y) => MaxMagnitude(x, y);
     public static Fixed MinMagnitude(Fixed x, Fixed y) => Abs(x) < Abs(y) ? x : y;
     public static Fixed MinMagnitudeNumber(Fixed x, Fixed y) => MinMagnitude(x, y);
+
+    // Other
+    public static Fixed Reciprocal(Fixed x)
+    {
+        return (Fixed)Fixed128.Reciprocal(x);
+    }
 
     // Formatting
     public string ToString(string? format, IFormatProvider? formatProvider)

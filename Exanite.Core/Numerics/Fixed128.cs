@@ -247,7 +247,7 @@ public readonly partial struct Fixed128 :
     public static bool IsNaN(Fixed128 value) => false;
     public static bool IsSubnormal(Fixed128 value) => false;
 
-    // Magnitude methods
+    // Magnitude
     public static Fixed128 Sign(Fixed128 value) => new(Int128.Sign(value.Raw) * OneRaw);
     public static Fixed128 SignNonZero(Fixed128 value) => new(((value.Raw >> 63) | 1) * OneRaw);
     public static Fixed128 Abs(Fixed128 value) => new(Int128.Abs(value.Raw));
@@ -255,6 +255,15 @@ public readonly partial struct Fixed128 :
     public static Fixed128 MaxMagnitudeNumber(Fixed128 x, Fixed128 y) => MaxMagnitude(x, y);
     public static Fixed128 MinMagnitude(Fixed128 x, Fixed128 y) => Abs(x) < Abs(y) ? x : y;
     public static Fixed128 MinMagnitudeNumber(Fixed128 x, Fixed128 y) => MinMagnitude(x, y);
+
+    // Other
+    public static Fixed128 Reciprocal(Fixed128 x)
+    {
+        // Subtract Shift to we guarantee we don't overflow
+        const int oneShift = 126 - Shift;
+        var result = (((Int128)1 << oneShift) / x.Raw) >> (oneShift - Shift - Shift);
+        return new Fixed128((long)result);
+    }
 
     // Formatting
     public string ToString(string? format, IFormatProvider? formatProvider)
