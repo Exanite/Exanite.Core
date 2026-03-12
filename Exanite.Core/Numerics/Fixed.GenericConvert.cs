@@ -76,7 +76,7 @@ public partial struct Fixed
         try
         {
             var doubleValue = double.CreateChecked(value);
-            result = new Fixed((long)double.Round(doubleValue * OneRaw, MidpointRounding.ToEven));
+            result = new Fixed(checked((long)double.Round(doubleValue * OneRaw, MidpointRounding.ToEven)));
             return true;
         }
         catch (NotSupportedException)

@@ -76,7 +76,7 @@ public partial struct Fixed128
         try
         {
             var doubleValue = double.CreateChecked(value);
-            result = new Fixed128((Int128)double.Round(doubleValue * OneRaw, MidpointRounding.ToEven));
+            result = new Fixed128(checked((Int128)double.Round(doubleValue * OneRaw, MidpointRounding.ToEven)));
             return true;
         }
         catch (NotSupportedException)
