@@ -369,7 +369,6 @@ public readonly partial struct Fixed :
     public static Fixed Parse(string s, NumberStyles style, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, style, provider);
 
     // ToFromRaw
-
     public long ToRaw()
     {
         return Raw;
@@ -381,7 +380,6 @@ public readonly partial struct Fixed :
     }
 
     // Internal
-
     [Conditional("DEBUG")]
     private static void AssertExpectedRange(long x, decimal inclusiveMin, decimal exclusiveMax)
     {

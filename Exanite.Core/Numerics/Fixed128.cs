@@ -387,7 +387,6 @@ public readonly partial struct Fixed128 :
     public static Fixed128 Parse(string s, NumberStyles style, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, style, provider);
 
     // ToFromRaw
-
     public Int128 ToRaw()
     {
         return Raw;
@@ -399,7 +398,6 @@ public readonly partial struct Fixed128 :
     }
 
     // Internal
-
     [Conditional("DEBUG")]
     private static void AssertExpectedRange(Int128 x, int shift, decimal inclusiveMin, decimal exclusiveMax)
     {
