@@ -73,10 +73,18 @@ public partial struct Fixed
             return true;
         }
 
-        try
+        if (typeof(TOther) == typeof(decimal))
         {
             var decimalValue = decimal.CreateChecked(value);
-            result = new Fixed(checked((long)(decimalValue * OneRaw)));
+            result = new Fixed((long)decimal.Round(decimalValue * OneRaw, MidpointRounding.ToEven));
+            return true;
+        }
+
+        // Casting from float to decimal actually loses precision
+        try
+        {
+            var doubleValue = double.CreateChecked(value);
+            result = new Fixed((long)double.Round(doubleValue * OneRaw, MidpointRounding.ToEven));
             return true;
         }
         catch (NotSupportedException)
@@ -107,7 +115,7 @@ public partial struct Fixed
             return true;
         }
 
-        try
+        if (typeof(TOther) == typeof(decimal))
         {
             var decimalValue = decimal.CreateSaturating(value);
             if (decimalValue > (decimal)MaxValue)
@@ -122,7 +130,27 @@ public partial struct Fixed
                 return true;
             }
 
-            result = new Fixed((long)(decimalValue * OneRaw));
+            result = new Fixed((long)decimal.Round(decimalValue * OneRaw, MidpointRounding.ToEven));
+            return true;
+        }
+
+        // Casting from float to decimal actually loses precision
+        try
+        {
+            var doubleValue = double.CreateSaturating(value);
+            if (doubleValue > (double)MaxValue)
+            {
+                result = MaxValue;
+                return true;
+            }
+
+            if (doubleValue < (double)MinValue)
+            {
+                result = MinValue;
+                return true;
+            }
+
+            result = new Fixed((long)double.Round(doubleValue * OneRaw, MidpointRounding.ToEven));
             return true;
         }
         catch (NotSupportedException)
