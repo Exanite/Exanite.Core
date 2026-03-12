@@ -180,6 +180,12 @@ public partial struct Fixed128
         where TTo : INumberBase<TTo>
         where TFrom : INumberBase<double>
     {
+        if (typeof(TTo) == typeof(double))
+        {
+            result = (TTo)(object)value;
+            return true;
+        }
+
         return TFrom.TryConvertToChecked(value, out result);
     }
 
@@ -187,6 +193,12 @@ public partial struct Fixed128
         where TTo : INumberBase<TTo>
         where TFrom : INumberBase<double>
     {
+        if (typeof(TTo) == typeof(double))
+        {
+            result = (TTo)(object)value;
+            return true;
+        }
+
         return TFrom.TryConvertToSaturating(value, out result);
     }
 
@@ -194,6 +206,12 @@ public partial struct Fixed128
         where TTo : INumberBase<TTo>
         where TFrom : INumberBase<double>
     {
+        if (typeof(TTo) == typeof(double))
+        {
+            result = (TTo)(object)value;
+            return true;
+        }
+
         return TFrom.TryConvertToTruncating(value, out result);
     }
 }
