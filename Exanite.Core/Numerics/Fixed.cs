@@ -323,56 +323,6 @@ public readonly partial struct Fixed :
     public static Fixed MinMagnitude(Fixed x, Fixed y) => Abs(x) < Abs(y) ? x : y;
     public static Fixed MinMagnitudeNumber(Fixed x, Fixed y) => MinMagnitude(x, y);
 
-    // Formatting
-    public string ToString(string? format, IFormatProvider? formatProvider)
-    {
-        return ((decimal)Raw / OneRaw).ToString(format, formatProvider);
-    }
-
-    public override string ToString() => ToString(null, null);
-
-    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
-    {
-        return ((decimal)Raw / OneRaw).TryFormat(destination, out charsWritten, format, provider);
-    }
-
-    // Parsing
-    public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed result)
-    {
-        if (Fixed128.TryParse(s, style, provider, out var value))
-        {
-            if (value < MinValue || value > MaxValue)
-            {
-                result = default;
-                return false;
-            }
-
-            result = (Fixed)value;
-            return true;
-        }
-
-        result = default;
-        return false;
-    }
-
-    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out Fixed result) => TryParse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider, out result);
-    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out Fixed result) => TryParse((ReadOnlySpan<char>)s, provider, out result);
-    public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out Fixed result) => TryParse((ReadOnlySpan<char>)s, style, provider, out result);
-
-    public static Fixed Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider)
-    {
-        if (!TryParse(s, style, provider, out var result))
-        {
-            throw new FormatException($"Input string '{s.ToString()}' was not in a correct format.");
-        }
-
-        return result;
-    }
-
-    public static Fixed Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider);
-    public static Fixed Parse(string s, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, provider);
-    public static Fixed Parse(string s, NumberStyles style, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, style, provider);
-
     // ToFromRaw
     public long ToRaw()
     {
