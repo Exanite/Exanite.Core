@@ -460,14 +460,36 @@ public readonly partial struct Fixed128 :
 
         var resultRaw = integralValue << Shift;
 
+        // Parse fractional portion
+        var divisor = 10L;
+        var tenRaw = OneRaw * 10;
+        foreach (var c in fractionalText)
+        {
+            if (!char.IsDigit(c))
+            {
+                result = default;
+                return false;
+            }
+
+            var digit = c - '0';
+            var fraction = ((Int128)OneRaw * digit) / divisor;
+            resultRaw += fraction;
+
+            divisor *= 10;
+            if (divisor > tenRaw)
+            {
+                break;
+            }
+        }
+
         // Apply negative sign
         if (isNegative)
         {
             resultRaw = -resultRaw;
         }
 
-        result = default;
-        return false;
+        result = new Fixed128(resultRaw);
+        return true;
     }
 
     public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out Fixed128 result) => TryParse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider, out result);
