@@ -15,7 +15,9 @@ public class FixedParseTests
             new TheoryDataRow<string, Fixed>("-1", -1),
             new TheoryDataRow<string, Fixed>("0.5", Fixed.FromDecimal(0, 5, 1)),
             new TheoryDataRow<string, Fixed>("2", 2),
-            new TheoryDataRow<string, Fixed>("0.0000152587890625", Fixed.Epsilon),
+            new TheoryDataRow<string, Fixed>("0.0000152587890625", Fixed.Epsilon), // Input is 1.0 * Epsilon
+            new TheoryDataRow<string, Fixed>("0.00000762939453125", Fixed.Epsilon), // Input is 0.5 * Epsilon
+            new TheoryDataRow<string, Fixed>("0.00002288818359375", Fixed.Epsilon * 2), // Input is 1.5 * Epsilon
         ];
     }
 
