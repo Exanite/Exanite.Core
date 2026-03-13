@@ -451,8 +451,8 @@ public readonly partial struct Fixed128 :
 
         // Parse integral portion
         // Group separators can appear in the integral portion, but not the fractional portion
-        var integerStyle = style & NumberStyles.AllowThousands;
-        if (!Int128.TryParse(integralText, integerStyle, provider, out var integralValue))
+        var integralStyle = style & NumberStyles.AllowThousands;
+        if (!Int128.TryParse(integralText, integralStyle, provider, out var integralValue))
         {
             result = default;
             return false;
