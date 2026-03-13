@@ -36,13 +36,24 @@ public class Fixed128ParseTests
     }
 
     [Fact]
-    public void TryParse_ParsesAsInteger_ForHexStyle()
+    public void TryParse_ParsesAsInteger_ForHex()
     {
         // 0x10 is 16
         var input = "10";
         var expected = Fixed128.One * 16;
-
         var isSuccess = Fixed128.TryParse(input, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out var result);
+
+        Assert.True(isSuccess);
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void TryParse_ParsesAsInteger_ForBinary()
+    {
+        // 0b10 is 2
+        var input = "10";
+        var expected = Fixed128.One * 2;
+        var isSuccess = Fixed128.TryParse(input, NumberStyles.AllowBinarySpecifier, CultureInfo.InvariantCulture, out var result);
 
         Assert.True(isSuccess);
         Assert.Equal(expected, result);
@@ -53,7 +64,6 @@ public class Fixed128ParseTests
     {
         var input = "(1)";
         var style = NumberStyles.AllowParentheses;
-
         var isSuccess = Fixed128.TryParse(input, style, CultureInfo.InvariantCulture, out var result);
 
         Assert.True(isSuccess);

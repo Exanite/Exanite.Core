@@ -352,6 +352,22 @@ public readonly partial struct Fixed128 :
     // Parsing
     public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed128 result)
     {
+        // If hex or binary is requested, then just parse it as an Int128 and shift up
+        if ((style & (NumberStyles.AllowHexSpecifier | NumberStyles.AllowBinarySpecifier)) != 0)
+        {
+            if (Int128.TryParse(s, style, provider, out var integral))
+            {
+                if (integral > (Int128)MaxValue || integral < (Int128)MinValue)
+                {
+                    result = default;
+                    return false;
+                }
+
+                result = new Fixed128(integral << Shift);
+                return true;
+            }
+        }
+
         if ((style & NumberStyles.AllowLeadingWhite) != 0)
         {
             s = s.TrimStart();
@@ -366,22 +382,6 @@ public readonly partial struct Fixed128 :
         {
             result = default;
             return false;
-        }
-
-        // If hex is requested, then just parse it as an Int128 and shift up
-        if ((style & NumberStyles.AllowHexSpecifier) != 0)
-        {
-            if (Int128.TryParse(s, style, provider, out var integral))
-            {
-                if (integral > (Int128)MaxValue || integral < (Int128)MinValue)
-                {
-                    result = default;
-                    return false;
-                }
-
-                result = new Fixed128(integral << Shift);
-                return true;
-            }
         }
 
         var formatInfo = NumberFormatInfo.GetInstance(provider);

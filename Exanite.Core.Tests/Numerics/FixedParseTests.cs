@@ -36,19 +36,29 @@ public class FixedParseTests
     public void TryParse_ReturnsCorrectValue_CommonInputs(string input, Fixed expected)
     {
         var isSuccess = Fixed.TryParse(input, NumberStyles.Number, CultureInfo.InvariantCulture, out var result);
+        Assert.True(isSuccess);
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void TryParse_ParsesAsInteger_ForHex()
+    {
+        // 0x10 is 16
+        var input = "10";
+        var expected = Fixed.One * 16;
+        var isSuccess = Fixed.TryParse(input, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out var result);
 
         Assert.True(isSuccess);
         Assert.Equal(expected, result);
     }
 
     [Fact]
-    public void TryParse_ParsesAsInteger_ForHexStyle()
+    public void TryParse_ParsesAsInteger_ForBinary()
     {
-        // 0x10 is 16
+        // 0b10 is 2
         var input = "10";
-        var expected = Fixed.One * 16;
-
-        var isSuccess = Fixed.TryParse(input, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out var result);
+        var expected = Fixed.One * 2;
+        var isSuccess = Fixed.TryParse(input, NumberStyles.AllowBinarySpecifier, CultureInfo.InvariantCulture, out var result);
 
         Assert.True(isSuccess);
         Assert.Equal(expected, result);
@@ -59,7 +69,6 @@ public class FixedParseTests
     {
         var input = "(1)";
         var style = NumberStyles.AllowParentheses;
-
         var isSuccess = Fixed.TryParse(input, style, CultureInfo.InvariantCulture, out var result);
 
         Assert.True(isSuccess);
