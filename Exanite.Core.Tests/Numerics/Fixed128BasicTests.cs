@@ -7,6 +7,12 @@ namespace Exanite.Core.Tests.Numerics;
 public class Fixed128BasicTests
 {
     [Fact]
+    public void Default_IsZero()
+    {
+        Assert.Equal(Fixed128.Zero, default);
+    }
+
+    [Fact]
     public void MinMax_AreSymmetric()
     {
         Assert.Equal(Fixed128.MaxValue, -Fixed128.MinValue);
