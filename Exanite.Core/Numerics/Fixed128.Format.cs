@@ -13,7 +13,8 @@ public partial struct Fixed128
         var formatSpan = format.AsSpan();
         var precisionSpan = formatSpan.Length > 1 ? formatSpan[1..] : [];
 
-        var precision = -1;
+        // Parse precision for the purpose of pre-allocating memory
+        var precision = 0;
         if (precisionSpan.Length != 0)
         {
             if (!uint.TryParse(precisionSpan, CultureInfo.InvariantCulture, out var requestedPrecision))
@@ -34,6 +35,8 @@ public partial struct Fixed128
 
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
+        // Parse the format
+        // -1 is used to represent an unspecified amount of precision
         var formatType = 'G';
         var precision = -1;
         if (format.Length > 1)
@@ -53,6 +56,7 @@ public partial struct Fixed128
             }
         }
 
+        // Map to internal format
         switch (formatType)
         {
             case 'G':
@@ -69,7 +73,7 @@ public partial struct Fixed128
             }
             case 'R':
             {
-                return TryFormatInternal(destination, out charsWritten, 'F', -1, provider);
+                return TryFormatInternal(destination, out charsWritten, 'G', -1, provider);
             }
             default:
             {
@@ -79,8 +83,37 @@ public partial struct Fixed128
         }
     }
 
-    private bool TryFormatInternal(Span<char> destination, out int charsWritten, char format, int precision, IFormatProvider? provider)
+    private bool TryFormatInternal(Span<char> destination, out int charsWritten, char formatType, int precision, IFormatProvider? provider)
     {
+        // Further normalize format
+        var formatInfo = NumberFormatInfo.GetInstance(provider);
+        switch (formatType)
+        {
+            case 'G':
+            {
+                // Do nothing
+                break;
+            }
+            case 'F':
+            case 'N':
+            {
+                // Precision for F and N default to NumberFormatInfo.NumberDecimalDigits, if not specified
+                if (precision < 0)
+                {
+                    precision = formatInfo.NumberDecimalDigits;
+                }
 
+                break;
+            }
+            default:
+            {
+                GuardUtility.Throw($"Internal: Incorrect format type: {formatType}");
+
+                charsWritten = 0;
+                return false;
+            }
+        }
+
+        // TODO
     }
 }
