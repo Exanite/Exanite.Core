@@ -1,5 +1,6 @@
 using System;
 using Exanite.Core.Numerics;
+using Exanite.Core.Runtime;
 using Xunit;
 
 namespace Exanite.Core.Tests.Numerics;
@@ -27,9 +28,21 @@ public class FixedCreationTests
     [InlineData(-1, 1, 1, -1.1)]
     [InlineData(3, 14159, 5, 3.14159)]
     [InlineData(-3, 14159, 5, -3.14159)]
+    [InlineData(1234, 567, 3, 1234.567)]
     public void FromDecimal_ReturnsExpectedResult(long integral, int fractional, int decimalPlaces, double expected)
     {
         Assert.Equal(expected, (double)Fixed.FromDecimal(integral, fractional, decimalPlaces), FloatingPointComparer.FromPrecision(FixedTestConstants.BaseExpectedPrecision));
+    }
+
+    [Fact]
+    public void FromDecimal_Throws_ForExcessiveDecimalPlaces()
+    {
+        Fixed.FromDecimal(0, 0, 10);
+
+        Assert.Throws<GuardException>(() =>
+        {
+            Fixed.FromDecimal(0, 0, 11);
+        });
     }
 
     [Theory]

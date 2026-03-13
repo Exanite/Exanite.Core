@@ -145,6 +145,7 @@ public readonly partial struct Fixed :
     {
         GuardUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
         GuardUtility.IsFalse(decimalPlaces <= 0 && fractional != 0, "Decimal places must be strictly positive when the fractional part is non-zero");
+        GuardUtility.IsFalse(decimalPlaces > 10, "There can be at most 10 decimal places");
         if (integral > (1L << IntegralBitCount))
         {
             GuardUtility.Throw($"Integral part must be less than or equal to 2^{IntegralBitCount}");
