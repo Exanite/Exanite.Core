@@ -26,7 +26,7 @@ public partial struct Fixed128
 
         var result = precision <= FractionalBitCount ? stackalloc char[64] : new char[64 + precision];
         var isSuccess = TryFormat(result, out var written, format, formatProvider);
-        AssertUtility.IsTrue(isSuccess, "Internal: Failed to format Fixed128 as string");
+        AssertUtility.IsTrue(isSuccess, "Internal: Failed to format fixed point number as a string");
 
         return result[..written].ToString();
     }
