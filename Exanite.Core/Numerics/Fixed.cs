@@ -137,9 +137,9 @@ public readonly partial struct Fixed :
     /// <summary>
     /// Creates a fixed point number by using combining an integral part and a fractional part.
     /// <br/>
-    /// Eg: FromParts(1, 1, 1) -> 1.1
+    /// Eg: FromDecimal(1, 1, 1) -> 1.1
     /// <br/>
-    /// Eg: FromParts(1, 123, 3) -> 1.123
+    /// Eg: FromDecimal(1, 123, 3) -> 1.123
     /// </summary>
     public static Fixed FromDecimal(long integral, int fractional, int decimalPlaces)
     {
