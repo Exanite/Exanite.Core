@@ -157,7 +157,11 @@ public readonly partial struct Fixed :
         }
 
         var divisor = M.Exp10(decimalPlaces);
-        return new Fixed(integral * OneRaw + ((integral >> 63) | 1) * ((fractional * OneRaw) / divisor));
+        var fractionalRaw = (((long)fractional << 1) * OneRaw) / divisor;
+        fractionalRaw += fractionalRaw & 1;
+        fractionalRaw >>= 1;
+
+        return new Fixed(integral * OneRaw + ((integral >> 63) | 1) * fractionalRaw);
     }
 
     /// <summary>

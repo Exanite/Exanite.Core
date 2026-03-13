@@ -175,7 +175,11 @@ public readonly partial struct Fixed128 :
         }
 
         var divisor = M.Exp10(decimalPlaces);
-        return new Fixed128(integral * OneRaw + ((integral >> 127) | 1) * ((fractional * OneRaw) / divisor));
+        var fractionalRaw = (((long)fractional << 1) * OneRaw) / divisor;
+        fractionalRaw += fractionalRaw & 1;
+        fractionalRaw >>= 1;
+
+        return new Fixed128(integral * OneRaw + ((integral >> 127) | 1) * fractionalRaw);
     }
 
     /// <summary>
