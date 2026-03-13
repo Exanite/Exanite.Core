@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace Exanite.Core.Utilities;
 
@@ -98,6 +99,54 @@ public static partial class M
     #endregion
 
     #region IFloatingPoint
+
+    /// <summary>
+    /// Returns the ceiling of the provided value.
+    /// </summary>
+    public static T Ceiling<T>(T a) where T : IFloatingPoint<T>
+    {
+        return T.Ceiling(a);
+    }
+
+    /// <summary>
+    /// Returns the floor of the provided value.
+    /// </summary>
+    public static T Floor<T>(T a) where T : IFloatingPoint<T>
+    {
+        return T.Floor(a);
+    }
+
+    /// <summary>
+    /// Rounds the provided value.
+    /// </summary>
+    public static T Round<T>(T a) where T : IFloatingPoint<T>
+    {
+        return T.Round(a);
+    }
+
+    /// <summary>
+    /// Rounds the provided value.
+    /// </summary>
+    public static T Round<T>(T a, MidpointRounding rounding) where T : IFloatingPoint<T>
+    {
+        return T.Round(a, rounding);
+    }
+
+    /// <summary>
+    /// Rounds the provided value.
+    /// </summary>
+    public static T Round<T>(T a, int digits) where T : IFloatingPoint<T>
+    {
+        return T.Round(a, digits);
+    }
+
+    /// <summary>
+    /// Rounds the provided value.
+    /// </summary>
+    public static T Round<T>(T a, int digits, MidpointRounding rounding) where T : IFloatingPoint<T>
+    {
+        return T.Round(a, digits, rounding);
+    }
 
     /// <summary>
     /// Remaps a value from one range to another.
