@@ -100,52 +100,64 @@ public static partial class M
 
     #region IFloatingPoint
 
-    /// <summary>
-    /// Returns the ceiling of the provided value.
-    /// </summary>
-    public static T Ceiling<T>(T a) where T : IFloatingPoint<T>
+    /// <inheritdoc cref="IFloatingPoint{T}.Ceiling"/>
+    public static T Ceiling<T>(T x) where T : IFloatingPoint<T>
     {
-        return T.Ceiling(a);
+        return T.Ceiling(x);
     }
 
-    /// <summary>
-    /// Returns the floor of the provided value.
-    /// </summary>
-    public static T Floor<T>(T a) where T : IFloatingPoint<T>
+    /// <inheritdoc cref="IFloatingPoint{T}.Floor"/>
+    public static T Floor<T>(T x) where T : IFloatingPoint<T>
     {
-        return T.Floor(a);
+        return T.Floor(x);
     }
 
-    /// <summary>
-    /// Rounds the provided value.
-    /// </summary>
-    public static T Round<T>(T a) where T : IFloatingPoint<T>
+    /// <inheritdoc cref="IFloatingPoint{T}.Round(T)"/>
+    public static T Round<T>(T x) where T : IFloatingPoint<T>
     {
-        return T.Round(a);
+        return T.Round(x);
     }
 
-    /// <summary>
-    /// Rounds the provided value.
-    /// </summary>
-    public static T Round<T>(T a, MidpointRounding rounding) where T : IFloatingPoint<T>
+    /// <inheritdoc cref="IFloatingPoint{T}.Round(T,MidpointRounding)"/>
+    public static T Round<T>(T x, MidpointRounding rounding) where T : IFloatingPoint<T>
     {
-        return T.Round(a, rounding);
+        return T.Round(x, rounding);
     }
 
-    /// <summary>
-    /// Rounds the provided value.
-    /// </summary>
-    public static T Round<T>(T a, int digits) where T : IFloatingPoint<T>
+    /// <inheritdoc cref="IFloatingPoint{T}.Round(T,int)"/>
+    public static T Round<T>(T x, int digits) where T : IFloatingPoint<T>
     {
-        return T.Round(a, digits);
+        return T.Round(x, digits);
     }
 
-    /// <summary>
-    /// Rounds the provided value.
-    /// </summary>
-    public static T Round<T>(T a, int digits, MidpointRounding rounding) where T : IFloatingPoint<T>
+    /// <inheritdoc cref="IFloatingPoint{T}.Round(T,int,MidpointRounding)"/>
+    public static T Round<T>(T x, int digits, MidpointRounding rounding) where T : IFloatingPoint<T>
     {
-        return T.Round(a, digits, rounding);
+        return T.Round(x, digits, rounding);
+    }
+
+    /// <inheritdoc cref="ILogarithmicFunctions{T}.Log(T)"/>
+    public static T Log<T>(T x) where T : ILogarithmicFunctions<T>
+    {
+        return T.Log(x);
+    }
+
+    /// <inheritdoc cref="ILogarithmicFunctions{T}.Log(T,T)"/>
+    public static T Log<T>(T x, T newBase) where T : ILogarithmicFunctions<T>
+    {
+        return T.Log(x, newBase);
+    }
+
+    /// <inheritdoc cref="ILogarithmicFunctions{T}.Log2"/>
+    public static T Log2<T>(T x) where T : ILogarithmicFunctions<T>
+    {
+        return T.Log2(x);
+    }
+
+    /// <inheritdoc cref="ILogarithmicFunctions{T}.Log10"/>
+    public static T Log10<T>(T x) where T : ILogarithmicFunctions<T>
+    {
+        return T.Log10(x);
     }
 
     /// <summary>
