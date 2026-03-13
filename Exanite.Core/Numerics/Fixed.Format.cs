@@ -9,10 +9,10 @@ public partial struct Fixed
         return ((decimal)Raw / OneRaw).ToString(format, formatProvider);
     }
 
-    public override string ToString() => ToString(null, null);
-
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         return ((decimal)Raw / OneRaw).TryFormat(destination, out charsWritten, format, provider);
     }
+
+    public override string ToString() => ToString(null, null);
 }
