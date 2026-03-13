@@ -74,10 +74,21 @@ public class Fixed128ParseTests
     {
         return
         [
-            new TheoryDataRow<string, string, bool, Fixed128>("1,234.567", "en-US", true, Fixed128.FromDecimal(1234, 567, 1)), // Comma is group separator
-            new TheoryDataRow<string, string, bool, Fixed128>("1,2,3,4.5,6,7", "en-US", true, Fixed128.FromDecimal(1234, 567, 1)), // Wrong group sizes, but be lenient
-            new TheoryDataRow<string, string, bool, Fixed128>("1.234,567", "de-DE", true, Fixed128.FromDecimal(1234, 567, 1)), // Dot is group separator, comma is decimal
-            new TheoryDataRow<string, string, bool, Fixed128>("1,234.567", "de-DE", false, 0), // Wrong format for US
+            // Valid for specified culture
+            new TheoryDataRow<string, string, bool, Fixed128>("1,234.567", "en-US", true, Fixed128.FromDecimal(1234, 567, 3)),
+            new TheoryDataRow<string, string, bool, Fixed128>("1.234,567", "de-DE", true, Fixed128.FromDecimal(1234, 567, 3)),
+            new TheoryDataRow<string, string, bool, Fixed128>("1٬234٫567", "fa-IR", true, Fixed128.FromDecimal(1234, 567, 3)),
+
+            // Wrong group sizes, but be lenient
+            new TheoryDataRow<string, string, bool, Fixed128>("1,2,3,4.567", "en-US", true, Fixed128.FromDecimal(1234, 567, 3)),
+
+            // Cannot have group separators after decimal
+            new TheoryDataRow<string, string, bool, Fixed128>("1,2,3,4.5,6,7", "en-US", false, 0),
+            new TheoryDataRow<string, string, bool, Fixed128>("1,234.567", "de-DE", false, 0),
+
+            // Wrong separator
+            new TheoryDataRow<string, string, bool, Fixed128>("1'234.567", "en-US", false, 0),
+            new TheoryDataRow<string, string, bool, Fixed128>("1'234,567", "de-DE", false, 0),
         ];
     }
 
