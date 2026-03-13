@@ -352,17 +352,40 @@ public readonly partial struct Fixed128 :
     // Parsing
     public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed128 result)
     {
-        if (Int128.TryParse(s, style, provider, out var int128Value))
+        if ((style & NumberStyles.AllowLeadingWhite) != 0)
         {
-            result = new Fixed128(int128Value * OneRaw);
-            return true;
+            s = s.TrimStart();
         }
 
-        if (decimal.TryParse(s, style, provider, out var decimalValue))
+        if ((style & NumberStyles.AllowTrailingWhite) != 0)
         {
-            result = new Fixed128((Int128)(decimalValue * OneRaw));
-            return true;
+            s = s.TrimEnd();
         }
+
+        if (s.IsEmpty)
+        {
+            result = default;
+            return false;
+        }
+
+        // If hex is requested, then just parse it as an Int128 and shift up
+        if ((style & NumberStyles.AllowHexSpecifier) != 0)
+        {
+            if (Int128.TryParse(s, style, provider, out var integral))
+            {
+                if (integral > (Int128)MaxValue || integral < (Int128)MinValue)
+                {
+                    result = default;
+                    return false;
+                }
+
+                result = new Fixed128(integral << Shift);
+                return true;
+            }
+        }
+
+        var formatInfo = NumberFormatInfo.GetInstance(provider);
+        var decimalSeparator = formatInfo.NumberDecimalSeparator;
 
         result = default;
         return false;
