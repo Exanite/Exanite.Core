@@ -128,9 +128,10 @@ public class FixedParseTests
     }
 
     [Theory]
-    [InlineData("not-a-number")]
-    [InlineData("1.2.3")]
     [InlineData("")]
+    [InlineData("1.2.3")]
+    [InlineData("not-a-number")]
+    [InlineData("123.12345678901234567890123456789012345678901234567890bad")]
     public void TryParse_ReturnsFalse_ForInvalidInput(string input)
     {
         var isSuccess = Fixed.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out var result);
