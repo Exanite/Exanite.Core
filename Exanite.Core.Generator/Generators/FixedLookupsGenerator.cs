@@ -8,20 +8,8 @@ namespace Exanite.Core.Generator.Generators;
 
 public class FixedLookupsGenerator
 {
-    private readonly bool generate;
-
-    public FixedLookupsGenerator(bool generate)
-    {
-        this.generate = generate;
-    }
-
     public void Run()
     {
-        if (!generate)
-        {
-            return;
-        }
-
         GenerateFixedConstants();
         GenerateFixedLookups();
         GenerateFixed128Lookups();
