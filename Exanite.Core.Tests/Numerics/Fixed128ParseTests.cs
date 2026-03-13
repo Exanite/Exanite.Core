@@ -20,8 +20,8 @@ public class Fixed128ParseTests
             new TheoryDataRow<string, Fixed128>("0.0000152587890625", Fixed.Epsilon),
 
             // Min/Max for Fixed
-            new TheoryDataRow<string, Fixed128>("281474976710656.9999847412109375", Fixed.MaxValue),
-            new TheoryDataRow<string, Fixed128>("-281474976710656.9999847412109375", Fixed.MinValue),
+            new TheoryDataRow<string, Fixed128>("140737488355328.9999847412109375", Fixed.MaxValue),
+            new TheoryDataRow<string, Fixed128>("-140737488355328.9999847412109375", Fixed.MinValue),
         ];
     }
 
