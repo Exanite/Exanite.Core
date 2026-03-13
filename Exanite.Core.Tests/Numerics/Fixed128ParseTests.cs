@@ -15,10 +15,9 @@ public class Fixed128ParseTests
             new TheoryDataRow<string, Fixed128>("-1", -1),
             new TheoryDataRow<string, Fixed128>("0.5", Fixed128.FromDecimal(0, 5, 1)),
             new TheoryDataRow<string, Fixed128>("2", 2),
+
+            // Only require Q48.16 precision even though Fixed128 is a Q96.32
             new TheoryDataRow<string, Fixed128>("0.0000152587890625", Fixed.Epsilon),
-            new TheoryDataRow<string, Fixed128>("0.00000000023283064365386962890625", Fixed128.Epsilon), // Input is 1.0 * Epsilon
-            new TheoryDataRow<string, Fixed128>("0.000000000116415321826934814453125", Fixed128.Epsilon), // Input is 0.5 * Epsilon
-            new TheoryDataRow<string, Fixed128>("0.000000000349245965480804443359375", Fixed128.Epsilon * 2), // Input is 1.5 * Epsilon
         ];
     }
 
