@@ -353,22 +353,43 @@ public readonly partial struct Fixed128 :
     // Parsing
     public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed128 result)
     {
+        // Intentionally excluded values:
+        // AllowExponent
+        // AllowCurrencySymbol
+        const NumberStyles allowedStyles = 0
+            | NumberStyles.AllowLeadingWhite
+            | NumberStyles.AllowTrailingWhite
+            | NumberStyles.AllowLeadingSign
+            | NumberStyles.AllowTrailingSign
+            | NumberStyles.AllowParentheses
+            | NumberStyles.AllowDecimalPoint
+            | NumberStyles.AllowThousands
+            | NumberStyles.AllowHexSpecifier
+            | NumberStyles.AllowBinarySpecifier;
+
+        if ((style & ~allowedStyles) != 0)
+        {
+            result = default;
+            return false;
+        }
+
         // If hex or binary is requested, then just parse it as an Int128 and shift up
         if ((style & (NumberStyles.AllowHexSpecifier | NumberStyles.AllowBinarySpecifier)) != 0)
         {
-            if (Int128.TryParse(s, style, provider, out var integral))
+            if (Int128.TryParse(s, style, provider, out var value))
             {
-                if (integral > (Int128)MaxValue || integral < (Int128)MinValue)
+                if (value > (Int128)MaxValue || value < (Int128)MinValue)
                 {
                     result = default;
                     return false;
                 }
 
-                result = new Fixed128(integral << Shift);
+                result = new Fixed128(value << Shift);
                 return true;
             }
         }
 
+        // Handle whitespace
         if ((style & NumberStyles.AllowLeadingWhite) != 0)
         {
             s = s.TrimStart();
@@ -385,8 +406,65 @@ public readonly partial struct Fixed128 :
             return false;
         }
 
+        // Get format info
         var formatInfo = NumberFormatInfo.GetInstance(provider);
+
+        // Handle signs
+        var isNegative = false;
+        if ((style & NumberStyles.AllowParentheses) != 0 && s.StartsWith("(") && s.EndsWith(")"))
+        {
+            isNegative = true;
+            s = s[1..^1];
+        }
+        else if ((style & NumberStyles.AllowLeadingSign) != 0 && s.StartsWith(formatInfo.NegativeSign))
+        {
+            isNegative = true;
+            s = s[formatInfo.NegativeSign.Length..];
+        }
+        else if ((style & NumberStyles.AllowLeadingSign) != 0 && s.StartsWith(formatInfo.PositiveSign))
+        {
+            s = s[formatInfo.PositiveSign.Length..];
+        }
+
+        // Split into integral and fractional parts
+        ReadOnlySpan<char> integralText;
+        ReadOnlySpan<char> fractionalText;
+
         var decimalSeparator = formatInfo.NumberDecimalSeparator;
+        var decimalIndex = s.IndexOf(decimalSeparator);
+        if (decimalIndex >= 0)
+        {
+            if ((style & NumberStyles.AllowDecimalPoint) == 0)
+            {
+                result = default;
+                return false;
+            }
+
+            integralText = s[..decimalIndex];
+            fractionalText = s[(decimalIndex + decimalSeparator.Length)..];
+        }
+        else
+        {
+            integralText = s;
+            fractionalText = ReadOnlySpan<char>.Empty;
+        }
+
+        // Parse integral portion
+        // Group separators can appear in the integral portion, but not the fractional portion
+        var integerStyle = style & NumberStyles.AllowThousands;
+        if (!Int128.TryParse(integralText, integerStyle, provider, out var integralValue))
+        {
+            result = default;
+            return false;
+        }
+
+        var resultRaw = integralValue << Shift;
+
+        // Apply negative sign
+        if (isNegative)
+        {
+            resultRaw = -resultRaw;
+        }
 
         result = default;
         return false;
