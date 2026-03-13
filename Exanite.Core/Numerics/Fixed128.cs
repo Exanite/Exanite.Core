@@ -472,7 +472,13 @@ public readonly partial struct Fixed128 :
             }
 
             var digit = c - '0';
-            var fraction = ((Int128)OneRaw * digit) / divisor;
+
+            // Round up by adding the last bit
+            // This adds a tiny bit more precision
+            var fraction = ((Int128)(OneRaw << 1) * digit) / divisor;
+            fraction += fraction & 1;
+            fraction >>= 1;
+
             resultRaw += fraction;
 
             divisor *= 10;
