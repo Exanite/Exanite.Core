@@ -74,9 +74,10 @@ public class Fixed128ParseTests
     {
         return
         [
-            new TheoryDataRow<string, string, bool, Fixed128>("1,234.5", "en-US", true, Fixed128.FromDecimal(1234, 5, 1)), // Comma is group separator
-            new TheoryDataRow<string, string, bool, Fixed128>("1.234,5", "de-DE", true, Fixed128.FromDecimal(1234, 5, 1)), // Dot is group separator, comma is decimal
-            new TheoryDataRow<string, string, bool, Fixed128>("1,234.5", "de-DE", false, 0), // Wrong format for US
+            new TheoryDataRow<string, string, bool, Fixed128>("1,234.567", "en-US", true, Fixed128.FromDecimal(1234, 567, 1)), // Comma is group separator
+            new TheoryDataRow<string, string, bool, Fixed128>("1,2,3,4.5,6,7", "en-US", true, Fixed128.FromDecimal(1234, 567, 1)), // Wrong group sizes, but be lenient
+            new TheoryDataRow<string, string, bool, Fixed128>("1.234,567", "de-DE", true, Fixed128.FromDecimal(1234, 567, 1)), // Dot is group separator, comma is decimal
+            new TheoryDataRow<string, string, bool, Fixed128>("1,234.567", "de-DE", false, 0), // Wrong format for US
         ];
     }
 
