@@ -24,6 +24,10 @@ public class FixedParseTests
 
             // Input is 1.5 * Epsilon
             new TheoryDataRow<string, Fixed>("0.00002288818359375", Fixed.Epsilon * 2),
+
+            // Min/Max for Fixed
+            new TheoryDataRow<string, Fixed>("281474976710656.9999847412109375", Fixed.MaxValue),
+            new TheoryDataRow<string, Fixed>("-281474976710656.9999847412109375", Fixed.MinValue),
         ];
     }
 

@@ -18,6 +18,10 @@ public class Fixed128ParseTests
 
             // Only require Q48.16 precision even though Fixed128 is a Q96.32
             new TheoryDataRow<string, Fixed128>("0.0000152587890625", Fixed.Epsilon),
+
+            // Min/Max for Fixed
+            new TheoryDataRow<string, Fixed128>("281474976710656.9999847412109375", Fixed.MaxValue),
+            new TheoryDataRow<string, Fixed128>("-281474976710656.9999847412109375", Fixed.MinValue),
         ];
     }
 
