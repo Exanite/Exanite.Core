@@ -7,22 +7,18 @@ namespace Exanite.Core.Tests.Numerics;
 
 public class Fixed128FormatTests
 {
-    public static TheoryData<Fixed128, string?, string> ToString_ReturnsCorrectString_Data()
+    public static TheoryData<Fixed128, string?, string> ToString_ReturnsCorrectValue_Data()
     {
         // Based on https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings
         return
         [
-            // G and F should behave the same.
-            // N is similar, but with group separators.
-            // R is the same as G
+            // Supported:
+            // G, F, N, R
             //
-            // Lowercase variants should also work.
+            // Lowercase variants should also work
             //
             // Not supported:
-            // P
-            // X
-
-            // TODO: All code below this is AI generated and not yet reviewed. Use with caution.
+            // C, D, E, P, X
 
             // Default formatting (G)
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.Zero, null, "0"),
@@ -41,9 +37,9 @@ public class Fixed128FormatTests
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.Half, "g", "0.5"),
 
             // Fixed-point (F)
-            new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(123, 456, 3), "F2", "123.46"), // Rounds for display
+            new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(123, 456, 3), "F2", "123.46"), // Round for display
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(0, 5, 1), "F0", "0"), // Round to even
-            new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(1, 5, 1), "F0", "2"), // Round to even // TODO: Check which midpoint rounding should be used
+            new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(1, 5, 1), "F0", "2"), // Round to even
 
             // Numeric (N)
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.One * 1000, "N0", "1,000"),
@@ -52,16 +48,15 @@ public class Fixed128FormatTests
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.One * 1000, "n0", "1,000"),
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(1, 25, 2), "n2", "1.25"),
 
-
-
             // Precision testing (Epsilon)
-            new TheoryDataRow<Fixed128, string?, string>(Fixed128.Epsilon, "F32", "0.00000000023283064365386962890625"),
+            new TheoryDataRow<Fixed128, string?, string>(Fixed128.Epsilon, "G", "0.00000000023283064365386962890625"),
+            new TheoryDataRow<Fixed128, string?, string>(Fixed128.Epsilon, "R", "0.00000000023283064365386962890625"),
         ];
     }
 
     [Theory]
-    [MemberData(nameof(ToString_ReturnsCorrectString_Data))]
-    public void ToString_ReturnsCorrectString_InvariantCulture(Fixed128 value, string? format, string expected)
+    [MemberData(nameof(ToString_ReturnsCorrectValue_Data))]
+    public void ToString_ReturnsCorrectValue_InvariantCulture(Fixed128 value, string? format, string expected)
     {
         var result = value.ToString(format, CultureInfo.InvariantCulture);
         Assert.Equal(expected, result);
@@ -71,12 +66,9 @@ public class Fixed128FormatTests
     {
         return
         [
-            // Germany uses dot for thousands and comma for decimal
-            new TheoryDataRow<Fixed128, string, string>(Fixed128.FromDecimal(1234, 5, 1), "N1", "1.234,5"), // TODO: This is wrong
-            // US uses comma for thousands and dot for decimal
-            new TheoryDataRow<Fixed128, string, string>(Fixed128.FromDecimal(1234, 5, 1), "N1", "1,234.5"),
-            // French uses space for thousands and comma for decimal
-            new TheoryDataRow<Fixed128, string, string>(Fixed128.FromDecimal(1234, 5, 1), "N1", "1\u00A0234,5"),
+            new TheoryDataRow<Fixed128, string, string>(Fixed128.FromDecimal(1234, 5, 1), "en-US", "1,234.5"),
+            new TheoryDataRow<Fixed128, string, string>(Fixed128.FromDecimal(1234, 5, 1), "de-DE", "1.234,5"),
+            new TheoryDataRow<Fixed128, string, string>(Fixed128.FromDecimal(1234, 5, 1), "fr-FR", "1\u00A0234,5"),
         ];
     }
 
@@ -87,25 +79,22 @@ public class Fixed128FormatTests
         var culture = new CultureInfo(cultureName);
         var result = value.ToString("N1", culture);
 
-        // Normalize spaces for the French culture test if necessary
-        var actual = result.Replace('\u202F', '\u00A0'); // TODO: Document what these characters are
-
-        Assert.Equal(expected, actual);
+        // Normalize narrow nbsp to nbsp for the French culture
+        var normalizedResult = result.Replace('\u202F', '\u00A0');
+        Assert.Equal(expected, normalizedResult);
     }
 
-    [Fact] // TODO: Fix inconsistent naming convention
-    public void ToString_NoArguments_UsesDefaultFormat()
+    [Fact]
+    public void ToString_UsesGeneralFormat_ByDefault()
     {
         var value = Fixed128.FromDecimal(10, 75, 2);
-        var expected = "10.75"; // Default Invariant behavior usually
-
-        Assert.Equal(expected, value.ToString(null, CultureInfo.InvariantCulture));
+        Assert.Equal("10.75", value.ToString(null, CultureInfo.InvariantCulture));
     }
 
     [Fact]
     public void TryFormat_ReturnsTrue_IfBufferIsLargeEnough()
     {
-        var value = Fixed128.One;
+        var value = Fixed128.FromDecimal(123, 45, 2); // "123.45"
         Span<char> destination = stackalloc char[10];
 
         var isSuccess = value.TryFormat(destination, out var charsWritten, "G", CultureInfo.InvariantCulture);
@@ -126,5 +115,27 @@ public class Fixed128FormatTests
         Assert.Equal(0, charsWritten);
     }
 
-    // TODO: Add round trip tests to ensure bit perfect precision
+    [Fact]
+    public void TryFormat_Parse_CanRoundtrip()
+    {
+        var current = 0.0001;
+        var multiplier = 1.025;
+        for (var i = 0; i < 1350; i++)
+        {
+            current *= multiplier;
+
+            var input = (Fixed128)current;
+            AssertEqualRoundtrip(i, input, Fixed128.Parse(input.ToString("R", CultureInfo.InvariantCulture), CultureInfo.InvariantCulture));
+        }
+    }
+
+    private void AssertEqualRoundtrip(int i, Fixed128 input, Fixed128 expected)
+    {
+        Assert.True(expected == input, $"""
+            Failed at i: {i}
+            Input:       {input}
+            Expected:    {expected}
+            Actual:      {input}
+            """);
+    }
 }
