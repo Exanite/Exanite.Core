@@ -16,16 +16,12 @@ public class FixedParseTests
             new TheoryDataRow<string, Fixed>("0.5", Fixed.FromDecimal(0, 5, 1)),
             new TheoryDataRow<string, Fixed>("2", 2),
 
-            // Input is 1.0 * Epsilon
-            new TheoryDataRow<string, Fixed>("0.0000152587890625", Fixed.Epsilon),
+            // Test against Epsilon for Fixed
+            new TheoryDataRow<string, Fixed>("0.00000762939453125", 0), // Input string is 0.5 * Epsilon
+            new TheoryDataRow<string, Fixed>("0.0000152587890625", Fixed.Epsilon), // Input string is 1.0 * Epsilon
+            new TheoryDataRow<string, Fixed>("0.00002288818359375", Fixed.Epsilon * 2), // Input string is 1.5 * Epsilon
 
-            // Input is 0.5 * Epsilon
-            new TheoryDataRow<string, Fixed>("0.00000762939453125", Fixed.Epsilon),
-
-            // Input is 1.5 * Epsilon
-            new TheoryDataRow<string, Fixed>("0.00002288818359375", Fixed.Epsilon * 2),
-
-            // Min/Max for Fixed
+            // Test again Min/Max for Fixed
             new TheoryDataRow<string, Fixed>("140737488355327.9999847412109375", Fixed.MaxValue),
             new TheoryDataRow<string, Fixed>("-140737488355327.9999847412109375", Fixed.MinValue),
         ];
