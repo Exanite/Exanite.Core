@@ -16,10 +16,11 @@ public class Fixed128ParseTests
             new TheoryDataRow<string, Fixed128>("0.5", Fixed128.FromDecimal(0, 5, 1)),
             new TheoryDataRow<string, Fixed128>("2", 2),
 
-            // Only require Q48.16 precision even though Fixed128 is a Q96.32
+            // Test against Epsilon for Fixed/Fixed128
             new TheoryDataRow<string, Fixed128>("0.0000152587890625", Fixed.Epsilon),
+            new TheoryDataRow<string, Fixed128>("0.00000000023283064365386962890625", Fixed128.Epsilon),
 
-            // Min/Max for Fixed
+            // Test again Min/Max for Fixed
             new TheoryDataRow<string, Fixed128>("140737488355327.9999847412109375", Fixed.MaxValue),
             new TheoryDataRow<string, Fixed128>("-140737488355327.9999847412109375", Fixed.MinValue),
         ];
