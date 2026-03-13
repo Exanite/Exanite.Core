@@ -6,7 +6,7 @@ namespace Exanite.Core.Tests.Numerics;
 
 public class FixedParseTests
 {
-    public static TheoryData<string, Fixed> TryParse_ReturnsCorrectValue_CommonInputs_Data()
+    public static TheoryData<string, Fixed> TryParse_ReturnsCorrectValue_Data()
     {
         return
         [
@@ -28,8 +28,8 @@ public class FixedParseTests
     }
 
     [Theory]
-    [MemberData(nameof(TryParse_ReturnsCorrectValue_CommonInputs_Data))]
-    public void TryParse_ReturnsCorrectValue_CommonInputs(string input, Fixed expected)
+    [MemberData(nameof(TryParse_ReturnsCorrectValue_Data))]
+    public void TryParse_ReturnsCorrectValue(string input, Fixed expected)
     {
         var isSuccess = Fixed.TryParse(input, NumberStyles.Number, CultureInfo.InvariantCulture, out var result);
         Assert.True(isSuccess);
