@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
@@ -116,30 +117,50 @@ public partial struct Fixed128
         var resultRaw = integralValue << Shift;
 
         // Parse fractional portion
-        var divisor = 10L;
-        var tenRaw = OneRaw * 10;
-        foreach (var c in fractionalText)
         {
-            if (!char.IsDigit(c))
+            Int128 numerator = 0;
+            Int128 denominator = 1;
+            var digitsProcessed = 0;
+
+            const int maxDigits = 28; // log10(2^(127-Shift))
+            foreach (var c in fractionalText)
             {
-                result = default;
-                return false;
+                if (!char.IsDigit(c))
+                {
+                    result = default;
+                    return false;
+                }
+
+                if (digitsProcessed < maxDigits)
+                {
+                    var digit = c - '0';
+                    numerator = (numerator * 10) + digit;
+                    denominator *= 10;
+                    digitsProcessed++;
+                }
             }
 
-            var digit = c - '0';
-
-            // Round up by adding the last bit
-            // This adds a tiny bit more precision
-            var fraction = ((Int128)(OneRaw << 1) * digit) / divisor;
-            fraction += fraction & 1;
-            fraction >>= 1;
-
-            resultRaw += fraction;
-
-            divisor *= 10;
-            if (divisor > tenRaw)
+            if (numerator > 0)
             {
-                break;
+                var scaledNumerator = numerator * OneRaw;
+                var fraction = scaledNumerator / denominator;
+                var remainder = scaledNumerator % denominator;
+
+                // Banker's rounding
+                var twiceRemainder = remainder * 2;
+                if (twiceRemainder > denominator)
+                {
+                    // Remainder is greater than 0.5
+                    fraction++;
+                }
+                else if (twiceRemainder == denominator && (fraction & 1) != 0)
+                {
+                    // Remainder is exactly 0.5
+                    // Only add if fraction is odd
+                    fraction++;
+                }
+
+                resultRaw += fraction;
             }
         }
 
