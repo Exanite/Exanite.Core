@@ -335,15 +335,15 @@ public readonly partial struct Fixed :
     // Parsing
     public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed result)
     {
-        if (long.TryParse(s, style, provider, out var longValue))
+        if (Fixed128.TryParse(s, style, provider, out var value))
         {
-            result = new Fixed(longValue * OneRaw);
-            return true;
-        }
+            if (value < MinValue || value > MaxValue)
+            {
+                result = default;
+                return false;
+            }
 
-        if (decimal.TryParse(s, style, provider, out var decimalValue))
-        {
-            result = new Fixed((long)(decimalValue * OneRaw));
+            result = (Fixed)value;
             return true;
         }
 
