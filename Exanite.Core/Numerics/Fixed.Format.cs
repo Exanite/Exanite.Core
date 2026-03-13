@@ -4,6 +4,8 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed
 {
+    public override string ToString() => ToString(null, null);
+
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
         return ((Fixed128)this).ToString(format, formatProvider);
@@ -13,6 +15,4 @@ public partial struct Fixed
     {
         return ((Fixed128)this).TryFormat(destination, out charsWritten, format, provider);
     }
-
-    public override string ToString() => ToString(null, null);
 }

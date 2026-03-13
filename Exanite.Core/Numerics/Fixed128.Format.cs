@@ -6,6 +6,8 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed128
 {
+    public override string ToString() => ToString(null, null);
+
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
         var formatSpan = format.AsSpan();
@@ -33,6 +35,4 @@ public partial struct Fixed128
     {
         return ((decimal)Raw / OneRaw).TryFormat(destination, out charsWritten, format, provider);
     }
-
-    public override string ToString() => ToString(null, null);
 }
