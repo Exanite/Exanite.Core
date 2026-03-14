@@ -155,7 +155,7 @@ public partial struct Fixed128
 
         // Write integral portion
         {
-            var integral = Raw >> Shift;
+            var integral = M.Abs(Raw) >> Shift;
 
             var integralFormat = "G";
             if (formatType == 'N')
