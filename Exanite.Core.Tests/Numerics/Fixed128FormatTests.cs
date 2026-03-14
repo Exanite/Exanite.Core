@@ -100,7 +100,7 @@ public class Fixed128FormatTests
         var isSuccess = value.TryFormat(destination, out var charsWritten, "G", CultureInfo.InvariantCulture);
 
         Assert.True(isSuccess);
-        Assert.Equal("1", destination[..charsWritten].ToString());
+        Assert.Equal("123.45", destination[..charsWritten].ToString());
     }
 
     [Fact]
