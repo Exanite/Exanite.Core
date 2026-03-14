@@ -8,21 +8,11 @@ public partial struct Fixed128
 {
     public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed128 result)
     {
-        // Intentionally excluded values:
-        // AllowExponent
-        // AllowCurrencySymbol
-        const NumberStyles allowedStyles = 0
-            | NumberStyles.AllowLeadingWhite
-            | NumberStyles.AllowTrailingWhite
-            | NumberStyles.AllowLeadingSign
-            | NumberStyles.AllowTrailingSign
-            | NumberStyles.AllowParentheses
-            | NumberStyles.AllowDecimalPoint
-            | NumberStyles.AllowThousands
-            | NumberStyles.AllowHexSpecifier
-            | NumberStyles.AllowBinarySpecifier;
+        const NumberStyles disallowedStyles = 0
+            | NumberStyles.AllowExponent
+            | NumberStyles.AllowCurrencySymbol;
 
-        if ((style & ~allowedStyles) != 0)
+        if ((style & disallowedStyles) != 0)
         {
             result = default;
             return false;
