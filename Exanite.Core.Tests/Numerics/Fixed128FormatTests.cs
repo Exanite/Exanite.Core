@@ -42,6 +42,7 @@ public class Fixed128FormatTests
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(123, 456, 3), "F2", "123.46"), // Round for display
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(0, 5, 1), "F0", "0"), // Round to even
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(1, 5, 1), "F0", "2"), // Round to even
+            new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(999, 999, 3), "F0", "1000"), // Carry rounded values
 
             // Numeric (N)
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.One * 1000, "N0", "1,000"),

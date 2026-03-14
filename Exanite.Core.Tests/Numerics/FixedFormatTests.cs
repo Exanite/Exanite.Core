@@ -42,6 +42,7 @@ public class FixedFormatTests
             new TheoryDataRow<Fixed, string?, string>(Fixed.FromDecimal(123, 456, 3), "F2", "123.46"), // Round for display
             new TheoryDataRow<Fixed, string?, string>(Fixed.FromDecimal(0, 5, 1), "F0", "0"), // Round to even
             new TheoryDataRow<Fixed, string?, string>(Fixed.FromDecimal(1, 5, 1), "F0", "2"), // Round to even
+            new TheoryDataRow<Fixed, string?, string>(Fixed.FromDecimal(999, 999, 3), "F0", "1000"), // Carry rounded values
 
             // Numeric (N)
             new TheoryDataRow<Fixed, string?, string>(Fixed.One * 1000, "N0", "1,000"),
