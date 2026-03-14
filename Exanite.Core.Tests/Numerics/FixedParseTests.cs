@@ -79,6 +79,7 @@ public class FixedParseTests
             new TheoryDataRow<string, string, bool, Fixed>("1,234.567", "en-US", true, Fixed.FromDecimal(1234, 567, 3)),
             new TheoryDataRow<string, string, bool, Fixed>("1.234,567", "de-DE", true, Fixed.FromDecimal(1234, 567, 3)),
             new TheoryDataRow<string, string, bool, Fixed>("1٬234٫567", "fa-IR", true, Fixed.FromDecimal(1234, 567, 3)),
+            new TheoryDataRow<string, string, bool, Fixed>("1٬234٫567-", "ar-SA", true, Fixed.FromDecimal(-1234, 567, 3)),
 
             // Wrong group sizes, but be lenient
             new TheoryDataRow<string, string, bool, Fixed>("1,2,3,4.567", "en-US", true, Fixed.FromDecimal(1234, 567, 3)),
