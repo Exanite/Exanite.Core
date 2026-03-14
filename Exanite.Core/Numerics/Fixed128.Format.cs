@@ -7,6 +7,8 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed128
 {
+    private const int ToStringInternalStackBufferSize = 256;
+
     public override string ToString() => ToString(null, null);
 
     public string ToString(string? format, IFormatProvider? formatProvider)
@@ -28,7 +30,7 @@ public partial struct Fixed128
 
         var formatInfo = NumberFormatInfo.GetInstance(formatProvider);
         var maxLength = GetToStringMaxLength(precision, formatInfo);
-        var result = maxLength <= 64 ? stackalloc char[64] : new char[maxLength];
+        var result = maxLength <= ToStringInternalStackBufferSize ? stackalloc char[ToStringInternalStackBufferSize] : new char[maxLength];
         var isSuccess = TryFormat(result, out var written, format, formatProvider);
         AssertUtility.IsTrue(isSuccess, "Internal: Failed to format fixed point number as a string");
 
@@ -135,7 +137,7 @@ public partial struct Fixed128
 
         // Allocate internal buffer
         var maxLength = GetToStringMaxLength(precision, formatInfo);
-        var fullResult = maxLength <= 64 ? stackalloc char[64] : new char[maxLength];
+        var fullResult = maxLength <= ToStringInternalStackBufferSize ? stackalloc char[ToStringInternalStackBufferSize] : new char[maxLength];
         var unwrittenResult = fullResult;
         var internalCharsWritten = 0;
 
