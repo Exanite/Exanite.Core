@@ -227,6 +227,7 @@ public partial struct Fixed128
         }
 
         // Write fractional portion
+        var decimalSeparatorWritten = false;
         var fractionalDigitsStart = internalCharsWritten;
         var fractionalDigitsWritten = 0;
         {
@@ -238,6 +239,7 @@ public partial struct Fixed128
                     unwrittenResult[0] = c;
                     unwrittenResult = unwrittenResult[1..];
                     internalCharsWritten++;
+                    decimalSeparatorWritten = true;
                 }
             }
 
@@ -269,6 +271,7 @@ public partial struct Fixed128
         {
             // Exclude the last digit from the final result
             internalCharsWritten--;
+            fractionalDigitsWritten--;
 
             // Check if we need to round
             var currentIndex = precision + 1 + fractionalDigitsStart;
@@ -308,12 +311,6 @@ public partial struct Fixed128
                 }
             }
 
-            // Remove decimal if necessary
-            if (fractionalDigitsWritten == 1)
-            {
-                internalCharsWritten -= formatInfo.NumberDecimalSeparator.Length;
-            }
-
             static bool TryGetNextDigit(ref Span<char> fullResult, int currentIndex, out int nextIndex)
             {
                 currentIndex--;
@@ -332,6 +329,34 @@ public partial struct Fixed128
                 nextIndex = 0;
                 return false;
             }
+        }
+
+        // Pad with 0s if necessary
+        if (formatType == 'F' && fractionalDigitsWritten < precision)
+        {
+            // Write decimal
+            foreach (var c in formatInfo.NumberDecimalSeparator)
+            {
+                unwrittenResult[0] = c;
+                unwrittenResult = unwrittenResult[1..];
+                internalCharsWritten++;
+                decimalSeparatorWritten = true;
+            }
+
+            var zeroesNeeded = precision - fractionalDigitsWritten;
+            fractionalDigitsWritten += zeroesNeeded;
+            for (var i = 0; i < zeroesNeeded; i++)
+            {
+                unwrittenResult[0] = '0';
+                unwrittenResult = unwrittenResult[1..];
+                internalCharsWritten++;
+            }
+        }
+
+        // Remove decimal if necessary
+        if (decimalSeparatorWritten && fractionalDigitsWritten == 0)
+        {
+            internalCharsWritten -= formatInfo.NumberDecimalSeparator.Length;
         }
 
         // Write trailing negative sign
