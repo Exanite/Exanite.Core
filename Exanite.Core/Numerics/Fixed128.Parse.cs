@@ -6,11 +6,13 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed128
 {
-    public static Fixed128 Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider);
+    public const NumberStyles AllowedNumberStyles = ~(NumberStyles.AllowExponent | NumberStyles.AllowCurrencySymbol) & NumberStyles.Any;
+
+    public static Fixed128 Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, AllowedNumberStyles, provider);
     public static Fixed128 Parse(string s, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, provider);
     public static Fixed128 Parse(string s, NumberStyles style, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, style, provider);
 
-    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out Fixed128 result) => TryParse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider, out result);
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out Fixed128 result) => TryParse(s, AllowedNumberStyles, provider, out result);
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out Fixed128 result) => TryParse((ReadOnlySpan<char>)s, provider, out result);
     public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out Fixed128 result) => TryParse((ReadOnlySpan<char>)s, style, provider, out result);
 
@@ -26,11 +28,7 @@ public partial struct Fixed128
 
     public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed128 result)
     {
-        const NumberStyles disallowedStyles = 0
-            | NumberStyles.AllowExponent
-            | NumberStyles.AllowCurrencySymbol;
-
-        if ((style & disallowedStyles) != 0)
+        if ((style & ~AllowedNumberStyles) != 0)
         {
             result = default;
             return false;
