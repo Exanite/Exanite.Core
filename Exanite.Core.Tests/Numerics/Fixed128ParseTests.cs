@@ -129,6 +129,8 @@ public class Fixed128ParseTests
     [Theory]
     [InlineData("")]
     [InlineData("1.2.3")]
+    [InlineData("1234-")]
+    [InlineData("1234+")]
     [InlineData("not-a-number")]
     [InlineData("123.12345678901234567890123456789012345678901234567890bad")]
     public void TryParse_ReturnsFalse_ForInvalidInput(string input)
