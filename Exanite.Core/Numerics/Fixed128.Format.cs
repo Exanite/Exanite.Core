@@ -153,6 +153,54 @@ public partial struct Fixed128
         var unwrittenResult = fullResult;
         var internalCharsWritten = 0;
 
+        // Write leading negative sign
+        if (IsNegative(this))
+        {
+            switch (formatInfo.NumberNegativePattern)
+            {
+                case 0:
+                {
+                    unwrittenResult[0] = '(';
+                    unwrittenResult = unwrittenResult[1..];
+                    internalCharsWritten++;
+
+                    break;
+                }
+                case 1:
+                {
+                    foreach (var c in formatInfo.NegativeSign)
+                    {
+                        unwrittenResult[0] = c;
+                        unwrittenResult = unwrittenResult[1..];
+                        internalCharsWritten++;
+                    }
+
+                    break;
+                }
+                case 2:
+                {
+                    foreach (var c in formatInfo.NegativeSign)
+                    {
+                        unwrittenResult[0] = c;
+                        unwrittenResult = unwrittenResult[1..];
+                        internalCharsWritten++;
+                    }
+
+                    unwrittenResult[0] = ' ';
+                    unwrittenResult = unwrittenResult[1..];
+                    internalCharsWritten++;
+
+                    break;
+                }
+                case 3:
+                case 4:
+                {
+                    break;
+                }
+                default: throw new ArgumentOutOfRangeException(nameof(formatInfo.NumberNegativePattern), $"Invalid value for NumberNegativePattern: {formatInfo.NumberNegativePattern}");
+            }
+        }
+
         // Write integral portion
         {
             var integral = M.Abs(Raw) >> Shift;
@@ -169,8 +217,8 @@ public partial struct Fixed128
                 return false;
             }
 
-            internalCharsWritten += integralCharsWritten;
             unwrittenResult = unwrittenResult[integralCharsWritten..];
+            internalCharsWritten += integralCharsWritten;
         }
 
         // Write fractional portion
@@ -182,9 +230,8 @@ public partial struct Fixed128
                 foreach (var c in formatInfo.NumberDecimalSeparator)
                 {
                     unwrittenResult[0] = c;
-
-                    internalCharsWritten++;
                     unwrittenResult = unwrittenResult[1..];
+                    internalCharsWritten++;
                 }
             }
 
@@ -200,12 +247,60 @@ public partial struct Fixed128
                 fractional &= Mask;
 
                 unwrittenResult[0] = (char)(digit + '0');
-                internalCharsWritten++;
                 unwrittenResult = unwrittenResult[1..];
+                internalCharsWritten++;
             }
         }
 
         // TODO: Apply format
+
+        // Write trailing negative sign
+        if (IsNegative(this))
+        {
+            switch (formatInfo.NumberNegativePattern)
+            {
+                case 0:
+                {
+                    unwrittenResult[0] = ')';
+                    unwrittenResult = unwrittenResult[1..];
+                    internalCharsWritten++;
+
+                    break;
+                }
+                case 1:
+                case 2:
+                {
+                    break;
+                }
+                case 3:
+                {
+                    foreach (var c in formatInfo.NegativeSign)
+                    {
+                        unwrittenResult[0] = c;
+                        unwrittenResult = unwrittenResult[1..];
+                        internalCharsWritten++;
+                    }
+
+                    break;
+                }
+                case 4:
+                {
+                    unwrittenResult[0] = ' ';
+                    unwrittenResult = unwrittenResult[1..];
+                    internalCharsWritten++;
+
+                    foreach (var c in formatInfo.NegativeSign)
+                    {
+                        unwrittenResult[0] = c;
+                        unwrittenResult = unwrittenResult[1..];
+                        internalCharsWritten++;
+                    }
+
+                    break;
+                }
+                default: throw new ArgumentOutOfRangeException(nameof(formatInfo.NumberNegativePattern), $"Invalid value for NumberNegativePattern: {formatInfo.NumberNegativePattern}");
+            }
+        }
 
         // Write to destination
         if (destination.Length < internalCharsWritten)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
@@ -22,17 +23,6 @@ public partial struct Fixed128
 
     public const NumberStyles DefaultParseNumberStyles = SupportedNumberStyles
         & ~(NumberStyles.AllowHexSpecifier | NumberStyles.AllowBinarySpecifier);
-
-    private static readonly ImmutableArray<char> BidiCharacters = [
-        '\u061C', // ALM - Arabic letter mark
-        '\u200E', // LRM - Left-to-right mark
-        '\u200F', // RLM - Right-to-left mark
-        '\u202A', // LRE - Left-to-right embedding
-        '\u202B', // RLE - Right-to-left embedding
-        '\u202C', // PDF - Pop directional formatting
-        '\u202D', // LRO - Left-to-right override
-        '\u202E', // RLO - Right-to-left override
-    ];
 
     public static Fixed128 Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, DefaultParseNumberStyles, provider);
     public static Fixed128 Parse(string s, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, provider);
@@ -77,7 +67,7 @@ public partial struct Fixed128
         }
 
         // Trim Bidi characters
-        s = s.Trim(BidiCharacters.AsSpan());
+        s = s.Trim(StringUtility.BidiCharacters.AsSpan());
 
         // Handle whitespace
         if ((style & NumberStyles.AllowLeadingWhite) != 0)
@@ -109,8 +99,8 @@ public partial struct Fixed128
         else
         {
             var explicitLeadingSignHandled = false;
-            var negativeSign = formatInfo.NegativeSign.Trim(BidiCharacters.AsSpan());
-            var positiveSign = formatInfo.PositiveSign.Trim(BidiCharacters.AsSpan());
+            var negativeSign = formatInfo.NegativeSign.Trim(StringUtility.BidiCharacters.AsSpan());
+            var positiveSign = formatInfo.PositiveSign.Trim(StringUtility.BidiCharacters.AsSpan());
 
             if ((style & NumberStyles.AllowLeadingSign) != 0)
             {
