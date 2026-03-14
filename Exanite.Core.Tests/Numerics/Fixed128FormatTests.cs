@@ -99,13 +99,13 @@ public class Fixed128FormatTests
     [Fact]
     public void TryFormat_ReturnsTrue_IfBufferIsLargeEnough()
     {
-        var value = Fixed128.FromDecimal(123, 45, 2); // "123.45"
-        Span<char> destination = stackalloc char[10];
+        var value = Fixed128.One; // "1"
+        Span<char> destination = stackalloc char[1];
 
         var isSuccess = value.TryFormat(destination, out var charsWritten, "G", CultureInfo.InvariantCulture);
 
         Assert.True(isSuccess);
-        Assert.Equal("123.45", destination[..charsWritten].ToString());
+        Assert.Equal("1", destination[..charsWritten].ToString());
     }
 
     [Fact]
