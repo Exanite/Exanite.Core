@@ -202,60 +202,13 @@ public partial struct Fixed128
             }
         }
 
-        // Split into parts and round
+        // Split into parts
         var integral = M.Abs(Raw) >> Shift;
         var fractional = (long)(Raw & Mask);
-        if (precision >= 0)
-        {
-            var position = FractionalBitCount - precision - 1;
-            if (position >= 0)
-            {
-                var bit = 1L << position;
-                if ((fractional & bit) != 0)
-                {
-                    // Need to round to even
-                    var nextBitPosition = position + 1;
-
-                    bool isEven;
-                    if (nextBitPosition < FractionalBitCount)
-                    {
-                        // Bit is a fractional bit
-                        isEven = (fractional & (1 << nextBitPosition)) == 0;
-                    }
-                    else
-                    {
-                        // Bit is an integral bit
-                        isEven = (integral & 1) == 0;
-                    }
-
-                    if (!isEven)
-                    {
-                        // Add bit
-                        fractional += bit;
-
-                        // Carry over to integral if necessary
-                        if (fractional >= OneRaw)
-                        {
-                            fractional -= OneRaw;
-                            if (IsNegative(this))
-                            {
-                                integral -= 1;
-                            }
-                            else
-                            {
-                                integral += 1;
-                            }
-                        }
-                    }
-                }
-
-                // Truncate bits
-                var truncateMask = (bit << 1) - 1;
-                fractional &= ~truncateMask;
-            }
-        }
 
         // Write integral portion
+        var integralDigitsStart = internalCharsWritten;
+        var integralDigitsWritten = 0;
         {
             var integralFormat = "G";
             if (formatType == 'N')
@@ -263,17 +216,19 @@ public partial struct Fixed128
                 integralFormat = "N0";
             }
 
-            if (!integral.TryFormat(unwrittenResult, out var integralCharsWritten, integralFormat, provider))
+            if (!integral.TryFormat(unwrittenResult, out integralDigitsWritten, integralFormat, provider))
             {
                 charsWritten = 0;
                 return false;
             }
 
-            unwrittenResult = unwrittenResult[integralCharsWritten..];
-            internalCharsWritten += integralCharsWritten;
+            unwrittenResult = unwrittenResult[integralDigitsWritten..];
+            internalCharsWritten += integralDigitsWritten;
         }
 
         // Write fractional portion
+        var fractionalDigitsStart = internalCharsWritten;
+        var fractionalDigitsWritten = 0;
         {
             if (fractional != 0)
             {
@@ -300,6 +255,82 @@ public partial struct Fixed128
                 unwrittenResult[0] = (char)(digit + '0');
                 unwrittenResult = unwrittenResult[1..];
                 internalCharsWritten++;
+                fractionalDigitsWritten++;
+
+                if (precision >= 0 && fractionalDigitsWritten >= (precision + 1))
+                {
+                    break;
+                }
+            }
+        }
+
+        // Round
+        if (precision >= 0 && precision + 1 == fractionalDigitsWritten)
+        {
+            // Exclude the last digit from the final result
+            internalCharsWritten--;
+
+            // Check if we need to round
+            var currentIndex = precision + 1 + fractionalDigitsStart;
+            if (fullResult[currentIndex] >= '5')
+            {
+                // Need to round
+                // Check if next digit is even
+                var isSuccess = TryGetNextDigit(ref fullResult, currentIndex, out currentIndex);
+                AssertUtility.IsTrue(isSuccess, "Internal: There should always be a next digit since we are in the fractional section");
+
+                var isEven = int.IsEvenInteger(fullResult[currentIndex] - '0');
+                if (!isEven)
+                {
+                    // Need to round up
+                    // Note that we don't bother incrementing the last digit since it gets truncated anyway
+                    fullResult[currentIndex]++;
+
+                    // Carry if necessary
+                    while (fullResult[currentIndex] > '9')
+                    {
+                        fullResult[currentIndex] = '0';
+
+                        if (!TryGetNextDigit(ref fullResult, currentIndex, out var nextIndex))
+                        {
+                            // Insert one and end
+                            fullResult[integralDigitsStart..internalCharsWritten].CopyTo(fullResult[(integralDigitsStart + 1)..(internalCharsWritten + 1)]);
+                            fullResult[integralDigitsStart] = '1';
+                            internalCharsWritten++;
+                            break;
+                        }
+
+                        // Found the next digit
+                        // Increment and continue
+                        currentIndex = nextIndex;
+                        fullResult[currentIndex]++;
+                    }
+                }
+            }
+
+            // Remove decimal if necessary
+            if (fractionalDigitsWritten == 1)
+            {
+                internalCharsWritten -= formatInfo.NumberDecimalSeparator.Length;
+            }
+
+            static bool TryGetNextDigit(ref Span<char> fullResult, int currentIndex, out int nextIndex)
+            {
+                currentIndex--;
+
+                while (currentIndex >= 0)
+                {
+                    if (char.IsDigit(fullResult[currentIndex]))
+                    {
+                        nextIndex = currentIndex;
+                        return true;
+                    }
+
+                    currentIndex--;
+                }
+
+                nextIndex = 0;
+                return false;
             }
         }
 
