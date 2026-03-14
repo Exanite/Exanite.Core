@@ -67,7 +67,14 @@ public partial struct Fixed128
         {
             case 'G':
             {
-                return TryFormatInternal(destination, out charsWritten, 'G', precision, formatInfo);
+                // Disallow precision specifier for general format (for simplicity)
+                if (precision >= 0)
+                {
+                    charsWritten = 0;
+                    return false;
+                }
+
+                return TryFormatInternal(destination, out charsWritten, 'G', -1, formatInfo);
             }
             case 'F':
             {
@@ -79,6 +86,7 @@ public partial struct Fixed128
             }
             case 'R':
             {
+                // Roundtrip just uses the general format
                 return TryFormatInternal(destination, out charsWritten, 'G', -1, formatInfo);
             }
             default:
