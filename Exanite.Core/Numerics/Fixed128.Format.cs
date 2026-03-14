@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
@@ -14,7 +15,7 @@ public partial struct Fixed128
         var precisionSpan = formatSpan.Length > 1 ? formatSpan[1..] : [];
 
         // Parse precision for the purpose of pre-allocating memory
-        var precision = 0;
+        var precision = -1;
         if (precisionSpan.Length != 0)
         {
             if (!uint.TryParse(precisionSpan, CultureInfo.InvariantCulture, out var requestedPrecision))
@@ -25,8 +26,9 @@ public partial struct Fixed128
             precision = (int)requestedPrecision;
         }
 
-        // The heap array size is a bit excessive here, but realistically, the heap allocation path is never taken
-        var result = precision <= FractionalBitCount ? stackalloc char[64] : new char[64 + M.Abs(precision)];
+        var formatInfo = NumberFormatInfo.GetInstance(formatProvider);
+        var maxLength = GetToStringMaxLength(precision, formatInfo);
+        var result = maxLength <= 64 ? stackalloc char[64] : new char[maxLength];
         var isSuccess = TryFormat(result, out var written, format, formatProvider);
         AssertUtility.IsTrue(isSuccess, "Internal: Failed to format fixed point number as a string");
 
@@ -35,6 +37,8 @@ public partial struct Fixed128
 
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
+        var formatInfo = NumberFormatInfo.GetInstance(provider);
+
         // Parse the format
         // -1 is used to represent an unspecified amount of precision
         var formatType = 'G';
@@ -61,19 +65,19 @@ public partial struct Fixed128
         {
             case 'G':
             {
-                return TryFormatInternal(destination, out charsWritten, 'G', precision, provider);
+                return TryFormatInternal(destination, out charsWritten, 'G', precision, formatInfo);
             }
             case 'F':
             {
-                return TryFormatInternal(destination, out charsWritten, 'F', precision, provider);
+                return TryFormatInternal(destination, out charsWritten, 'F', precision, formatInfo);
             }
             case 'N':
             {
-                return TryFormatInternal(destination, out charsWritten, 'N', precision, provider);
+                return TryFormatInternal(destination, out charsWritten, 'N', precision, formatInfo);
             }
             case 'R':
             {
-                return TryFormatInternal(destination, out charsWritten, 'G', -1, provider);
+                return TryFormatInternal(destination, out charsWritten, 'G', -1, formatInfo);
             }
             default:
             {
@@ -83,10 +87,25 @@ public partial struct Fixed128
         }
     }
 
-    private bool TryFormatInternal(Span<char> destination, out int charsWritten, char formatType, int precision, IFormatProvider? provider)
+    private int GetToStringMaxLength(int precision, NumberFormatInfo formatInfo)
+    {
+        if (precision < 0)
+        {
+            precision = FractionalBitCount;
+        }
+
+        var signCharCount = M.Max(formatInfo.PositiveSign.Length, formatInfo.NegativeSign.Length);
+        var integralDigits = (int)M.Ceiling(IntegralBitCount * double.Log10(2));
+
+        var groupSize = formatInfo.NumberGroupSizes.Max();
+        var groupSeparatorCharCount = groupSize > 0 ? formatInfo.NumberGroupSeparator.Length * (integralDigits / groupSize) : 0;
+
+        return signCharCount + integralDigits + groupSeparatorCharCount + formatInfo.NumberDecimalSeparator.Length + precision;
+    }
+
+    private bool TryFormatInternal(Span<char> destination, out int charsWritten, char formatType, int precision, NumberFormatInfo formatInfo)
     {
         // Further normalize format
-        var formatInfo = NumberFormatInfo.GetInstance(provider);
         switch (formatType)
         {
             case 'G':
@@ -114,6 +133,27 @@ public partial struct Fixed128
             }
         }
 
+        // Allocate internal buffer
+        var maxLength = GetToStringMaxLength(precision, formatInfo);
+        var fullResult = maxLength <= 64 ? stackalloc char[64] : new char[maxLength];
+        var unwrittenResult = fullResult;
+        var internalCharsWritten = 0;
+
+        // Write integral portion
+        if (!(Raw >> Shift).TryFormat(unwrittenResult, out var integralCharsWritten, "G", CultureInfo.InvariantCulture))
+        {
+            charsWritten = 0;
+            return false;
+        }
+
+        internalCharsWritten += integralCharsWritten;
+        unwrittenResult = unwrittenResult[integralCharsWritten..];
+
+        // Write fractional portion
+
+
         // TODO
+        charsWritten = 0;
+        return false;
     }
 }
