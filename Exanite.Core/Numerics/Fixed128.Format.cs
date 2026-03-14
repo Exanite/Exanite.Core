@@ -68,6 +68,7 @@ public partial struct Fixed128
             case 'G':
             {
                 // Disallow precision specifier for general format (for simplicity)
+                // We also always show all significant digits
                 if (precision >= 0)
                 {
                     charsWritten = 0;
