@@ -88,14 +88,44 @@ public partial struct Fixed128
             isNegative = true;
             s = s[1..^1];
         }
-        else if ((style & NumberStyles.AllowLeadingSign) != 0 && s.StartsWith(formatInfo.NegativeSign))
+        else
         {
-            isNegative = true;
-            s = s[formatInfo.NegativeSign.Length..];
-        }
-        else if ((style & NumberStyles.AllowLeadingSign) != 0 && s.StartsWith(formatInfo.PositiveSign))
-        {
-            s = s[formatInfo.PositiveSign.Length..];
+            var explicitSignHandled = false;
+            if ((style & NumberStyles.AllowLeadingSign) != 0)
+            {
+                if (s.StartsWith(formatInfo.NegativeSign))
+                {
+                    isNegative = true;
+                    s = s[formatInfo.NegativeSign.Length..];
+
+                    if (formatInfo.NegativeSign.Length > 0)
+                    {
+                        explicitSignHandled = true;
+                    }
+                }
+                else if (s.StartsWith(formatInfo.PositiveSign))
+                {
+                    s = s[formatInfo.PositiveSign.Length..];
+
+                    if (formatInfo.PositiveSign.Length > 0)
+                    {
+                        explicitSignHandled = true;
+                    }
+                }
+            }
+
+            if (!explicitSignHandled && (style & NumberStyles.AllowTrailingSign) != 0)
+            {
+                if (s.EndsWith(formatInfo.NegativeSign))
+                {
+                    isNegative = true;
+                    s = s[..formatInfo.NegativeSign.Length];
+                }
+                else if (s.EndsWith(formatInfo.PositiveSign))
+                {
+                    s = s[..formatInfo.PositiveSign.Length];
+                }
+            }
         }
 
         // Split into integral and fractional parts
