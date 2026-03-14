@@ -202,10 +202,61 @@ public partial struct Fixed128
             }
         }
 
+        // Split into parts and round
+        var integral = M.Abs(Raw) >> Shift;
+        var fractional = (long)(Raw & Mask);
+        if (precision >= 0)
+        {
+            var position = FractionalBitCount - precision - 1;
+            if (position >= 0)
+            {
+                var bit = 1L << position;
+                if ((fractional & bit) != 0)
+                {
+                    // Need to round to even
+                    var nextBitPosition = position + 1;
+
+                    bool isEven;
+                    if (nextBitPosition < FractionalBitCount)
+                    {
+                        // Bit is a fractional bit
+                        isEven = (fractional & (1 << nextBitPosition)) == 0;
+                    }
+                    else
+                    {
+                        // Bit is an integral bit
+                        isEven = (integral & 1) == 0;
+                    }
+
+                    if (!isEven)
+                    {
+                        // Add bit
+                        fractional += bit;
+
+                        // Carry over to integral if necessary
+                        if (fractional >= OneRaw)
+                        {
+                            fractional -= OneRaw;
+                            if (IsNegative(this))
+                            {
+                                integral -= 1;
+                            }
+                            else
+                            {
+                                integral += 1;
+                            }
+                        }
+                    }
+                }
+
+                // Truncate bits
+                var truncateMask = (bit << 1) - 1;
+                fractional &= ~truncateMask;
+            }
+        }
+
         // Write integral portion
         {
-            var integral = M.Abs(Raw) >> Shift;
-
             var integralFormat = "G";
             if (formatType == 'N')
             {
@@ -224,7 +275,6 @@ public partial struct Fixed128
 
         // Write fractional portion
         {
-            var fractional = (long)(Raw & Mask);
             if (fractional != 0)
             {
                 // Write decimal
@@ -252,8 +302,6 @@ public partial struct Fixed128
                 internalCharsWritten++;
             }
         }
-
-        // TODO: Apply format
 
         // Write trailing negative sign
         if (IsNegative(this))
