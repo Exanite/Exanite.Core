@@ -6,7 +6,7 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed
 {
-    public const NumberStyles AllowedNumberStyles = Fixed128.AllowedNumberStyles;
+    public const NumberStyles AllowedNumberStyles = Fixed128.SupportedNumberStyles;
 
     public static Fixed Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, AllowedNumberStyles, provider);
     public static Fixed Parse(string s, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, provider);

@@ -6,13 +6,24 @@ namespace Exanite.Core.Numerics;
 
 public partial struct Fixed128
 {
-    public const NumberStyles AllowedNumberStyles = ~(NumberStyles.AllowExponent | NumberStyles.AllowCurrencySymbol) & NumberStyles.Any;
+    public const NumberStyles SupportedNumberStyles = 0
+        | NumberStyles.AllowLeadingWhite
+        | NumberStyles.AllowTrailingWhite
+        | NumberStyles.AllowLeadingSign
+        | NumberStyles.AllowTrailingSign
+        | NumberStyles.AllowParentheses
+        | NumberStyles.AllowDecimalPoint
+        | NumberStyles.AllowThousands
+        | NumberStyles.AllowHexSpecifier
+        | NumberStyles.AllowBinarySpecifier
+        // Explicitly specify that these are not supported
+        & ~(NumberStyles.AllowExponent | NumberStyles.AllowCurrencySymbol);
 
-    public static Fixed128 Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, AllowedNumberStyles, provider);
+    public static Fixed128 Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, SupportedNumberStyles, provider);
     public static Fixed128 Parse(string s, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, provider);
     public static Fixed128 Parse(string s, NumberStyles style, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, style, provider);
 
-    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out Fixed128 result) => TryParse(s, AllowedNumberStyles, provider, out result);
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out Fixed128 result) => TryParse(s, SupportedNumberStyles, provider, out result);
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out Fixed128 result) => TryParse((ReadOnlySpan<char>)s, provider, out result);
     public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out Fixed128 result) => TryParse((ReadOnlySpan<char>)s, style, provider, out result);
 
@@ -28,7 +39,7 @@ public partial struct Fixed128
 
     public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, out Fixed128 result)
     {
-        if ((style & ~AllowedNumberStyles) != 0)
+        if ((style & ~SupportedNumberStyles) != 0)
         {
             result = default;
             return false;
