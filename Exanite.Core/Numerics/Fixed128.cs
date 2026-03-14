@@ -1,7 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Numerics;
 using Exanite.Core.Utilities;
 
@@ -350,13 +347,5 @@ public readonly partial struct Fixed128 :
     public static Fixed128 FromRaw(Int128 raw)
     {
         return new Fixed128(raw);
-    }
-
-    // Internal
-    [Conditional("DEBUG")]
-    private static void AssertExpectedRange(Int128 x, int shift, decimal inclusiveMin, decimal exclusiveMax)
-    {
-        AssertUtility.IsFalse((decimal)x / (1L << shift) < inclusiveMin, "Internal: Value is less than the required minimum");
-        AssertUtility.IsFalse((decimal)x / (1L << shift) >= exclusiveMax, "Internal: Value is greater than the required maximum");
     }
 }

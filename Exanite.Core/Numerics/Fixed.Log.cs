@@ -22,7 +22,7 @@ public partial struct Fixed
         var shiftInitial = shiftNormalize;
 
         var normalizedX = shiftInitial < 0 ? x.Raw >> -shiftInitial : x.Raw << shiftInitial;
-        AssertExpectedRange(normalizedX, 1M, 2M);
+        FixedInternalUtility.AssertExpectedRange(normalizedX, Shift, 1M, 2M);
 
         // Calculate index into LUT
         var rawIndex = (normalizedX - OneRaw) << Log2LutBits;

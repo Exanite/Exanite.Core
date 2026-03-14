@@ -30,7 +30,7 @@ public partial struct Fixed128
         var shiftInitial = shiftInputToInternal + shiftNormalize;
 
         var normalizedX = shiftInitial < 0 ? x.Raw >> -shiftInitial : x.Raw << shiftInitial;
-        AssertExpectedRange(normalizedX, internalShift, 0.5M, 2M);
+        FixedInternalUtility.AssertExpectedRange(normalizedX, internalShift, 0.5M, 2M);
 
         // Calculate LUT index of initial guess
         // 2 is represented with (internalShift + 2) bits, but we are exclusive of 2
@@ -95,7 +95,7 @@ public partial struct Fixed128
         var shiftInitial = shiftInputToInternal + shiftNormalize;
 
         var normalizedX = shiftInitial < 0 ? absX >> -shiftInitial : absX << shiftInitial;
-        AssertExpectedRange(normalizedX, internalShift, 0.25M, 2M);
+        FixedInternalUtility.AssertExpectedRange(normalizedX, internalShift, 0.25M, 2M);
 
         // Calculate LUT index of initial guess
         // 2 is represented with (internalShift + 2) bits, but we are exclusive of 1
