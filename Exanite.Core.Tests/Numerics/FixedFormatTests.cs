@@ -1,8 +1,6 @@
 using System;
 using System.Globalization;
-using System.Linq;
 using Exanite.Core.Numerics;
-using Exanite.Core.Utilities;
 using Xunit;
 
 namespace Exanite.Core.Tests.Numerics;
