@@ -66,13 +66,16 @@ public class Fixed128FormatTests
 
     public static TheoryData<Fixed128, string, string> ToString_RespectsFormatProvider_Data()
     {
+        var arSaFormatInfo = NumberFormatInfo.GetInstance(new CultureInfo("ar-SA"));
+        var arSaExpected = $"{arSaFormatInfo.NegativeSign}1\u066C234\u066B5"; // NumberNegativePattern=1, so the negative sign goes in front
+
         return
         [
             new TheoryDataRow<Fixed128, string, string>(Fixed128.FromDecimal(1234, 5, 1), "en-US", "1,234.5"),
             new TheoryDataRow<Fixed128, string, string>(Fixed128.FromDecimal(1234, 5, 1), "de-DE", "1.234,5"),
             new TheoryDataRow<Fixed128, string, string>(Fixed128.FromDecimal(1234, 5, 1), "en-US", "1,234.5"),
             new TheoryDataRow<Fixed128, string, string>(Fixed128.FromDecimal(1234, 5, 1), "fa-IR", "1٬234٫5"),
-            new TheoryDataRow<Fixed128, string, string>(Fixed128.FromDecimal(-1234, 5, 1), "ar-SA", "1٬234٫5-"),
+            new TheoryDataRow<Fixed128, string, string>(Fixed128.FromDecimal(-1234, 5, 1), "ar-SA", arSaExpected),
         ];
     }
 
@@ -82,7 +85,7 @@ public class Fixed128FormatTests
     {
         var culture = new CultureInfo(cultureName);
         var result = value.ToString("N1", culture);
-        Assert.Equal(expected, Normalize(result));
+        Assert.Equal(expected, result);
     }
 
     [Fact]
@@ -128,20 +131,6 @@ public class Fixed128FormatTests
             var input = (Fixed128)current;
             AssertEqualRoundtrip(i, input, Fixed128.Parse(input.ToString("R", CultureInfo.InvariantCulture), CultureInfo.InvariantCulture));
         }
-    }
-
-    private string Normalize(string text)
-    {
-        var result = text;
-
-        // Replace narrow nbsp to nbsp for French
-        result = result
-            .Replace('\u202F', '\u00A0');
-
-        // Remove Bidi characters
-        result = new string(result.Where(c => !StringUtility.BidiCharacterSearch.Contains(c)).ToArray());
-
-        return result;
     }
 
     private void AssertEqualRoundtrip(int i, Fixed128 input, Fixed128 expected)
