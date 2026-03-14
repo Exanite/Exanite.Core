@@ -154,14 +154,46 @@ public partial struct Fixed128
 
         // Write fractional portion
         {
-            var fractional = Raw & Mask;
-            // TODO: How?
+            var fractional = (long)(Raw & Mask);
+            if (fractional != 0)
+            {
+                // Write decimal
+                foreach (var c in formatInfo.NumberDecimalSeparator)
+                {
+                    unwrittenResult[0] = c;
+
+                    internalCharsWritten++;
+                    unwrittenResult = unwrittenResult[1..];
+                }
+            }
+
+            // Prefill with zeroes
+            unwrittenResult[..FractionalBitCount].Fill('0');
+
+            // Write digits
+            while (fractional != 0)
+            {
+                fractional *= 10;
+
+                var digit = (int)(fractional >> Shift);
+                fractional &= Mask;
+
+                unwrittenResult[0] = (char)(digit + '0');
+                internalCharsWritten++;
+                unwrittenResult = unwrittenResult[1..];
+            }
         }
 
         // TODO: Apply format
 
         // Write to destination
-        fullResult[internalCharsWritten..].CopyTo(destination);
+        if (destination.Length < internalCharsWritten)
+        {
+            charsWritten = 0;
+            return false;
+        }
+
+        fullResult[..internalCharsWritten].CopyTo(destination);
         charsWritten = internalCharsWritten;
         return true;
     }

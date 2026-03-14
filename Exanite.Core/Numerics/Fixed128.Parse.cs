@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Numerics;
 
