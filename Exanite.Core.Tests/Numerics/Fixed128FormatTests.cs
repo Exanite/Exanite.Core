@@ -49,6 +49,8 @@ public class Fixed128FormatTests
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.One * 1000, "n0", "1,000"),
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(1, 25, 2), "n2", "1.25"),
 
+            new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(9999, 99, 2), "N0", "10,000"),
+
             // Precision testing (Epsilon)
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.Epsilon, "G", "0.00000000023283064365386962890625"),
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.Epsilon, "R", "0.00000000023283064365386962890625"),

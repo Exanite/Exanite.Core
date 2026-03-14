@@ -49,6 +49,8 @@ public class FixedFormatTests
             new TheoryDataRow<Fixed, string?, string>(Fixed.One * 1000, "n0", "1,000"),
             new TheoryDataRow<Fixed, string?, string>(Fixed.FromDecimal(1, 25, 2), "n2", "1.25"),
 
+            new TheoryDataRow<Fixed, string?, string>(Fixed.FromDecimal(9999, 99, 2), "N0", "10,000"),
+
             // Precision testing (Epsilon)
             new TheoryDataRow<Fixed, string?, string>(Fixed.Epsilon, "G", "0.0000152587890625"),
             new TheoryDataRow<Fixed, string?, string>(Fixed.Epsilon, "R", "0.0000152587890625"),
