@@ -1,6 +1,8 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using Exanite.Core.Numerics;
+using Exanite.Core.Utilities;
 using Xunit;
 
 namespace Exanite.Core.Tests.Numerics;
@@ -80,10 +82,7 @@ public class FixedFormatTests
     {
         var culture = new CultureInfo(cultureName);
         var result = value.ToString("N1", culture);
-
-        // Normalize narrow nbsp to nbsp for the French culture
-        var normalizedResult = result.Replace('\u202F', '\u00A0');
-        Assert.Equal(expected, normalizedResult);
+        Assert.Equal(expected, Normalize(result));
     }
 
     [Fact]
@@ -129,6 +128,20 @@ public class FixedFormatTests
             var input = (Fixed)current;
             AssertEqualRoundtrip(i, input, Fixed.Parse(input.ToString("R", CultureInfo.InvariantCulture), CultureInfo.InvariantCulture));
         }
+    }
+
+    private string Normalize(string text)
+    {
+        var result = text;
+
+        // Replace narrow nbsp to nbsp for French
+        result = result
+            .Replace('\u202F', '\u00A0');
+
+        // Remove Bidi characters
+        result = new string(result.Where(c => !StringUtility.BidiCharacterSearch.Contains(c)).ToArray());
+
+        return result;
     }
 
     private void AssertEqualRoundtrip(int i, Fixed input, Fixed expected)
