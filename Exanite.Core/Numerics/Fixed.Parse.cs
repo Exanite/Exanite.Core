@@ -32,7 +32,7 @@ public partial struct Fixed
     {
         if (!TryParse(s, style, provider, out var result))
         {
-            throw new FormatException($"Input string '{s.ToString()}' was not in a correct format.");
+            throw new FormatException($"The input string is in an invalid format: {s}");
         }
 
         return result;
