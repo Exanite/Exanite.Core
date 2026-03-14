@@ -20,6 +20,9 @@ public partial struct Fixed128
         // Explicitly specify that these are not supported
         & ~(NumberStyles.AllowExponent | NumberStyles.AllowCurrencySymbol);
 
+    public const NumberStyles DefaultParseNumberStyles = SupportedNumberStyles
+        & ~(NumberStyles.AllowHexSpecifier | NumberStyles.AllowBinarySpecifier);
+
     private static readonly ImmutableArray<char> BidiCharacters = [
         '\u061C', // ALM - Arabic letter mark
         '\u200E', // LRM - Left-to-right mark
@@ -31,11 +34,11 @@ public partial struct Fixed128
         '\u202E', // RLO - Right-to-left override
     ];
 
-    public static Fixed128 Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, SupportedNumberStyles, provider);
+    public static Fixed128 Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, DefaultParseNumberStyles, provider);
     public static Fixed128 Parse(string s, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, provider);
     public static Fixed128 Parse(string s, NumberStyles style, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, style, provider);
 
-    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out Fixed128 result) => TryParse(s, SupportedNumberStyles, provider, out result);
+    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out Fixed128 result) => TryParse(s, DefaultParseNumberStyles, provider, out result);
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, out Fixed128 result) => TryParse((ReadOnlySpan<char>)s, provider, out result);
     public static bool TryParse([NotNullWhen(true)] string? s, NumberStyles style, IFormatProvider? provider, out Fixed128 result) => TryParse((ReadOnlySpan<char>)s, style, provider, out result);
 
