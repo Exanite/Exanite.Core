@@ -54,6 +54,7 @@ public class Fixed128FormatTests
             // Precision testing (Epsilon)
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.Epsilon, "G", "0.00000000023283064365386962890625"),
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.Epsilon, "R", "0.00000000023283064365386962890625"),
+            new TheoryDataRow<Fixed128, string?, string>(Fixed128.Epsilon, "F31", "0.0000000002328306436538696289062"),
         ];
     }
 

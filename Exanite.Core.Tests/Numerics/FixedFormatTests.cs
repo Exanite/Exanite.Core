@@ -54,6 +54,7 @@ public class FixedFormatTests
             // Precision testing (Epsilon)
             new TheoryDataRow<Fixed, string?, string>(Fixed.Epsilon, "G", "0.0000152587890625"),
             new TheoryDataRow<Fixed, string?, string>(Fixed.Epsilon, "R", "0.0000152587890625"),
+            new TheoryDataRow<Fixed, string?, string>(Fixed.Epsilon, "F15", "0.000015258789062"),
         ];
     }
 
