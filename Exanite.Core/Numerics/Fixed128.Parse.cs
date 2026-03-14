@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
@@ -18,6 +19,17 @@ public partial struct Fixed128
         | NumberStyles.AllowBinarySpecifier
         // Explicitly specify that these are not supported
         & ~(NumberStyles.AllowExponent | NumberStyles.AllowCurrencySymbol);
+
+    private static readonly ImmutableArray<char> BidiCharacters = [
+        '\u061C', // ALM - Arabic letter mark
+        '\u200E', // LRM - Left-to-right mark
+        '\u200F', // RLM - Right-to-left mark
+        '\u202A', // LRE - Left-to-right embedding
+        '\u202B', // RLE - Right-to-left embedding
+        '\u202C', // PDF - Pop directional formatting
+        '\u202D', // LRO - Left-to-right override
+        '\u202E', // RLO - Right-to-left override
+    ];
 
     public static Fixed128 Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, SupportedNumberStyles, provider);
     public static Fixed128 Parse(string s, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, provider);
@@ -61,6 +73,9 @@ public partial struct Fixed128
             }
         }
 
+        // Trim Bidi characters
+        s = s.Trim(BidiCharacters.AsSpan());
+
         // Handle whitespace
         if ((style & NumberStyles.AllowLeadingWhite) != 0)
         {
@@ -90,40 +105,43 @@ public partial struct Fixed128
         }
         else
         {
-            var explicitSignHandled = false;
+            var explicitLeadingSignHandled = false;
+            var negativeSign = formatInfo.NegativeSign.Trim(BidiCharacters.AsSpan());
+            var positiveSign = formatInfo.PositiveSign.Trim(BidiCharacters.AsSpan());
+
             if ((style & NumberStyles.AllowLeadingSign) != 0)
             {
-                if (s.StartsWith(formatInfo.NegativeSign))
+                if (s.StartsWith(negativeSign))
                 {
                     isNegative = true;
-                    s = s[formatInfo.NegativeSign.Length..];
+                    s = s[negativeSign.Length..];
 
-                    if (formatInfo.NegativeSign.Length > 0)
+                    if (negativeSign.Length > 0)
                     {
-                        explicitSignHandled = true;
+                        explicitLeadingSignHandled = true;
                     }
                 }
-                else if (s.StartsWith(formatInfo.PositiveSign))
+                else if (s.StartsWith(positiveSign))
                 {
-                    s = s[formatInfo.PositiveSign.Length..];
+                    s = s[positiveSign.Length..];
 
-                    if (formatInfo.PositiveSign.Length > 0)
+                    if (positiveSign.Length > 0)
                     {
-                        explicitSignHandled = true;
+                        explicitLeadingSignHandled = true;
                     }
                 }
             }
 
-            if (!explicitSignHandled && (style & NumberStyles.AllowTrailingSign) != 0)
+            if (!explicitLeadingSignHandled && (style & NumberStyles.AllowTrailingSign) != 0)
             {
-                if (s.EndsWith(formatInfo.NegativeSign))
+                if (s.EndsWith(negativeSign))
                 {
                     isNegative = true;
-                    s = s[..formatInfo.NegativeSign.Length];
+                    s = s[..^negativeSign.Length];
                 }
-                else if (s.EndsWith(formatInfo.PositiveSign))
+                else if (s.EndsWith(positiveSign))
                 {
-                    s = s[..formatInfo.PositiveSign.Length];
+                    s = s[..^positiveSign.Length];
                 }
             }
         }
