@@ -97,12 +97,14 @@ public partial struct Fixed128
         }
     }
 
-    private int GetToStringMaxLength(int precision, NumberFormatInfo formatInfo)
+    private int GetToStringMaxLength(int precision, IFormatProvider? provider)
     {
         if (precision < 0)
         {
             precision = FractionalBitCount;
         }
+
+        var formatInfo = NumberFormatInfo.GetInstance(provider);
 
         var signCharCount = M.Max(formatInfo.PositiveSign.Length, formatInfo.NegativeSign.Length);
         var integralDigits = (int)M.Ceiling(IntegralBitCount * double.Log10(2));
@@ -113,8 +115,10 @@ public partial struct Fixed128
         return signCharCount + integralDigits + groupSeparatorCharCount + formatInfo.NumberDecimalSeparator.Length + precision;
     }
 
-    private bool TryFormatInternal(Span<char> destination, out int charsWritten, char formatType, int precision, NumberFormatInfo formatInfo)
+    private bool TryFormatInternal(Span<char> destination, out int charsWritten, char formatType, int precision, IFormatProvider? provider)
     {
+        var formatInfo = NumberFormatInfo.GetInstance(provider);
+
         // Further normalize format
         switch (formatType)
         {
@@ -152,7 +156,14 @@ public partial struct Fixed128
         // Write integral portion
         {
             var integral = Raw >> Shift;
-            if (!integral.TryFormat(unwrittenResult, out var integralCharsWritten, "G", CultureInfo.InvariantCulture))
+
+            var integralFormat = "G";
+            if (formatType == 'N')
+            {
+                integralFormat = "N0";
+            }
+
+            if (!integral.TryFormat(unwrittenResult, out var integralCharsWritten, integralFormat, provider))
             {
                 charsWritten = 0;
                 return false;
