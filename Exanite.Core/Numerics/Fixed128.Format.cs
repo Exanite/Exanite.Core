@@ -140,20 +140,29 @@ public partial struct Fixed128
         var internalCharsWritten = 0;
 
         // Write integral portion
-        if (!(Raw >> Shift).TryFormat(unwrittenResult, out var integralCharsWritten, "G", CultureInfo.InvariantCulture))
         {
-            charsWritten = 0;
-            return false;
+            var integral = Raw >> Shift;
+            if (!integral.TryFormat(unwrittenResult, out var integralCharsWritten, "G", CultureInfo.InvariantCulture))
+            {
+                charsWritten = 0;
+                return false;
+            }
+
+            internalCharsWritten += integralCharsWritten;
+            unwrittenResult = unwrittenResult[integralCharsWritten..];
         }
 
-        internalCharsWritten += integralCharsWritten;
-        unwrittenResult = unwrittenResult[integralCharsWritten..];
-
         // Write fractional portion
+        {
+            var fractional = Raw & Mask;
+            // TODO: How?
+        }
 
+        // TODO: Apply format
 
-        // TODO
-        charsWritten = 0;
-        return false;
+        // Write to destination
+        fullResult[internalCharsWritten..].CopyTo(destination);
+        charsWritten = internalCharsWritten;
+        return true;
     }
 }
