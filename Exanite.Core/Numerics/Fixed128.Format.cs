@@ -13,89 +13,28 @@ public partial struct Fixed128
 
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
-        var formatSpan = format.AsSpan();
-        var precisionSpan = formatSpan.Length > 1 ? formatSpan[1..] : [];
-
-        // Parse precision for the purpose of pre-allocating memory
-        var precision = -1;
-        if (precisionSpan.Length != 0)
+        if (!FixedInternalUtility.TryParseToStringFormat(format, out var internalFormat, out var precision))
         {
-            if (!uint.TryParse(precisionSpan, CultureInfo.InvariantCulture, out var requestedPrecision))
-            {
-                throw new FormatException($"The requested format is not supported: {formatSpan}");
-            }
-
-            precision = (int)requestedPrecision;
+            throw new FormatException($"The requested format is not supported: {format}");
         }
 
-        var formatInfo = NumberFormatInfo.GetInstance(formatProvider);
-        var maxLength = GetToStringMaxLength(precision, formatInfo);
+        var maxLength = GetToStringMaxLength(precision, formatProvider);
         var result = maxLength <= ToStringInternalStackBufferSize ? stackalloc char[ToStringInternalStackBufferSize] : new char[maxLength];
-        var isSuccess = TryFormat(result, out var written, format, formatProvider);
+        var isSuccess = TryFormatInternal(result, out var charsWritten, internalFormat, precision, formatProvider);
         AssertUtility.IsTrue(isSuccess, "Internal: Failed to format fixed point number as a string");
 
-        return result[..written].ToString();
+        return result[..charsWritten].ToString();
     }
 
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
-        var formatInfo = NumberFormatInfo.GetInstance(provider);
-
-        // Parse the format
-        // -1 is used to represent an unspecified amount of precision
-        var formatType = 'G';
-        var precision = -1;
-        if (format.Length > 1)
+        if (!FixedInternalUtility.TryParseToStringFormat(format, out var internalFormat, out var precision))
         {
-            formatType = char.ToUpper(format[0]);
-
-            var precisionSpan = format[1..];
-            if (precisionSpan.Length != 0)
-            {
-                if (!int.TryParse(precisionSpan, CultureInfo.InvariantCulture, out var requestedPrecision))
-                {
-                    charsWritten = 0;
-                    return false;
-                }
-
-                precision = requestedPrecision;
-            }
+            charsWritten = 0;
+            return false;
         }
 
-        // Map to internal format
-        switch (formatType)
-        {
-            case 'G':
-            {
-                // Disallow precision specifier for general format (for simplicity)
-                // We also always show all significant digits
-                if (precision >= 0)
-                {
-                    charsWritten = 0;
-                    return false;
-                }
-
-                return TryFormatInternal(destination, out charsWritten, 'G', -1, formatInfo);
-            }
-            case 'F':
-            {
-                return TryFormatInternal(destination, out charsWritten, 'F', precision, formatInfo);
-            }
-            case 'N':
-            {
-                return TryFormatInternal(destination, out charsWritten, 'N', precision, formatInfo);
-            }
-            case 'R':
-            {
-                // Roundtrip just uses the general format
-                return TryFormatInternal(destination, out charsWritten, 'G', -1, formatInfo);
-            }
-            default:
-            {
-                charsWritten = 0;
-                return false;
-            }
-        }
+        return TryFormatInternal(destination, out charsWritten, internalFormat, precision, provider);
     }
 
     private int GetToStringMaxLength(int precision, IFormatProvider? provider)
@@ -116,12 +55,12 @@ public partial struct Fixed128
         return signCharCount + integralDigits + groupSeparatorCharCount + formatInfo.NumberDecimalSeparator.Length + precision;
     }
 
-    private bool TryFormatInternal(Span<char> destination, out int charsWritten, char formatType, int precision, IFormatProvider? provider)
+    private bool TryFormatInternal(Span<char> destination, out int charsWritten, char internalFormat, int precision, IFormatProvider? provider)
     {
         var formatInfo = NumberFormatInfo.GetInstance(provider);
 
         // Further normalize format
-        switch (formatType)
+        switch (internalFormat)
         {
             case 'G':
             {
@@ -141,7 +80,7 @@ public partial struct Fixed128
             }
             default:
             {
-                GuardUtility.Throw($"Internal: Incorrect format type: {formatType}");
+                GuardUtility.Throw($"Internal: Incorrect format type: {internalFormat}");
 
                 charsWritten = 0;
                 return false;
@@ -211,7 +150,7 @@ public partial struct Fixed128
         var integralDigitsWritten = 0;
         {
             var integralFormat = "G";
-            if (formatType == 'N')
+            if (internalFormat == 'N')
             {
                 integralFormat = "N0";
             }
@@ -332,7 +271,7 @@ public partial struct Fixed128
         }
 
         // Pad with 0s if necessary
-        if (formatType == 'F' && fractionalDigitsWritten < precision)
+        if (internalFormat == 'F' && fractionalDigitsWritten < precision)
         {
             // Write decimal
             foreach (var c in formatInfo.NumberDecimalSeparator)

@@ -19,6 +19,7 @@ public partial struct Fixed
 
     public static Fixed Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider)
     {
+        FixedInternalUtility.ValidateNumberStyle(style, SupportedNumberStyles);
         if (!TryParse(s, style, provider, out var result))
         {
             throw new FormatException($"The input string is in an invalid format: {s}");
