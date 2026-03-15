@@ -17,7 +17,7 @@ namespace Exanite.Core.Events;
 public class EventBus : IAllEventHandler, IDisposable
 {
     private readonly List<IAllEventHandler> allHandlers = new();
-    private readonly TypeIndexedList<TypeIndex<TypeIndexScope>, object?> invokerByTypeIndex = new();
+    private readonly TypeIndexedTable<TypeIndex<TypeIndexScope>, object?> invokerByTypeIndex = new();
 
     /// <summary>
     /// Configures all events received by this event bus to be sent to the provided handler.

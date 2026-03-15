@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace Exanite.Core.Utilities;
 
@@ -99,6 +100,66 @@ public static partial class M
 
     #region IFloatingPoint
 
+    /// <inheritdoc cref="IFloatingPoint{T}.Ceiling"/>
+    public static T Ceiling<T>(T x) where T : IFloatingPoint<T>
+    {
+        return T.Ceiling(x);
+    }
+
+    /// <inheritdoc cref="IFloatingPoint{T}.Floor"/>
+    public static T Floor<T>(T x) where T : IFloatingPoint<T>
+    {
+        return T.Floor(x);
+    }
+
+    /// <inheritdoc cref="IFloatingPoint{T}.Round(T)"/>
+    public static T Round<T>(T x) where T : IFloatingPoint<T>
+    {
+        return T.Round(x);
+    }
+
+    /// <inheritdoc cref="IFloatingPoint{T}.Round(T,MidpointRounding)"/>
+    public static T Round<T>(T x, MidpointRounding rounding) where T : IFloatingPoint<T>
+    {
+        return T.Round(x, rounding);
+    }
+
+    /// <inheritdoc cref="IFloatingPoint{T}.Round(T,int)"/>
+    public static T Round<T>(T x, int digits) where T : IFloatingPoint<T>
+    {
+        return T.Round(x, digits);
+    }
+
+    /// <inheritdoc cref="IFloatingPoint{T}.Round(T,int,MidpointRounding)"/>
+    public static T Round<T>(T x, int digits, MidpointRounding rounding) where T : IFloatingPoint<T>
+    {
+        return T.Round(x, digits, rounding);
+    }
+
+    /// <inheritdoc cref="ILogarithmicFunctions{T}.Log(T)"/>
+    public static T Log<T>(T x) where T : ILogarithmicFunctions<T>
+    {
+        return T.Log(x);
+    }
+
+    /// <inheritdoc cref="ILogarithmicFunctions{T}.Log(T,T)"/>
+    public static T Log<T>(T x, T newBase) where T : ILogarithmicFunctions<T>
+    {
+        return T.Log(x, newBase);
+    }
+
+    /// <inheritdoc cref="ILogarithmicFunctions{T}.Log2"/>
+    public static T Log2<T>(T x) where T : ILogarithmicFunctions<T>
+    {
+        return T.Log2(x);
+    }
+
+    /// <inheritdoc cref="ILogarithmicFunctions{T}.Log10"/>
+    public static T Log10<T>(T x) where T : ILogarithmicFunctions<T>
+    {
+        return T.Log10(x);
+    }
+
     /// <summary>
     /// Remaps a value from one range to another.
     /// Output will be clamped in the range [toStart, toEnd].
@@ -164,6 +225,12 @@ public static partial class M
         return MoveTowards(current, target, maxDelta);
     }
 
+    /// <inheritdoc cref="SmoothDamp{T}(T,T,T,T,ref T,T)"/>
+    public static T SmoothDamp<T>(T current, T target, T smoothTime, T deltaTime, ref T currentVelocity) where T : struct, IFloatingPointIeee754<T>
+    {
+        return SmoothDamp(current, target, smoothTime, deltaTime, ref currentVelocity, T.PositiveInfinity);
+    }
+
     /// <summary>
     /// Moves a value towards the target value over time while smoothing the movement.
     /// <br/>
@@ -176,17 +243,12 @@ public static partial class M
     /// <param name="smoothTime">The time it takes to reach the target. Smaller values result in faster movement.</param>
     /// <param name="deltaTime">The time since the last update.</param>
     /// <param name="currentVelocity">Reference to the current velocity, modified by the function.</param>
-    /// <param name="maxSpeed">Optional maximum speed. Defaults to PositiveInfinity.</param>
+    /// <param name="maxSpeed">The maximum change in value allowed.</param>
     /// <returns>The new value after applying smoothing.</returns>
-    public static T SmoothDamp<T>(T current, T target, T smoothTime, T deltaTime, ref T currentVelocity, T maxSpeed = default) where T : struct, IFloatingPointIeee754<T>
+    public static T SmoothDamp<T>(T current, T target, T smoothTime, T deltaTime, ref T currentVelocity, T maxSpeed) where T : struct, IFloatingPoint<T>
     {
         // From https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Math/Mathf.cs#L309
         // Based on Game Programming Gems 4 Chapter 1.10
-        if (maxSpeed == T.Zero)
-        {
-            maxSpeed = T.PositiveInfinity;
-        }
-
         smoothTime = Max(T.CreateTruncating(0.0001f), smoothTime);
         var omega = T.CreateTruncating(2) / smoothTime;
 
@@ -307,27 +369,53 @@ public static partial class M
     }
 
     /// <summary>
-    /// Returns true if the value is even.
-    /// </summary>
-    public static bool IsEven<T>(this T value) where T : IBinaryInteger<T>
-    {
-        return value % T.CreateTruncating(2) == T.Zero;
-    }
-
-    /// <summary>
-    /// Returns true if the value is odd.
-    /// </summary>
-    public static bool IsOdd<T>(this T value) where T : IBinaryInteger<T>
-    {
-        return value % T.CreateTruncating(2) != T.Zero;
-    }
-
-    /// <summary>
     /// Returns true if the value is a power of 2.
     /// </summary>
     public static bool IsPowerOfTwo<T>(this T value) where T : IBinaryInteger<T>
     {
         return value > T.Zero && (value & (value - T.One)) == T.Zero;
+    }
+
+    /// <summary>
+    /// Returns 10 raised to the given power.
+    /// </summary>
+    public static int Exp10(int power)
+    {
+        switch (power)
+        {
+            case 0: return 1;
+            case 1: return 10;
+            case 2: return 100;
+            case 3: return 1000;
+            case 4: return 10000;
+            case 5: return 100000;
+            default:
+            {
+                var result = 10;
+                for (var i = 1; i < power; i++)
+                {
+                    result *= 10;
+                }
+
+                return result;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Returns true if the value is even.
+    /// </summary>
+    public static bool IsEvenInteger<T>(this T value) where T : INumber<T>
+    {
+        return T.IsEvenInteger(value);
+    }
+
+    /// <summary>
+    /// Returns true if the value is odd.
+    /// </summary>
+    public static bool IsOddInteger<T>(this T value) where T : INumber<T>
+    {
+        return T.IsOddInteger(value);
     }
 
     #endregion

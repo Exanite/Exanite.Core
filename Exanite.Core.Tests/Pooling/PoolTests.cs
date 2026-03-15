@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Exanite.Core.Pooling;
 using Xunit;
 
-namespace Exanite.Core.Tests;
+namespace Exanite.Core.Tests.Pooling;
 
 public class PoolTests
 {

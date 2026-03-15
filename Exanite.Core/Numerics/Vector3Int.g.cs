@@ -76,7 +76,7 @@ public partial struct Vector3Int : IEquatable<Vector3Int>, IFormattable
 
     public static implicit operator Vector3(Vector3Int value)
     {
-        return new Vector3(value.X, value.Y, value.Z);
+        return new Vector3((float)value.X, (float)value.Y, (float)value.Z);
     }
 
     public static Vector3Int operator *(Vector3Int value, int scalar)
@@ -117,6 +117,11 @@ public partial struct Vector3Int : IEquatable<Vector3Int>, IFormattable
     public static Vector3Int operator /(Vector3Int left, Vector3Int right)
     {
         return new Vector3Int(left.X / right.X, left.Y / right.Y, left.Z / right.Z);
+    }
+
+    public static Vector3Int operator %(Vector3Int left, Vector3Int right)
+    {
+        return new Vector3Int(left.X % right.X, left.Y % right.Y, left.Z % right.Z);
     }
 
     public static Vector3Int operator <<(Vector3Int left, Vector3Int right)
@@ -191,6 +196,8 @@ public partial struct Vector3Int : IEquatable<Vector3Int>, IFormattable
 
     public string ToString([StringSyntax(StringSyntaxAttribute.NumericFormat)] string? format, IFormatProvider? formatProvider)
     {
-        return ((Vector3)this).ToString(format, formatProvider);
+        string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
+
+        return $"<{X.ToString(format, formatProvider)}{separator} {Y.ToString(format, formatProvider)}{separator} {Z.ToString(format, formatProvider)}>";
     }
 }
