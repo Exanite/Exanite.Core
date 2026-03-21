@@ -169,17 +169,22 @@ public partial struct Fixed128
         var decimalSeparatorWritten = false;
         var fractionalDigitsStart = internalCharsWritten;
         var fractionalDigitsWritten = 0;
+        if (fractional != 0)
         {
-            if (fractional != 0)
+            // Write decimal
+            foreach (var c in formatInfo.NumberDecimalSeparator)
             {
-                // Write decimal
-                foreach (var c in formatInfo.NumberDecimalSeparator)
-                {
-                    unwrittenResult[0] = c;
-                    unwrittenResult = unwrittenResult[1..];
-                    internalCharsWritten++;
-                    decimalSeparatorWritten = true;
-                }
+                unwrittenResult[0] = c;
+                unwrittenResult = unwrittenResult[1..];
+                internalCharsWritten++;
+            }
+
+            decimalSeparatorWritten = true;
+
+            // Use the complement of the fractional portion if negative
+            if (IsNegative(this))
+            {
+                fractional = OneRaw - fractional;
             }
 
             // Prefill with zeroes
