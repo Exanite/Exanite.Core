@@ -243,7 +243,7 @@ public static partial class M
     /// <param name="smoothTime">The time it takes to reach the target. Smaller values result in faster movement.</param>
     /// <param name="deltaTime">The time since the last update.</param>
     /// <param name="currentVelocity">Reference to the current velocity, modified by the function.</param>
-    /// <param name="maxSpeed">The maximum speed allowed in units per second. This is multiplied by <see cref="deltaTime"/> to get the maximum change allowed.</param>
+    /// <param name="maxSpeed">The maximum change in value allowed.</param>
     /// <returns>The new value after applying smoothing.</returns>
     public static T SmoothDamp<T>(T current, T target, T smoothTime, T deltaTime, ref T currentVelocity, T maxSpeed) where T : struct, IFloatingPoint<T>
     {
@@ -258,7 +258,7 @@ public static partial class M
         var originalTo = target;
 
         // Clamp maximum speed
-        var maxChange = maxSpeed * deltaTime;
+        var maxChange = maxSpeed * smoothTime;
         change = Clamp(change, -maxChange, maxChange);
         target = current - change;
 
