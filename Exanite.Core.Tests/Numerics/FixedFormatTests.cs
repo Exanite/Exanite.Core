@@ -45,7 +45,7 @@ public class FixedFormatTests
             new TheoryDataRow<Fixed, string?, string>(Fixed.One, "F64", "1.0000000000000000000000000000000000000000000000000000000000000000"), // Pad zeroes
 
             // Numeric (N)
-            new TheoryDataRow<Fixed, string?, string>(Fixed.One * 1000, "N", "1,000"),
+            new TheoryDataRow<Fixed, string?, string>(Fixed.One * 1000, "N", "1,000.00"),
 
             new TheoryDataRow<Fixed, string?, string>(Fixed.FromDecimal(1, 25, 2), "N0", "1"),
             new TheoryDataRow<Fixed, string?, string>(Fixed.FromDecimal(1, 25, 2), "N1", "1.2"),

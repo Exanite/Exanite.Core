@@ -276,15 +276,18 @@ public partial struct Fixed128
         }
 
         // Pad with 0s if necessary
-        if (internalFormat == 'F' && fractionalDigitsWritten < precision)
+        if (NeedsPaddedFractional(internalFormat) && fractionalDigitsWritten < precision)
         {
-            // Write decimal
-            foreach (var c in formatInfo.NumberDecimalSeparator)
+            if (!decimalSeparatorWritten)
             {
-                unwrittenResult[0] = c;
-                unwrittenResult = unwrittenResult[1..];
-                internalCharsWritten++;
-                decimalSeparatorWritten = true;
+                // Write decimal
+                foreach (var c in formatInfo.NumberDecimalSeparator)
+                {
+                    unwrittenResult[0] = c;
+                    unwrittenResult = unwrittenResult[1..];
+                    internalCharsWritten++;
+                    decimalSeparatorWritten = true;
+                }
             }
 
             var zeroesNeeded = precision - fractionalDigitsWritten;
@@ -361,5 +364,15 @@ public partial struct Fixed128
         fullResult[..internalCharsWritten].CopyTo(destination);
         charsWritten = internalCharsWritten;
         return true;
+    }
+
+    private static bool NeedsPaddedFractional(char internalFormat)
+    {
+        return internalFormat switch
+        {
+            'F' => true,
+            'N' => true,
+            _ => false,
+        };
     }
 }
