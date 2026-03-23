@@ -12,7 +12,7 @@ namespace Exanite.Core.Runtime;
 /// The backing storage is a list that grows to accommodate the highest accessed index.
 /// In most usage cases, this backing list will be sparse.
 /// </remarks>
-public class IntIndexedTable<TValue>
+public class IndexedTable<TValue>
 {
     private readonly List<TValue?> values = new();
 
