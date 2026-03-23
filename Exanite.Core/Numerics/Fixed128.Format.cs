@@ -49,7 +49,7 @@ public partial struct Fixed128
         var signCharCount = M.Max(formatInfo.PositiveSign.Length, formatInfo.NegativeSign.Length);
         var integralDigits = (int)M.Ceiling(IntegralBitCount * double.Log10(2));
 
-        var groupSize = formatInfo.NumberGroupSizes.Max();
+        var groupSize = M.Max(1, formatInfo.NumberGroupSizes.Min());
         var groupSeparatorCharCount = groupSize > 0 ? formatInfo.NumberGroupSeparator.Length * (integralDigits / groupSize) : 0;
 
         return signCharCount + integralDigits + groupSeparatorCharCount + formatInfo.NumberDecimalSeparator.Length + precision;
