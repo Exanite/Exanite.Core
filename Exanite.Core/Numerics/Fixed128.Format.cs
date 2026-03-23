@@ -169,6 +169,7 @@ public partial struct Fixed128
         var decimalSeparatorWritten = false;
         var fractionalDigitsStart = internalCharsWritten;
         var fractionalDigitsWritten = 0;
+        var fractionalHasRemaining = false;
         if (fractional != 0)
         {
             // Write decimal
@@ -205,6 +206,9 @@ public partial struct Fixed128
 
                 if (precision >= 0 && fractionalDigitsWritten >= (precision + 1))
                 {
+                    // Track whether any fractional values are remaining
+                    // This lets us know whether we need to round up below
+                    fractionalHasRemaining = fractional != 0;
                     break;
                 }
             }
@@ -227,7 +231,7 @@ public partial struct Fixed128
                 AssertUtility.IsTrue(isSuccess, "Internal: There should always be a next digit since we are in the fractional section");
 
                 var isEven = int.IsEvenInteger(fullResult[currentIndex] - '0');
-                if (!isEven)
+                if (!isEven || fractionalHasRemaining)
                 {
                     // Need to round up
                     // Note that we don't bother incrementing the last digit since it gets truncated anyway
