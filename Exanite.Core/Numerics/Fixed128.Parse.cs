@@ -54,7 +54,7 @@ public partial struct Fixed128
         {
             if (Int128.TryParse(s, style, provider, out var value))
             {
-                if (value > (Int128)MaxValue || value < (Int128)MinValue)
+                if (M.Abs(value) > (Int128)MaxValue)
                 {
                     result = default;
                     return false;
