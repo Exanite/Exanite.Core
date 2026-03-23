@@ -171,6 +171,13 @@ public partial struct Fixed128
             return false;
         }
 
+        // Check for overflow
+        if (M.Abs(integralValue) > (Int128)MaxValue)
+        {
+            result = default;
+            return false;
+        }
+
         var resultRaw = integralValue << Shift;
 
         // Parse fractional portion
