@@ -6,7 +6,7 @@ using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Generator.Generators;
 
-public class FixedLookupsGenerator
+public class FixedConstantsGenerator
 {
     public void Run()
     {
