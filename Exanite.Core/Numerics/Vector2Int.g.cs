@@ -150,6 +150,11 @@ public partial struct Vector2Int : IEquatable<Vector2Int>, IFormattable
         return Zero - value;
     }
 
+    public static int Dot(Vector2Int left, Vector2Int right)
+    {
+        return left.X * right.X + left.Y * right.Y;
+    }
+
     public static bool operator ==(Vector2Int left, Vector2Int right)
     {
         return left.Equals(right);

@@ -144,6 +144,11 @@ public partial struct Vector3Fixed : IEquatable<Vector3Fixed>, IFormattable
         return value / Vector3Fixed.Length(value);
     }
 
+    public static Fixed Dot(Vector3Fixed left, Vector3Fixed right)
+    {
+        return left.X * right.X + left.Y * right.Y + left.Z * right.Z;
+    }
+
     public static bool operator ==(Vector3Fixed left, Vector3Fixed right)
     {
         return left.Equals(right);

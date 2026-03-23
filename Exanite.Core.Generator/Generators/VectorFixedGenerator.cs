@@ -74,6 +74,8 @@ public class VectorFixedGenerator : VectorGenerator
                 AppendLengthOperation(builder, vectorFixedType, fixedType, components);
                 AppendNormalizeOperation(builder, vectorFixedType);
 
+                AppendDotOperation(builder, vectorFixedType, fixedType, components);
+
                 AppendEqualityOperations(builder, vectorFixedType, components);
                 AppendFormattingOperations(builder, components);
             }

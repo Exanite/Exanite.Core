@@ -143,6 +143,15 @@ public class VectorGenerator
         }
     }
 
+    protected void AppendDotOperation(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
+    {
+        builder.AppendSeparation();
+        using (builder.EnterScope($"public static {backingType} Dot({selfVectorType} left, {selfVectorType} right)"))
+        {
+            builder.AppendLine($"return {string.Join(" + ", components.Select(c => $"left.{c} * right.{c}"))};");
+        }
+    }
+
     /// <remarks>
     /// Currently designed only for self equality.
     /// </remarks>
