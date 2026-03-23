@@ -25,7 +25,7 @@ public readonly partial struct Fixed128 :
 {
     // Constants
     public const int BitCount = 128;
-    public const int IntegralBitCount = BitCount - Shift;
+    public const int IntegralBitCount = BitCount - Shift - 1;
     public const int FractionalBitCount = Shift;
 
     public const int Shift = Fixed.Shift * 2;
