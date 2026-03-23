@@ -143,6 +143,16 @@ public partial struct Vector4Fixed : IEquatable<Vector4Fixed>, IFormattable
         return Zero - value;
     }
 
+    public static Fixed Length(Vector4Fixed value)
+    {
+        return Fixed.Hypot(value.X, value.Y, value.Z, value.W);
+    }
+
+    public static Vector4Fixed Normalize(Vector4Fixed value)
+    {
+        return value / Vector4Fixed.Length(value);
+    }
+
     public static bool operator ==(Vector4Fixed left, Vector4Fixed right)
     {
         return left.Equals(right);
