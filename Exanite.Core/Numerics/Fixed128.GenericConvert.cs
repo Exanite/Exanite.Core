@@ -148,7 +148,7 @@ public partial struct Fixed128
 
     public static bool TryConvertFromTruncating<TOther>(TOther value, out Fixed128 result) where TOther : INumberBase<TOther>
     {
-        // Not going to support truncating conversation
+        // Not going to support truncating conversion
         // .NET's floating point types don't either
         // Truncating in this context means rounding values towards zero, to the nearest epsilon
         // Truncating in the context of integers means rounding values towards zero, to the nearest integer
