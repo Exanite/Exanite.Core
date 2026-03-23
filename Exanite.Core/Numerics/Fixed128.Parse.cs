@@ -103,7 +103,7 @@ public partial struct Fixed128
 
             if ((style & NumberStyles.AllowLeadingSign) != 0)
             {
-                if (s.StartsWith(negativeSign))
+                if (negativeSign.Length != 0 && s.StartsWith(negativeSign))
                 {
                     isNegative = true;
                     s = s[negativeSign.Length..];
@@ -113,7 +113,7 @@ public partial struct Fixed128
                         explicitLeadingSignHandled = true;
                     }
                 }
-                else if (s.StartsWith(positiveSign))
+                else if (positiveSign.Length != 0 && s.StartsWith(positiveSign))
                 {
                     s = s[positiveSign.Length..];
 
@@ -126,12 +126,12 @@ public partial struct Fixed128
 
             if (!explicitLeadingSignHandled && (style & NumberStyles.AllowTrailingSign) != 0)
             {
-                if (s.EndsWith(negativeSign))
+                if (negativeSign.Length != 0 && s.EndsWith(negativeSign))
                 {
                     isNegative = true;
                     s = s[..^negativeSign.Length];
                 }
-                else if (s.EndsWith(positiveSign))
+                else if (positiveSign.Length != 0 && s.EndsWith(positiveSign))
                 {
                     s = s[..^positiveSign.Length];
                 }
