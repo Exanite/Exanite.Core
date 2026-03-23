@@ -45,11 +45,12 @@ public class Fixed128FormatTests
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.One, "F64", "1.0000000000000000000000000000000000000000000000000000000000000000"), // Pad zeroes
 
             // Numeric (N)
-            new TheoryDataRow<Fixed128, string?, string>(Fixed128.One * 1000, "N0", "1,000"),
-            new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(1, 25, 2), "N2", "1.25"),
+            new TheoryDataRow<Fixed128, string?, string>(Fixed128.One * 1000, "N", "1,000"),
 
-            new TheoryDataRow<Fixed128, string?, string>(Fixed128.One * 1000, "n0", "1,000"),
-            new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(1, 25, 2), "n2", "1.25"),
+            new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(1, 25, 2), "N0", "1"),
+            new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(1, 25, 2), "N1", "1.2"),
+            new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(1, 25, 2), "N2", "1.25"),
+            new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(1, 25, 2), "N3", "1.250"),
 
             new TheoryDataRow<Fixed128, string?, string>(Fixed128.FromDecimal(9999, 99, 2), "N0", "10,000"),
 

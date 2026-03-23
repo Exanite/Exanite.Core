@@ -17,19 +17,22 @@ internal static class FixedInternalUtility
     {
         internalFormat = 'G';
         precision = -1;
-        if (format.Length > 1)
+        if (format.Length > 0)
         {
             internalFormat = char.ToUpper(format[0]);
 
-            var precisionSpan = format[1..];
-            if (precisionSpan.Length != 0)
+            if (format.Length > 1)
             {
-                if (!int.TryParse(precisionSpan, CultureInfo.InvariantCulture, out var requestedPrecision))
+                var precisionSpan = format[1..];
+                if (precisionSpan.Length != 0)
                 {
-                    return false;
-                }
+                    if (!int.TryParse(precisionSpan, CultureInfo.InvariantCulture, out var requestedPrecision))
+                    {
+                        return false;
+                    }
 
-                precision = requestedPrecision;
+                    precision = requestedPrecision;
+                }
             }
         }
 
