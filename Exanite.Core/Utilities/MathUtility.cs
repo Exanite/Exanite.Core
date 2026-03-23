@@ -379,6 +379,7 @@ public static partial class M
     /// <summary>
     /// Returns 10 raised to the given power.
     /// </summary>
+    /// <param name="power">An integer in the interval [0, 9].</param>
     public static int Exp10(int power)
     {
         switch (power)
@@ -389,15 +390,14 @@ public static partial class M
             case 3: return 1000;
             case 4: return 10000;
             case 5: return 100000;
+            case 6: return 1000000;
+            case 7: return 10000000;
+            case 8: return 100000000;
+            case 9: return 1000000000;
             default:
             {
-                var result = 10;
-                for (var i = 1; i < power; i++)
-                {
-                    result *= 10;
-                }
-
-                return result;
+                GuardUtility.Throw("Argument out of range. Expected power to be in the interval [0, 9]");
+                return 0;
             }
         }
     }

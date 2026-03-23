@@ -37,11 +37,11 @@ public class FixedCreationTests
     [Fact]
     public void FromDecimal_Throws_ForExcessiveDecimalPlaces()
     {
-        Fixed.FromDecimal(0, 0, 10);
+        Fixed.FromDecimal(0, 0, 9);
 
         Assert.Throws<GuardException>(() =>
         {
-            Fixed.FromDecimal(0, 0, 11);
+            Fixed.FromDecimal(0, 0, 10);
         });
     }
 
