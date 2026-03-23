@@ -20,8 +20,7 @@ public partial struct Fixed128
         // Explicitly specify that these are not supported
         & ~(NumberStyles.AllowExponent | NumberStyles.AllowCurrencySymbol);
 
-    public const NumberStyles DefaultParseNumberStyles = SupportedNumberStyles
-        & ~(NumberStyles.AllowHexSpecifier | NumberStyles.AllowBinarySpecifier);
+    public const NumberStyles DefaultParseNumberStyles = (NumberStyles.Float & SupportedNumberStyles) | NumberStyles.AllowThousands;
 
     public static Fixed128 Parse(ReadOnlySpan<char> s, IFormatProvider? provider) => Parse(s, DefaultParseNumberStyles, provider);
     public static Fixed128 Parse(string s, IFormatProvider? provider) => Parse((ReadOnlySpan<char>)s, provider);
