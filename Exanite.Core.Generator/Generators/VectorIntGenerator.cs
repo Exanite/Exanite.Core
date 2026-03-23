@@ -66,6 +66,7 @@ public class VectorIntGenerator : VectorGenerator
                 AppendNegateOperation(builder, vectorIntType);
 
                 AppendDotOperation(builder, vectorIntType, intType, components);
+                AppendCrossOperation(builder, vectorIntType, intType, components);
 
                 AppendEqualityOperations(builder, vectorIntType, components);
                 AppendFormattingOperations(builder, components);

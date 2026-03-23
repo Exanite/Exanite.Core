@@ -134,20 +134,25 @@ public partial struct Vector3Fixed : IEquatable<Vector3Fixed>, IFormattable
         return Zero - value;
     }
 
+    /// <inheritdoc cref="Vector3.Length"/>
     public static Fixed Length(Vector3Fixed value)
     {
         return Fixed.Hypot(value.X, value.Y, value.Z);
     }
 
+    /// <inheritdoc cref="Vector3.Normalize"/>
     public static Vector3Fixed Normalize(Vector3Fixed value)
     {
         return value / Vector3Fixed.Length(value);
     }
 
+    /// <inheritdoc cref="Vector3.Dot"/>
     public static Fixed Dot(Vector3Fixed left, Vector3Fixed right)
     {
         return left.X * right.X + left.Y * right.Y + left.Z * right.Z;
     }
+
+    /// <inheritdoc cref="Vector3.Cross"/>
 
     public static bool operator ==(Vector3Fixed left, Vector3Fixed right)
     {

@@ -128,15 +128,17 @@ public class VectorGenerator
     protected void AppendLengthOperation(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
     {
         builder.AppendSeparation();
+        builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.Length\"/>");
         using (builder.EnterScope($"public static {backingType} Length({selfVectorType} value)"))
         {
             builder.AppendLine($"return {backingType}.Hypot({string.Join(", ", components.Select(c => $"value.{c}"))});");
         }
     }
 
-    protected void AppendNormalizeOperation(IndentedStringBuilder builder, string selfVectorType)
+    protected void AppendNormalizeOperation(IndentedStringBuilder builder, string selfVectorType, string[] components)
     {
         builder.AppendSeparation();
+        builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.Normalize\"/>");
         using (builder.EnterScope($"public static {selfVectorType} Normalize({selfVectorType} value)"))
         {
             builder.AppendLine($"return value / {selfVectorType}.Length(value);");
@@ -146,9 +148,37 @@ public class VectorGenerator
     protected void AppendDotOperation(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
     {
         builder.AppendSeparation();
+        builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.Dot\"/>");
         using (builder.EnterScope($"public static {backingType} Dot({selfVectorType} left, {selfVectorType} right)"))
         {
             builder.AppendLine($"return {string.Join(" + ", components.Select(c => $"left.{c} * right.{c}"))};");
+        }
+    }
+
+    protected void AppendCrossOperation(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
+    {
+        builder.AppendSeparation();
+        builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.Cross\"/>");
+        switch (components.Length)
+        {
+            case 2:
+            {
+                using (builder.EnterScope($"public static {backingType} Cross({selfVectorType} left, {selfVectorType} right)"))
+                {
+                    builder.AppendLine($"return left.{components[0]} * right.{components[1]} - left.{components[1]} * right.{components[0]};");
+                }
+
+                break;
+            }
+            case 3:
+            {
+                break;
+            }
+            case 4:
+            {
+                break;
+            }
+            default: break;
         }
     }
 

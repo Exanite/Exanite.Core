@@ -168,10 +168,13 @@ public partial struct Vector4Int : IEquatable<Vector4Int>, IFormattable
         return Zero - value;
     }
 
+    /// <inheritdoc cref="Vector4.Dot"/>
     public static int Dot(Vector4Int left, Vector4Int right)
     {
         return left.X * right.X + left.Y * right.Y + left.Z * right.Z + left.W * right.W;
     }
+
+    /// <inheritdoc cref="Vector4.Cross"/>
 
     public static bool operator ==(Vector4Int left, Vector4Int right)
     {

@@ -72,9 +72,10 @@ public class VectorFixedGenerator : VectorGenerator
                 AppendNegateOperation(builder, vectorFixedType);
 
                 AppendLengthOperation(builder, vectorFixedType, fixedType, components);
-                AppendNormalizeOperation(builder, vectorFixedType);
+                AppendNormalizeOperation(builder, vectorFixedType, components);
 
                 AppendDotOperation(builder, vectorFixedType, fixedType, components);
+                AppendCrossOperation(builder, vectorFixedType, fixedType, components);
 
                 AppendEqualityOperations(builder, vectorFixedType, components);
                 AppendFormattingOperations(builder, components);
