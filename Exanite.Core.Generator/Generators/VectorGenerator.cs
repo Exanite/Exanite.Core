@@ -172,10 +172,33 @@ public class VectorGenerator
             }
             case 3:
             {
+                using (builder.EnterScope($"public static {selfVectorType} Cross({selfVectorType} left, {selfVectorType} right)"))
+                {
+                    using (builder.Indent($"return new {selfVectorType}("))
+                    {
+                        builder.AppendLine($"(left.{components[1]} * right.{components[2]}) - (left.{components[2]} * right.{components[1]}),");
+                        builder.AppendLine($"(left.{components[2]} * right.{components[0]}) - (left.{components[0]} * right.{components[2]}),");
+                        builder.AppendLine($"(left.{components[0]} * right.{components[1]}) - (left.{components[1]} * right.{components[0]})");
+                    }
+                    builder.AppendLine(");");
+                }
+
                 break;
             }
             case 4:
             {
+                using (builder.EnterScope($"public static {selfVectorType} Cross({selfVectorType} left, {selfVectorType} right)"))
+                {
+                    using (builder.Indent($"return new {selfVectorType}("))
+                    {
+                        builder.AppendLine($"(left.{components[1]} * right.{components[2]}) - (left.{components[2]} * right.{components[1]}),");
+                        builder.AppendLine($"(left.{components[2]} * right.{components[0]}) - (left.{components[0]} * right.{components[2]}),");
+                        builder.AppendLine($"(left.{components[0]} * right.{components[1]}) - (left.{components[1]} * right.{components[0]}),");
+                        builder.AppendLine($"left.{components[3]} * right.{components[3]}");
+                    }
+                    builder.AppendLine(");");
+                }
+
                 break;
             }
             default: break;

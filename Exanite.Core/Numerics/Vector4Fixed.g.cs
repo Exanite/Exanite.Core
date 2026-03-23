@@ -162,6 +162,15 @@ public partial struct Vector4Fixed : IEquatable<Vector4Fixed>, IFormattable
     }
 
     /// <inheritdoc cref="Vector4.Cross"/>
+    public static Vector4Fixed Cross(Vector4Fixed left, Vector4Fixed right)
+    {
+        return new Vector4Fixed(
+            (left.Y * right.Z) - (left.Z * right.Y),
+            (left.Z * right.X) - (left.X * right.Z),
+            (left.X * right.Y) - (left.Y * right.X),
+            left.W * right.W
+        );
+    }
 
     public static bool operator ==(Vector4Fixed left, Vector4Fixed right)
     {
