@@ -98,8 +98,8 @@ public partial struct Fixed128
         else
         {
             var explicitLeadingSignHandled = false;
-            var negativeSign = formatInfo.NegativeSign.Trim(StringUtility.BidiCharacters.AsSpan());
-            var positiveSign = formatInfo.PositiveSign.Trim(StringUtility.BidiCharacters.AsSpan());
+            var negativeSign = formatInfo.NegativeSign.AsSpan().Trim(StringUtility.BidiCharacters.AsSpan());
+            var positiveSign = formatInfo.PositiveSign.AsSpan().Trim(StringUtility.BidiCharacters.AsSpan());
 
             if ((style & NumberStyles.AllowLeadingSign) != 0)
             {
