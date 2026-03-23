@@ -120,7 +120,7 @@ public class Fixed128ParseTests
     {
         // Value significantly larger than MaxValue
         var input = "1" + new string('0', 30);
-        var isSuccess = Fixed128.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out var result);
+        var isSuccess = Fixed128.TryParse(input, CultureInfo.InvariantCulture, out var result);
 
         Assert.False(isSuccess);
         Assert.Equal(Fixed128.Zero, result);
@@ -133,9 +133,11 @@ public class Fixed128ParseTests
     [InlineData("1234+")]
     [InlineData("not-a-number")]
     [InlineData("123.12345678901234567890123456789012345678901234567890bad")]
+    [InlineData("39614081257132168796771975168")]
+    [InlineData("-39614081257132168796771975168")]
     public void TryParse_ReturnsFalse_ForInvalidInput(string input)
     {
-        var isSuccess = Fixed128.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out var result);
+        var isSuccess = Fixed128.TryParse(input, CultureInfo.InvariantCulture, out var result);
 
         Assert.False(isSuccess);
         Assert.Equal(default, result);
