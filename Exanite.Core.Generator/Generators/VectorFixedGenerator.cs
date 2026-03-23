@@ -82,22 +82,4 @@ public class VectorFixedGenerator : VectorGenerator
             outputPath.WriteAllText(builder.ToString());
         }
     }
-
-    private void AppendLengthOperation(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
-    {
-        builder.AppendSeparation();
-        using (builder.EnterScope($"public static {backingType} Length({selfVectorType} value)"))
-        {
-            builder.AppendLine($"return {backingType}.Hypot({string.Join(", ", components.Select(c => $"value.{c}"))});");
-        }
-    }
-
-    private void AppendNormalizeOperation(IndentedStringBuilder builder, string selfVectorType)
-    {
-        builder.AppendSeparation();
-        using (builder.EnterScope($"public static {selfVectorType} Normalize({selfVectorType} value)"))
-        {
-            builder.AppendLine($"return value / {selfVectorType}.Length(value);");
-        }
-    }
 }
