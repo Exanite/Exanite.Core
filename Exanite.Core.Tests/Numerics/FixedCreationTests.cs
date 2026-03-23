@@ -45,6 +45,20 @@ public class FixedCreationTests
         });
     }
 
+    [Fact]
+    public void FromDecimal_Throws_WhenIntegralPartWillOverflow()
+    {
+        Assert.Throws<GuardException>(() =>
+        {
+            Fixed.FromDecimal((long)Fixed.MaxValue + 1, 0, 0);
+        });
+
+        Assert.Throws<GuardException>(() =>
+        {
+            Fixed.FromDecimal((long)Fixed.MinValue - 1, 0, 0);
+        });
+    }
+
     [Theory]
     [InlineData(0)]
     [InlineData(123)]

@@ -45,6 +45,20 @@ public class Fixed128CreationTests
         });
     }
 
+    [Fact]
+    public void FromDecimal_Throws_WhenIntegralPartWillOverflow()
+    {
+        Assert.Throws<GuardException>(() =>
+        {
+            Fixed128.FromDecimal((Int128)Fixed128.MaxValue + 1, 0, 0);
+        });
+
+        Assert.Throws<GuardException>(() =>
+        {
+            Fixed128.FromDecimal((Int128)Fixed128.MinValue - 1, 0, 0);
+        });
+    }
+
     [Theory]
     [InlineData(0)]
     [InlineData(123)]

@@ -161,9 +161,9 @@ public readonly partial struct Fixed128 :
         GuardUtility.IsFalse(fractional < 0, "Fractional part cannot be negative");
         GuardUtility.IsFalse(decimalPlaces <= 0 && fractional != 0, "Decimal places must be strictly positive when the fractional part is non-zero");
         GuardUtility.IsFalse(decimalPlaces > 9, "At most 9 decimal places is supported");
-        if (integral > ((Int128)1L << IntegralBitCount))
+        if (M.Abs(integral) > (Int128)MaxValue)
         {
-            GuardUtility.Throw($"Integral part must be less than or equal to 2^{IntegralBitCount}");
+            GuardUtility.Throw($"The absolute value of the integral part must be less than or equal to 2^{IntegralBitCount}");
         }
 
         if (fractional == 0)
