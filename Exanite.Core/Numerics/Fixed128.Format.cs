@@ -48,7 +48,7 @@ public partial struct Fixed128
 
         // This accounts for both formats where the sign is separated by a space
         // and the accounting format where the number is surrounded by parentheses
-        var signCharCount = M.Min(M.Max(formatInfo.PositiveSign.Length + 1, formatInfo.NegativeSign.Length + 1), 2);
+        var signCharCount = M.Max(M.Max(formatInfo.PositiveSign.Length + 1, formatInfo.NegativeSign.Length + 1), 2);
 
         var integralDigits = (int)M.Ceiling(IntegralBitCount * double.Log10(2));
 
