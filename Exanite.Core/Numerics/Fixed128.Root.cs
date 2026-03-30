@@ -58,7 +58,7 @@ public partial struct Fixed128
 
         // Cancel out normalization and conversion to internal
         const int shiftMultiplication = internalShift;
-        var shiftDenormalize = shiftNormalize / 2;
+        var shiftDenormalize = shiftNormalize >> 1;
         const int shiftInternalToOutput = internalShift - Shift;
         var shiftFinal = shiftMultiplication + shiftDenormalize + shiftInternalToOutput;
 
