@@ -265,7 +265,7 @@ public record struct Color
             }
             default:
             {
-                throw ExceptionUtility.NotSupportedEnumValue(color.Type);
+                throw ExceptionUtility.NotSupported(color.Type);
             }
         }
 
@@ -330,7 +330,7 @@ public record struct Color
             }
             default:
             {
-                throw ExceptionUtility.NotSupportedEnumValue(targetType);
+                throw ExceptionUtility.NotSupported(targetType);
             }
         }
 

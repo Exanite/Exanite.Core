@@ -166,7 +166,7 @@ public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
             }
             default:
             {
-                throw ExceptionUtility.NotSupportedEnumValue(displayFormat);
+                throw ExceptionUtility.NotSupported(displayFormat);
             }
         }
     }

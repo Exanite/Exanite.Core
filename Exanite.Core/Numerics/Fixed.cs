@@ -247,7 +247,7 @@ public readonly partial struct Fixed :
                 return Ceiling(value);
             }
 
-            default: throw ExceptionUtility.NotSupportedEnumValue(rounding);
+            default: throw ExceptionUtility.NotSupported(rounding);
         }
     }
 

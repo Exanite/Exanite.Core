@@ -79,7 +79,7 @@ public record struct Angle
             }
             default:
             {
-                throw ExceptionUtility.NotSupportedEnumValue(Type);
+                throw ExceptionUtility.NotSupported(Type);
             }
         }
 
@@ -97,7 +97,7 @@ public record struct Angle
             }
             default:
             {
-                throw ExceptionUtility.NotSupportedEnumValue(Type);
+                throw ExceptionUtility.NotSupported(Type);
             }
         }
 

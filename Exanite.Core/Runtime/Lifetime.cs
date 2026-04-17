@@ -71,7 +71,7 @@ public class Lifetime : IDisposable
                 }
                 default:
                 {
-                    throw ExceptionUtility.NotSupportedEnumValue(registrationType);
+                    throw ExceptionUtility.NotSupported(registrationType);
                 }
             }
         }

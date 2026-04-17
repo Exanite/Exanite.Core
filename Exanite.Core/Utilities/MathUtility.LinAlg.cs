@@ -22,7 +22,7 @@ public static partial class M
             Vector3Swizzle.Yzx => new Vector3(vector.Y, vector.Z, vector.X),
             Vector3Swizzle.Zxy => new Vector3(vector.Z, vector.X, vector.Y),
             Vector3Swizzle.Zyx => new Vector3(vector.Z, vector.Y, vector.X),
-            _ => throw ExceptionUtility.NotSupportedEnumValue(swizzle),
+            _ => throw ExceptionUtility.NotSupported(swizzle),
         };
     }
 
@@ -40,7 +40,7 @@ public static partial class M
             Vector3Swizzle.Yzx => new Vector3(vector.Z, vector.X, vector.Y),
             Vector3Swizzle.Zxy => new Vector3(vector.Y, vector.Z, vector.X),
             Vector3Swizzle.Zyx => new Vector3(vector.Z, vector.Y, vector.X),
-            _ => throw ExceptionUtility.NotSupportedEnumValue(swizzle),
+            _ => throw ExceptionUtility.NotSupported(swizzle),
         };
     }
 
