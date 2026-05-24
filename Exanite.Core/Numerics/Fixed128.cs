@@ -71,6 +71,18 @@ public readonly partial struct Fixed128 :
     public static implicit operator Fixed128(uint value) => new((Int128)value << Shift);
     public static implicit operator Fixed128(long value) => new((Int128)value << Shift);
     public static implicit operator Fixed128(ulong value) => new((Int128)value << Shift);
+
+    public static explicit operator Fixed128(Int128 value) => new(value << Shift);
+    public static explicit operator checked Fixed128(Int128 value)
+    {
+        if (M.Abs(value) > (Int128)MaxValue)
+        {
+            FixedInternalUtility.ThrowOverflowException();
+        }
+
+        return new Fixed128(checked((long)(value << Shift)));
+    }
+
     public static implicit operator Fixed128(Fixed value) => new((Int128)value.Raw << (Shift - Fixed.Shift));
 
     // Conversion: Unsafe - Non-deterministic
@@ -185,88 +197,6 @@ public readonly partial struct Fixed128 :
     public static Fixed128 FromFraction(Fixed128 numerator, Fixed128 denominator)
     {
         return numerator / denominator;
-    }
-
-    // Rounding
-
-    /// <summary>
-    /// Rounds down to the nearest integer.
-    /// </summary>
-    public static Fixed128 Floor(Fixed128 value)
-    {
-        return new Fixed128(value.Raw & ~Mask);
-    }
-
-    /// <summary>
-    /// Rounds up to the nearest integer.
-    /// </summary>
-    public static Fixed128 Ceiling(Fixed128 value)
-    {
-        var fractional = value.Raw & Mask;
-        return fractional == 0 ? value : Floor(value) + One;
-    }
-
-    /// <summary>
-    /// Rounds to the nearest integer using the specified rounding strategy.
-    /// </summary>
-    public static Fixed128 Round(Fixed128 value, MidpointRounding rounding = MidpointRounding.ToEven)
-    {
-        var integral = value.Raw & ~Mask;
-        var fractional = value.Raw & Mask;
-
-        if (fractional == 0)
-        {
-            return value;
-        }
-
-        switch (rounding)
-        {
-            case MidpointRounding.ToEven:
-            {
-                if (fractional < HalfRaw)
-                {
-                    return new Fixed128(integral);
-                }
-
-                if (fractional > HalfRaw)
-                {
-                    return new Fixed128(integral + OneRaw);
-                }
-
-                return IsEvenInteger(new Fixed128(integral)) ? new Fixed128(integral) : new Fixed128(integral + OneRaw);
-            }
-
-            case MidpointRounding.AwayFromZero:
-            {
-                if (fractional < HalfRaw)
-                {
-                    return new Fixed128(integral);
-                }
-                if (fractional > HalfRaw)
-                {
-                    return new Fixed128(integral + OneRaw);
-                }
-
-                return value.Raw < 0 ? new Fixed128(integral) : new Fixed128(integral + OneRaw);
-            }
-
-            case MidpointRounding.ToZero:
-            {
-                return value.Raw < 0 ? new Fixed128(integral + OneRaw) : new Fixed128(integral);
-            }
-
-            case MidpointRounding.ToNegativeInfinity:
-            {
-                return Floor(value);
-            }
-
-            case MidpointRounding.ToPositiveInfinity:
-            {
-                return Ceiling(value);
-            }
-
-            default: throw ExceptionUtility.NotSupported(rounding);
-        }
     }
 
     // Operators

@@ -83,7 +83,7 @@ public readonly partial struct Fixed :
     public static explicit operator Fixed(long value) => new(value << Shift);
     public static explicit operator checked Fixed(long value)
     {
-        if (value > (long)MaxValue)
+        if (M.Abs(value) > (long)MaxValue)
         {
             FixedInternalUtility.ThrowOverflowException();
         }
@@ -167,88 +167,6 @@ public readonly partial struct Fixed :
     public static Fixed FromFraction(Fixed numerator, Fixed denominator)
     {
         return numerator / denominator;
-    }
-
-    // Rounding
-
-    /// <summary>
-    /// Rounds down to the nearest integer.
-    /// </summary>
-    public static Fixed Floor(Fixed value)
-    {
-        return new Fixed(value.Raw & ~Mask);
-    }
-
-    /// <summary>
-    /// Rounds up to the nearest integer.
-    /// </summary>
-    public static Fixed Ceiling(Fixed value)
-    {
-        var fractional = value.Raw & Mask;
-        return fractional == 0 ? value : Floor(value) + One;
-    }
-
-    /// <summary>
-    /// Rounds to the nearest integer using the specified rounding strategy.
-    /// </summary>
-    public static Fixed Round(Fixed value, MidpointRounding rounding = MidpointRounding.ToEven)
-    {
-        var integral = value.Raw & ~Mask;
-        var fractional = value.Raw & Mask;
-
-        if (fractional == 0)
-        {
-            return value;
-        }
-
-        switch (rounding)
-        {
-            case MidpointRounding.ToEven:
-            {
-                if (fractional < HalfRaw)
-                {
-                    return new Fixed(integral);
-                }
-
-                if (fractional > HalfRaw)
-                {
-                    return new Fixed(integral + OneRaw);
-                }
-
-                return IsEvenInteger(new Fixed(integral)) ? new Fixed(integral) : new Fixed(integral + OneRaw);
-            }
-
-            case MidpointRounding.AwayFromZero:
-            {
-                if (fractional < HalfRaw)
-                {
-                    return new Fixed(integral);
-                }
-                if (fractional > HalfRaw)
-                {
-                    return new Fixed(integral + OneRaw);
-                }
-
-                return value.Raw < 0 ? new Fixed(integral) : new Fixed(integral + OneRaw);
-            }
-
-            case MidpointRounding.ToZero:
-            {
-                return value.Raw < 0 ? new Fixed(integral + OneRaw) : new Fixed(integral);
-            }
-
-            case MidpointRounding.ToNegativeInfinity:
-            {
-                return Floor(value);
-            }
-
-            case MidpointRounding.ToPositiveInfinity:
-            {
-                return Ceiling(value);
-            }
-
-            default: throw ExceptionUtility.NotSupported(rounding);
-        }
     }
 
     // Operators
