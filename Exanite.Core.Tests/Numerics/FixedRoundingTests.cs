@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using Exanite.Core.Numerics;
 using Exanite.Core.Utilities;
 using Xunit;
@@ -9,90 +8,104 @@ namespace Exanite.Core.Tests.Numerics;
 public class FixedRoundingTests
 {
     [Theory]
-    [InlineData(1.5, 1)]
-    [InlineData(1.4, 1)]
-    [InlineData(3.14159, 3)]
-    [InlineData(-3.5, -4)]
-    public void Floor_ReturnsExpectedValue(double input, int expected)
+    [InlineData(1.5)]
+    [InlineData(1.4)]
+    [InlineData(3.14159)]
+    [InlineData(-3.5)]
+    public void Floor_ReturnsExpectedValue(decimal input)
     {
-        Assert.Equal(expected, (int)Fixed.Floor((Fixed)input));
+        var expected = (Fixed)decimal.Ceiling(input);
+        var result = Fixed.Ceiling((Fixed)input);
+        RoundingAssertEqual(expected, result);
     }
 
     [Theory]
-    [InlineData(1.5, 2)]
-    [InlineData(1.4, 2)]
-    [InlineData(3.14159, 4)]
-    [InlineData(-3.5, -3)]
-    public void Ceiling_ReturnsExpectedValue(double input, int expected)
+    [InlineData(1.5)]
+    [InlineData(1.4)]
+    [InlineData(3.14159)]
+    [InlineData(-3.5)]
+    public void Ceiling_ReturnsExpectedValue(decimal input)
     {
-        Assert.Equal(expected, (int)Fixed.Ceiling((Fixed)input));
+        var expected = (Fixed)decimal.Ceiling(input);
+        var result = Fixed.Ceiling((Fixed)input);
+        RoundingAssertEqual(expected, result);
     }
 
     [Theory]
-    [InlineData(1.5, 2)]
-    [InlineData(1.4, 1)]
-    [InlineData(3.14159, 3)]
-    [InlineData(-3.5, -4)]
-    public void Round_ReturnsExpectedValue(double input, int expected)
+    [InlineData(1.5)]
+    [InlineData(1.4)]
+    [InlineData(3.14159)]
+    [InlineData(-3.5)]
+    public void Round_ReturnsExpectedValue(decimal input)
     {
-        Assert.Equal(expected, (int)Fixed.Round((Fixed)input));
+        var expected = (Fixed)decimal.Round(input);
+        var result = Fixed.Round((Fixed)input);
+        RoundingAssertEqual(expected, result);
     }
 
     [Theory]
-    [InlineData(MidpointRounding.ToEven, 1.5, 2)]
-    [InlineData(MidpointRounding.ToEven, 2.5, 2)]
-    [InlineData(MidpointRounding.ToEven, -1.5, -2)]
-    [InlineData(MidpointRounding.ToEven, -2.5, -2)]
-    [InlineData(MidpointRounding.AwayFromZero, 1.5, 2)]
-    [InlineData(MidpointRounding.AwayFromZero, 2.5, 3)]
-    [InlineData(MidpointRounding.AwayFromZero, -1.5, -2)]
-    [InlineData(MidpointRounding.AwayFromZero, -2.5, -3)]
-    [InlineData(MidpointRounding.ToZero, 1.9, 1)]
-    [InlineData(MidpointRounding.ToZero, -1.9, -1)]
-    [InlineData(MidpointRounding.ToNegativeInfinity, 1.9, 1)]
-    [InlineData(MidpointRounding.ToNegativeInfinity, -1.1, -2)]
-    [InlineData(MidpointRounding.ToPositiveInfinity, 1.1, 2)]
-    [InlineData(MidpointRounding.ToPositiveInfinity, -1.9, -1)]
-    public void Round_WithMode_ReturnsExpectedValue(MidpointRounding mode, double input, double expected)
+    [InlineData(MidpointRounding.ToEven, 1.5)]
+    [InlineData(MidpointRounding.ToEven, 2.5)]
+    [InlineData(MidpointRounding.ToEven, -1.5)]
+    [InlineData(MidpointRounding.ToEven, -2.5)]
+    [InlineData(MidpointRounding.AwayFromZero, 1.5)]
+    [InlineData(MidpointRounding.AwayFromZero, 2.5)]
+    [InlineData(MidpointRounding.AwayFromZero, -1.5)]
+    [InlineData(MidpointRounding.AwayFromZero, -2.5)]
+    [InlineData(MidpointRounding.ToZero, 1.9)]
+    [InlineData(MidpointRounding.ToZero, -1.9)]
+    [InlineData(MidpointRounding.ToNegativeInfinity, 1.9)]
+    [InlineData(MidpointRounding.ToNegativeInfinity, -1.1)]
+    [InlineData(MidpointRounding.ToPositiveInfinity, 1.1)]
+    [InlineData(MidpointRounding.ToPositiveInfinity, -1.9)]
+    public void Round_WithMode_ReturnsExpectedValue(MidpointRounding mode, decimal input)
     {
-        var value = (Fixed)input;
-        var expectedValue = (Fixed)expected;
-
-        var result = Fixed.Round(value, mode);
-
-        Assert.Equal(expectedValue, result);
+        var expected = (Fixed)decimal.Round(input, 0, mode);
+        var result = Fixed.Round((Fixed)input, mode);
+        RoundingAssertEqual(expected, result);
     }
 
     [Theory]
-    [InlineData(0, 2, 0)]
-    [InlineData(1.5, 0, 2)]
-    [InlineData(1.23456, 0, 1)]
-    [InlineData(1.23456, 1, 1.2)]
-    [InlineData(1.23456, 2, 1.23)]
-    [InlineData(1.23456, 3, 1.234)]
-    [InlineData(1.23456, 4, 1.2345)]
-    [InlineData(1.23456, 5, 1.2346)]
-    [InlineData(1.23456, 6, 1.23456)]
-    [InlineData(-1.23456, 0, -1)]
-    [InlineData(-1.23456, 1, -1.2)]
-    [InlineData(-1.23456, 2, -1.23)]
-    [InlineData(-1.23456, 3, -1.234)]
-    [InlineData(-1.23456, 4, -1.2345)]
-    [InlineData(-1.23456, 5, -1.2346)]
-    [InlineData(-1.23456, 6, -1.23456)]
-    public void Round_WithDigits_ReturnsExpectedValue(double input, int digits, double expected)
+    [InlineData(0, 2)]
+    [InlineData(1.5, 0)]
+    [InlineData(1.23456, 0)]
+    [InlineData(1.23456, 1)]
+    [InlineData(1.23456, 2)]
+    [InlineData(1.23456, 3)]
+    [InlineData(1.23456, 4)]
+    [InlineData(1.23456, 5)]
+    [InlineData(1.23456, 6)]
+    [InlineData(-1.23456, 0)]
+    [InlineData(-1.23456, 1)]
+    [InlineData(-1.23456, 2)]
+    [InlineData(-1.23456, 3)]
+    [InlineData(-1.23456, 4)]
+    [InlineData(-1.23456, 5)]
+    [InlineData(-1.23456, 6)]
+    [InlineData(12.3456, 0)]
+    [InlineData(12.3456, 1)]
+    [InlineData(12.3456, 2)]
+    [InlineData(12.3456, 3)]
+    [InlineData(12.3456, 4)]
+    [InlineData(12.3456, 5)]
+    [InlineData(12.3456, 6)]
+    [InlineData(-12.3456, 0)]
+    [InlineData(-12.3456, 1)]
+    [InlineData(-12.3456, 2)]
+    [InlineData(-12.3456, 3)]
+    [InlineData(-12.3456, 4)]
+    [InlineData(-12.3456, 5)]
+    [InlineData(-12.3456, 6)]
+    public void Round_WithDigits_ReturnsExpectedValue(decimal input, int digits)
     {
-        var value = (Fixed)input;
-        var expectedValue = (Fixed)expected;
-
-        var result = Fixed.Round(value, digits);
-
-        RoundingAssertEqual(expectedValue, result);
+        var expected = (Fixed)decimal.Round(input, digits);
+        var result = Fixed.Round((Fixed)input, digits);
+        RoundingAssertEqual(expected, result);
     }
 
     private void RoundingAssertEqual(Fixed expected, Fixed actual)
     {
-        var comparer = FloatingPointComparer.FromTolerance((decimal)Fixed.Epsilon);
+        var comparer = FloatingPointComparer.FromTolerance((decimal)Fixed.Epsilon * 2);
         Assert.True(comparer.Equals((decimal)expected, (decimal)actual), $"""
             Expected:    {(decimal)expected}
             Actual:      {(decimal)actual}

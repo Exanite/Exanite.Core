@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Exanite.Core.Numerics;
 
 namespace Exanite.Core.Utilities;
 
@@ -19,6 +20,19 @@ public static partial class M
     /// </summary>
     public static T Sign<T>(T a) where T : INumber<T>
     {
+        return T.CreateTruncating(T.Sign(a));
+    }
+
+    /// <summary>
+    /// Returns the sign of the provided value, returning 1 instead if the input is 0.
+    /// </summary>
+    public static T SignNonZero<T>(T a) where T : INumber<T>
+    {
+        if (a == T.Zero)
+        {
+            return T.One;
+        }
+
         return T.CreateTruncating(T.Sign(a));
     }
 
