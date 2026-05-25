@@ -6,12 +6,12 @@ namespace Exanite.Core.Threading;
 
 // Based off of https://github.com/martindevans/Myriad.ECS/blob/4e7226596dcd6aee60cc96118f535807545a714c/Myriad.ECS/Locks/RWLock.cs
 // Original source is available under the MIT license
-public class RwLock<T>
+public class ReadWriteLock<T>
 {
     private T value;
     private readonly ReaderWriterLockSlim sync = new(LockRecursionPolicy.SupportsRecursion);
 
-    public RwLock(T value)
+    public ReadWriteLock(T value)
     {
         this.value = value;
     }
