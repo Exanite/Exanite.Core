@@ -149,7 +149,10 @@ public class BitSet
         Array.Clear(chunks);
     }
 
-    private void EnsureCapacity(int requestedChunkCount)
+    /// <summary>
+    /// Ensures that the bitset has capacity for at least the number of requested chunks.
+    /// </summary>
+    public void EnsureCapacity(int requestedChunkCount)
     {
         if (chunks.Length >= requestedChunkCount)
         {
