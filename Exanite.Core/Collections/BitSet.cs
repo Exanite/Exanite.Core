@@ -3,6 +3,7 @@ using System.Collections;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Collections;
 
@@ -146,6 +147,23 @@ public class BitSet
     public BitSet()
     {
         chunks = new ulong[DefaultChunkCount];
+    }
+
+    /// <summary>
+    /// Creates a new empty bit set with the specified capacity.
+    /// This specified capacity will use the next power of two, if it is not already a power of two.
+    /// </summary>
+    public BitSet(int chunkCapacity)
+    {
+        if (chunkCapacity == 1)
+        {
+            chunks = new ulong[chunkCapacity];
+        }
+        else
+        {
+            // GetNextPowerOfTwo returns a minimum of 2
+            chunks = new ulong[M.GetNextPowerOfTwo(chunkCapacity)];
+        }
     }
 
     /// <summary>
