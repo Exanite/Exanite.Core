@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
@@ -19,7 +20,7 @@ namespace Exanite.Core.Collections;
 /// Shift operations are also not supported.
 /// This is because this data structure is designed for storing flags, which do not make sense to bitshift.
 /// </remarks>
-public class BitSet
+public class BitSet : IEnumerable<int>
 {
     private const int DefaultChunkCount = 1;
     private const int GrowFactor = 2;
@@ -121,22 +122,22 @@ public class BitSet
                 return false;
             }
 
-            var bit = bitIndex & Mask;
-            return (chunks[chunkIndex] & (1UL << bit)) != 0;
+            var bitInChunkI = bitIndex & Mask;
+            return (chunks[chunkIndex] & (1UL << bitInChunkI)) != 0;
         }
         set
         {
             var chunkIndex = bitIndex >> Shift;
             EnsureCapacity(chunkIndex + 1);
 
-            var bit = bitIndex & Mask;
+            var bitInChunkI = bitIndex & Mask;
             if (value)
             {
-                chunks[chunkIndex] |= 1UL << bit;
+                chunks[chunkIndex] |= 1UL << bitInChunkI;
             }
             else
             {
-                chunks[chunkIndex] &= ~(1UL << bit);
+                chunks[chunkIndex] &= ~(1UL << bitInChunkI);
             }
         }
     }
@@ -212,5 +213,32 @@ public class BitSet
         var newChunks = new ulong[newChunkCount];
         chunks.CopyTo(newChunks);
         chunks = newChunks;
+    }
+
+    public IEnumerator<int> GetEnumerator()
+    {
+        for (var chunkI = 0; chunkI < chunks.Length; chunkI++)
+        {
+            var chunk = chunks[chunkI];
+            if (BitOperations.PopCount(chunk) == 0)
+            {
+                continue;
+            }
+
+            var offset = chunkI * BitsPerChunk;
+            for (var bitInChunkI = 0; bitInChunkI < BitsPerChunk; bitInChunkI++)
+            {
+                if ((chunk & (1UL << bitInChunkI)) != 0)
+                {
+                    var bitI = offset + bitInChunkI;
+                    yield return bitI;
+                }
+            }
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }
