@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Exanite.Core.Collections;
 using Xunit;
@@ -84,13 +85,14 @@ public class BitSetTests
     public void CanEnumerateCollection()
     {
         var bitset = new BitSet();
+        var expected = new List<int>();
         for (var i = 0; i < 10000; i++)
         {
+            expected.Add(i * 2);
             bitset[i * 2] = true;
         }
 
-        var array = bitset.ToArray();
-        Assert.Equal(array, bitset);
+        Assert.Equal(expected, bitset.ToArray());
     }
 
     // TODO: CopyTo, copy constructor tests
