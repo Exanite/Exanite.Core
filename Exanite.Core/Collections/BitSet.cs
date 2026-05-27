@@ -10,7 +10,7 @@ namespace Exanite.Core.Collections;
 
 /// <summary>
 /// Represents a set of bits that are set to true.
-/// Supports set operations and bitwise operations.
+/// Supports set operations, but not all bitwise operations.
 /// Uses an ulong[] as the backing memory.
 /// </summary>
 /// <remarks>
