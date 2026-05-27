@@ -214,30 +214,68 @@ public class BitSet : IEnumerable<int>
         chunks = newChunks;
     }
 
-    public IEnumerator<int> GetEnumerator()
+    public Enumerator GetEnumerator()
     {
-        for (var chunkI = 0; chunkI < chunks.Length; chunkI++)
-        {
-            var chunk = chunks[chunkI];
-            if (BitOperations.PopCount(chunk) == 0)
-            {
-                continue;
-            }
+        return new Enumerator(this);
+    }
 
-            var offset = chunkI * BitsPerChunk;
-            for (var bitInChunkI = 0; bitInChunkI < BitsPerChunk; bitInChunkI++)
-            {
-                if ((chunk & (1UL << bitInChunkI)) != 0)
-                {
-                    var bitI = offset + bitInChunkI;
-                    yield return bitI;
-                }
-            }
-        }
+    IEnumerator<int> IEnumerable<int>.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+    public struct Enumerator : IEnumerator<int>
+    {
+        private readonly BitSet bitset;
+
+        private int bitI = -1;
+
+        public int Current { get; private set; } = -1;
+        object IEnumerator.Current => Current;
+
+        public Enumerator(BitSet bitset)
+        {
+            this.bitset = bitset;
+        }
+
+        public bool MoveNext()
+        {
+            bitI++;
+
+            var chunkI = bitI >> Shift;
+            var bitInChunkI = bitI & Mask;
+            while (chunkI < bitset.Chunks.Length)
+            {
+                var chunk = bitset.Chunks[chunkI];
+
+                // Ignore already visited bits
+                chunk >>= bitInChunkI;
+
+                if (chunk != 0)
+                {
+                    // Find next 1 bit
+                    var trailingZeroCount = BitOperations.TrailingZeroCount(chunk);
+                    bitI += trailingZeroCount + 1;
+                    Current = bitI - 1;
+
+                    return true;
+                }
+
+                // Chunk has no more 1 bits
+                bitI += BitsPerChunk - bitInChunkI;
+                chunkI = bitI >> Shift;
+                bitInChunkI = bitI & Mask;
+            }
+
+            return false;
+        }
+
+        public void Reset() => throw new NotSupportedException();
+        public void Dispose() {}
     }
 }
