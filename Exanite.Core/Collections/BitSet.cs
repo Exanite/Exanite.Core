@@ -26,7 +26,7 @@ public class BitSet
     private const int Shift = 6;
     private const int Mask = (1 << Shift) - 1;
 
-    private ulong[] chunks = new ulong[DefaultChunkCount];
+    private ulong[] chunks;
 
     /// <summary>
     /// The underlying memory used to store the bits.
@@ -138,6 +138,32 @@ public class BitSet
                 chunks[chunkIndex] &= ~(1UL << bit);
             }
         }
+    }
+
+    /// <summary>
+    /// Creates a new empty bit set.
+    /// </summary>
+    public BitSet()
+    {
+        chunks = new ulong[DefaultChunkCount];
+    }
+
+    /// <summary>
+    /// Creates a new bit set by copying the specified bit set.
+    /// </summary>
+    public BitSet(BitSet other)
+    {
+        chunks = new ulong[other.Chunks.Length];
+        other.Chunks.CopyTo(chunks);
+    }
+
+    /// <summary>
+    /// Copies the contents of this bitset to the specified bit set.
+    /// </summary>
+    public void CopyTo(BitSet other)
+    {
+        other.EnsureCapacity(Chunks.Length);
+        Chunks.CopyTo(other.chunks);
     }
 
     /// <summary>

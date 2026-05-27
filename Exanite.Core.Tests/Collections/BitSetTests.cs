@@ -78,4 +78,6 @@ public class BitSetTests
         Assert.True(bitset.IsEmpty);
         Assert.Equal(0, bitset.Count);
     }
+
+    // TODO: CopyTo, copy constructor tests
 }
