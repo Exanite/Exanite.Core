@@ -12,9 +12,6 @@ public class BitSet
 
     private int[] chunks = new int[DefaultChunkCount];
 
-    public int ChunkCount => Chunks.Length;
-    public int BitCount => ChunkCount * BitsPerChunk;
-
     public ReadOnlySpan<int> Chunks => chunks;
 
     /// <summary>
@@ -50,15 +47,15 @@ public class BitSet
         }
     }
 
-    private void EnsureCapacity(int chunkCount)
+    private void EnsureCapacity(int requestedChunkCount)
     {
-        if (ChunkCount >= chunkCount)
+        if (chunks.Length >= requestedChunkCount)
         {
             return;
         }
 
-        var newChunkCount = ChunkCount;
-        while (newChunkCount < chunkCount)
+        var newChunkCount = chunks.Length;
+        while (newChunkCount < requestedChunkCount)
         {
             newChunkCount *= GrowFactor;
         }
