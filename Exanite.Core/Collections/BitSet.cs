@@ -13,8 +13,15 @@ public class BitSet
     private const int Mask = (1 << 5) - 1;
 
     private int[] chunks = new int[DefaultChunkCount];
+
+    /// <summary>
+    /// The underlying memory used to store the bits.
+    /// </summary>
     public ReadOnlySpan<int> Chunks => chunks;
 
+    /// <summary>
+    /// Returns whether the bitset contains all false bits.
+    /// </summary>
     public bool IsEmpty
     {
         get
@@ -93,6 +100,10 @@ public class BitSet
         }
     }
 
+    /// <summary>
+    /// Clears the bitset.
+    /// Does not resize the underlying array.
+    /// </summary>
     public void Clear()
     {
         Array.Clear(chunks);
