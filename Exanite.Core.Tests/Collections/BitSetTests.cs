@@ -17,4 +17,32 @@ public class BitSetTests
         Assert.True(bitset[10]);
         Assert.True(bitset[1000]);
     }
+
+    [Fact]
+    public void IsEmpty_ReturnsIfAllBitsAreFalse()
+    {
+        var bitset = new BitSet();
+
+        Assert.True(bitset.IsEmpty);
+
+        bitset[0] = true;
+        Assert.False(bitset.IsEmpty);
+
+        bitset[0] = false;
+        Assert.True(bitset.IsEmpty);
+    }
+
+    [Fact]
+    public void Clear()
+    {
+        var bitset = new BitSet();
+
+        Assert.True(bitset.IsEmpty);
+
+        bitset[0] = true;
+        Assert.False(bitset.IsEmpty);
+
+        bitset.Clear();
+        Assert.True(bitset.IsEmpty);
+    }
 }
