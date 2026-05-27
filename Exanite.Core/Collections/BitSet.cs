@@ -23,7 +23,6 @@ namespace Exanite.Core.Collections;
 public class BitSet : IEnumerable<int>
 {
     private const int DefaultChunkCount = 1;
-    private const int GrowFactor = 2;
     private const int BitsPerChunk = sizeof(ulong) * 8;
     private const int Shift = 6;
     private const int Mask = (1 << Shift) - 1;
@@ -207,7 +206,7 @@ public class BitSet : IEnumerable<int>
         var newChunkCount = chunks.Length;
         while (newChunkCount < requestedChunkCount)
         {
-            newChunkCount *= GrowFactor;
+            newChunkCount <<= 1;
         }
 
         var newChunks = new ulong[newChunkCount];
