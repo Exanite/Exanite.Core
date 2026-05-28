@@ -253,8 +253,8 @@ public class BitSet : IEnumerable<int>
         var resultsSpan = other.chunks.AsSpan();
 
         // Process the overlapping region
+        var processed = 0;
         {
-            var processed = 0;
             if (Vector.IsHardwareAccelerated && resultChunkCount >= Vector<ulong>.Count)
             {
                 var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(selfSpan);
@@ -450,9 +450,9 @@ public class BitSet : IEnumerable<int>
         var otherSpan = other.Chunks;
 
         // Process the overlapping region
+        var processed = 0;
         var overlapChunkCount = M.Min(selfSpan.Length, otherSpan.Length);
         {
-            var processed = 0;
             if (Vector.IsHardwareAccelerated && overlapChunkCount >= Vector<ulong>.Count)
             {
                 var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(selfSpan);
@@ -518,9 +518,9 @@ public class BitSet : IEnumerable<int>
         var otherSpan = other.Chunks;
 
         // Process the overlapping region
+        var processed = 0;
         var overlapChunkCount = M.Min(selfSpan.Length, otherSpan.Length);
         {
-            var processed = 0;
             if (Vector.IsHardwareAccelerated && overlapChunkCount >= Vector<ulong>.Count)
             {
                 var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(selfSpan);
@@ -567,9 +567,9 @@ public class BitSet : IEnumerable<int>
         }
 
         // Process the overlapping region
+        var processed = 0;
         var overlapChunkCount = M.Min(selfSpan.Length, otherSpan.Length);
         {
-            var processed = 0;
             if (Vector.IsHardwareAccelerated && overlapChunkCount >= Vector<ulong>.Count)
             {
                 var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(selfSpan);
