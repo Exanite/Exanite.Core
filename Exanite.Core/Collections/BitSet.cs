@@ -144,6 +144,7 @@ public class BitSet : IReadOnlyBitSet
     /// </summary>
     public BitSet(int chunkCapacity)
     {
+        GuardUtility.IsTrue(chunkCapacity >= 0, "BitSet capacity must be non-negative");
         if (chunkCapacity == 1)
         {
             chunks = new ulong[chunkCapacity];
@@ -701,15 +702,16 @@ public class BitSet : IReadOnlyBitSet
     /// <summary>
     /// Ensures that the bitset has capacity for at least the number of requested chunks.
     /// </summary>
-    public void EnsureCapacity(int requestedChunkCount)
+    public void EnsureCapacity(int chunkCapacity)
     {
-        if (chunks.Length >= requestedChunkCount)
+        GuardUtility.IsTrue(chunkCapacity >= 0, "BitSet capacity must be non-negative");
+        if (chunks.Length >= chunkCapacity)
         {
             return;
         }
 
         var newChunkCount = chunks.Length;
-        while (newChunkCount < requestedChunkCount)
+        while (newChunkCount < chunkCapacity)
         {
             newChunkCount <<= 1;
         }
