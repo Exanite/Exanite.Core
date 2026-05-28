@@ -144,6 +144,20 @@ public class MathUtilityTests
         Assert.Equal(expected, M.GetNextPowerOfTwo(value));
     }
 
+    [Theory]
+    [InlineData(-4, false)]
+    [InlineData(-2, false)]
+    [InlineData(-1, false)]
+    [InlineData(0, false)]
+    [InlineData(1, true)]
+    [InlineData(2, true)]
+    [InlineData(4, true)]
+    [InlineData(128, true)]
+    public void IsPowerOfTwo_ReturnsExpectedResult(int value, bool expected)
+    {
+        Assert.Equal(expected, value.IsPowerOfTwo());
+    }
+
     #endregion
 
     #region ApproximatelyEquals
