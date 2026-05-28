@@ -173,7 +173,7 @@ public class BitSet : IReadOnlyBitSet
             maxIndex = M.Max(index, maxIndex);
         }
 
-        var bitset = new BitSet();
+        var bitset = new BitSet((maxIndex >> Shift) + 1);
         foreach (var index in indices)
         {
             bitset[index] = true;
