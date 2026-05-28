@@ -175,6 +175,52 @@ public class BitSet : IEnumerable<int>
         other.Chunks.CopyTo(chunks);
     }
 
+    public bool IsProperSubsetOf(BitSet other)
+    {
+        return Count < other.Count && IsSubsetOf(other);
+    }
+
+    public bool IsProperSupersetOf(BitSet other)
+    {
+        return Count > other.Count && IsSupersetOf(other);
+    }
+
+    public bool IsSubsetOf(BitSet other)
+    {
+        return other.IsSupersetOf(this);
+    }
+
+    public bool IsSupersetOf(BitSet other)
+    {
+        var selfSpan = Chunks;
+        var otherSpan = other.Chunks;
+
+        // Check chunks for which there is a corresponding chunk in the other
+        var chunkCount = M.Min(selfSpan.Length, otherSpan.Length);
+        for (var i = 0; i < chunkCount; i++)
+        {
+            var selfChunk = selfSpan[i];
+            var otherChunk = otherSpan[i];
+            if ((selfChunk & otherChunk) != otherChunk)
+            {
+                return false;
+            }
+        }
+
+        // Handle remaining chunks in other
+        // If any remaining chunks are non-zero, then this set is not a superset
+        for (var i = chunkCount; i < otherSpan.Length; i++)
+        {
+            var otherChunk = otherSpan[i];
+            if (otherChunk != 0)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /// <summary>
     /// Copies the contents of this bitset to the specified bit set.
     /// </summary>

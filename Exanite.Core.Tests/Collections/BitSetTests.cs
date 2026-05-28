@@ -123,4 +123,112 @@ public class BitSetTests
 
         Assert.Equal(bitset.ToArray(), other.ToArray());
     }
+
+    [Fact]
+    public void SetComparison()
+    {
+        var a = new BitSet()
+        {
+            [1] = true,
+            [10] = true,
+            [123] = true,
+            [1234] = true,
+        };
+
+        var b = new BitSet()
+        {
+            [1] = true,
+            [10] = true,
+            // [123] = true,
+            [1234] = true,
+        };
+
+        Assert.True(a.IsSupersetOf(b));
+        Assert.False(b.IsSupersetOf(a));
+
+        Assert.False(a.IsSubsetOf(b));
+        Assert.True(b.IsSubsetOf(a));
+
+        Assert.True(a.IsProperSupersetOf(b));
+
+        // True for Overlaps
+        // False for SetEquals
+    }
+
+    [Fact]
+    public void SetComparison_BigValues()
+    {
+        // The values are really big here since I wanted to roughly test performance here as well
+        var a = new BitSet()
+        {
+            [1] = true,
+            [10] = true,
+            [123] = true,
+            [1234] = true,
+            [12345] = true,
+            [123456] = true,
+            [1234567] = true,
+            [12345678] = true,
+            [123456789] = true,
+            [1234567890] = true,
+        };
+
+        var b = new BitSet()
+        {
+            [1] = true,
+            [10] = true,
+            // [123] = true,
+            [1234] = true,
+            [12345] = true,
+            // [123456] = true,
+            [1234567] = true,
+            [12345678] = true,
+            // [123456789] = true,
+            [1234567890] = true,
+        };
+
+        Assert.True(a.IsSupersetOf(b));
+        Assert.False(b.IsSupersetOf(a));
+
+        Assert.False(a.IsSubsetOf(b));
+        Assert.True(b.IsSubsetOf(a));
+
+        Assert.True(a.IsProperSupersetOf(b));
+
+        // True for Overlaps
+        // False for SetEquals
+    }
+
+    [Fact]
+    public void SetComparison_WhenBothEmpty()
+    {
+        var a = new BitSet();
+        var b = new BitSet();
+
+        Assert.True(a.IsSupersetOf(b));
+        Assert.True(b.IsSupersetOf(a));
+
+        Assert.True(a.IsSubsetOf(b));
+        Assert.True(b.IsSubsetOf(a));
+
+        // False for Overlaps
+        // True for SetEquals
+    }
+
+    [Fact]
+    public void SetComparison_AgainstSelf()
+    {
+        var a = new BitSet()
+        {
+            [10] = true,
+        };
+
+        Assert.True(a.IsSupersetOf(a));
+        Assert.True(a.IsSubsetOf(a));
+
+        Assert.False(a.IsProperSubsetOf(a));
+        Assert.False(a.IsProperSupersetOf(a));
+
+        // True for Overlaps, SetEquals
+    }
 }
