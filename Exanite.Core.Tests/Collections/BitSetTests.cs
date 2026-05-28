@@ -314,60 +314,60 @@ public class BitSetTests
     [Fact]
     public void UnionWith()
     {
-        BitSet a = [0, 5, 63, 64, 127];
-        BitSet b = [5, 64, 128, 250, 1271];
+        BitSet a = [0, 15, 189, 192, 381];
+        BitSet b = [15, 192, 384, 750, 3813];
 
         // Initialize results with garbage data
         var results = new BitSet();
         results.EnsureCapacity(10000);
         results.Chunks.Fill(ulong.MaxValue);
 
-        Assert.Equal([0, 5, 63, 64, 127, 128, 250, 1271], a.UnionWith(b, results));
-        Assert.Equal([0, 5, 63, 64, 127, 128, 250, 1271], b.UnionWith(a, results));
+        Assert.Equal([0, 15, 189, 192, 381, 384, 750, 3813], a.UnionWith(b, results));
+        Assert.Equal([0, 15, 189, 192, 381, 384, 750, 3813], b.UnionWith(a, results));
     }
 
     [Fact]
     public void IntersectWith()
     {
-        BitSet a = [0, 5, 63, 64, 127];
-        BitSet b = [5, 64, 128, 250, 1271];
+        BitSet a = [0, 15, 189, 192, 381];
+        BitSet b = [15, 192, 384, 750, 3813];
 
         // Initialize results with garbage data
         var results = new BitSet();
         results.EnsureCapacity(10000);
         results.Chunks.Fill(ulong.MaxValue);
 
-        Assert.Equal([5, 64], a.IntersectWith(b, results));
-        Assert.Equal([5, 64], b.IntersectWith(a, results));
+        Assert.Equal([15, 192], a.IntersectWith(b, results));
+        Assert.Equal([15, 192], b.IntersectWith(a, results));
     }
 
     [Fact]
     public void ExceptWith()
     {
-        BitSet a = [0, 5, 63, 64, 127];
-        BitSet b = [5, 64, 128, 250, 1271];
+        BitSet a = [0, 15, 189, 192, 381];
+        BitSet b = [15, 192, 384, 750, 3813];
 
         // Initialize results with garbage data
         var results = new BitSet();
         results.EnsureCapacity(10000);
         results.Chunks.Fill(ulong.MaxValue);
 
-        Assert.Equal([0, 63, 127], a.ExceptWith(b, results));
-        Assert.Equal([128, 250, 1271], b.ExceptWith(a, results));
+        Assert.Equal([0, 189, 381], a.ExceptWith(b, results));
+        Assert.Equal([384, 750, 3813], b.ExceptWith(a, results));
     }
 
     [Fact]
     public void SymmetricExceptWith()
     {
-        BitSet a = [0, 5, 63, 64, 127];
-        BitSet b = [5, 64, 128, 250, 1271];
+        BitSet a = [0, 15, 189, 192, 381];
+        BitSet b = [15, 192, 384, 750, 3813];
 
         // Initialize results with garbage data
         var results = new BitSet();
         results.EnsureCapacity(10000);
         results.Chunks.Fill(ulong.MaxValue);
 
-        Assert.Equal([0, 63, 127, 128, 250, 1271], a.SymmetricExceptWith(b, results));
-        Assert.Equal([0, 63, 127, 128, 250, 1271], b.SymmetricExceptWith(a, results));
+        Assert.Equal([0, 189, 381, 384, 750, 3813], a.SymmetricExceptWith(b, results));
+        Assert.Equal([0, 189, 381, 384, 750, 3813], b.SymmetricExceptWith(a, results));
     }
 }
