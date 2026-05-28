@@ -231,4 +231,27 @@ public class BitSetTests
 
         // True for Overlaps, SetEquals
     }
+
+    [Fact]
+    public void IsSupersetOf_WhenOtherIsMuchLonger()
+    {
+        var a = new BitSet()
+        {
+            [1] = true,
+            [10] = true,
+            [123] = true,
+            [1234] = true,
+        };
+
+        var b = new BitSet()
+        {
+            [1] = true,
+            [10] = true,
+            [123] = true,
+            [1234] = true,
+            [123456789] = true,
+        };
+
+        Assert.False(a.IsSupersetOf(b));
+    }
 }
