@@ -665,6 +665,11 @@ public class BitSet : IReadOnlyBitSet
     {
         other.EnsureCapacity(Chunks.Length);
         Chunks.CopyTo(other.chunks);
+
+        if (other.chunks.Length > Chunks.Length)
+        {
+            other.Chunks[Chunks.Length..].Clear();
+        }
     }
 
     /// <summary>

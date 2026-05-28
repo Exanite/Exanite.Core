@@ -128,6 +128,24 @@ public class BitSetTests
     }
 
     [Fact]
+    public void CopyTo_WhenDstHasExistingData()
+    {
+        var bitset = new BitSet();
+        for (var i = 0; i < 1000; i++)
+        {
+            bitset[i * 3] = true;
+        }
+
+        var other = new BitSet();
+        other.EnsureCapacity(10000);
+        other.Chunks.Fill(ulong.MaxValue);
+
+        bitset.CopyTo(other);
+
+        Assert.Equal(bitset, other);
+    }
+
+    [Fact]
     public void CollectionBuilder()
     {
         var a = new BitSet()
