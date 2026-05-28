@@ -23,10 +23,25 @@ namespace Exanite.Core.Collections;
 [CollectionBuilder(typeof(BitSet), nameof(Create))]
 public class BitSet : IReadOnlyBitSet
 {
+    /// <summary>
+    /// The number of bits stored in each chunk.
+    /// </summary>
+    public const int BitsPerChunk = sizeof(ulong) * 8;
+
+    /// <summary>
+    /// The shift corresponding to the number of bits stored in each chunk.
+    /// Equal to the exponent in 2^6 = <see cref="BitsPerChunk"/>.
+    /// Can be used to convert a bit index into a chunk index.
+    /// </summary>
+    public const int Shift = 6;
+
+    /// <summary>
+    /// The mask corresponding to the bit in chunk index.
+    /// Can be used to isolate the bit in chunk index from the bit index.
+    /// </summary>
+    public const int Mask = (1 << Shift) - 1;
+
     internal const int DefaultChunkCount = 1;
-    internal const int BitsPerChunk = sizeof(ulong) * 8;
-    internal const int Shift = 6;
-    internal const int Mask = (1 << Shift) - 1;
 
     private ulong[] chunks;
 
