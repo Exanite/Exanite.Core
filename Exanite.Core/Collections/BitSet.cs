@@ -290,6 +290,14 @@ public class BitSet : IEnumerable<int>
         var selfSpan = Chunks;
         var otherSpan = other.Chunks;
 
+        if (selfSpan.Length > otherSpan.Length)
+        {
+            // Ensure other is longest
+            var temp = selfSpan;
+            selfSpan = otherSpan;
+            otherSpan = temp;
+        }
+
         // Process the overlapping region
         var overlapChunkCount = M.Min(selfSpan.Length, otherSpan.Length);
         {

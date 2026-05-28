@@ -153,6 +153,9 @@ public class BitSetTests
 
         Assert.True(a.Overlaps(b));
         Assert.False(a.SetEquals(b));
+
+        Assert.True(b.Overlaps(a));
+        Assert.False(b.SetEquals(a));
     }
 
     [Fact]
@@ -197,6 +200,9 @@ public class BitSetTests
 
         Assert.True(a.Overlaps(b));
         Assert.False(a.SetEquals(b));
+
+        Assert.True(b.Overlaps(a));
+        Assert.False(b.SetEquals(a));
     }
 
     [Fact]
@@ -213,28 +219,13 @@ public class BitSetTests
 
         Assert.False(a.Overlaps(b));
         Assert.True(a.SetEquals(b));
+
+        Assert.False(b.Overlaps(a));
+        Assert.True(b.SetEquals(a));
     }
 
     [Fact]
-    public void SetComparison_AgainstSelf()
-    {
-        var a = new BitSet()
-        {
-            [10] = true,
-        };
-
-        Assert.True(a.IsSupersetOf(a));
-        Assert.True(a.IsSubsetOf(a));
-
-        Assert.False(a.IsProperSubsetOf(a));
-        Assert.False(a.IsProperSupersetOf(a));
-
-        Assert.True(a.Overlaps(a));
-        Assert.True(a.SetEquals(a));
-    }
-
-    [Fact]
-    public void IsSupersetOf_WhenOtherIsMuchLonger()
+    public void SetComparison_WhenOneIsMuchLonger()
     {
         var a = new BitSet()
         {
@@ -254,5 +245,33 @@ public class BitSetTests
         };
 
         Assert.False(a.IsSupersetOf(b));
+        Assert.True(b.IsSupersetOf(a));
+
+        Assert.True(a.IsSubsetOf(b));
+        Assert.False(b.IsSubsetOf(a));
+
+        Assert.True(a.Overlaps(b));
+        Assert.False(a.SetEquals(b));
+
+        Assert.True(b.Overlaps(a));
+        Assert.False(b.SetEquals(a));
+    }
+
+    [Fact]
+    public void SetComparison_AgainstSelf()
+    {
+        var a = new BitSet()
+        {
+            [10] = true,
+        };
+
+        Assert.True(a.IsSupersetOf(a));
+        Assert.True(a.IsSubsetOf(a));
+
+        Assert.False(a.IsProperSubsetOf(a));
+        Assert.False(a.IsProperSupersetOf(a));
+
+        Assert.True(a.Overlaps(a));
+        Assert.True(a.SetEquals(a));
     }
 }
