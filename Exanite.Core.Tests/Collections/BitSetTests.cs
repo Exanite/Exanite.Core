@@ -95,5 +95,32 @@ public class BitSetTests
         Assert.Equal(expected, bitset.ToArray());
     }
 
-    // TODO: CopyTo, copy constructor tests
+    [Fact]
+    public void CopyConstructor()
+    {
+        var bitset = new BitSet();
+        for (var i = 0; i < 1000; i++)
+        {
+            bitset[i * 3] = true;
+        }
+
+        var other = new BitSet(bitset);
+
+        Assert.Equal(bitset.ToArray(), other.ToArray());
+    }
+
+    [Fact]
+    public void CopyTo()
+    {
+        var bitset = new BitSet();
+        for (var i = 0; i < 1000; i++)
+        {
+            bitset[i * 3] = true;
+        }
+
+        var other = new BitSet();
+        bitset.CopyTo(other);
+
+        Assert.Equal(bitset.ToArray(), other.ToArray());
+    }
 }
