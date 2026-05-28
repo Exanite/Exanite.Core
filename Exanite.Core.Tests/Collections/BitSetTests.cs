@@ -290,4 +290,60 @@ public class BitSetTests
         Assert.True(a.Overlaps(a));
         Assert.True(a.SetEquals(a));
     }
+
+    [Fact]
+    public void UnionWith()
+    {
+        BitSet a = [0, 5, 63, 64, 127];
+        BitSet b = [5, 64, 128, 250];
+        var results = new BitSet();
+
+        a.UnionWith(b, results);
+        Assert.Equal([0, 5, 63, 64, 127, 128, 250], results);
+
+        b.UnionWith(a, results);
+        Assert.Equal([0, 5, 63, 64, 127, 128, 250], results);
+    }
+
+    [Fact]
+    public void IntersectWith()
+    {
+        BitSet a = [0, 5, 63, 64, 127];
+        BitSet b = [5, 64, 128, 250];
+        var results = new BitSet();
+
+        a.IntersectWith(b, results);
+        Assert.Equal([5, 64], results);
+
+        b.IntersectWith(a, results);
+        Assert.Equal([5, 64], results);
+    }
+
+    [Fact]
+    public void ExceptWith()
+    {
+        BitSet a = [0, 5, 63, 64, 127];
+        BitSet b = [5, 64, 128, 250];
+        var results = new BitSet();
+
+        a.ExceptWith(b, results);
+        Assert.Equal([0, 63, 127], results);
+
+        b.ExceptWith(a, results);
+        Assert.Equal([128, 250], results);
+    }
+
+    [Fact]
+    public void SymmetricExceptWith()
+    {
+        BitSet a = [0, 5, 63, 64, 127];
+        BitSet b = [5, 64, 128, 250];
+        var results = new BitSet();
+
+        a.SymmetricExceptWith(b, results);
+        Assert.Equal([0, 63, 127, 128, 250], results);
+
+        b.SymmetricExceptWith(a, results);
+        Assert.Equal([0, 63, 127, 128, 250], results);
+    }
 }
