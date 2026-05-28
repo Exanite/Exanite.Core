@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics;
 using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Collections;
