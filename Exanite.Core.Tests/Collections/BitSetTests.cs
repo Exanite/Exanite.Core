@@ -315,7 +315,7 @@ public class BitSetTests
     public void UnionWith()
     {
         BitSet a = [0, 5, 63, 64, 127];
-        BitSet b = [5, 64, 128, 250];
+        BitSet b = [5, 64, 128, 250, 1271];
 
         // Initialize results with garbage data
         var results = new BitSet();
@@ -323,17 +323,17 @@ public class BitSetTests
         results.Chunks.Fill(ulong.MaxValue);
 
         a.UnionWith(b, results);
-        Assert.Equal([0, 5, 63, 64, 127, 128, 250], results);
+        Assert.Equal([0, 5, 63, 64, 127, 128, 250, 1271], results);
 
         b.UnionWith(a, results);
-        Assert.Equal([0, 5, 63, 64, 127, 128, 250], results);
+        Assert.Equal([0, 5, 63, 64, 127, 128, 250, 1271], results);
     }
 
     [Fact]
     public void IntersectWith()
     {
         BitSet a = [0, 5, 63, 64, 127];
-        BitSet b = [5, 64, 128, 250];
+        BitSet b = [5, 64, 128, 250, 1271];
 
         // Initialize results with garbage data
         var results = new BitSet();
@@ -351,7 +351,7 @@ public class BitSetTests
     public void ExceptWith()
     {
         BitSet a = [0, 5, 63, 64, 127];
-        BitSet b = [5, 64, 128, 250];
+        BitSet b = [5, 64, 128, 250, 1271];
 
         // Initialize results with garbage data
         var results = new BitSet();
@@ -362,14 +362,14 @@ public class BitSetTests
         Assert.Equal([0, 63, 127], results);
 
         b.ExceptWith(a, results);
-        Assert.Equal([128, 250], results);
+        Assert.Equal([128, 250, 1271], results);
     }
 
     [Fact]
     public void SymmetricExceptWith()
     {
         BitSet a = [0, 5, 63, 64, 127];
-        BitSet b = [5, 64, 128, 250];
+        BitSet b = [5, 64, 128, 250, 1271];
 
         // Initialize results with garbage data
         var results = new BitSet();
@@ -377,9 +377,9 @@ public class BitSetTests
         results.Chunks.Fill(ulong.MaxValue);
 
         a.SymmetricExceptWith(b, results);
-        Assert.Equal([0, 63, 127, 128, 250], results);
+        Assert.Equal([0, 63, 127, 128, 250, 1271], results);
 
         b.SymmetricExceptWith(a, results);
-        Assert.Equal([0, 63, 127, 128, 250], results);
+        Assert.Equal([0, 63, 127, 128, 250, 1271], results);
     }
 }
