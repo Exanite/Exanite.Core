@@ -181,12 +181,12 @@ public class BitSet : IReadOnlyBitSet
         return bitset;
     }
 
-    public void UnionWith(IReadOnlyBitSet other)
+    public BitSet UnionWith(IReadOnlyBitSet other)
     {
-        UnionWith(other, this);
+        return UnionWith(other, this);
     }
 
-    public void UnionWith(IReadOnlyBitSet other, BitSet results)
+    public BitSet UnionWith(IReadOnlyBitSet other, BitSet results)
     {
         var selfSpan = (ReadOnlySpan<ulong>)Chunks;
         var otherSpan = other.Chunks;
@@ -261,14 +261,16 @@ public class BitSet : IReadOnlyBitSet
         {
             resultsSpan[resultChunkCount..].Clear();
         }
+
+        return results;
     }
 
-    public void IntersectWith(IReadOnlyBitSet other)
+    public BitSet IntersectWith(IReadOnlyBitSet other)
     {
-        IntersectWith(other, this);
+        return IntersectWith(other, this);
     }
 
-    public void IntersectWith(IReadOnlyBitSet other, BitSet results)
+    public BitSet IntersectWith(IReadOnlyBitSet other, BitSet results)
     {
         var selfSpan = Chunks;
         var otherSpan = other.Chunks;
@@ -309,14 +311,16 @@ public class BitSet : IReadOnlyBitSet
         {
             resultsSpan[resultChunkCount..].Clear();
         }
+
+        return results;
     }
 
-    public void ExceptWith(IReadOnlyBitSet other)
+    public BitSet ExceptWith(IReadOnlyBitSet other)
     {
-        ExceptWith(other, this);
+        return ExceptWith(other, this);
     }
 
-    public void ExceptWith(IReadOnlyBitSet other, BitSet results)
+    public BitSet ExceptWith(IReadOnlyBitSet other, BitSet results)
     {
         var selfSpan = Chunks;
         var otherSpan = other.Chunks;
@@ -383,14 +387,16 @@ public class BitSet : IReadOnlyBitSet
         {
             resultsSpan[resultChunkCount..].Clear();
         }
+
+        return results;
     }
 
-    public void SymmetricExceptWith(IReadOnlyBitSet other)
+    public BitSet SymmetricExceptWith(IReadOnlyBitSet other)
     {
-        SymmetricExceptWith(other, this);
+        return SymmetricExceptWith(other, this);
     }
 
-    public void SymmetricExceptWith(IReadOnlyBitSet other, BitSet results)
+    public BitSet SymmetricExceptWith(IReadOnlyBitSet other, BitSet results)
     {
         var selfSpan = (ReadOnlySpan<ulong>)Chunks;
         var otherSpan = other.Chunks;
@@ -465,6 +471,8 @@ public class BitSet : IReadOnlyBitSet
         {
             resultsSpan[resultChunkCount..].Clear();
         }
+
+        return results;
     }
 
     public bool IsProperSubsetOf(IReadOnlyBitSet other)

@@ -322,11 +322,8 @@ public class BitSetTests
         results.EnsureCapacity(10000);
         results.Chunks.Fill(ulong.MaxValue);
 
-        a.UnionWith(b, results);
-        Assert.Equal([0, 5, 63, 64, 127, 128, 250, 1271], results);
-
-        b.UnionWith(a, results);
-        Assert.Equal([0, 5, 63, 64, 127, 128, 250, 1271], results);
+        Assert.Equal([0, 5, 63, 64, 127, 128, 250, 1271], a.UnionWith(b, results));
+        Assert.Equal([0, 5, 63, 64, 127, 128, 250, 1271], b.UnionWith(a, results));
     }
 
     [Fact]
@@ -340,11 +337,8 @@ public class BitSetTests
         results.EnsureCapacity(10000);
         results.Chunks.Fill(ulong.MaxValue);
 
-        a.IntersectWith(b, results);
-        Assert.Equal([5, 64], results);
-
-        b.IntersectWith(a, results);
-        Assert.Equal([5, 64], results);
+        Assert.Equal([5, 64], a.IntersectWith(b, results));
+        Assert.Equal([5, 64], b.IntersectWith(a, results));
     }
 
     [Fact]
@@ -358,11 +352,8 @@ public class BitSetTests
         results.EnsureCapacity(10000);
         results.Chunks.Fill(ulong.MaxValue);
 
-        a.ExceptWith(b, results);
-        Assert.Equal([0, 63, 127], results);
-
-        b.ExceptWith(a, results);
-        Assert.Equal([128, 250, 1271], results);
+        Assert.Equal([0, 63, 127], a.ExceptWith(b, results));
+        Assert.Equal([128, 250, 1271], b.ExceptWith(a, results));
     }
 
     [Fact]
@@ -376,10 +367,7 @@ public class BitSetTests
         results.EnsureCapacity(10000);
         results.Chunks.Fill(ulong.MaxValue);
 
-        a.SymmetricExceptWith(b, results);
-        Assert.Equal([0, 63, 127, 128, 250, 1271], results);
-
-        b.SymmetricExceptWith(a, results);
-        Assert.Equal([0, 63, 127, 128, 250, 1271], results);
+        Assert.Equal([0, 63, 127, 128, 250, 1271], a.SymmetricExceptWith(b, results));
+        Assert.Equal([0, 63, 127, 128, 250, 1271], b.SymmetricExceptWith(a, results));
     }
 }

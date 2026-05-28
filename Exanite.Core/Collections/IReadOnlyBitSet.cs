@@ -17,10 +17,10 @@ public interface IReadOnlyBitSet : IEnumerable<int>
     /// <inheritdoc cref="BitSet.this"/>
     public bool this[int bitIndex] { get; }
 
-    public void UnionWith(IReadOnlyBitSet other, BitSet results);
-    public void IntersectWith(IReadOnlyBitSet other, BitSet results);
-    public void ExceptWith(IReadOnlyBitSet other, BitSet results);
-    public void SymmetricExceptWith(IReadOnlyBitSet other, BitSet results);
+    public BitSet UnionWith(IReadOnlyBitSet other, BitSet results);
+    public BitSet IntersectWith(IReadOnlyBitSet other, BitSet results);
+    public BitSet ExceptWith(IReadOnlyBitSet other, BitSet results);
+    public BitSet SymmetricExceptWith(IReadOnlyBitSet other, BitSet results);
 
     public bool IsProperSubsetOf(IReadOnlyBitSet other);
     public bool IsProperSupersetOf(IReadOnlyBitSet other);
