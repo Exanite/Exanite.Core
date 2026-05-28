@@ -166,7 +166,13 @@ public class BitSet : IReadOnlyBitSet
 
     public static BitSet Create(ReadOnlySpan<int> indices)
     {
-        var bitset = new BitSet(indices.Length);
+        var maxIndex = 0;
+        foreach (var index in indices)
+        {
+            maxIndex = M.Max(index, maxIndex);
+        }
+
+        var bitset = new BitSet();
         foreach (var index in indices)
         {
             bitset[index] = true;
