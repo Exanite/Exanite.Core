@@ -69,31 +69,18 @@ public class BitSet : IEnumerable<int>
         get
         {
             var span = Chunks;
-            if (Vector256.IsHardwareAccelerated && span.Length >= Vector256<ulong>.Count)
+            if (Vector.IsHardwareAccelerated && span.Length >= Vector<ulong>.Count)
             {
-                var vectorSpan = MemoryMarshal.Cast<ulong, Vector256<ulong>>(span);
+                var vectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(span);
                 foreach (var vector in vectorSpan)
                 {
-                    if (vector != Vector256<ulong>.Zero)
+                    if (vector != Vector<ulong>.Zero)
                     {
                         return false;
                     }
                 }
 
-                span = span[(vectorSpan.Length * Vector256<ulong>.Count)..];
-            }
-            else if (Vector128.IsHardwareAccelerated && span.Length >= Vector128<ulong>.Count)
-            {
-                var vectorSpan = MemoryMarshal.Cast<ulong, Vector128<ulong>>(span);
-                foreach (var vector in vectorSpan)
-                {
-                    if (vector != Vector128<ulong>.Zero)
-                    {
-                        return false;
-                    }
-                }
-
-                span = span[(vectorSpan.Length * Vector128<ulong>.Count)..];
+                span = span[(vectorSpan.Length * Vector<ulong>.Count)..];
             }
 
             foreach (var chunk in span)
@@ -199,10 +186,10 @@ public class BitSet : IEnumerable<int>
         var overlapChunkCount = M.Min(selfSpan.Length, otherSpan.Length);
         {
             var processed = 0;
-            if (Vector256.IsHardwareAccelerated && overlapChunkCount >= Vector256<ulong>.Count)
+            if (Vector.IsHardwareAccelerated && overlapChunkCount >= Vector<ulong>.Count)
             {
-                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector256<ulong>>(selfSpan);
-                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector256<ulong>>(otherSpan);
+                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(selfSpan);
+                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(otherSpan);
                 var count = M.Min(selfVectorSpan.Length, otherVectorSpan.Length);
                 for (var i = 0; i < count; i++)
                 {
@@ -214,24 +201,7 @@ public class BitSet : IEnumerable<int>
                     }
                 }
 
-                processed += count * Vector256<ulong>.Count;
-            }
-            else if (Vector128.IsHardwareAccelerated && overlapChunkCount >= Vector128<ulong>.Count)
-            {
-                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector128<ulong>>(selfSpan);
-                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector128<ulong>>(otherSpan);
-                var count = M.Min(selfVectorSpan.Length, otherVectorSpan.Length);
-                for (var i = 0; i < count; i++)
-                {
-                    var selfChunk = selfVectorSpan[i];
-                    var otherChunk = otherVectorSpan[i];
-                    if ((selfChunk & otherChunk) != otherChunk)
-                    {
-                        return false;
-                    }
-                }
-
-                processed += count * Vector128<ulong>.Count;
+                processed += count * Vector<ulong>.Count;
             }
 
             for (var i = processed; i < overlapChunkCount; i++)
@@ -249,31 +219,18 @@ public class BitSet : IEnumerable<int>
         // If any remaining chunks are non-zero, then this set is not a superset
         var remainingOtherSpan = otherSpan[overlapChunkCount..];
         {
-            if (Vector256.IsHardwareAccelerated && remainingOtherSpan.Length >= Vector256<ulong>.Count)
+            if (Vector.IsHardwareAccelerated && remainingOtherSpan.Length >= Vector<ulong>.Count)
             {
-                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector256<ulong>>(remainingOtherSpan);
+                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(remainingOtherSpan);
                 foreach (var otherChunk in otherVectorSpan)
                 {
-                    if (otherChunk != Vector256<ulong>.Zero)
+                    if (otherChunk != Vector<ulong>.Zero)
                     {
                         return false;
                     }
                 }
 
-                remainingOtherSpan = remainingOtherSpan[(otherVectorSpan.Length * Vector256<ulong>.Count)..];
-            }
-            else if (Vector128.IsHardwareAccelerated && remainingOtherSpan.Length >= Vector128<ulong>.Count)
-            {
-                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector128<ulong>>(remainingOtherSpan);
-                foreach (var otherChunk in otherVectorSpan)
-                {
-                    if (otherChunk != Vector128<ulong>.Zero)
-                    {
-                        return false;
-                    }
-                }
-
-                remainingOtherSpan = remainingOtherSpan[(otherVectorSpan.Length * Vector128<ulong>.Count)..];
+                remainingOtherSpan = remainingOtherSpan[(otherVectorSpan.Length * Vector<ulong>.Count)..];
             }
 
             foreach (var otherChunk in remainingOtherSpan)
@@ -297,39 +254,22 @@ public class BitSet : IEnumerable<int>
         var overlapChunkCount = M.Min(selfSpan.Length, otherSpan.Length);
         {
             var processed = 0;
-            if (Vector256.IsHardwareAccelerated && overlapChunkCount >= Vector256<ulong>.Count)
+            if (Vector.IsHardwareAccelerated && overlapChunkCount >= Vector<ulong>.Count)
             {
-                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector256<ulong>>(selfSpan);
-                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector256<ulong>>(otherSpan);
+                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(selfSpan);
+                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(otherSpan);
                 var count = M.Min(selfVectorSpan.Length, otherVectorSpan.Length);
                 for (var i = 0; i < count; i++)
                 {
                     var selfChunk = selfVectorSpan[i];
                     var otherChunk = otherVectorSpan[i];
-                    if ((selfChunk & otherChunk) != Vector256<ulong>.Zero)
+                    if ((selfChunk & otherChunk) != Vector<ulong>.Zero)
                     {
                         return true;
                     }
                 }
 
-                processed += count * Vector256<ulong>.Count;
-            }
-            else if (Vector128.IsHardwareAccelerated && overlapChunkCount >= Vector128<ulong>.Count)
-            {
-                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector128<ulong>>(selfSpan);
-                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector128<ulong>>(otherSpan);
-                var count = M.Min(selfVectorSpan.Length, otherVectorSpan.Length);
-                for (var i = 0; i < count; i++)
-                {
-                    var selfChunk = selfVectorSpan[i];
-                    var otherChunk = otherVectorSpan[i];
-                    if ((selfChunk & otherChunk) != Vector128<ulong>.Zero)
-                    {
-                        return true;
-                    }
-                }
-
-                processed += count * Vector128<ulong>.Count;
+                processed += count * Vector<ulong>.Count;
             }
 
             for (var i = processed; i < overlapChunkCount; i++)
@@ -355,10 +295,10 @@ public class BitSet : IEnumerable<int>
         var overlapChunkCount = M.Min(selfSpan.Length, otherSpan.Length);
         {
             var processed = 0;
-            if (Vector256.IsHardwareAccelerated && overlapChunkCount >= Vector256<ulong>.Count)
+            if (Vector.IsHardwareAccelerated && overlapChunkCount >= Vector<ulong>.Count)
             {
-                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector256<ulong>>(selfSpan);
-                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector256<ulong>>(otherSpan);
+                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(selfSpan);
+                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(otherSpan);
                 var count = M.Min(selfVectorSpan.Length, otherVectorSpan.Length);
                 for (var i = 0; i < count; i++)
                 {
@@ -370,24 +310,7 @@ public class BitSet : IEnumerable<int>
                     }
                 }
 
-                processed += count * Vector256<ulong>.Count;
-            }
-            else if (Vector128.IsHardwareAccelerated && overlapChunkCount >= Vector128<ulong>.Count)
-            {
-                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector128<ulong>>(selfSpan);
-                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector128<ulong>>(otherSpan);
-                var count = M.Min(selfVectorSpan.Length, otherVectorSpan.Length);
-                for (var i = 0; i < count; i++)
-                {
-                    var selfChunk = selfVectorSpan[i];
-                    var otherChunk = otherVectorSpan[i];
-                    if (selfChunk != otherChunk)
-                    {
-                        return false;
-                    }
-                }
-
-                processed += count * Vector128<ulong>.Count;
+                processed += count * Vector<ulong>.Count;
             }
 
             for (var i = processed; i < overlapChunkCount; i++)
@@ -405,31 +328,18 @@ public class BitSet : IEnumerable<int>
         // If any remaining chunks are non-zero, then the sets are not set equal
         var remainingOtherSpan = otherSpan[overlapChunkCount..];
         {
-            if (Vector256.IsHardwareAccelerated && remainingOtherSpan.Length >= Vector256<ulong>.Count)
+            if (Vector.IsHardwareAccelerated && remainingOtherSpan.Length >= Vector<ulong>.Count)
             {
-                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector256<ulong>>(remainingOtherSpan);
+                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(remainingOtherSpan);
                 foreach (var otherChunk in otherVectorSpan)
                 {
-                    if (otherChunk != Vector256<ulong>.Zero)
+                    if (otherChunk != Vector<ulong>.Zero)
                     {
                         return false;
                     }
                 }
 
-                remainingOtherSpan = remainingOtherSpan[(otherVectorSpan.Length * Vector256<ulong>.Count)..];
-            }
-            else if (Vector128.IsHardwareAccelerated && remainingOtherSpan.Length >= Vector128<ulong>.Count)
-            {
-                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector128<ulong>>(remainingOtherSpan);
-                foreach (var otherChunk in otherVectorSpan)
-                {
-                    if (otherChunk != Vector128<ulong>.Zero)
-                    {
-                        return false;
-                    }
-                }
-
-                remainingOtherSpan = remainingOtherSpan[(otherVectorSpan.Length * Vector128<ulong>.Count)..];
+                remainingOtherSpan = remainingOtherSpan[(otherVectorSpan.Length * Vector<ulong>.Count)..];
             }
 
             foreach (var otherChunk in remainingOtherSpan)
