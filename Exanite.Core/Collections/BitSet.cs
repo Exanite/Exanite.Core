@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Exanite.Core.Utilities;
 
@@ -19,6 +20,7 @@ namespace Exanite.Core.Collections;
 /// Shift operations are also not supported.
 /// This is because this data structure is designed for storing flags, which do not make sense to bitshift.
 /// </remarks>
+[CollectionBuilder(typeof(BitSet), nameof(Create))]
 public class BitSet : IEnumerable<int>
 {
     private const int DefaultChunkCount = 1;
@@ -159,6 +161,17 @@ public class BitSet : IEnumerable<int>
     {
         chunks = new ulong[other.Chunks.Length];
         other.Chunks.CopyTo(chunks);
+    }
+
+    public static BitSet Create(ReadOnlySpan<int> indices)
+    {
+        var bitset = new BitSet(indices.Length);
+        foreach (var index in indices)
+        {
+            bitset[index] = true;
+        }
+
+        return bitset;
     }
 
     public void UnionWith(BitSet other)

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Exanite.Core.Collections;
 using Xunit;
 
@@ -92,7 +91,7 @@ public class BitSetTests
             bitset[i * 2] = true;
         }
 
-        Assert.Equal(expected, bitset.ToArray());
+        Assert.Equal(expected, bitset);
     }
 
     [Fact]
@@ -106,7 +105,7 @@ public class BitSetTests
 
         var other = new BitSet(bitset);
 
-        Assert.Equal(bitset.ToArray(), other.ToArray());
+        Assert.Equal(bitset, other);
     }
 
     [Fact]
@@ -121,7 +120,24 @@ public class BitSetTests
         var other = new BitSet();
         bitset.CopyTo(other);
 
-        Assert.Equal(bitset.ToArray(), other.ToArray());
+        Assert.Equal(bitset, other);
+    }
+
+    [Fact]
+    public void CollectionBuilder()
+    {
+        var a = new BitSet()
+        {
+            [0] = true,
+            [5] = true,
+            [63] = true,
+            [64] = true,
+            [127] = true,
+        };
+
+        BitSet b = [0, 5, 63, 64, 127];
+
+        Assert.Equal(a, b);
     }
 
     [Fact]
