@@ -387,6 +387,8 @@ public class BitSet : IEnumerable<int>
             newChunkCount <<= 1;
         }
 
+        newChunkCount = M.GetNextPowerOfTwo(newChunkCount);
+
         var newChunks = new ulong[newChunkCount];
         chunks.CopyTo(newChunks);
         chunks = newChunks;
