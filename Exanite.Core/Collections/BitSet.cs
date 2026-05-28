@@ -33,7 +33,8 @@ public class BitSet : IReadOnlyBitSet
     /// <summary>
     /// The underlying memory used to store the bits.
     /// </summary>
-    public ReadOnlySpan<ulong> Chunks => chunks;
+    public Span<ulong> Chunks => chunks;
+    ReadOnlySpan<ulong> IReadOnlyBitSet.Chunks => chunks;
 
     /// <summary>
     /// Returns the number of true bits.
@@ -181,7 +182,7 @@ public class BitSet : IReadOnlyBitSet
 
     public void UnionWith(IReadOnlyBitSet other, BitSet results)
     {
-        var selfSpan = Chunks;
+        var selfSpan = (ReadOnlySpan<ulong>)Chunks;
         var otherSpan = other.Chunks;
 
         if (selfSpan.Length > otherSpan.Length)
@@ -383,7 +384,7 @@ public class BitSet : IReadOnlyBitSet
 
     public void SymmetricExceptWith(IReadOnlyBitSet other, BitSet results)
     {
-        var selfSpan = Chunks;
+        var selfSpan = (ReadOnlySpan<ulong>)Chunks;
         var otherSpan = other.Chunks;
 
         if (selfSpan.Length > otherSpan.Length)
@@ -583,7 +584,7 @@ public class BitSet : IReadOnlyBitSet
 
     public bool SetEquals(IReadOnlyBitSet other)
     {
-        var selfSpan = Chunks;
+        var selfSpan = (ReadOnlySpan<ulong>)Chunks;
         var otherSpan = other.Chunks;
 
         if (selfSpan.Length > otherSpan.Length)
