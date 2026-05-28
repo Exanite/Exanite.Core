@@ -161,6 +161,148 @@ public class BitSet : IEnumerable<int>
         other.Chunks.CopyTo(chunks);
     }
 
+    public void UnionWith(BitSet other)
+    {
+        UnionWith(other, this);
+    }
+
+    public void UnionWith(BitSet other, BitSet results)
+    {
+        var selfSpan = Chunks;
+        var otherSpan = other.Chunks;
+
+        if (selfSpan.Length > otherSpan.Length)
+        {
+            // Ensure other is longest
+            var temp = selfSpan;
+            selfSpan = otherSpan;
+            otherSpan = temp;
+        }
+
+        var resultChunkCount = M.Max(selfSpan.Length, otherSpan.Length);
+        results.EnsureCapacity(resultChunkCount);
+        var resultsSpan = other.chunks.AsSpan();
+
+        // Process the overlapping region
+        var processed = 0;
+        var overlapChunkCount = M.Min(selfSpan.Length, otherSpan.Length);
+        {
+            if (Vector.IsHardwareAccelerated && overlapChunkCount >= Vector<ulong>.Count)
+            {
+                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(selfSpan);
+                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(otherSpan);
+                var resultsVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(resultsSpan);
+                var count = M.Min(selfVectorSpan.Length, otherVectorSpan.Length);
+                for (var i = 0; i < count; i++)
+                {
+                    var selfChunk = selfVectorSpan[i];
+                    var otherChunk = otherVectorSpan[i];
+                    resultsVectorSpan[i] = selfChunk | otherChunk;
+                }
+
+                processed += count * Vector<ulong>.Count;
+            }
+
+            for (var i = processed; i < overlapChunkCount; i++)
+            {
+                var selfChunk = selfSpan[i];
+                var otherChunk = otherSpan[i];
+                resultsSpan[i] = selfChunk | otherChunk;
+            }
+        }
+
+        // Process remaining chunks in other
+        var remainingOtherSpan = otherSpan[overlapChunkCount..];
+        {
+            if (Vector.IsHardwareAccelerated && remainingOtherSpan.Length >= Vector<ulong>.Count)
+            {
+                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(remainingOtherSpan);
+                var resultsVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(resultsSpan);
+                for (var i = 0; i < otherVectorSpan.Length; i++)
+                {
+                    var otherChunk = otherVectorSpan[i];
+                    resultsVectorSpan[i] = otherChunk;
+                }
+
+                processed += otherVectorSpan.Length * Vector<ulong>.Count;
+            }
+
+            for (var i = processed; i < remainingOtherSpan.Length; i++)
+            {
+                var otherChunk = otherSpan[i];
+                resultsSpan[i] = otherChunk;
+            }
+        }
+
+        // Clear uninitialized results
+        resultsSpan[resultChunkCount..].Clear();
+    }
+
+    public void IntersectWith(BitSet other)
+    {
+        IntersectWith(other, this);
+    }
+
+    public void IntersectWith(BitSet other, BitSet results)
+    {
+        var selfSpan = Chunks;
+        var otherSpan = other.Chunks;
+
+        var resultChunkCount = M.Min(selfSpan.Length, otherSpan.Length);
+        results.EnsureCapacity(resultChunkCount);
+        var resultsSpan = other.chunks.AsSpan();
+
+        // Process the overlapping region
+        {
+            var processed = 0;
+            if (Vector.IsHardwareAccelerated && resultChunkCount >= Vector<ulong>.Count)
+            {
+                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(selfSpan);
+                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(otherSpan);
+                var resultsVectorSpan = MemoryMarshal.Cast<ulong, Vector<ulong>>(resultsSpan);
+                var count = M.Min(selfVectorSpan.Length, otherVectorSpan.Length);
+                for (var i = 0; i < count; i++)
+                {
+                    var selfChunk = selfVectorSpan[i];
+                    var otherChunk = otherVectorSpan[i];
+                    resultsVectorSpan[i] = selfChunk & otherChunk;
+                }
+
+                processed += count * Vector<ulong>.Count;
+            }
+
+            for (var i = processed; i < resultChunkCount; i++)
+            {
+                var selfChunk = selfSpan[i];
+                var otherChunk = otherSpan[i];
+                resultsSpan[i] = selfChunk & otherChunk;
+            }
+        }
+
+        // Clear uninitialized results
+        resultsSpan[resultChunkCount..].Clear();
+    }
+
+    public void ExceptWith(BitSet other)
+    {
+        ExceptWith(other, this);
+    }
+
+    public void ExceptWith(BitSet other, BitSet results)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SymmetricExceptWith(BitSet other)
+    {
+        SymmetricExceptWith(other, this);
+    }
+
+    public void SymmetricExceptWith(BitSet other, BitSet results)
+    {
+        throw new NotImplementedException();
+    }
+
     public bool IsProperSubsetOf(BitSet other)
     {
         return Count < other.Count && IsSubsetOf(other);
