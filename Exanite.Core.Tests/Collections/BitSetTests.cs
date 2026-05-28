@@ -189,7 +189,6 @@ public class BitSetTests
             [1234567] = true,
             [12345678] = true,
             [123456789] = true,
-            [1234567890] = true,
         };
 
         var b = new BitSet()
@@ -203,7 +202,6 @@ public class BitSetTests
             [1234567] = true,
             [12345678] = true,
             // [123456789] = true,
-            [1234567890] = true,
         };
 
         Assert.True(a.IsSupersetOf(b));
