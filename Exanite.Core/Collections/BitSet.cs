@@ -197,24 +197,91 @@ public class BitSet : IEnumerable<int>
 
         // Check chunks for which there is a corresponding chunk in the other
         var chunkCount = M.Min(selfSpan.Length, otherSpan.Length);
-        for (var i = 0; i < chunkCount; i++)
         {
-            var selfChunk = selfSpan[i];
-            var otherChunk = otherSpan[i];
-            if ((selfChunk & otherChunk) != otherChunk)
+            var processed = 0;
+            if (Vector256.IsHardwareAccelerated && chunkCount >= Vector256<ulong>.Count)
             {
-                return false;
+                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector256<ulong>>(selfSpan);
+                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector256<ulong>>(otherSpan);
+                var count = M.Min(selfVectorSpan.Length, otherVectorSpan.Length);
+                for (var i = 0; i < count; i++)
+                {
+                    var selfChunk = selfVectorSpan[i];
+                    var otherChunk = otherVectorSpan[i];
+                    if ((selfChunk & otherChunk) != otherChunk)
+                    {
+                        return false;
+                    }
+                }
+
+                processed += count * Vector256<ulong>.Count;
+            }
+            else if (Vector128.IsHardwareAccelerated && chunkCount >= Vector128<ulong>.Count)
+            {
+                var selfVectorSpan = MemoryMarshal.Cast<ulong, Vector128<ulong>>(selfSpan);
+                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector128<ulong>>(otherSpan);
+                var count = M.Min(selfVectorSpan.Length, otherVectorSpan.Length);
+                for (var i = 0; i < count; i++)
+                {
+                    var selfChunk = selfVectorSpan[i];
+                    var otherChunk = otherVectorSpan[i];
+                    if ((selfChunk & otherChunk) != otherChunk)
+                    {
+                        return false;
+                    }
+                }
+
+                processed += count * Vector128<ulong>.Count;
+            }
+
+            for (var i = processed; i < chunkCount; i++)
+            {
+                var selfChunk = selfSpan[i];
+                var otherChunk = otherSpan[i];
+                if ((selfChunk & otherChunk) != otherChunk)
+                {
+                    return false;
+                }
             }
         }
 
         // Handle remaining chunks in other
         // If any remaining chunks are non-zero, then this set is not a superset
-        for (var i = chunkCount; i < otherSpan.Length; i++)
+        var remainingOtherSpan = otherSpan[chunkCount..];
         {
-            var otherChunk = otherSpan[i];
-            if (otherChunk != 0)
+            if (Vector256.IsHardwareAccelerated && remainingOtherSpan.Length >= Vector256<ulong>.Count)
             {
-                return false;
+                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector256<ulong>>(remainingOtherSpan);
+                foreach (var otherChunk in otherVectorSpan)
+                {
+                    if (otherChunk != Vector256<ulong>.Zero)
+                    {
+                        return false;
+                    }
+                }
+
+                remainingOtherSpan = remainingOtherSpan[(otherVectorSpan.Length * Vector256<ulong>.Count)..];
+            }
+            else if (Vector128.IsHardwareAccelerated && remainingOtherSpan.Length >= Vector128<ulong>.Count)
+            {
+                var otherVectorSpan = MemoryMarshal.Cast<ulong, Vector128<ulong>>(remainingOtherSpan);
+                foreach (var otherChunk in otherVectorSpan)
+                {
+                    if (otherChunk != Vector128<ulong>.Zero)
+                    {
+                        return false;
+                    }
+                }
+
+                remainingOtherSpan = remainingOtherSpan[(otherVectorSpan.Length * Vector128<ulong>.Count)..];
+            }
+
+            foreach (var otherChunk in remainingOtherSpan)
+            {
+                if (otherChunk != 0)
+                {
+                    return false;
+                }
             }
         }
 
