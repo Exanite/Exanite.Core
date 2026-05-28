@@ -21,12 +21,12 @@ namespace Exanite.Core.Collections;
 /// This is because this data structure is designed for storing flags, which do not make sense to bitshift.
 /// </remarks>
 [CollectionBuilder(typeof(BitSet), nameof(Create))]
-public class BitSet : IEnumerable<int>
+public class BitSet : IReadOnlyBitSet
 {
-    private const int DefaultChunkCount = 1;
-    private const int BitsPerChunk = sizeof(ulong) * 8;
-    private const int Shift = 6;
-    private const int Mask = (1 << Shift) - 1;
+    internal const int DefaultChunkCount = 1;
+    internal const int BitsPerChunk = sizeof(ulong) * 8;
+    internal const int Shift = 6;
+    internal const int Mask = (1 << Shift) - 1;
 
     private ulong[] chunks;
 
@@ -174,12 +174,12 @@ public class BitSet : IEnumerable<int>
         return bitset;
     }
 
-    public void UnionWith(BitSet other)
+    public void UnionWith(IReadOnlyBitSet other)
     {
         UnionWith(other, this);
     }
 
-    public void UnionWith(BitSet other, BitSet results)
+    public void UnionWith(IReadOnlyBitSet other, BitSet results)
     {
         var selfSpan = Chunks;
         var otherSpan = other.Chunks;
@@ -255,12 +255,12 @@ public class BitSet : IEnumerable<int>
         }
     }
 
-    public void IntersectWith(BitSet other)
+    public void IntersectWith(IReadOnlyBitSet other)
     {
         IntersectWith(other, this);
     }
 
-    public void IntersectWith(BitSet other, BitSet results)
+    public void IntersectWith(IReadOnlyBitSet other, BitSet results)
     {
         var selfSpan = Chunks;
         var otherSpan = other.Chunks;
@@ -303,12 +303,12 @@ public class BitSet : IEnumerable<int>
         }
     }
 
-    public void ExceptWith(BitSet other)
+    public void ExceptWith(IReadOnlyBitSet other)
     {
         ExceptWith(other, this);
     }
 
-    public void ExceptWith(BitSet other, BitSet results)
+    public void ExceptWith(IReadOnlyBitSet other, BitSet results)
     {
         var selfSpan = Chunks;
         var otherSpan = other.Chunks;
@@ -376,12 +376,12 @@ public class BitSet : IEnumerable<int>
         }
     }
 
-    public void SymmetricExceptWith(BitSet other)
+    public void SymmetricExceptWith(IReadOnlyBitSet other)
     {
         SymmetricExceptWith(other, this);
     }
 
-    public void SymmetricExceptWith(BitSet other, BitSet results)
+    public void SymmetricExceptWith(IReadOnlyBitSet other, BitSet results)
     {
         var selfSpan = Chunks;
         var otherSpan = other.Chunks;
@@ -457,22 +457,22 @@ public class BitSet : IEnumerable<int>
         }
     }
 
-    public bool IsProperSubsetOf(BitSet other)
+    public bool IsProperSubsetOf(IReadOnlyBitSet other)
     {
         return Count < other.Count && IsSubsetOf(other);
     }
 
-    public bool IsProperSupersetOf(BitSet other)
+    public bool IsProperSupersetOf(IReadOnlyBitSet other)
     {
         return Count > other.Count && IsSupersetOf(other);
     }
 
-    public bool IsSubsetOf(BitSet other)
+    public bool IsSubsetOf(IReadOnlyBitSet other)
     {
         return other.IsSupersetOf(this);
     }
 
-    public bool IsSupersetOf(BitSet other)
+    public bool IsSupersetOf(IReadOnlyBitSet other)
     {
         var selfSpan = Chunks;
         var otherSpan = other.Chunks;
@@ -540,7 +540,7 @@ public class BitSet : IEnumerable<int>
         return true;
     }
 
-    public bool Overlaps(BitSet other)
+    public bool Overlaps(IReadOnlyBitSet other)
     {
         var selfSpan = Chunks;
         var otherSpan = other.Chunks;
@@ -581,7 +581,7 @@ public class BitSet : IEnumerable<int>
         return false;
     }
 
-    public bool SetEquals(BitSet other)
+    public bool SetEquals(IReadOnlyBitSet other)
     {
         var selfSpan = Chunks;
         var otherSpan = other.Chunks;
@@ -698,9 +698,9 @@ public class BitSet : IEnumerable<int>
         chunks = newChunks;
     }
 
-    public Enumerator GetEnumerator()
+    public BitSetEnumerator GetEnumerator()
     {
-        return new Enumerator(this);
+        return new BitSetEnumerator(this);
     }
 
     IEnumerator<int> IEnumerable<int>.GetEnumerator()
@@ -711,55 +711,5 @@ public class BitSet : IEnumerable<int>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
-    }
-
-    public struct Enumerator : IEnumerator<int>
-    {
-        private readonly BitSet bitset;
-
-        private int bitI = -1;
-
-        public int Current { get; private set; } = -1;
-        object IEnumerator.Current => Current;
-
-        public Enumerator(BitSet bitset)
-        {
-            this.bitset = bitset;
-        }
-
-        public bool MoveNext()
-        {
-            bitI++;
-
-            var chunkI = bitI >> Shift;
-            var bitInChunkI = bitI & Mask;
-            while (chunkI < bitset.Chunks.Length)
-            {
-                var chunk = bitset.Chunks[chunkI];
-
-                // Ignore already visited bits
-                chunk >>= bitInChunkI;
-
-                if (chunk != 0)
-                {
-                    // Find next 1 bit
-                    var trailingZeroCount = BitOperations.TrailingZeroCount(chunk);
-                    bitI += trailingZeroCount + 1;
-                    Current = bitI - 1;
-
-                    return true;
-                }
-
-                // Chunk has no more 1 bits
-                bitI += BitsPerChunk - bitInChunkI;
-                chunkI = bitI >> Shift;
-                bitInChunkI = bitI & Mask;
-            }
-
-            return false;
-        }
-
-        public void Reset() => throw new NotSupportedException();
-        public void Dispose() {}
     }
 }
