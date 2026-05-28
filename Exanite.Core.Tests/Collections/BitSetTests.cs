@@ -316,9 +316,10 @@ public class BitSetTests
     {
         BitSet a = [0, 5, 63, 64, 127];
         BitSet b = [5, 64, 128, 250];
-        var results = new BitSet();
 
-        // Fill with garbage data
+        // Initialize results with garbage data
+        var results = new BitSet();
+        results.EnsureCapacity(10000);
         results.Chunks.Fill(ulong.MaxValue);
 
         a.UnionWith(b, results);
@@ -333,9 +334,10 @@ public class BitSetTests
     {
         BitSet a = [0, 5, 63, 64, 127];
         BitSet b = [5, 64, 128, 250];
-        var results = new BitSet();
 
-        // Fill with garbage data
+        // Initialize results with garbage data
+        var results = new BitSet();
+        results.EnsureCapacity(10000);
         results.Chunks.Fill(ulong.MaxValue);
 
         a.IntersectWith(b, results);
@@ -350,9 +352,10 @@ public class BitSetTests
     {
         BitSet a = [0, 5, 63, 64, 127];
         BitSet b = [5, 64, 128, 250];
-        var results = new BitSet();
 
-        // Fill with garbage data
+        // Initialize results with garbage data
+        var results = new BitSet();
+        results.EnsureCapacity(10000);
         results.Chunks.Fill(ulong.MaxValue);
 
         a.ExceptWith(b, results);
@@ -367,9 +370,10 @@ public class BitSetTests
     {
         BitSet a = [0, 5, 63, 64, 127];
         BitSet b = [5, 64, 128, 250];
-        var results = new BitSet();
 
-        // Fill with garbage data
+        // Initialize results with garbage data
+        var results = new BitSet();
+        results.EnsureCapacity(10000);
         results.Chunks.Fill(ulong.MaxValue);
 
         a.SymmetricExceptWith(b, results);
