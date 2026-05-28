@@ -9,7 +9,7 @@ public struct BitSetEnumerator : IEnumerator<int>
 {
     private readonly IReadOnlyBitSet bitset;
 
-    private int bitI = -1;
+    private int bitI = 0;
 
     public int Current { get; private set; } = -1;
     object IEnumerator.Current => Current;
@@ -21,8 +21,6 @@ public struct BitSetEnumerator : IEnumerator<int>
 
     public bool MoveNext()
     {
-        bitI++;
-
         var chunkI = bitI >> BitSet.Shift;
         var bitInChunkI = bitI & BitSet.Mask;
         while (chunkI < bitset.Chunks.Length)

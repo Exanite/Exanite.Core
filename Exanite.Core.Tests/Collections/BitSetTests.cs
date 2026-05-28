@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Exanite.Core.Collections;
 using Xunit;
 
@@ -88,10 +89,13 @@ public class BitSetTests
         for (var i = 0; i < 10000; i++)
         {
             expected.Add(i * 2);
+            expected.Add(i * 3);
+
             bitset[i * 2] = true;
+            bitset[i * 3] = true;
         }
 
-        Assert.Equal(expected, bitset);
+        Assert.Equal(expected.Distinct().Order(), bitset);
     }
 
     [Fact]
