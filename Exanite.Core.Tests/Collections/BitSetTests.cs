@@ -151,8 +151,8 @@ public class BitSetTests
 
         Assert.True(a.IsProperSupersetOf(b));
 
-        // True for Overlaps
-        // False for SetEquals
+        Assert.True(a.Overlaps(b));
+        Assert.False(a.SetEquals(b));
     }
 
     [Fact]
@@ -195,8 +195,8 @@ public class BitSetTests
 
         Assert.True(a.IsProperSupersetOf(b));
 
-        // True for Overlaps
-        // False for SetEquals
+        Assert.True(a.Overlaps(b));
+        Assert.False(a.SetEquals(b));
     }
 
     [Fact]
@@ -211,8 +211,8 @@ public class BitSetTests
         Assert.True(a.IsSubsetOf(b));
         Assert.True(b.IsSubsetOf(a));
 
-        // False for Overlaps
-        // True for SetEquals
+        Assert.False(a.Overlaps(b));
+        Assert.True(a.SetEquals(b));
     }
 
     [Fact]
@@ -229,7 +229,8 @@ public class BitSetTests
         Assert.False(a.IsProperSubsetOf(a));
         Assert.False(a.IsProperSupersetOf(a));
 
-        // True for Overlaps, SetEquals
+        Assert.True(a.Overlaps(a));
+        Assert.True(a.SetEquals(a));
     }
 
     [Fact]
