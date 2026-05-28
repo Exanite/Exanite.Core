@@ -29,7 +29,7 @@ public interface IReadOnlyBitSet : IEnumerable<int>
     public bool Overlaps(IReadOnlyBitSet other);
     public bool SetEquals(IReadOnlyBitSet other);
 
-    /// <inheritdoc cref="BitSet.this"/>
+    /// <inheritdoc cref="BitSet.CopyTo"/>
     public void CopyTo(BitSet other);
 
     public new BitSetEnumerator GetEnumerator();
