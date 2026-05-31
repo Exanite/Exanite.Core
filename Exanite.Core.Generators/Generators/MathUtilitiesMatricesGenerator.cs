@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Exanite.CodeGen;
 using Exanite.Core.Io;
 
-namespace Exanite.Core.Generator.Generators;
+namespace Exanite.Core.Generators.Generators;
 
 public class MathUtilitiesMatricesGenerator
 {

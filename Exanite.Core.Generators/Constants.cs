@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 
-namespace Exanite.Core.Generator;
+namespace Exanite.Core.Generators;
 
 public static class GeneratorConstants
 {

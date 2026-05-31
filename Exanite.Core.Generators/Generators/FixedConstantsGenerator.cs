@@ -4,7 +4,7 @@ using Exanite.Core.Io;
 using Exanite.Core.Numerics;
 using Exanite.Core.Utilities;
 
-namespace Exanite.Core.Generator.Generators;
+namespace Exanite.Core.Generators.Generators;
 
 public class FixedConstantsGenerator
 {

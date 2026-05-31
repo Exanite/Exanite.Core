@@ -1,8 +1,8 @@
-using Exanite.Core.Generator.Generators;
+using Exanite.Core.Generators.Generators;
 using Exanite.Core.Io;
 using Exanite.Core.Utilities;
 
-namespace Exanite.Core.Generator;
+namespace Exanite.Core.Generators;
 
 public class Program
 {
