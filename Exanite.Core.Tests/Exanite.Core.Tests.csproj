@@ -9,10 +9,6 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup>
-    <NoWarn>$(NoWarn);xUnit2013</NoWarn> <!-- Don't care about Assert.Empty/NotEmpty/Single -->
-    <NoWarn>$(NoWarn);xUnit2017</NoWarn> <!-- Don't care about Assert.Contains/DoesNotContain -->
-  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0"/>
