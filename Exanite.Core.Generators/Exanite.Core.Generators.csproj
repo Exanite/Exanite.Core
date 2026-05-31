@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>Exanite.Core.Generator</AssemblyName>
-    <RootNamespace>Exanite.Core.Generator</RootNamespace>
+    <RootNamespace>Exanite.Core</RootNamespace>
 
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
