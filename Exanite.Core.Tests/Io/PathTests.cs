@@ -158,6 +158,17 @@ public class PathTests
         }
     }
 
+    [Theory]
+    [InlineData("Path/A", true)]
+    [InlineData("Path", false)]
+    [InlineData("Path/..", false)]
+    [InlineData("Paths", false)]
+    public void AbsolutePath_Contains(string other, bool expected)
+    {
+        var path = new AbsolutePath("Path");
+        Assert.Equal(expected, path.Contains(other));
+    }
+
     [Fact]
     public void AbsolutePath_Split_ReturnsExpectedValue()
     {

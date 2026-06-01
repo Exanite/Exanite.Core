@@ -405,6 +405,19 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     }
 
     /// <summary>
+    /// Returns whether this path contains the other path.
+    /// </summary>
+    public bool Contains(AbsolutePath other)
+    {
+        if (other.Length <= path.Length || !other.path.StartsWith(path))
+        {
+            return false;
+        }
+
+        return other.path[path.Length] == Path.AltDirectorySeparatorChar;
+    }
+
+    /// <summary>
     /// Gets a relative path from this path to another path.
     /// </summary>
     public RelativePath GetRelativePathTo(AbsolutePath other)
