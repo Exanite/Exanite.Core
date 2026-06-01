@@ -169,6 +169,18 @@ public class PathTests
     {
         var path = new AbsolutePath(current);
         Assert.Equal(expected, path.Contains(other));
+        Assert.Equal(expected, path.Contains(other, out _));
+    }
+
+    [Theory]
+    [InlineData("Path", "Path/A", "A")]
+    [InlineData("Path/A/B", "Path/A/B/../B/C", "C")]
+    public void AbsolutePath_Contains_ReturnsCorrectRelative(string current, string other, string expected)
+    {
+        var path = new AbsolutePath(current);
+        Assert.True(path.Contains(other));
+        Assert.True(path.Contains(other, out var relativePath));
+        Assert.Equal(new RelativePath(expected), relativePath);
     }
 
     [Fact]
