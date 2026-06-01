@@ -409,12 +409,7 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     /// </summary>
     public bool Contains(AbsolutePath other)
     {
-        if (other.Length <= path.Length || !other.path.StartsWith(path))
-        {
-            return false;
-        }
-
-        return other.path[path.Length] == Path.AltDirectorySeparatorChar;
+        return other.Length > path.Length && other.path.StartsWith(path) && other.path[path.Length] == Path.AltDirectorySeparatorChar;
     }
 
     /// <summary>
