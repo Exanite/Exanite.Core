@@ -159,13 +159,13 @@ public class PathTests
     }
 
     [Theory]
-    [InlineData("Path/A", true)]
-    [InlineData("Path", false)]
-    [InlineData("Path/..", false)]
-    [InlineData("Paths", false)]
-    public void AbsolutePath_Contains(string other, bool expected)
+    [InlineData("Path", "Path/A", true)]
+    [InlineData("Path", "Path", false)]
+    [InlineData("Path", "Path/..", false)]
+    [InlineData("Path", "Paths", false)]
+    public void AbsolutePath_Contains(string current, string other, bool expected)
     {
-        var path = new AbsolutePath("Path");
+        var path = new AbsolutePath(current);
         Assert.Equal(expected, path.Contains(other));
     }
 
