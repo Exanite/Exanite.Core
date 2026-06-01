@@ -163,6 +163,8 @@ public class PathTests
     [InlineData("Path", "Path", false)]
     [InlineData("Path", "Path/..", false)]
     [InlineData("Path", "Paths", false)]
+    [InlineData("Path/A/B", "Path/A/B/../B", false)]
+    [InlineData("Path/A/B", "Path/A/B/../B/C", true)]
     public void AbsolutePath_Contains(string current, string other, bool expected)
     {
         var path = new AbsolutePath(current);
