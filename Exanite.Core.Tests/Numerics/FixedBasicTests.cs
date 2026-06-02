@@ -1,4 +1,3 @@
-using System;
 using Exanite.Core.Numerics;
 using Xunit;
 

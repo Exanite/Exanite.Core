@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Numerics;
-using Exanite.Core.Numerics;
 
 namespace Exanite.Core.Utilities;
 
