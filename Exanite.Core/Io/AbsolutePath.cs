@@ -213,6 +213,30 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
     }
 
     /// <summary>
+    /// Reads the entire file at this path as text.
+    /// </summary>
+    public string ReadAllText()
+    {
+        return File.ReadAllText(path);
+    }
+
+    /// <summary>
+    /// Reads the entire file at this path as lines.
+    /// </summary>
+    public string[] ReadAllLines()
+    {
+        return File.ReadAllLines(path);
+    }
+
+    /// <summary>
+    /// Reads the entire file at this path as bytes.
+    /// </summary>
+    public byte[] ReadAllBytes()
+    {
+        return File.ReadAllBytes(path);
+    }
+
+    /// <summary>
     /// Writes the specified text to a new file at this path.
     /// If the file already exists, it is overwritten.
     /// </summary>
