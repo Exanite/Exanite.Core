@@ -82,7 +82,6 @@ public class FixedFormatTests
         [
             new TheoryDataRow<Fixed, string, string>(Fixed.FromDecimal(1234, 5, 1), "en-US", "1,234.5"),
             new TheoryDataRow<Fixed, string, string>(Fixed.FromDecimal(1234, 5, 1), "de-DE", "1.234,5"),
-            new TheoryDataRow<Fixed, string, string>(Fixed.FromDecimal(1234, 5, 1), "en-US", "1,234.5"),
             new TheoryDataRow<Fixed, string, string>(Fixed.FromDecimal(1234, 5, 1), "fa-IR", "1٬234٫5"),
             new TheoryDataRow<Fixed, string, string>(Fixed.FromDecimal(-1234, 5, 1), "ar-SA", arSaExpected),
         ];
