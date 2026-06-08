@@ -6,7 +6,7 @@ namespace Exanite.Core.Types;
 /// <summary>
 /// Type expander that returns all interfaces implemented by the input type.
 /// </summary>
-public class InterfaceTypeExpander : ITypeExpander
+public class InterfacesTypeExpander : ITypeExpander
 {
     public IEnumerable<Type> Expand(Type type)
     {

@@ -10,7 +10,7 @@ public static class TypeExpanders
     /// <summary>
     /// Type expander that returns all interfaces implemented by the input type.
     /// </summary>
-    public static ITypeExpander Interfaces { get; } = new InterfaceTypeExpander();
+    public static ITypeExpander Interfaces { get; } = new InterfacesTypeExpander();
 
     /// <summary>
     /// Type expander that returns the class inheritance hierarchy of the input type.
@@ -19,11 +19,11 @@ public static class TypeExpanders
     /// <remarks>
     /// Interfaces are not returned.
     /// </remarks>
-    public static ITypeExpander Hierarchy { get; } = new InheritanceHierarchyTypeExpander();
+    public static ITypeExpander Hierarchy { get; } = new HierarchyTypeExpander();
 
     /// <summary>
     /// Type expander that returns the union of the <see cref="Hierarchy"/> and <see cref="Interfaces"/> type expanders.
     /// The input type is included as part of the results.
     /// </summary>
-    public static ITypeExpander HierarchyAndInterfaces { get; } = new TypeExpander([new InterfaceTypeExpander(), new InheritanceHierarchyTypeExpander()]);
+    public static ITypeExpander HierarchyAndInterfaces { get; } = new TypeExpander([new InterfacesTypeExpander(), new HierarchyTypeExpander()]);
 }

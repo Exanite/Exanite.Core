@@ -10,7 +10,7 @@ namespace Exanite.Core.Types;
 /// <remarks>
 /// Interfaces are not returned.
 /// </remarks>
-public class InheritanceHierarchyTypeExpander : ITypeExpander
+public class HierarchyTypeExpander : ITypeExpander
 {
     /// <summary>
     /// A set of types that determine when the type expander stops traversing the type inheritance hierarchy.
@@ -33,7 +33,7 @@ public class InheritanceHierarchyTypeExpander : ITypeExpander
     /// </summary>
     public bool IncludeBaseType { get; init; } = false;
 
-    public InheritanceHierarchyTypeExpander(IEnumerable<Type>? baseTypes = null)
+    public HierarchyTypeExpander(IEnumerable<Type>? baseTypes = null)
     {
         baseTypes ??= [];
         BaseTypes = baseTypes.ToHashSet();
