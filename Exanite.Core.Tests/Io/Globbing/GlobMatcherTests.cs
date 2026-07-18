@@ -35,8 +35,8 @@ public class GlobMatcherTests
         Assert.IsType<LiteralGlobSegment>(globPattern.Segments[2]);
         Assert.Equal("assets", ((LiteralGlobSegment)globPattern.Segments[2]).Value);
 
-        Assert.IsType<StarGlobSegment>(globPattern.Segments[3]);
-        Assert.Equal("*", ((StarGlobSegment)globPattern.Segments[3]).Value);
+        Assert.IsType<PatternGlobSegment>(globPattern.Segments[3]);
+        Assert.Equal("*", ((PatternGlobSegment)globPattern.Segments[3]).Value);
 
         Assert.IsType<PatternGlobSegment>(globPattern.Segments[4]);
         Assert.Equal("*.txt", ((PatternGlobSegment)globPattern.Segments[4]).Value);
