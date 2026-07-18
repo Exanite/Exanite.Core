@@ -24,24 +24,34 @@ public static class GlobConstants
 }
 
 /// <summary>
-/// Finds files matching a set of specified glob patterns.
+/// Finds files matching a specified set of glob patterns.
+/// Patterns are case-sensitive for cross-platform consistency.
+/// Traversal is optimized by only traversing through relevant folders.
 /// <para/>
 /// Supported features:
 /// <list type="bullet">
-///     <item><description><c>!</c> for excluding matches.</description></item>
-///     <item><description><c>?</c> for matching exactly one character.</description></item>
-///     <item><description><c>*</c> for matching any number of characters.</description></item>
-///     <item><description><c>**</c> for matching any number of folder levels.</description></item>
+///     <item><description><c>/</c> as a path segment separator.</description></item>
+///     <item><description><c>!</c> at the beginning of a pattern for excluding matches.</description></item>
+///     <item><description><c>?</c> within a segment for matching exactly one character.</description></item>
+///     <item><description><c>*</c> within a segment for matching zero or more characters.</description></item>
+///     <item><description><c>**</c> as a segment for matching zero or more folder levels.</description></item>
 /// </list>
+/// Characters not used by supported features are matched directly against file and folder names.
+/// <para/>
 /// Unsupported features:
 /// <list type="bullet">
-///     <item><description><c>\</c> characters. Use <c>/</c> instead.</description></item>
-///     <item><description><c>.</c> for matching the current folder.</description></item>
-///     <item><description><c>..</c> for matching the parent folder.</description></item>
+///     <item><description><c>\</c> as a path segment separator. Use <c>/</c> instead.</description></item>
+///     <item><description><c>.</c> for matching the current folder. Using these will throw an error.</description></item>
+///     <item><description><c>..</c> for matching the parent folder. Using these will throw an error.</description></item>
 ///     <item><description><c>[abc]</c> for matching character sets.</description></item>
 ///     <item><description><c>[a-z]</c> for matching character ranges.</description></item>
 ///     <item><description><c>{a,b,c}</c> for matching expanded character sets.</description></item>
+///     <item><description>
+///         Matching folders in general, such as by using a trailing <c>/</c>.
+///         This glob implementation only works on files. For example, use <c>folder/**</c> instead of <c>folder/</c>.
+///     </description></item>
 /// </list>
+/// <para/>
 /// </summary>
 public class GlobMatcher
 {
@@ -103,7 +113,7 @@ public class GlobMatcher
             results.Add(new PatternGlobSegment(segment.ToString()));
         }
 
-        GuardUtility.IsFalse(results.Count == 0, "Pattern must no");
+        GuardUtility.IsFalse(results.Count == 0, "Pattern must not have zero segments");
 
         return new GlobPattern(results, isExclude);
     }
@@ -145,7 +155,8 @@ public class LiteralGlobSegment : IGlobSegment
 
 /// <summary>
 /// Matches a file or folder name by pattern.
-/// Supports <c>?</c> for matching one character and <c>*</c> for any number of characters.
+/// Supports <c>?</c> for matching exactly one character
+/// and <c>*</c> for matching zero or more characters.
 /// </summary>
 public class PatternGlobSegment : IGlobSegment
 {

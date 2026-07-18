@@ -508,7 +508,7 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
 
     /// <summary>
     /// Finds files matching a glob pattern using this path as the root path.
-    /// Patterns are case-sensitive (for cross-platform consistency).
+    /// Patterns are case-sensitive for cross-platform consistency.
     /// </summary>
     public AbsolutePath[] GlobFiles(string pattern)
     {
