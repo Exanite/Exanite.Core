@@ -37,11 +37,11 @@ public class GlobMatcherTests
 
     [Theory]
     [InlineData("abc")]
-    [InlineData("!abc")]
     [InlineData("hello.world")]
     public void Valid(string pattern)
     {
         _ = GlobMatcher.Parse(pattern);
+        _ = GlobMatcher.Parse($"!{pattern}");
     }
 
     [Theory]
@@ -61,6 +61,11 @@ public class GlobMatcherTests
         Assert.ThrowsAny<Exception>(() =>
         {
             _ = GlobMatcher.Parse(pattern);
+        });
+
+        Assert.ThrowsAny<Exception>(() =>
+        {
+            _ = GlobMatcher.Parse($"!{pattern}");
         });
     }
 }
