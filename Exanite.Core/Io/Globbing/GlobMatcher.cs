@@ -7,16 +7,23 @@ namespace Exanite.Core.Io.Globbing;
 
 public static class GlobConstants
 {
-    public const string Slash = "/";
+    public const string FolderSeparator = "/";
+
     public const string Star = "*";
     public const string DoubleStar = "**";
-    public const string Dot = ".";
-    public const string DoubleDot = "..";
+
+    public const string QuestionMark = "?";
+
+    public const string CurrentFolderReference = ".";
+    public const string ParentFolderReference = "..";
 
     public static readonly SearchValues<char> PatternCharacters = SearchValues.Create('*');
     public static readonly SearchValues<char> BannedCharacters = SearchValues.Create('\\');
 }
 
+/// <summary>
+/// Finds files matching the specified glob pattern.
+/// </summary>
 public class GlobMatcher
 {
     public GlobMatcher(IEnumerable<string> patterns)
@@ -26,7 +33,7 @@ public class GlobMatcher
 
     public static GlobPattern Parse(string pattern)
     {
-        var segments = pattern.Split(GlobConstants.Slash);
+        var segments = pattern.Split(GlobConstants.FolderSeparator);
         var results = new List<IGlobSegment>();
 
         foreach (var segment in segments)
@@ -45,7 +52,7 @@ public class GlobMatcher
                 continue;
             }
 
-            if (segment is GlobConstants.Dot or GlobConstants.DoubleDot)
+            if (segment is GlobConstants.CurrentFolderReference or GlobConstants.ParentFolderReference)
             {
                 GuardUtility.Throw($"Pattern cannot contain the following segment: {segment}");
             }
@@ -93,7 +100,7 @@ public class GlobPattern
 
     public override string ToString()
     {
-        return string.Join(GlobConstants.Slash, Segments.Select(segment => segment.Value));
+        return string.Join(GlobConstants.FolderSeparator, Segments.Select(segment => segment.Value));
     }
 }
 
@@ -110,6 +117,10 @@ public class LiteralGlobSegment : IGlobSegment
     }
 }
 
+/// <summary>
+/// Matches a file or folder name by pattern.
+/// Supports <c>?</c> for matching one character and <c>*</c> for any number of characters.
+/// </summary>
 public class PatternGlobSegment : IGlobSegment
 {
     public string Value { get; }
@@ -120,16 +131,25 @@ public class PatternGlobSegment : IGlobSegment
     }
 }
 
+/// <summary>
+/// Matches any file or folder name.
+/// </summary>
 public class StarGlobSegment : IGlobSegment
 {
     public string Value => "*";
 }
 
+/// <summary>
+/// Matches any file or folder name, recursively.
+/// </summary>
 public class DoubleStarGlobSegment : IGlobSegment
 {
     public string Value => "**";
 }
 
+/// <summary>
+/// Represents a parsed segment of a glob pattern.
+/// </summary>
 public interface IGlobSegment
 {
     public string Value { get; }
