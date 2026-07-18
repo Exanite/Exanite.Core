@@ -55,9 +55,16 @@ public static class GlobConstants
 /// </summary>
 public class GlobMatcher
 {
+    private readonly GlobPattern[] patterns;
+
     public GlobMatcher(IEnumerable<string> patterns)
     {
+        this.patterns = patterns.Select(Parse).ToArray();
+    }
 
+    public GlobMatcher(IEnumerable<GlobPattern> patterns)
+    {
+        this.patterns = patterns.ToArray();
     }
 
     public static GlobPattern Parse(string pattern)
