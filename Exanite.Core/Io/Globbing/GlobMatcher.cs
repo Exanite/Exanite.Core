@@ -160,8 +160,3 @@ public interface IGlobDirectory
 {
 
 }
-
-public interface IGlobFile
-{
-
-}
