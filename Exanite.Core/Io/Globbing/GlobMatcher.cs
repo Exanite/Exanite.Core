@@ -1,3 +1,4 @@
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,8 @@ namespace Exanite.Core.Io.Globbing;
 public static class GlobConstants
 {
     public const string PathSeparator = "/";
+
+    public const string Exclude = "!";
 
     public const string DoubleStar = "**";
 
@@ -25,6 +28,7 @@ public static class GlobConstants
 /// <para/>
 /// Supported features:
 /// <list type="bullet">
+///     <item><description><c>!</c> for excluding matches.</description></item>
 ///     <item><description><c>?</c> for matching exactly one character.</description></item>
 ///     <item><description><c>*</c> for matching any number of characters.</description></item>
 ///     <item><description><c>**</c> for matching any number of folder levels.</description></item>
@@ -48,16 +52,26 @@ public class GlobMatcher
 
     public static GlobPattern Parse(string pattern)
     {
-        var segments = pattern.Split(GlobConstants.PathSeparator);
+        var patternSpan = pattern.AsSpan();
+
+        var isExclude = false;
+        if (patternSpan.StartsWith(GlobConstants.Exclude))
+        {
+            isExclude = true;
+            patternSpan = patternSpan[GlobConstants.Exclude.Length..];
+        }
+
+        var segmentRanges = patternSpan.Split(GlobConstants.PathSeparator);
         var results = new List<IGlobSegment>();
 
-        foreach (var segment in segments)
+        foreach (var segmentRange in segmentRanges)
         {
+            var segment = patternSpan[segmentRange];
             GuardUtility.IsFalse(segment.Length == 0, "Pattern cannot contain a zero length segment");
 
-            if (segment == GlobConstants.DoubleStar)
+            if (segment is GlobConstants.DoubleStar)
             {
-                results.Add(new DoubleStarGlobSegment());
+                results.Add(DoubleStarGlobSegment.Instance);
                 continue;
             }
 
@@ -82,16 +96,16 @@ public class GlobMatcher
 
             if (!hasPatternCharacter)
             {
-                results.Add(new LiteralGlobSegment(segment));
+                results.Add(new LiteralGlobSegment(segment.ToString()));
                 continue;
             }
 
-            results.Add(new PatternGlobSegment(segment));
+            results.Add(new PatternGlobSegment(segment.ToString()));
         }
 
         GuardUtility.IsFalse(results.Count == 0, "Pattern must no");
 
-        return new GlobPattern(results);
+        return new GlobPattern(results, isExclude);
     }
 }
 
@@ -102,14 +116,17 @@ public class GlobPattern
 {
     public IReadOnlyList<IGlobSegment> Segments { get; }
 
-    public GlobPattern(IEnumerable<IGlobSegment> segments)
+    public bool IsExclude { get; }
+
+    public GlobPattern(IEnumerable<IGlobSegment> segments, bool isExclude)
     {
+        IsExclude = isExclude;
         Segments = segments.ToArray();
     }
 
     public override string ToString()
     {
-        return string.Join(GlobConstants.PathSeparator, Segments.Select(segment => segment.Value));
+        return $"{(IsExclude ? "!" : "")}{string.Join(GlobConstants.PathSeparator, Segments.Select(segment => segment.Value))}";
     }
 }
 
@@ -145,7 +162,11 @@ public class PatternGlobSegment : IGlobSegment
 /// </summary>
 public class DoubleStarGlobSegment : IGlobSegment
 {
+    public static readonly DoubleStarGlobSegment Instance = new();
+
     public string Value => "**";
+
+    private DoubleStarGlobSegment() {}
 }
 
 /// <summary>

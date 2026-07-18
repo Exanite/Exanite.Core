@@ -6,24 +6,13 @@ namespace Exanite.Core.Tests.Io.Globbing;
 
 public class GlobMatcherTests
 {
-    [Theory]
-    [InlineData("abc")]
-    [InlineData("hello.world")]
-    public void CanParseLiteral(string pattern)
+    [Fact]
+    public void CorrectStructure()
     {
+        var pattern = "!node_modules/**/assets/*/*.txt";
         var globPattern = GlobMatcher.Parse(pattern);
 
-        Assert.Equal(1, globPattern.Segments.Count);
-
-        Assert.IsType<LiteralGlobSegment>(globPattern.Segments[0]);
-        Assert.Equal(pattern, ((LiteralGlobSegment)globPattern.Segments[0]).Value);
-    }
-
-    [Fact]
-    public void CanParseComplex()
-    {
-        var globPattern = GlobMatcher.Parse("node_modules/**/assets/*/*.txt");
-
+        Assert.True(globPattern.IsExclude);
         Assert.Equal(5, globPattern.Segments.Count);
 
         Assert.IsType<LiteralGlobSegment>(globPattern.Segments[0]);
@@ -41,11 +30,24 @@ public class GlobMatcherTests
         Assert.IsType<PatternGlobSegment>(globPattern.Segments[4]);
         Assert.Equal("*.txt", ((PatternGlobSegment)globPattern.Segments[4]).Value);
 
-        Assert.Equal("node_modules/**/assets/*/*.txt", globPattern.ToString());
+        // Note that it is not a requirement that the parsed pattern is the exact same as the original.
+        // It just so happens to be the same in this case.
+        Assert.Equal(pattern, globPattern.ToString());
+    }
+
+    [Theory]
+    [InlineData("abc")]
+    [InlineData("!abc")]
+    [InlineData("hello.world")]
+    [InlineData("abc/")]
+    public void Valid(string pattern)
+    {
+        _ = GlobMatcher.Parse(pattern);
     }
 
     [Theory]
     [InlineData("..")]
+    [InlineData("folder//")]
     [InlineData("folder/..")]
     [InlineData("folder/../a/b/c")]
     [InlineData(".")]
