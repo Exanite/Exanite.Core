@@ -30,9 +30,7 @@ public class GlobMatcherTests
         Assert.IsType<PatternGlobSegment>(globPattern.Segments[4]);
         Assert.Equal("*.txt", ((PatternGlobSegment)globPattern.Segments[4]).Value);
 
-        // Note that it is not a requirement that the parsed pattern is the exact same as the original.
-        // It just so happens to be the same in this case.
-        Assert.Equal(pattern, globPattern.ToString());
+        Assert.Equal("!node_modules/**/assets/*/*.txt", globPattern.ToString());
     }
 
     [Theory]
@@ -48,12 +46,16 @@ public class GlobMatcherTests
     [InlineData("")]
     [InlineData(".")]
     [InlineData("..")]
+    [InlineData("abc!")]
     [InlineData("abc/")]
     [InlineData("folder//")]
+    [InlineData("folder/.")]
     [InlineData("folder/..")]
     [InlineData("folder/../a/b/c")]
     [InlineData("./a/b/c")]
     [InlineData("./a/./b")]
+    [InlineData("/")]
+    [InlineData("abc//abc")]
     [InlineData(@"folder\\a\\b\\c")]
     [InlineData(@"\\")]
     public void NotValid(string pattern)

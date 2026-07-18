@@ -19,8 +19,8 @@ public static class GlobConstants
     public const string CurrentFolderReference = ".";
     public const string ParentFolderReference = "..";
 
-    public static readonly SearchValues<char> PatternCharacters = SearchValues.Create('*', '?');
-    public static readonly SearchValues<char> BannedCharacters = SearchValues.Create('\\');
+    public static readonly SearchValues<char> SegmentPatternCharacters = SearchValues.Create('*', '?');
+    public static readonly SearchValues<char> SegmentBannedCharacters = SearchValues.Create('\\', '!');
 }
 
 /// <summary>
@@ -53,6 +53,10 @@ public static class GlobConstants
 /// </list>
 /// <para/>
 /// </summary>
+/// <remarks>
+/// Currently, files starting with <c>!</c> cannot be matched. This requires support for escape characters or matching the current character.
+/// TODO: This seems easy enough to fix?
+/// </remarks>
 public class GlobMatcher
 {
     private readonly GlobPattern[] patterns;
@@ -100,12 +104,12 @@ public class GlobMatcher
             var hasPatternCharacter = false;
             foreach (var c in segment)
             {
-                if (GlobConstants.BannedCharacters.Contains(c))
+                if (GlobConstants.SegmentBannedCharacters.Contains(c))
                 {
                     GuardUtility.Throw($"Pattern cannot contain the following character: {c}");
                 }
 
-                if (GlobConstants.PatternCharacters.Contains(c))
+                if (GlobConstants.SegmentPatternCharacters.Contains(c))
                 {
                     hasPatternCharacter = true;
                 }
