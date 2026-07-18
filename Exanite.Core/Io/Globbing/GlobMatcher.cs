@@ -1,4 +1,3 @@
-using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,7 +67,7 @@ public class GlobMatcher
 
     public GlobMatcher(IEnumerable<string> patterns)
     {
-        this.patterns = patterns.Select(Parse).ToArray();
+        this.patterns = patterns.Select(pattern => new GlobPattern(pattern)).ToArray();
     }
 
     public GlobMatcher(IEnumerable<GlobPattern> patterns)
@@ -131,6 +130,8 @@ public class GlobPattern
                     {
                         GuardUtility.Throw($"Pattern cannot contain the following segment: {segment}");
                     }
+
+                    // TODO
                 }
             }
         }
@@ -140,7 +141,7 @@ public class GlobPattern
 
     public override string ToString()
     {
-        return $"{(IsExclude ? GlobConstants.Exclude : "")}{string.Join(GlobConstants.PathSeparator, Segments.Select(segment => segment.Value))}";
+        return pattern;
     }
 }
 

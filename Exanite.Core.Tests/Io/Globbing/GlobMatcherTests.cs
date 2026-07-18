@@ -10,27 +10,26 @@ public class GlobMatcherTests
     public void CorrectStructure()
     {
         var pattern = "!node_modules/**/assets/*/*.txt";
-        var globPattern = GlobMatcher.Parse(pattern);
+        var globPattern = new GlobPattern(pattern);
 
         Assert.True(globPattern.IsExclude);
         Assert.Equal(5, globPattern.Segments.Count);
 
         Assert.IsType<LiteralGlobSegment>(globPattern.Segments[0]);
-        Assert.Equal("node_modules", ((LiteralGlobSegment)globPattern.Segments[0]).Value);
+        Assert.Equal("node_modules", ((LiteralGlobSegment)globPattern.Segments[0]).Literal);
 
         Assert.IsType<DoubleStarGlobSegment>(globPattern.Segments[1]);
-        Assert.Equal("**", ((DoubleStarGlobSegment)globPattern.Segments[1]).Value);
 
         Assert.IsType<LiteralGlobSegment>(globPattern.Segments[2]);
-        Assert.Equal("assets", ((LiteralGlobSegment)globPattern.Segments[2]).Value);
+        Assert.Equal("assets", ((LiteralGlobSegment)globPattern.Segments[2]).Literal);
 
         Assert.IsType<PatternGlobSegment>(globPattern.Segments[3]);
-        Assert.Equal("*", ((PatternGlobSegment)globPattern.Segments[3]).Value);
+        Assert.Equal("*", ((PatternGlobSegment)globPattern.Segments[3]).Pattern);
 
         Assert.IsType<PatternGlobSegment>(globPattern.Segments[4]);
-        Assert.Equal("*.txt", ((PatternGlobSegment)globPattern.Segments[4]).Value);
+        Assert.Equal("*.txt", ((PatternGlobSegment)globPattern.Segments[4]).Pattern);
 
-        Assert.Equal("!node_modules/**/assets/*/*.txt", globPattern.ToString());
+        Assert.Equal(pattern, globPattern.ToString());
     }
 
     [Theory]
@@ -42,8 +41,8 @@ public class GlobMatcherTests
     [InlineData("hello.world")]
     public void Valid(string pattern)
     {
-        _ = GlobMatcher.Parse(pattern);
-        _ = GlobMatcher.Parse($"!{pattern}");
+        _ = new GlobPattern(pattern);
+        _ = new GlobPattern($"!{pattern}");
     }
 
     [Theory]
@@ -65,12 +64,12 @@ public class GlobMatcherTests
     {
         Assert.ThrowsAny<Exception>(() =>
         {
-            _ = GlobMatcher.Parse(pattern);
+            _ = new GlobPattern(pattern);
         });
 
         Assert.ThrowsAny<Exception>(() =>
         {
-            _ = GlobMatcher.Parse($"!{pattern}");
+            _ = new GlobPattern($"!{pattern}");
         });
     }
 }
