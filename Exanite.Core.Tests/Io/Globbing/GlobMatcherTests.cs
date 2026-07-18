@@ -35,7 +35,11 @@ public class GlobMatcherTests
 
     [Theory]
     [InlineData("abc")]
+    [InlineData("abc!")]
     [InlineData("hello.world")]
+    [InlineData("\\!")]
+    [InlineData("\\?")]
+    [InlineData("\\*")]
     public void Valid(string pattern)
     {
         _ = GlobMatcher.Parse(pattern);
@@ -46,7 +50,6 @@ public class GlobMatcherTests
     [InlineData("")]
     [InlineData(".")]
     [InlineData("..")]
-    [InlineData("abc!")]
     [InlineData("abc/")]
     [InlineData("folder//")]
     [InlineData("folder/.")]

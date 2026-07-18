@@ -19,8 +19,15 @@ public static class GlobConstants
     public const string CurrentFolderReference = ".";
     public const string ParentFolderReference = "..";
 
+    /// <summary>
+    /// These characters have special meaning in a path segment.
+    /// </summary>
     public static readonly SearchValues<char> SegmentPatternCharacters = SearchValues.Create('*', '?');
-    public static readonly SearchValues<char> SegmentBannedCharacters = SearchValues.Create('\\', '!');
+
+    /// <summary>
+    /// These characters cannot be used within a path segment.
+    /// </summary>
+    public static readonly SearchValues<char> SegmentBannedCharacters = SearchValues.Create('\\', '/');
 }
 
 /// <summary>
@@ -31,6 +38,7 @@ public static class GlobConstants
 /// Supported features:
 /// <list type="bullet">
 ///     <item><description><c>/</c> as a path segment separator.</description></item>
+///     <item><description><c>\</c> as an escape character. The next character will be matched verbatim.</description></item>
 ///     <item><description><c>!</c> at the beginning of a pattern for excluding matches.</description></item>
 ///     <item><description><c>?</c> within a segment for matching exactly one character.</description></item>
 ///     <item><description><c>*</c> within a segment for matching zero or more characters.</description></item>
@@ -53,10 +61,6 @@ public static class GlobConstants
 /// </list>
 /// <para/>
 /// </summary>
-/// <remarks>
-/// Currently, files starting with <c>!</c> cannot be matched. This requires support for escape characters or matching the current character.
-/// TODO: This seems easy enough to fix?
-/// </remarks>
 public class GlobMatcher
 {
     private readonly GlobPattern[] patterns;
