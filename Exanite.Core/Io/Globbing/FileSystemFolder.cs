@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Enumeration;
 
 namespace Exanite.Core.Io.Globbing;
 
@@ -8,6 +9,14 @@ namespace Exanite.Core.Io.Globbing;
 /// </summary>
 public class FileSystemFolder : IGlobFolder
 {
+    private static readonly EnumerationOptions EnumerationOptions = new()
+    {
+        AttributesToSkip = FileAttributes.None,
+        IgnoreInaccessible = true,
+        ReturnSpecialDirectories = false,
+        RecurseSubdirectories = false,
+    };
+
     public string Path { get; private init; } = null!;
 
     private FileSystemFolder() {}
@@ -27,11 +36,18 @@ public class FileSystemFolder : IGlobFolder
 
     public IEnumerable<string> GetFolders()
     {
-        return Directory.EnumerateDirectories(Path);
+        return new FileSystemEnumerable<string>(Path, (ref entry) => entry.FileName.ToString(), EnumerationOptions)
+        {
+            ShouldIncludePredicate = static (ref entry) => entry.IsDirectory
+                && (entry.Attributes & FileAttributes.ReparsePoint) == 0, // Skip symlinks
+        };
     }
 
     public IEnumerable<string> GetFiles()
     {
-        return Directory.EnumerateFiles(Path);
+        return new FileSystemEnumerable<string>(Path, (ref entry) => entry.FileName.ToString(), EnumerationOptions)
+        {
+            ShouldIncludePredicate = static (ref entry) => !entry.IsDirectory,
+        };
     }
 }
