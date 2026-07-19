@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Exanite.Core.Pooling;
-using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Io.Globbing;
 
