@@ -116,6 +116,27 @@ public class BitSet : IReadOnlyBitSet
     }
 
     /// <summary>
+    /// Gets the index of the highest set bit. Returns -1 if the bitset is empty.
+    /// </summary>
+    public int Max
+    {
+        get
+        {
+            var span = Chunks;
+            for (var i = span.Length - 1; i >= 0; i--)
+            {
+                var chunk = span[i];
+                if (chunk != 0)
+                {
+                    return (i << Shift) + (63 - BitOperations.LeadingZeroCount(chunk));
+                }
+            }
+
+            return -1;
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the bit at the specified index.
     /// </summary>
     public bool this[int bitIndex]

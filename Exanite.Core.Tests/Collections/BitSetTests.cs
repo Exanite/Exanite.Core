@@ -21,6 +21,28 @@ public class BitSetTests
         Assert.Equal(3, bitset.Count);
     }
 
+    [Theory]
+    [InlineData(1)]
+    [InlineData(14)]
+    [InlineData(25)]
+    [InlineData(31)]
+    [InlineData(87)]
+    [InlineData(127)]
+    [InlineData(128)]
+    [InlineData(823)]
+    public void Max(int max)
+    {
+        var bitset = new BitSet();
+        var current = max;
+        while (current != 0)
+        {
+            bitset[current] = true;
+            current /= 2;
+        }
+
+        Assert.Equal(max, bitset.Max);
+    }
+
     [Fact]
     public void IsEmpty_ReturnsIfAllBitsAreFalse()
     {
