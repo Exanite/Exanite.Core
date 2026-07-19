@@ -25,14 +25,20 @@ public sealed class PatternGlobSegment : GlobSegment
             new(-1, default, false),
         };
 
-        foreach (var nameC in name)
+        for (var nameI = 0; nameI < name.Length; nameI++)
         {
-            foreach (ref var state in activeStates.AsSpan())
+            var c = name[nameI];
+            var isLast = nameI == name.Length - 1;
+
+            var span = activeStates.AsSpan();
+            for (var stateI = 0; stateI < span.Length; stateI++)
             {
+                ref var state = ref span[stateI];
+
                 // Initialize state if necessary
                 if (state.PatternIndex == -1 && !TryAdvanceState(ref state))
                 {
-                    return true;
+                    return isLast;
                 }
 
                 if (!state.IsEscaped)
@@ -41,8 +47,10 @@ public sealed class PatternGlobSegment : GlobSegment
                     {
                         if (!TryAdvanceState(ref state))
                         {
-                            return true;
+                            return isLast;
                         }
+
+                        continue;
                     }
 
                     if (state.ActiveSelector == '*')
@@ -50,16 +58,27 @@ public sealed class PatternGlobSegment : GlobSegment
                         // TODO
                         if (!TryAdvanceState(ref state))
                         {
-                            return true;
+                            return isLast;
                         }
+
+                        continue;
                     }
                 }
 
-                if (state.ActiveSelector == nameC && !TryAdvanceState(ref state))
+                if (state.ActiveSelector == c)
                 {
-                    return true;
+                    if (!TryAdvanceState(ref state))
+                    {
+                        return isLast;
+                    }
+
+                    continue;
                 }
+
+                state.IsAlive = false;
             }
+
+            activeStates.RemoveAll(static state => !state.IsAlive);
         }
 
         return false;
@@ -90,5 +109,5 @@ public sealed class PatternGlobSegment : GlobSegment
         return true;
     }
 
-    private record struct ActiveState(int PatternIndex, char ActiveSelector, bool IsEscaped);
+    private record struct ActiveState(int PatternIndex, char ActiveSelector, bool IsEscaped, bool IsAlive = true);
 }
