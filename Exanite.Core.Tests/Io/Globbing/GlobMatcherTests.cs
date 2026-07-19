@@ -32,6 +32,82 @@ public class GlobMatcherTests
         Assert.Equal(pattern, globPattern.ToString());
     }
 
+    [Fact]
+    public void EscapeCharacters()
+    {
+        {
+            var pattern = "**/hello**world #?/*";
+            var globPattern = new GlobPattern(pattern);
+
+            Assert.False(globPattern.IsExclude);
+            Assert.Equal(3, globPattern.Segments.Count);
+
+            Assert.IsType<DoubleStarGlobSegment>(globPattern.Segments[0]);
+
+            Assert.IsType<PatternGlobSegment>(globPattern.Segments[1]);
+            Assert.Equal("hello*world #?", ((PatternGlobSegment)globPattern.Segments[1]).Pattern);
+
+            Assert.IsType<PatternGlobSegment>(globPattern.Segments[2]);
+            Assert.Equal("*", ((PatternGlobSegment)globPattern.Segments[2]).Pattern);
+
+            Assert.Equal(pattern, globPattern.ToString());
+        }
+
+        {
+            var pattern = "**/hello\\*\\*world #?/*";
+            var globPattern = new GlobPattern(pattern);
+
+            Assert.False(globPattern.IsExclude);
+            Assert.Equal(3, globPattern.Segments.Count);
+
+            Assert.IsType<DoubleStarGlobSegment>(globPattern.Segments[0]);
+
+            Assert.IsType<PatternGlobSegment>(globPattern.Segments[1]);
+            Assert.Equal("hello**world #?", ((PatternGlobSegment)globPattern.Segments[1]).Pattern);
+
+            Assert.IsType<PatternGlobSegment>(globPattern.Segments[2]);
+            Assert.Equal("*", ((PatternGlobSegment)globPattern.Segments[2]).Pattern);
+
+            Assert.Equal(pattern, globPattern.ToString());
+        }
+
+        {
+            var pattern = "**/hello\\*\\*world #\\?/*";
+            var globPattern = new GlobPattern(pattern);
+
+            Assert.False(globPattern.IsExclude);
+            Assert.Equal(3, globPattern.Segments.Count);
+
+            Assert.IsType<DoubleStarGlobSegment>(globPattern.Segments[0]);
+
+            Assert.IsType<LiteralGlobSegment>(globPattern.Segments[1]);
+            Assert.Equal("hello**world #?", ((LiteralGlobSegment)globPattern.Segments[1]).Literal);
+
+            Assert.IsType<PatternGlobSegment>(globPattern.Segments[2]);
+            Assert.Equal("*", ((PatternGlobSegment)globPattern.Segments[2]).Pattern);
+
+            Assert.Equal(pattern, globPattern.ToString());
+        }
+
+        {
+            var pattern = "**/\\hello\\*\\*world #\\?/*";
+            var globPattern = new GlobPattern(pattern);
+
+            Assert.False(globPattern.IsExclude);
+            Assert.Equal(3, globPattern.Segments.Count);
+
+            Assert.IsType<DoubleStarGlobSegment>(globPattern.Segments[0]);
+
+            Assert.IsType<LiteralGlobSegment>(globPattern.Segments[1]);
+            Assert.Equal("hello**world #?", ((LiteralGlobSegment)globPattern.Segments[1]).Literal);
+
+            Assert.IsType<PatternGlobSegment>(globPattern.Segments[2]);
+            Assert.Equal("*", ((PatternGlobSegment)globPattern.Segments[2]).Pattern);
+
+            Assert.Equal(pattern, globPattern.ToString());
+        }
+    }
+
     [Theory]
     [InlineData("\\!")]
     [InlineData("\\?")]
