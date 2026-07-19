@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Exanite.Core.Collections;
 
 namespace Exanite.Core.Io.Globbing;
@@ -14,7 +13,7 @@ public sealed class PatternGlobSegment : GlobSegment
 {
     public readonly string Pattern;
 
-    private readonly List<Node> Nodes = new();
+    private readonly List<Node> nodes = new();
 
     /// <remarks>
     /// This expects a pre-optimized pattern.
@@ -29,7 +28,7 @@ public sealed class PatternGlobSegment : GlobSegment
         {
             if (isEscape)
             {
-                Nodes.Add(new Node(pattern[i], isEscape));
+                nodes.Add(new Node(NodeType.Literal, pattern[i]));
                 isEscape = false;
                 continue;
             }
@@ -39,7 +38,14 @@ public sealed class PatternGlobSegment : GlobSegment
                 isEscape = true;
             }
 
-            Nodes.Add(new Node(pattern[i], isEscape));
+            var type = pattern[i] switch
+            {
+                '*' => NodeType.WildcardStar,
+                '?' => NodeType.WildcardQuestion,
+                _ => NodeType.Literal,
+            };
+
+            nodes.Add(new Node(type, pattern[i]));
         }
     }
 
@@ -49,7 +55,7 @@ public sealed class PatternGlobSegment : GlobSegment
         var nextStates = new BitSet();
 
         currentStates[0] = true;
-        if (!Nodes[0].IsEscaped && Nodes[0].Operator == '*')
+        if (nodes[0].Type == NodeType.WildcardStar)
         {
             // Process free move for star operator
             //
@@ -62,28 +68,28 @@ public sealed class PatternGlobSegment : GlobSegment
         {
             foreach (var currentState in currentStates)
             {
-                if (currentState >= Nodes.Count)
+                if (currentState >= nodes.Count)
                 {
                     return true;
                 }
 
-                var node = Nodes[currentState];
+                var node = nodes[currentState];
                 if (!IsMatch(node, c))
                 {
                     continue;
                 }
 
-                if (node is { IsEscaped: false, Operator: '*' })
+                if (node.Type == NodeType.WildcardStar)
                 {
                     nextStates[currentState] = true;
                 }
 
                 nextStates[currentState + 1] = true;
-                if (currentState + 1 < Nodes.Count)
+                if (currentState + 1 < nodes.Count)
                 {
                     // Process free move for star operator
-                    var nextNode = Nodes[currentState + 1];
-                    if (nextNode is { IsEscaped: false, Operator: '*' })
+                    var nextNode = nodes[currentState + 1];
+                    if (nextNode.Type == NodeType.WildcardStar)
                     {
                         nextStates[currentState + 2] = true;
                     }
@@ -95,31 +101,33 @@ public sealed class PatternGlobSegment : GlobSegment
             nextStates.Clear();
         }
 
-        return currentStates[Nodes.Count];
+        return currentStates[nodes.Count];
     }
 
     private bool IsMatch(Node node, char c)
     {
-        if (!node.IsEscaped)
+        switch (node.Type)
         {
-            if (node.Operator == '?')
+            case NodeType.WildcardStar:
+            case NodeType.WildcardQuestion:
             {
                 return true;
             }
 
-            if (node.Operator == '*')
+            case NodeType.Literal:
+            default:
             {
-                return true;
+                return node.Value == c;
             }
         }
-
-        if (node.Operator == c)
-        {
-            return true;
-        }
-
-        return false;
     }
 
-    private record struct Node(char Operator, bool IsEscaped);
+    private record struct Node(NodeType Type, char Value);
+
+    private enum NodeType
+    {
+        Literal,
+        WildcardStar,
+        WildcardQuestion,
+    }
 }
