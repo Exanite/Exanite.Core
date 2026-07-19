@@ -44,7 +44,10 @@ public class BitSet : IReadOnlyBitSet
     /// </summary>
     public const int Mask = (1 << Shift) - 1;
 
-    internal const int DefaultChunkCount = 1;
+    /// <summary>
+    /// The minimum number of chunks stored by a bitset.
+    /// </summary>
+    public const int MinChunkCount = 1;
 
     private ulong[] chunks;
 
@@ -174,7 +177,7 @@ public class BitSet : IReadOnlyBitSet
     /// </summary>
     public BitSet()
     {
-        chunks = new ulong[DefaultChunkCount];
+        chunks = new ulong[MinChunkCount];
     }
 
     /// <summary>
@@ -770,9 +773,9 @@ public class BitSet : IReadOnlyBitSet
         var maxBitIndex = Max;
         if (maxBitIndex < 0)
         {
-            if (chunks.Length > DefaultChunkCount)
+            if (chunks.Length > MinChunkCount)
             {
-                chunks = new ulong[DefaultChunkCount];
+                chunks = new ulong[MinChunkCount];
             }
 
             return;
