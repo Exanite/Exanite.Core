@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Exanite.Core.Tests.Io;
 
-public class PatternGlobSegmentTests
+public class GlobSegmentTests
 {
     [Theory]
     // Question mark wildcards
@@ -15,18 +15,28 @@ public class PatternGlobSegmentTests
     [InlineData("note*", "not", false)]
     [InlineData("note*", "note.txt", true)]
     [InlineData("*.txt", "note.txt", true)]
-    // Escaped question mark
-    [InlineData(@"note\?", "note?", true)]
-    [InlineData(@"note\?", "note0", false)]
     // Escaped misc
     [InlineData(@"\n\o\t\e?", "note0", true)]
     [InlineData(@"\n\o\t\e?", "note1", true)]
-    public void IsMatch(string pattern, string input, bool expected)
+    public void Pattern_IsMatch(string pattern, string input, bool expected)
     {
         var globPattern = new GlobPattern(pattern);
 
         Assert.Equal(1, globPattern.Segments.Count);
         Assert.IsType<PatternGlobSegment>(globPattern.Segments[0]);
         Assert.Equal(expected, ((PatternGlobSegment)globPattern.Segments[0]).IsMatch(input));
+    }
+
+    [Theory]
+    // Escaped question mark
+    [InlineData(@"note\?", "note?", true)]
+    [InlineData(@"note\?", "note0", false)]
+    public void Literal_IsMatch(string pattern, string input, bool expected)
+    {
+        var globPattern = new GlobPattern(pattern);
+
+        Assert.Equal(1, globPattern.Segments.Count);
+        Assert.IsType<LiteralGlobSegment>(globPattern.Segments[0]);
+        Assert.Equal(expected, ((LiteralGlobSegment)globPattern.Segments[0]).IsMatch(input));
     }
 }
