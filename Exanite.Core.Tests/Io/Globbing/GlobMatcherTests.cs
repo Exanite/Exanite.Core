@@ -9,7 +9,7 @@ public class GlobMatcherTests
     [Fact]
     public void CorrectStructure()
     {
-        var pattern = "!node_modules/**/assets/*/*.txt";
+        var pattern = "!node_modules/**/assets/*/note\\!_?.txt";
         var globPattern = new GlobPattern(pattern);
 
         Assert.True(globPattern.IsExclude);
@@ -27,7 +27,7 @@ public class GlobMatcherTests
         Assert.Equal("*", ((PatternGlobSegment)globPattern.Segments[3]).Pattern);
 
         Assert.IsType<PatternGlobSegment>(globPattern.Segments[4]);
-        Assert.Equal("*.txt", ((PatternGlobSegment)globPattern.Segments[4]).Pattern);
+        Assert.Equal("note\\!_?.txt", ((PatternGlobSegment)globPattern.Segments[4]).Pattern);
 
         Assert.Equal(pattern, globPattern.ToString());
     }
