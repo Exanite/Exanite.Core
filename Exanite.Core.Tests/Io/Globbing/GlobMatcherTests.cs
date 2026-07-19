@@ -109,6 +109,7 @@ public class GlobMatcherTests
     }
 
     [Theory]
+    // Escaped chars. We let the OS deal with whether these are valid or not.
     [InlineData(@"\!")]
     [InlineData(@"\?")]
     [InlineData(@"\*")]
@@ -116,6 +117,7 @@ public class GlobMatcherTests
     [InlineData(@"\..")]
     [InlineData(@"\.\.")]
     [InlineData(@"\\")]
+    [InlineData(@"\/")]
     [InlineData("abc")]
     [InlineData("abc!")]
     [InlineData("hello.world")]
