@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Exanite.Core.Collections;
 
 namespace Exanite.Core.Io.Globbing;
@@ -50,6 +51,10 @@ public sealed class PatternGlobSegment : GlobSegment
         currentStates[0] = true;
         if (!Nodes[0].IsEscaped && Nodes[0].Operator == '*')
         {
+            // Process free move for star operator
+            //
+            // Patterns are expected to be optimized so that there are never two adjacent star operators
+            // This means we only need to check the immediate node
             currentStates[1] = true;
         }
 
@@ -74,6 +79,15 @@ public sealed class PatternGlobSegment : GlobSegment
                 }
 
                 nextStates[currentState + 1] = true;
+                if (currentState + 1 < Nodes.Count)
+                {
+                    // Process free move for star operator
+                    var nextNode = Nodes[currentState + 1];
+                    if (nextNode is { IsEscaped: false, Operator: '*' })
+                    {
+                        nextStates[currentState + 2] = true;
+                    }
+                }
             }
 
             // Swap
