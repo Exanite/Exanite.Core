@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Exanite.Core.Pooling;
@@ -256,7 +257,56 @@ public class GlobSegment
     internal GlobSegment() {}
 }
 
-public interface IGlobDirectory
+/// <summary>
+/// Represents a folder accessible by a glob matcher.
+/// </summary>
+public interface IGlobFolder
 {
+    /// <summary>
+    /// The path to this current folder.
+    /// </summary>
+    public string Path { get; }
 
+    /// <summary>
+    /// Gets a folder directly contained within this folder by exact name.
+    /// </summary>
+    public IGlobFolder GetFolder(string name);
+
+    /// <summary>
+    /// Returns the folders directly contained within this folder.
+    /// </summary>
+    public IEnumerable<string> GetFolders();
+
+    /// <summary>
+    /// Returns the files directly contained within this folder.
+    /// </summary>
+    public IEnumerable<string> GetFiles();
+}
+
+/// <summary>
+/// Allow globbing files contained in the OS file system.
+/// </summary>
+public class FileSystemFolder : IGlobFolder
+{
+    public string Path { get; }
+
+    public FileSystemFolder(string path)
+    {
+        Path = new AbsolutePath(path);
+    }
+
+    public IGlobFolder GetFolder(string name)
+    {
+        return new FileSystemFolder($"{Path}/{name}");
+    }
+
+    public IEnumerable<string> GetFolders()
+    {
+        return Directory.EnumerateDirectories(Path);
+    }
+
+    public IEnumerable<string> GetFiles()
+    {
+        return Directory.EnumerateFiles(Path);
+    }
 }
