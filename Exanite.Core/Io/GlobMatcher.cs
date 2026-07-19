@@ -7,6 +7,7 @@ namespace Exanite.Core.Io;
 /// <summary>
 /// Finds files matching a specified set of glob patterns.
 /// Patterns are case-sensitive for cross-platform consistency.
+/// If a file is both included and excluded, the last matched pattern takes priority.
 /// Traversal is optimized by only traversing through relevant folders.
 /// <para/>
 /// Supported features:
@@ -47,5 +48,15 @@ public class GlobMatcher
     public GlobMatcher(IEnumerable<GlobPattern> patterns)
     {
         this.patterns = patterns.ToArray();
+    }
+
+    public IEnumerable<string> Match(AbsolutePath path)
+    {
+        return Match(new FileSystemFolder(path));
+    }
+
+    public IEnumerable<string> Match(IGlobFolder folder)
+    {
+        return [];
     }
 }

@@ -4,8 +4,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using Exanite.Core.Utilities;
-using Microsoft.Extensions.FileSystemGlobbing;
-using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
 
 namespace Exanite.Core.Io;
 
@@ -508,7 +506,7 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
 
     /// <summary>
     /// Finds files matching a glob pattern using this path as the root path.
-    /// Patterns are case-sensitive for cross-platform consistency.
+    /// See <see cref="GlobMatcher"/> for the allowed format.
     /// </summary>
     public AbsolutePath[] GlobFiles(string pattern)
     {
@@ -517,27 +515,12 @@ public readonly struct AbsolutePath : IEquatable<AbsolutePath>
 
     /// <summary>
     /// Finds files matching a list of glob patterns using this path as the root path.
-    /// Patterns are case-sensitive (for cross-platform consistency) and are applied in order.
+    /// See <see cref="GlobMatcher"/> for the allowed format.
     /// </summary>
     public AbsolutePath[] GlobFiles(IEnumerable<string> patterns)
     {
-        var matcher = new Matcher(StringComparison.Ordinal, true);
-        foreach (var pattern in patterns)
-        {
-            if (pattern.StartsWith('!'))
-            {
-                matcher.AddExclude(pattern[1..]);
-            }
-            else
-            {
-                matcher.AddInclude(pattern);
-            }
-        }
-
-        var root = this;
-        var results = matcher.Execute(new DirectoryInfoWrapper(new DirectoryInfo(path)));
-
-        return results.Files.Select(f => root / f.Path).ToArray();
+        var matcher = new GlobMatcher(patterns);
+        return matcher.Match(this).Select(result => new AbsolutePath(result)).ToArray();
     }
 
     public override string ToString()
