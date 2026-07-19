@@ -89,6 +89,41 @@ public class BitSetTests
     }
 
     [Fact]
+    public void TrimExcess_Empty()
+    {
+        var bitset = new BitSet();
+        bitset[10000] = true;
+        bitset[10000] = false;
+        bitset.TrimExcess();
+
+        Assert.Equal(1, bitset.Chunks.Length);
+    }
+
+    [Fact]
+    public void TrimExcess_250()
+    {
+        var bitset = new BitSet();
+        bitset[10000] = true;
+        bitset[10000] = false;
+        bitset[250] = true;
+        bitset.TrimExcess();
+
+        Assert.Equal(4, bitset.Chunks.Length);
+    }
+
+    [Fact]
+    public void TrimExcess_260()
+    {
+        var bitset = new BitSet();
+        bitset[10000] = true;
+        bitset[10000] = false;
+        bitset[260] = true;
+        bitset.TrimExcess();
+
+        Assert.Equal(8, bitset.Chunks.Length);
+    }
+
+    [Fact]
     public void Count_ReturnsNumberOfTrueBits()
     {
         var bitset = new BitSet();
