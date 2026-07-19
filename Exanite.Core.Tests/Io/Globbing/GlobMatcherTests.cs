@@ -109,9 +109,12 @@ public class GlobMatcherTests
     }
 
     [Theory]
-    [InlineData("\\!")]
-    [InlineData("\\?")]
-    [InlineData("\\*")]
+    [InlineData(@"\!")]
+    [InlineData(@"\?")]
+    [InlineData(@"\*")]
+    [InlineData(@"\.")]
+    [InlineData(@"\..")]
+    [InlineData(@"\.\.")]
     [InlineData(@"\\")]
     [InlineData("abc")]
     [InlineData("abc!")]
