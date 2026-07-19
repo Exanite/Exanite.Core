@@ -762,6 +762,32 @@ public class BitSet : IReadOnlyBitSet
         chunks = newChunks;
     }
 
+    /// <summary>
+    /// Sets the capacity to the number of chunks needed to represent all currently set bits, rounded up to the nearest power to two.
+    /// </summary>
+    public void TrimExcess()
+    {
+        var maxBitIndex = Max;
+        if (maxBitIndex < 0)
+        {
+            if (chunks.Length > DefaultChunkCount)
+            {
+                chunks = new ulong[DefaultChunkCount];
+            }
+
+            return;
+        }
+
+        var neededChunks = (maxBitIndex >> Shift) + 1;
+        var newChunkCount = neededChunks == 1 ? 1 : M.GetNextPowerOfTwo(neededChunks);
+        if (chunks.Length > newChunkCount)
+        {
+            var newChunks = new ulong[newChunkCount];
+            Array.Copy(chunks, newChunks, newChunkCount);
+            chunks = newChunks;
+        }
+    }
+
     public BitSetEnumerator GetEnumerator()
     {
         return new BitSetEnumerator(this);
