@@ -9,6 +9,10 @@ public class GlobSegmentTests
     // Question mark wildcards
     [InlineData("note?", "note0", true)]
     [InlineData("note?", "note1", true)]
+    [InlineData("note?", "note1.txt", false)]
+    [InlineData("note?.txt", "note1.txt", true)]
+    [InlineData("note?.txt", "note1.txt.more", false)]
+    [InlineData("note?.txt", "note1", false)]
     // Star wildcard
     [InlineData("note*", "note", true)]
     [InlineData("note*", "noted", true)]
