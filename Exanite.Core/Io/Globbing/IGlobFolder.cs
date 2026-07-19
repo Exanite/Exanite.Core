@@ -22,12 +22,12 @@ public interface IGlobFolder
     public IGlobFolder GetFolder(string name);
 
     /// <summary>
-    /// Returns the folders directly contained within this folder.
+    /// Returns the names of the folders directly contained within this folder.
     /// </summary>
     public IEnumerable<string> GetFolders();
 
     /// <summary>
-    /// Returns the files directly contained within this folder.
+    /// Returns the names of the files directly contained within this folder.
     /// </summary>
     public IEnumerable<string> GetFiles();
 }
