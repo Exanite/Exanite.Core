@@ -2,6 +2,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Exanite.Core.Pooling;
 using Exanite.Core.Utilities;
 
@@ -94,103 +95,124 @@ public class GlobPattern
 
         using var _ = StringBuilderPool.Acquire(out var builder);
 
-        // This parsing code will not always use GlobConstants for simplicity and performance
+        // This parsing code does not always use GlobConstants for simplicity and performance
+        var isInEscape = false;
+        var isInPattern = false;
+        var lastCharWasStar = false;
+        var segmentRawLength = 0;
+
         for (var i = 0; i < pattern.Length; i++)
         {
-            if (i == 0 && pattern[i] == '!')
+            var c = pattern[i];
+
+            if (i == 0 && c == '!')
             {
                 IsExclude = true;
                 continue;
             }
 
-            var start = i;
-            var end = GetSegmentEnd(pattern, start);
-            var segment = pattern.AsSpan()[start..end];
-            i = end;
-
-            GuardUtility.IsFalse(segment.Length == 0, "Pattern cannot contain a zero length segment");
-
-            if (segment is GlobConstants.DoubleStar)
+            // End of segment
+            if (!isInEscape && c == '/')
             {
-                segments.Add(DoubleStarGlobSegment.Instance);
+                OutputSegment(builder, segmentRawLength, isInPattern);
+                builder.Clear();
+                segmentRawLength = 0;
+
+                isInPattern = false;
+                lastCharWasStar = false;
                 continue;
             }
 
-            if (segment is GlobConstants.CurrentFolderReference or GlobConstants.ParentFolderReference)
+            segmentRawLength++;
+
+            // Escape character
+            if (!isInEscape && c == '\\')
             {
-                GuardUtility.Throw($"Pattern cannot contain the following segment: {segment}");
+                isInEscape = true;
+                lastCharWasStar = false;
+                continue;
             }
 
-            var isEscape = false;
-            foreach (var c in segment)
+            // Escaped, pattern, or normal character
+            if (c is '\\' or '/')
             {
-                if (isEscape)
+                GuardUtility.Throw($"Pattern cannot contain the following character: {c}");
+            }
+
+            var isPatternCharacter = c is '*' or '?';
+
+            // Escaped or normal character
+            if (isInEscape || !isPatternCharacter)
+            {
+                if (isInPattern && isPatternCharacter)
                 {
-                    isEscape = false;
+                    builder.Append('\\');
+                }
+
+                builder.Append(c);
+
+                isInEscape = false;
+                lastCharWasStar = false;
+                continue;
+            }
+
+            // Pattern characters
+            isInPattern = true;
+            if (c == '*')
+            {
+                if (lastCharWasStar)
+                {
+                    // Collapse consecutive unescaped stars in patterns
                     continue;
                 }
 
-                if (c == '\\')
-                {
-                    isEscape = true;
-                }
+                lastCharWasStar = true;
             }
-
-            // !?* is a valid literal file name
-            // !\?\* is the pattern version of that literal file name
-
-            // TODO
-            var isPattern = false;
-            foreach (var c in segment)
+            else
             {
-                if (GlobConstants.SegmentBannedCharacters.Contains(c))
-                {
-                    GuardUtility.Throw($"Pattern cannot contain the following character: {c}");
-                }
-
-                if (GlobConstants.SegmentPatternCharacters.Contains(c))
-                {
-                    isPattern = true;
-                }
+                lastCharWasStar = false;
             }
 
-            if (!isPattern)
-            {
-                segments.Add(new LiteralGlobSegment(segment.ToString()));
-                continue;
-            }
-
-            segments.Add(new PatternGlobSegment(segment.ToString()));
+            builder.Append(c);
         }
+
+        // Handle final segment
+        OutputSegment(builder, segmentRawLength, isInPattern);
 
         GuardUtility.IsFalse(segments.Count == 0, "Pattern must not have zero segments");
     }
 
-    private static int GetSegmentEnd(string pattern, int currentIndex)
+    private void OutputSegment(StringBuilder builder, int rawLength, bool isPattern)
     {
-        var isEscape = false;
-        for (var i = currentIndex; i < pattern.Length; i++)
+        GuardUtility.IsFalse(builder.Length == 0, "Pattern cannot contain a zero length segment");
+
+        // Double star
+        if (isPattern && rawLength == 2 && builder is ['*'])
         {
-            var c = pattern[i];
-            if (isEscape)
-            {
-                isEscape = false;
-                continue;
-            }
-
-            if (c == '\\')
-            {
-                isEscape = true;
-                continue;
-            }
-
-            if (c == '/')
-            {
-                return i;
-            }
+            segments.Add(DoubleStarGlobSegment.Instance);
+            return;
         }
 
-        return pattern.Length;
+        // Disallow directory references
+        if (!isPattern && rawLength == 1 && builder is ['.'])
+        {
+            GuardUtility.Throw("Pattern cannot contain the following segment: .");
+        }
+
+        if (!isPattern && rawLength == 2 && builder is ['.', '.'])
+        {
+            GuardUtility.Throw("Pattern cannot contain the following segment: ..");
+        }
+
+        // Pattern
+        if (isPattern)
+        {
+            segments.Add(new PatternGlobSegment(builder.ToString()));
+            return;
+        }
+
+        // Literal
+        segments.Add(new LiteralGlobSegment(builder.ToString()));
     }
 
     public override string ToString()

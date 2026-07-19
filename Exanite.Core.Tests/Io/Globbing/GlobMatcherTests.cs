@@ -27,7 +27,7 @@ public class GlobMatcherTests
         Assert.Equal("*", ((PatternGlobSegment)globPattern.Segments[3]).Pattern);
 
         Assert.IsType<PatternGlobSegment>(globPattern.Segments[4]);
-        Assert.Equal("note\\!_?.txt", ((PatternGlobSegment)globPattern.Segments[4]).Pattern);
+        Assert.Equal("note!_?.txt", ((PatternGlobSegment)globPattern.Segments[4]).Pattern);
 
         Assert.Equal(pattern, globPattern.ToString());
     }
