@@ -8,7 +8,9 @@ namespace Exanite.Core.Io.Globbing;
 /// </summary>
 public class FileSystemFolder : IGlobFolder
 {
-    public string Path { get; }
+    public string Path { get; private init; } = null!;
+
+    private FileSystemFolder() {}
 
     public FileSystemFolder(string path)
     {
@@ -17,7 +19,10 @@ public class FileSystemFolder : IGlobFolder
 
     public IGlobFolder GetFolder(string name)
     {
-        return new FileSystemFolder($"{Path}/{name}");
+        return new FileSystemFolder()
+        {
+            Path = $"{Path}/{name}",
+        };
     }
 
     public IEnumerable<string> GetFolders()

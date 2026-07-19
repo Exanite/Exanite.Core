@@ -15,6 +15,10 @@ public interface IGlobFolder
     /// <summary>
     /// Gets a folder directly contained within this folder by exact name.
     /// </summary>
+    /// <remarks>
+    /// This should be called only with names returned from <see cref="GetFolders"/>.
+    /// Other names are undefined behavior.
+    /// </remarks>
     public IGlobFolder GetFolder(string name);
 
     /// <summary>
