@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Exanite.Core.Tests.Io;
 
-public class GlobMatcherTests
+public class GlobPatternTests
 {
     [Fact]
     public void CorrectStructure()

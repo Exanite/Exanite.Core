@@ -11,4 +11,9 @@ public sealed class LiteralGlobSegment : GlobSegment
     {
         Literal = literal;
     }
+
+    public bool IsMatch(string name)
+    {
+        return name == Literal;
+    }
 }
