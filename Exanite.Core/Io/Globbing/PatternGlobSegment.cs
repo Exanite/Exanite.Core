@@ -44,86 +44,68 @@ public sealed class PatternGlobSegment : GlobSegment
 
     public bool IsMatch(string name)
     {
-        var maxStateCount = Nodes.Count + 1;
         var currentStates = new BitSet();
         var nextStates = new BitSet();
 
-        // var activeStatesList = new List<ActiveState>()
-        // {
-        //     new(-1, default, false),
-        // };
-        //
-        // for (var nameI = 0; nameI < name.Length; nameI++)
-        // {
-        //     var c = name[nameI];
-        //     var isLast = nameI == name.Length - 1;
-        //
-        //     var activeStates = activeStatesList.AsSpan();
-        //     for (var stateI = 0; stateI < activeStates.Length; stateI++)
-        //     {
-        //         ref var state = ref activeStates[stateI];
-        //
-        //         // Initialize state if necessary
-        //         if (state.PatternIndex == -1 && !TryAdvanceState(ref state))
-        //         {
-        //             return isLast;
-        //         }
-        //
-        //         if (!IsMatch(ref state, c))
-        //         {
-        //             state.IsAlive = false;
-        //             continue;
-        //         }
-        //
-        //         // TODO: I need to figure out a better way to check free moves. This is wrong.
-        //         if (!state.IsEscaped && state.Operator == '*')
-        //         {
-        //             activeStatesList.Add(state);
-        //         }
-        //
-        //         if (!TryAdvanceState(ref state))
-        //         {
-        //             return isLast;
-        //         }
-        //     }
-        //
-        //     activeStatesList.RemoveAll(static state => !state.IsAlive);
-        // }
-        //
-        // // Check for free moves
-        // foreach (var activeState in activeStatesList)
-        // {
-        //     if (activeState.PatternIndex == Pattern.Length - 1 && activeState is { IsEscaped: false, Operator: '*' })
-        //     {
-        //         return true;
-        //     }
-        // }
+        currentStates[0] = true;
+        if (!Nodes[0].IsEscaped && Nodes[0].Operator == '*')
+        {
+            currentStates[1] = true;
+        }
+
+        foreach (var c in name)
+        {
+            foreach (var currentState in currentStates)
+            {
+                if (currentState >= Nodes.Count)
+                {
+                    return true;
+                }
+
+                var node = Nodes[currentState];
+                if (!IsMatch(node, c))
+                {
+                    continue;
+                }
+
+                if (node is { IsEscaped: false, Operator: '*' })
+                {
+                    nextStates[currentState] = true;
+                }
+
+                nextStates[currentState + 1] = true;
+            }
+
+            // Swap
+            (currentStates, nextStates) = (nextStates, currentStates);
+            nextStates.Clear();
+        }
+
+        return currentStates[Nodes.Count];
+    }
+
+    private bool IsMatch(Node node, char c)
+    {
+        if (!node.IsEscaped)
+        {
+            if (node.Operator == '?')
+            {
+                return true;
+            }
+
+            if (node.Operator == '*')
+            {
+                return true;
+            }
+        }
+
+        if (node.Operator == c)
+        {
+            return true;
+        }
 
         return false;
     }
-
-    // private bool IsMatch(ref ActiveState state, char c)
-    // {
-    //     if (!state.IsEscaped)
-    //     {
-    //         if (state.Operator == '?')
-    //         {
-    //             return true;
-    //         }
-    //
-    //         if (state.Operator == '*')
-    //         {
-    //             return true;
-    //         }
-    //     }
-    //
-    //     if (state.Operator == c)
-    //     {
-    //         return true;
-    //     }
-    //
-    //     return false;
-    // }
 
     private record struct Node(char Operator, bool IsEscaped);
 }
