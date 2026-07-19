@@ -29,15 +29,36 @@ public sealed class PatternGlobSegment : GlobSegment
         {
             foreach (ref var state in activeStates.AsSpan())
             {
-                if (state.PatternIndex == -1)
+                // Initialize state if necessary
+                if (state.PatternIndex == -1 && !TryAdvanceState(ref state))
                 {
-                    if (!TryAdvanceState(ref state))
+                    return true;
+                }
+
+                if (!state.IsEscaped)
+                {
+                    if (state.ActiveSelector == '?')
                     {
-                        return true;
+                        if (!TryAdvanceState(ref state))
+                        {
+                            return true;
+                        }
+                    }
+
+                    if (state.ActiveSelector == '*')
+                    {
+                        // TODO
+                        if (!TryAdvanceState(ref state))
+                        {
+                            return true;
+                        }
                     }
                 }
 
-                // TODO
+                if (state.ActiveSelector == nameC && !TryAdvanceState(ref state))
+                {
+                    return true;
+                }
             }
         }
 
