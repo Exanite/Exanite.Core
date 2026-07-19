@@ -57,6 +57,22 @@ public class GlobMatcher
 
     public IEnumerable<string> Match(IGlobFolder folder)
     {
-        return [];
+        var results = new List<string>();
+        var activePatterns = new List<ActivePattern>();
+        for (var i = 0; i < patterns.Length; i++)
+        {
+            activePatterns.Add(new ActivePattern(i, 0));
+        }
+
+        Match(results, folder, activePatterns);
+
+        return results;
     }
+
+    private void Match(List<string> results, IGlobFolder folder, List<ActivePattern> activePatterns)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private record struct ActivePattern(int PatternIndex, int SegmentIndex);
 }
