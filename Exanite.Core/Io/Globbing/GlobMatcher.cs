@@ -1,3 +1,4 @@
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,50 +94,103 @@ public class GlobPattern
 
         using var _ = StringBuilderPool.Acquire(out var builder);
 
-        var isEscape = false;
-        var segmentStartI = 0;
+        // This parsing code will not always use GlobConstants for simplicity and performance
         for (var i = 0; i < pattern.Length; i++)
         {
-            // This parsing code will not always use GlobConstants for simplicity and performance
             if (i == 0 && pattern[i] == '!')
             {
                 IsExclude = true;
                 continue;
             }
 
-            if (pattern[i] == '\\')
+            var start = i;
+            var end = GetSegmentEnd(pattern, start);
+            var segment = pattern.AsSpan()[start..end];
+            i = end;
+
+            GuardUtility.IsFalse(segment.Length == 0, "Pattern cannot contain a zero length segment");
+
+            if (segment is GlobConstants.DoubleStar)
             {
-                isEscape = true;
+                segments.Add(DoubleStarGlobSegment.Instance);
+                continue;
             }
 
-            if (!isEscape)
+            if (segment is GlobConstants.CurrentFolderReference or GlobConstants.ParentFolderReference)
             {
-                if (pattern[i] == '/')
+                GuardUtility.Throw($"Pattern cannot contain the following segment: {segment}");
+            }
+
+            var isEscape = false;
+            foreach (var c in segment)
+            {
+                if (isEscape)
                 {
-                    var segment = builder.ToString();
-                    builder.Clear();
+                    isEscape = false;
+                    continue;
+                }
 
-                    segmentStartI = i + 1;
-
-                    GuardUtility.IsFalse(segment.Length == 0, "Pattern cannot contain a zero length segment");
-
-                    if (segment is GlobConstants.DoubleStar)
-                    {
-                        segments.Add(DoubleStarGlobSegment.Instance);
-                        continue;
-                    }
-
-                    if (segment is GlobConstants.CurrentFolderReference or GlobConstants.ParentFolderReference)
-                    {
-                        GuardUtility.Throw($"Pattern cannot contain the following segment: {segment}");
-                    }
-
-                    // TODO
+                if (c == '\\')
+                {
+                    isEscape = true;
                 }
             }
+
+            // !?* is a valid literal file name
+            // !\?\* is the pattern version of that literal file name
+
+            // TODO
+            var isPattern = false;
+            foreach (var c in segment)
+            {
+                if (GlobConstants.SegmentBannedCharacters.Contains(c))
+                {
+                    GuardUtility.Throw($"Pattern cannot contain the following character: {c}");
+                }
+
+                if (GlobConstants.SegmentPatternCharacters.Contains(c))
+                {
+                    isPattern = true;
+                }
+            }
+
+            if (!isPattern)
+            {
+                segments.Add(new LiteralGlobSegment(segment.ToString()));
+                continue;
+            }
+
+            segments.Add(new PatternGlobSegment(segment.ToString()));
         }
 
         GuardUtility.IsFalse(segments.Count == 0, "Pattern must not have zero segments");
+    }
+
+    private static int GetSegmentEnd(string pattern, int currentIndex)
+    {
+        var isEscape = false;
+        for (var i = currentIndex; i < pattern.Length; i++)
+        {
+            var c = pattern[i];
+            if (isEscape)
+            {
+                isEscape = false;
+                continue;
+            }
+
+            if (c == '\\')
+            {
+                isEscape = true;
+                continue;
+            }
+
+            if (c == '/')
+            {
+                return i;
+            }
+        }
+
+        return pattern.Length;
     }
 
     public override string ToString()
