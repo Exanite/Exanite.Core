@@ -41,44 +41,42 @@ public sealed class PatternGlobSegment : GlobSegment
                     return isLast;
                 }
 
-                if (!state.IsEscaped)
+                if (!IsMatch(ref state, c))
                 {
-                    if (state.ActiveSelector == '?')
-                    {
-                        if (!TryAdvanceState(ref state))
-                        {
-                            return isLast;
-                        }
-
-                        continue;
-                    }
-
-                    if (state.ActiveSelector == '*')
-                    {
-                        // TODO
-                        if (!TryAdvanceState(ref state))
-                        {
-                            return isLast;
-                        }
-
-                        continue;
-                    }
-                }
-
-                if (state.ActiveSelector == c)
-                {
-                    if (!TryAdvanceState(ref state))
-                    {
-                        return isLast;
-                    }
-
+                    state.IsAlive = false;
                     continue;
                 }
 
-                state.IsAlive = false;
+                if (!TryAdvanceState(ref state))
+                {
+                    return isLast;
+                }
             }
 
             activeStates.RemoveAll(static state => !state.IsAlive);
+        }
+
+        return false;
+    }
+
+    private bool IsMatch(ref ActiveState state, char c)
+    {
+        if (!state.IsEscaped)
+        {
+            if (state.ActiveSelector == '?')
+            {
+                return true;
+            }
+
+            if (state.ActiveSelector == '*')
+            {
+                return true;
+            }
+        }
+
+        if (state.ActiveSelector == c)
+        {
+            return true;
         }
 
         return false;
