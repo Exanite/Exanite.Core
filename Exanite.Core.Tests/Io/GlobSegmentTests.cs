@@ -14,6 +14,7 @@ public class GlobSegmentTests
     [InlineData("note*", "noted", true)]
     [InlineData("note*", "not", false)]
     [InlineData("note*", "note.txt", true)]
+    [InlineData("*n*o*t*e*", "note.txt", true)]
     [InlineData("*.txt", "note.txt", true)]
     // Escaped misc
     [InlineData(@"\n\o\t\e?", "note0", true)]

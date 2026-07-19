@@ -20,7 +20,7 @@ public sealed class PatternGlobSegment : GlobSegment
 
     public bool IsMatch(string name)
     {
-        var activeStates = new List<ActiveState>()
+        var activeStatesList = new List<ActiveState>()
         {
             new(-1, default, false),
         };
@@ -30,10 +30,10 @@ public sealed class PatternGlobSegment : GlobSegment
             var c = name[nameI];
             var isLast = nameI == name.Length - 1;
 
-            var span = activeStates.AsSpan();
-            for (var stateI = 0; stateI < span.Length; stateI++)
+            var activeStates = activeStatesList.AsSpan();
+            for (var stateI = 0; stateI < activeStates.Length; stateI++)
             {
-                ref var state = ref span[stateI];
+                ref var state = ref activeStates[stateI];
 
                 // Initialize state if necessary
                 if (state.PatternIndex == -1 && !TryAdvanceState(ref state))
@@ -47,13 +47,28 @@ public sealed class PatternGlobSegment : GlobSegment
                     continue;
                 }
 
+                // TODO: I need to figure out a better way to check free moves. This is wrong.
+                if (!state.IsEscaped && state.Operator == '*')
+                {
+                    activeStatesList.Add(state);
+                }
+
                 if (!TryAdvanceState(ref state))
                 {
                     return isLast;
                 }
             }
 
-            activeStates.RemoveAll(static state => !state.IsAlive);
+            activeStatesList.RemoveAll(static state => !state.IsAlive);
+        }
+
+        // Check for free moves
+        foreach (var activeState in activeStatesList)
+        {
+            if (activeState.PatternIndex == Pattern.Length - 1 && activeState is { IsEscaped: false, Operator: '*' })
+            {
+                return true;
+            }
         }
 
         return false;
@@ -63,18 +78,18 @@ public sealed class PatternGlobSegment : GlobSegment
     {
         if (!state.IsEscaped)
         {
-            if (state.ActiveSelector == '?')
+            if (state.Operator == '?')
             {
                 return true;
             }
 
-            if (state.ActiveSelector == '*')
+            if (state.Operator == '*')
             {
                 return true;
             }
         }
 
-        if (state.ActiveSelector == c)
+        if (state.Operator == c)
         {
             return true;
         }
@@ -107,5 +122,5 @@ public sealed class PatternGlobSegment : GlobSegment
         return true;
     }
 
-    private record struct ActiveState(int PatternIndex, char ActiveSelector, bool IsEscaped, bool IsAlive = true);
+    private record struct ActiveState(int PatternIndex, char Operator, bool IsEscaped, bool IsAlive = true);
 }
