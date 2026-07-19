@@ -54,7 +54,7 @@ public class GlobPatternTests
         }
 
         {
-            var pattern = "**/hello\\*\\*world #?/*";
+            var pattern = @"**/hello\*\*world #?/*";
             var globPattern = new GlobPattern(pattern);
 
             Assert.False(globPattern.IsExclude);
@@ -72,7 +72,7 @@ public class GlobPatternTests
         }
 
         {
-            var pattern = "**/hello\\*\\*world #\\?/*";
+            var pattern = @"**/hello\*\*world #\?/*";
             var globPattern = new GlobPattern(pattern);
 
             Assert.False(globPattern.IsExclude);
@@ -90,7 +90,7 @@ public class GlobPatternTests
         }
 
         {
-            var pattern = "**/\\hello\\*\\*world #\\?/*";
+            var pattern = @"**/\hello\*\*world #\?/*";
             var globPattern = new GlobPattern(pattern);
 
             Assert.False(globPattern.IsExclude);
