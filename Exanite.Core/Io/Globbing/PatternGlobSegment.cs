@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Exanite.Core.Collections;
+using Exanite.Core.Pooling;
 
 namespace Exanite.Core.Io.Globbing;
 
@@ -51,8 +51,8 @@ public sealed class PatternGlobSegment : GlobSegment
 
     public bool IsMatch(string name)
     {
-        var currentStates = new BitSet();
-        var nextStates = new BitSet();
+        using var _ = BitSetPool.Acquire(out var currentStates);
+        using var __ = BitSetPool.Acquire(out var nextStates);
 
         currentStates[0] = true;
         if (nodes[0].Type == NodeType.WildcardStar)
