@@ -2,7 +2,7 @@ using System;
 using Exanite.Core.Io.Globbing;
 using Xunit;
 
-namespace Exanite.Core.Tests.Io.Globbing;
+namespace Exanite.Core.Tests.Io;
 
 public class GlobMatcherTests
 {
