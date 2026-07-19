@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -21,6 +23,7 @@ namespace Exanite.Core.Collections;
 /// This is because this data structure is designed for storing flags, which do not make sense to bitshift.
 /// </remarks>
 [CollectionBuilder(typeof(BitSet), nameof(Create))]
+[DebuggerTypeProxy(typeof(BitSetDebugView))]
 public class BitSet : IReadOnlyBitSet
 {
     /// <summary>
@@ -751,5 +754,18 @@ public class BitSet : IReadOnlyBitSet
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+    private class BitSetDebugView
+    {
+        private readonly BitSet bitSet;
+
+        public BitSetDebugView(BitSet bitSet)
+        {
+            this.bitSet = bitSet;
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
+        public int[] Items => bitSet.ToArray();
     }
 }
