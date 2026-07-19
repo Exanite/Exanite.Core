@@ -25,11 +25,6 @@ public static class GlobConstants
     /// These characters have special meaning in a path segment.
     /// </summary>
     public static readonly SearchValues<char> SegmentPatternCharacters = SearchValues.Create('*', '?');
-
-    /// <summary>
-    /// These characters cannot be used within a path segment.
-    /// </summary>
-    public static readonly SearchValues<char> SegmentBannedCharacters = SearchValues.Create('\\', '/');
 }
 
 /// <summary>
@@ -131,12 +126,6 @@ public class GlobPattern
                 isInEscape = true;
                 lastCharWasStar = false;
                 continue;
-            }
-
-            // Escaped, pattern, or normal character
-            if (c is '\\' or '/')
-            {
-                GuardUtility.Throw($"Pattern cannot contain the following character: {c}");
             }
 
             var isPatternCharacter = c is '*' or '?';

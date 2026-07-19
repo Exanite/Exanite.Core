@@ -112,9 +112,11 @@ public class GlobMatcherTests
     [InlineData("\\!")]
     [InlineData("\\?")]
     [InlineData("\\*")]
+    [InlineData(@"\\")]
     [InlineData("abc")]
     [InlineData("abc!")]
     [InlineData("hello.world")]
+    [InlineData(@"folder\\a\\b\\c")] // This is just one segment
     public void Valid(string pattern)
     {
         _ = new GlobPattern(pattern);
@@ -126,7 +128,6 @@ public class GlobMatcherTests
     [InlineData(".")]
     [InlineData("..")]
     [InlineData("/")]
-    [InlineData(@"\\")]
     [InlineData("abc/")]
     [InlineData("folder//")]
     [InlineData("folder/.")]
@@ -135,7 +136,6 @@ public class GlobMatcherTests
     [InlineData("./a/b/c")]
     [InlineData("./a/./b")]
     [InlineData("abc//abc")]
-    [InlineData(@"folder\\a\\b\\c")]
     public void NotValid(string pattern)
     {
         Assert.ThrowsAny<Exception>(() =>
