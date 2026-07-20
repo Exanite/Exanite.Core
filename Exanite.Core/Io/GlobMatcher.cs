@@ -82,9 +82,35 @@ public class GlobMatcher
             this.patterns = patterns;
         }
 
+        // TODO: Optimize
         public void Match(IGlobFolder folder, List<ActivePattern> activePatterns)
         {
             // TODO: Handle free moves
+            for (var i = activePatterns.Count - 1; i >= 0; i--)
+            {
+                var activePattern = activePatterns[i];
+                var pattern = patterns[activePattern.PatternIndex];
+                var segment = pattern.Segments[activePattern.SegmentIndex];
+                var remainingSegmentCount = pattern.Segments.Count - activePattern.SegmentIndex;
+                if (remainingSegmentCount >= 2 && segment is DoubleStarGlobSegment)
+                {
+                    activePatterns.Insert(i + 1, new ActivePattern(activePattern.PatternIndex, activePattern.SegmentIndex + 1));
+                }
+            }
+
+            // TODO: Dedupe states
+            var rawActivePatterns = activePatterns;
+            activePatterns = new List<ActivePattern>();
+            var alreadyAddedActivePatterns = new HashSet<ActivePattern>();
+            for (var i = rawActivePatterns.Count - 1; i >= 0; i--)
+            {
+                var activePattern = rawActivePatterns[i];
+                if (alreadyAddedActivePatterns.Add(activePattern))
+                {
+                    activePatterns.Add(activePattern);
+                }
+            }
+            activePatterns.Reverse();
 
             // Try to match files
             var files = folder.GetFiles().ToHashSet();
@@ -157,13 +183,13 @@ public class GlobMatcher
 
                         if (remainingSegmentCount == 2)
                         {
-                            if (pattern.Segments[activePattern.SegmentIndex + 1] is DoubleStarGlobSegment)
+                            if (pattern.Segments[activePattern.SegmentIndex] is DoubleStarGlobSegment
+                                && pattern.Segments[activePattern.SegmentIndex + 1] is PatternGlobSegment { Pattern: "*" })
                             {
                                 break;
                             }
 
                             if (pattern.Segments[activePattern.SegmentIndex] is DoubleStarGlobSegment
-                                && pattern.Segments[activePattern.SegmentIndex + 1] is PatternGlobSegment { Pattern: "*" }
                                 && IsSegmentMatch(firstSegment, childFolder))
                             {
                                 break;
@@ -213,7 +239,6 @@ public class GlobMatcher
             var segment = pattern.Segments[activePattern.SegmentIndex];
             var remainingSegmentCount = pattern.Segments.Count - activePattern.SegmentIndex;
 
-            // TODO: Dedupe states
             // Case: ** -> Output as is
             // Case: **/.. -> Output ** and ..
             // Case: match -> Output nothing
