@@ -8,7 +8,7 @@ namespace Exanite.Core.Io.Globbing;
 public interface IGlobFolder
 {
     /// <summary>
-    /// The path to this current folder.
+    /// The full path to this current folder.
     /// </summary>
     public string Path { get; }
 
