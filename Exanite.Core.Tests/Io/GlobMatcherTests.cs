@@ -56,6 +56,18 @@ public class GlobMatcherTests
     }
 
     [Fact]
+    public void DirectReferenceIncludeThenDeepExclude()
+    {
+        RunGlobTest(
+            [
+                "package.json",
+                "!**",
+            ],
+            []
+        );
+    }
+
+    [Fact]
     public void DeepDirectReference()
     {
         RunGlobTest(
@@ -424,6 +436,28 @@ public class GlobMatcherTests
                 "root/package.json",
                 "root/tsconfig.json",
                 "root/public/manifest.json",
+            ]
+        );
+    }
+
+    [Fact]
+    public void ExcludeFolderDeepWildcardOptimization()
+    {
+        RunGlobTest(
+            [
+                "**/*",
+                "!src/**/*",
+            ],
+            [
+                "root/package.json",
+                "root/tsconfig.json",
+                "root/vite.config.ts",
+                "root/README.md",
+                "root/public/favicon.ico",
+                "root/public/index.html",
+                "root/public/manifest.json",
+                "root/tests/e2e/auth.spec.ts",
+                "root/tests/e2e/home.spec.ts",
             ]
         );
     }
