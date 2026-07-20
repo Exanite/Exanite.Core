@@ -87,6 +87,11 @@ public class GlobMatcher
 
         public void Match(IGlobFolder folder, List<ActivePattern> activePatterns)
         {
+            if (activePatterns.Count == 0)
+            {
+                return;
+            }
+
             // Handle free moves
             for (var i = activePatterns.Count - 1; i >= 0; i--)
             {
