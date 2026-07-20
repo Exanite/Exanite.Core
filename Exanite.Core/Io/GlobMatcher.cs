@@ -115,8 +115,7 @@ public class GlobMatcher
             activePatterns.Reverse();
 
             // Try to match files
-            var files = folder.GetFiles().ToHashSet();
-            foreach (var file in files)
+            foreach (var file in folder.GetFiles())
             {
                 for (var i = activePatterns.Count - 1; i >= 0; i--)
                 {
