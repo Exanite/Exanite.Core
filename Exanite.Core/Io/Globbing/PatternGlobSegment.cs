@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Exanite.Core.Collections;
 using Exanite.Core.Pooling;
 
 namespace Exanite.Core.Io.Globbing;
@@ -54,15 +55,7 @@ public sealed class PatternGlobSegment : GlobSegment
         using var _ = BitSetPool.Acquire(out var currentStates);
         using var __ = BitSetPool.Acquire(out var nextStates);
 
-        currentStates[0] = true;
-        if (nodes[0].Type == NodeType.WildcardStar)
-        {
-            // Process free move for star operator
-            //
-            // Patterns are expected to be optimized so that there are never two adjacent star operators
-            // This means we only need to check the immediate node
-            currentStates[1] = true;
-        }
+        EnableStateWithFreeMove(currentStates, 0);
 
         foreach (var c in name)
         {
@@ -84,16 +77,7 @@ public sealed class PatternGlobSegment : GlobSegment
                     nextStates[currentState] = true;
                 }
 
-                nextStates[currentState + 1] = true;
-                if (currentState + 1 < nodes.Count)
-                {
-                    // Process free move for star operator
-                    var nextNode = nodes[currentState + 1];
-                    if (nextNode.Type == NodeType.WildcardStar)
-                    {
-                        nextStates[currentState + 2] = true;
-                    }
-                }
+                EnableStateWithFreeMove(nextStates, currentState + 1);
             }
 
             // Swap
@@ -102,6 +86,28 @@ public sealed class PatternGlobSegment : GlobSegment
         }
 
         return currentStates[nodes.Count];
+    }
+
+    /// <summary>
+    /// Sets the state at the specified index to true and process free move for star operator.
+    /// </summary>
+    /// <remarks>
+    /// Patterns are expected to be optimized so that there are never two adjacent star operators
+    /// This means we only need to check the immediate node
+    /// </remarks>
+    private void EnableStateWithFreeMove(BitSet states, int index)
+    {
+        states[index] = true;
+
+        // Process free move for star operator
+        if (index < nodes.Count)
+        {
+            var nextNode = nodes[index];
+            if (nextNode.Type == NodeType.WildcardStar)
+            {
+                states[index + 1] = true;
+            }
+        }
     }
 
     private bool IsMatch(Node node, char c)
