@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Exanite.Core.Io;
 using Exanite.Core.Io.Globbing;
 using Xunit;
 
@@ -32,8 +33,37 @@ public class GlobMatcherTests
     ["package.json", "tsconfig.json", "vite.config.ts", "README.md"]).PropagatePaths();
 
     [Fact]
-    public void Basic()
+    public void DirectReference()
     {
+        var matcher = new GlobMatcher(["package.json"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "package.json",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void DeepDirectReference()
+    {
+        var matcher = new GlobMatcher(["src/components/Navbar/Navbar.test.tsx"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "src/components/Navbar/Navbar.test.tsx",
+        };
+
+        Assert.Equal(expected, results);
     }
 
     private class Folder : IGlobFolder
