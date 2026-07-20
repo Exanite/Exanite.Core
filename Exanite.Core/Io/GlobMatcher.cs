@@ -85,8 +85,7 @@ public class GlobMatcher
 
         public void Match(IGlobFolder folder, List<ActivePattern> activePatterns)
         {
-            // Try match files
-            // TODO: Consider flipping order of iteration
+            // Try to match files
             var files = folder.GetFiles().ToHashSet();
             foreach (var file in files)
             {
@@ -95,38 +94,33 @@ public class GlobMatcher
                     var activePattern = activePatterns[i];
                     var pattern = patterns[activePattern.PatternIndex];
                     var segment = pattern.Segments[activePattern.SegmentIndex];
-
-                    switch (segment)
+                    var remainingSegmentCount = pattern.Segments.Count - activePattern.SegmentIndex;
+                    if (remainingSegmentCount != 1)
                     {
-                        case DoubleStarGlobSegment:
+                        break;
+                    }
+
+                    var isMatch = segment switch
+                    {
+                        DoubleStarGlobSegment => true,
+                        LiteralGlobSegment literalSegment => literalSegment.IsMatch(file),
+                        PatternGlobSegment patternSegment => patternSegment.IsMatch(file),
+                        _ => throw ExceptionUtility.NotSupported(segment),
+                    };
+
+                    if (isMatch)
+                    {
+                        if (pattern.IsInclude)
                         {
                             ReportResult(folder, file);
-                            break;
                         }
-                        case LiteralGlobSegment literalSegment:
-                        {
-                            if (literalSegment.IsMatch(file))
-                            {
-                                ReportResult(folder, file);
-                            }
 
-                            break;
-                        }
-                        case PatternGlobSegment patternSegment:
-                        {
-                            if (patternSegment.IsMatch(file))
-                            {
-                                ReportResult(folder, file);
-                            }
-
-                            break;
-                        }
-                        default: throw ExceptionUtility.NotSupported(segment);
+                        break;
                     }
                 }
             }
 
-            // Try expand into folders
+            // Try to expand into folders
             foreach (var childFolder in folder.GetFolders())
             {
                 var isRelevant = false;
@@ -137,40 +131,58 @@ public class GlobMatcher
                     var firstSegment = pattern.Segments[activePattern.SegmentIndex];
                     var remainingSegmentCount = pattern.Segments.Count - activePattern.SegmentIndex;
 
-                    var maybeMatch = false;
-                    switch (firstSegment)
+                    var maybeMatch = firstSegment switch
                     {
-                        case DoubleStarGlobSegment:
-                        {
-                            maybeMatch = true;
-                            break;
-                        }
-                        case LiteralGlobSegment literalSegment:
-                        {
-                            maybeMatch = remainingSegmentCount >= 2 && literalSegment.IsMatch(childFolder);
-                            break;
-                        }
-                        case PatternGlobSegment patternSegment:
-                        {
-                            maybeMatch = remainingSegmentCount >= 2 && patternSegment.IsMatch(childFolder);
-                            break;
-                        }
-                        default: throw ExceptionUtility.NotSupported(firstSegment);
-                    }
+                        DoubleStarGlobSegment => true,
+                        LiteralGlobSegment literalSegment => remainingSegmentCount >= 2 && literalSegment.IsMatch(childFolder),
+                        PatternGlobSegment patternSegment => remainingSegmentCount >= 2 && patternSegment.IsMatch(childFolder),
+                        _ => throw ExceptionUtility.NotSupported(firstSegment),
+                    };
 
                     if (maybeMatch)
                     {
-                        if (!pattern.IsExclude)
+                        // For includes, we have to open the folder if it is even potentially relevant
+                        // For excludes, we can skip the folder once it is known to be definitely not relevant
+
+                        // Include: ** -> Definitely relevant
+                        // Include: match/.. -> Potentially relevant
+                        // These two conditions are covered by the switch above
+                        if (pattern.IsInclude)
                         {
                             // Folder is relevant if an include can maybe match
                             isRelevant = true;
                             break;
                         }
 
-                        if (remainingSegmentCount == 1 && pattern.Segments[activePattern.SegmentIndex + 1] is DoubleStarGlobSegment)
+                        // Exclude: ** -> Definitely not relevant
+                        // Exclude: **/* -> Definitely not relevant
+                        // Exclude: match/** -> Definitely not relevant
+                        // Exclude: match/**/* -> Definitely not relevant
+                        // Exclude: match/**/*/* -> Indeterminate
+                        // Exclude: match/*/** -> Indeterminate
+                        if (remainingSegmentCount == 1 && pattern.Segments[activePattern.SegmentIndex] is DoubleStarGlobSegment)
                         {
-                            // Folder is not relevant if an exclude can maybe match AND the next segment is the only segment AND the next segment is a double star segment
-                            isRelevant = false;
+                            break;
+                        }
+
+                        if (remainingSegmentCount == 2)
+                        {
+                            if (pattern.Segments[activePattern.SegmentIndex + 1] is DoubleStarGlobSegment)
+                            {
+                                break;
+                            }
+
+                            if (pattern.Segments[activePattern.SegmentIndex] is DoubleStarGlobSegment
+                                && pattern.Segments[activePattern.SegmentIndex + 1] is PatternGlobSegment { Pattern: "*" })
+                            {
+                                break;
+                            }
+                        }
+
+                        if (remainingSegmentCount == 3
+                            && pattern.Segments[activePattern.SegmentIndex + 1] is DoubleStarGlobSegment
+                            && pattern.Segments[activePattern.SegmentIndex + 2] is PatternGlobSegment { Pattern: "*" })
+                        {
                             break;
                         }
                     }
@@ -181,11 +193,13 @@ public class GlobMatcher
                     continue;
                 }
 
+                var nextActivePatterns = new List<ActivePattern>();
+
                 // TODO
                 Console.WriteLine(childFolder);
             }
 
-            if (nint.Size == 0) // Disable
+            if (nint.Size == 0) // TODO: WIP
             {
                 var folders = folder.GetFolders().ToHashSet();
 

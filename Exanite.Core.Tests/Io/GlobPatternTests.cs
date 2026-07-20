@@ -12,7 +12,7 @@ public class GlobPatternTests
         var pattern = "!node_modules/**/assets/*/note\\!_?.txt";
         var globPattern = new GlobPattern(pattern);
 
-        Assert.True(globPattern.IsExclude);
+        Assert.False(globPattern.IsInclude);
         Assert.Equal(5, globPattern.Segments.Count);
 
         Assert.IsType<LiteralGlobSegment>(globPattern.Segments[0]);
@@ -39,7 +39,7 @@ public class GlobPatternTests
             var pattern = "**/hello**world #?/*";
             var globPattern = new GlobPattern(pattern);
 
-            Assert.False(globPattern.IsExclude);
+            Assert.True(globPattern.IsInclude);
             Assert.Equal(3, globPattern.Segments.Count);
 
             Assert.IsType<DoubleStarGlobSegment>(globPattern.Segments[0]);
@@ -57,7 +57,7 @@ public class GlobPatternTests
             var pattern = @"**/hello\*\*world #?/*";
             var globPattern = new GlobPattern(pattern);
 
-            Assert.False(globPattern.IsExclude);
+            Assert.True(globPattern.IsInclude);
             Assert.Equal(3, globPattern.Segments.Count);
 
             Assert.IsType<DoubleStarGlobSegment>(globPattern.Segments[0]);
@@ -75,7 +75,7 @@ public class GlobPatternTests
             var pattern = @"**/hello\*\*world #\?/*";
             var globPattern = new GlobPattern(pattern);
 
-            Assert.False(globPattern.IsExclude);
+            Assert.True(globPattern.IsInclude);
             Assert.Equal(3, globPattern.Segments.Count);
 
             Assert.IsType<DoubleStarGlobSegment>(globPattern.Segments[0]);
@@ -93,7 +93,7 @@ public class GlobPatternTests
             var pattern = @"**/\hello\*\*world #\?/*";
             var globPattern = new GlobPattern(pattern);
 
-            Assert.False(globPattern.IsExclude);
+            Assert.True(globPattern.IsInclude);
             Assert.Equal(3, globPattern.Segments.Count);
 
             Assert.IsType<DoubleStarGlobSegment>(globPattern.Segments[0]);
@@ -114,7 +114,7 @@ public class GlobPatternTests
         var pattern = "**/**/*/*/**/**/**";
         var globPattern = new GlobPattern(pattern);
 
-        Assert.False(globPattern.IsExclude);
+        Assert.True(globPattern.IsInclude);
         Assert.Equal(4, globPattern.Segments.Count);
 
         Assert.IsType<DoubleStarGlobSegment>(globPattern.Segments[0]);

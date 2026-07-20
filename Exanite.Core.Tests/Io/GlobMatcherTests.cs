@@ -48,6 +48,20 @@ public class GlobMatcherTests
     }
 
     [Fact]
+    public void DirectReferenceIncludeThenExclude()
+    {
+        var matcher = new GlobMatcher(["package.json", "!package.json"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>();
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
     public void DeepDirectReference()
     {
         var matcher = new GlobMatcher(["src/components/Navbar/Navbar.test.tsx"]);
@@ -389,6 +403,23 @@ public class GlobMatcherTests
         Assert.Equal(results.Count, rawResults.Count);
 
         var expected = new HashSet<string>();
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void AllIncludeAllExclude_ThenIncludeOne()
+    {
+        var matcher = new GlobMatcher(["**/*", "!**/*", "package.json"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/package.json",
+        };
 
         Assert.Equal(expected, results);
     }

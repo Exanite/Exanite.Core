@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using Exanite.Core.Pooling;
@@ -14,7 +13,7 @@ public class GlobPattern
     private readonly string pattern;
     private readonly List<GlobSegment> segments = new();
 
-    public bool IsExclude { get; }
+    public bool IsInclude { get; } = true;
     public IReadOnlyList<GlobSegment> Segments => segments;
 
     public GlobPattern(string pattern)
@@ -35,7 +34,7 @@ public class GlobPattern
 
             if (i == 0 && c == '!')
             {
-                IsExclude = true;
+                IsInclude = false;
                 continue;
             }
 
