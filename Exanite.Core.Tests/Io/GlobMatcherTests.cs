@@ -271,6 +271,32 @@ public class GlobMatcherTests
     }
 
     [Fact]
+    public void AllNonTestTypescriptFiles()
+    {
+        var matcher = new GlobMatcher(["**/*.ts", "**/*.tsx", "!**/*.test.tsx", "!**/*.spec.ts"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/src/App.tsx",
+            "root/src/main.tsx",
+            "root/src/components/Button/Button.tsx",
+            "root/src/components/Navbar/Navbar.tsx",
+            "root/src/hooks/useAuth.ts",
+            "root/src/hooks/useFetch.ts",
+            "root/src/services/api.ts",
+            "root/src/services/logger.ts",
+            "root/src/utils/helpers.ts",
+            "root/src/utils/math.ts",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
     public void CaseSensitivity()
     {
         var matcher = new GlobMatcher(["**/button.tsx"]);
