@@ -547,5 +547,10 @@ public class GlobMatcherTests
         {
             return files;
         }
+
+        public override string ToString()
+        {
+            return Path;
+        }
     }
 }
