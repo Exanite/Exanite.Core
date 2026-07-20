@@ -39,6 +39,9 @@ public class GlobMatcherTests
             ],
             [
                 "root/package.json",
+            ],
+            [
+                "root",
             ]
         );
     }
@@ -51,7 +54,10 @@ public class GlobMatcherTests
                 "package.json",
                 "!package.json",
             ],
-            []
+            [],
+            [
+                "root",
+            ]
         );
     }
 
@@ -63,7 +69,10 @@ public class GlobMatcherTests
                 "package.json",
                 "!**",
             ],
-            []
+            [],
+            [
+                "root",
+            ]
         );
     }
 
@@ -76,6 +85,12 @@ public class GlobMatcherTests
             ],
             [
                 "root/src/components/Navbar/Navbar.test.tsx",
+            ],
+            [
+                "root",
+                "root/src",
+                "root/src/components",
+                "root/src/components/Navbar",
             ]
         );
     }
@@ -92,6 +107,9 @@ public class GlobMatcherTests
                 "root/tsconfig.json",
                 "root/vite.config.ts",
                 "root/README.md",
+            ],
+            [
+                "root",
             ]
         );
     }
@@ -106,6 +124,9 @@ public class GlobMatcherTests
             [
                 "root/package.json",
                 "root/tsconfig.json",
+            ],
+            [
+                "root",
             ]
         );
     }
@@ -151,6 +172,20 @@ public class GlobMatcherTests
                 "root/src/utils/math.ts",
                 "root/tests/e2e/auth.spec.ts",
                 "root/tests/e2e/home.spec.ts",
+            ],
+            [
+                "root",
+                "root/public",
+                "root/src",
+                "root/src/assets",
+                "root/src/components",
+                "root/src/components/Button",
+                "root/src/components/Navbar",
+                "root/src/hooks",
+                "root/src/services",
+                "root/src/utils",
+                "root/tests",
+                "root/tests/e2e",
             ]
         );
     }
@@ -196,6 +231,20 @@ public class GlobMatcherTests
                 "root/src/utils/math.ts",
                 "root/tests/e2e/auth.spec.ts",
                 "root/tests/e2e/home.spec.ts",
+            ],
+            [
+                "root",
+                "root/public",
+                "root/src",
+                "root/src/assets",
+                "root/src/components",
+                "root/src/components/Button",
+                "root/src/components/Navbar",
+                "root/src/hooks",
+                "root/src/services",
+                "root/src/utils",
+                "root/tests",
+                "root/tests/e2e",
             ]
         );
     }
@@ -209,6 +258,17 @@ public class GlobMatcherTests
             ],
             [
                 "root/src/components/Button/Button.tsx",
+            ],
+            [
+                "root",
+                "root/src",
+                "root/src/assets",
+                "root/src/components",
+                "root/src/components/Button",
+                "root/src/components/Navbar",
+                "root/src/hooks",
+                "root/src/services",
+                "root/src/utils",
             ]
         );
     }
@@ -222,6 +282,12 @@ public class GlobMatcherTests
             ],
             [
                 "root/src/components/Button/Button.tsx",
+            ],
+            [
+                "root",
+                "root/src",
+                "root/src/components",
+                "root/src/components/Button",
             ]
         );
     }
@@ -236,6 +302,20 @@ public class GlobMatcherTests
             [
                 "root/tests/e2e/auth.spec.ts",
                 "root/tests/e2e/home.spec.ts",
+            ],
+            [
+                "root",
+                "root/public",
+                "root/src",
+                "root/src/assets",
+                "root/src/components",
+                "root/src/components/Button",
+                "root/src/components/Navbar",
+                "root/src/hooks",
+                "root/src/services",
+                "root/src/utils",
+                "root/tests",
+                "root/tests/e2e",
             ]
         );
     }
@@ -250,6 +330,20 @@ public class GlobMatcherTests
             [
                 "root/src/components/Button/Button.tsx",
                 "root/src/components/Button/Button.test.tsx",
+            ],
+            [
+                "root",
+                "root/public",
+                "root/src",
+                "root/src/assets",
+                "root/src/components",
+                "root/src/components/Button",
+                "root/src/components/Navbar",
+                "root/src/hooks",
+                "root/src/services",
+                "root/src/utils",
+                "root/tests",
+                "root/tests/e2e",
             ]
         );
     }
@@ -277,6 +371,20 @@ public class GlobMatcherTests
                 "root/src/utils/math.ts",
                 "root/src/vite-env.d.ts",
                 "root/vite.config.ts",
+            ],
+            [
+                "root",
+                "root/public",
+                "root/src",
+                "root/src/assets",
+                "root/src/components",
+                "root/src/components/Button",
+                "root/src/components/Navbar",
+                "root/src/hooks",
+                "root/src/services",
+                "root/src/utils",
+                "root/tests",
+                "root/tests/e2e",
             ]
         );
     }
@@ -288,7 +396,21 @@ public class GlobMatcherTests
             [
                 "**/button.tsx",
             ],
-            []
+            [],
+            [
+                "root",
+                "root/public",
+                "root/src",
+                "root/src/assets",
+                "root/src/components",
+                "root/src/components/Button",
+                "root/src/components/Navbar",
+                "root/src/hooks",
+                "root/src/services",
+                "root/src/utils",
+                "root/tests",
+                "root/tests/e2e",
+            ]
         );
     }
 
@@ -305,6 +427,20 @@ public class GlobMatcherTests
                 "root/src/assets/product0.png",
                 "root/src/assets/product1.png",
                 "root/src/assets/product2.png",
+            ],
+            [
+                "root",
+                "root/public",
+                "root/src",
+                "root/src/assets",
+                "root/src/components",
+                "root/src/components/Button",
+                "root/src/components/Navbar",
+                "root/src/hooks",
+                "root/src/services",
+                "root/src/utils",
+                "root/tests",
+                "root/tests/e2e",
             ]
         );
     }
@@ -316,7 +452,21 @@ public class GlobMatcherTests
             [
                 "**/product??.png",
             ],
-            []
+            [],
+            [
+                "root",
+                "root/public",
+                "root/src",
+                "root/src/assets",
+                "root/src/components",
+                "root/src/components/Button",
+                "root/src/components/Navbar",
+                "root/src/hooks",
+                "root/src/services",
+                "root/src/utils",
+                "root/tests",
+                "root/tests/e2e",
+            ]
         );
     }
 
@@ -329,6 +479,20 @@ public class GlobMatcherTests
             ],
             [
                 "root/src/assets/product?.png",
+            ],
+            [
+                "root",
+                "root/public",
+                "root/src",
+                "root/src/assets",
+                "root/src/components",
+                "root/src/components/Button",
+                "root/src/components/Navbar",
+                "root/src/hooks",
+                "root/src/services",
+                "root/src/utils",
+                "root/tests",
+                "root/tests/e2e",
             ]
         );
     }
@@ -342,6 +506,11 @@ public class GlobMatcherTests
             ],
             [
                 "root/src/assets/product!.png",
+            ],
+            [
+                "root",
+                "root/src",
+                "root/src/assets",
             ]
         );
     }
@@ -354,7 +523,10 @@ public class GlobMatcherTests
                 "**/*",
                 "!**/*",
             ],
-            []
+            [],
+            [
+                "root",
+            ]
         );
     }
 
@@ -369,6 +541,9 @@ public class GlobMatcherTests
             ],
             [
                 "root/package.json",
+            ],
+            [
+                "root",
             ]
         );
     }
@@ -404,6 +579,16 @@ public class GlobMatcherTests
                 "root/src/services/logger.ts",
                 "root/src/utils/helpers.ts",
                 "root/src/utils/math.ts",
+            ],
+            [
+                "root",
+                "root/src",
+                "root/src/assets",
+                "root/src/components",
+                "root/src/components/Button",
+                "root/src/hooks",
+                "root/src/services",
+                "root/src/utils",
             ]
         );
     }
@@ -420,6 +605,12 @@ public class GlobMatcherTests
                 "root/package.json",
                 "root/tsconfig.json",
                 "root/public/manifest.json",
+            ],
+            [
+                "root",
+                "root/public",
+                "root/tests",
+                "root/tests/e2e",
             ]
         );
     }
@@ -436,6 +627,20 @@ public class GlobMatcherTests
                 "root/package.json",
                 "root/tsconfig.json",
                 "root/public/manifest.json",
+            ],
+            [
+                "root",
+                "root/public",
+                "root/src",
+                "root/src/assets",
+                "root/src/components",
+                "root/src/components/Button",
+                "root/src/components/Navbar",
+                "root/src/hooks",
+                "root/src/services",
+                "root/src/utils",
+                "root/tests",
+                "root/tests/e2e",
             ]
         );
     }
@@ -458,6 +663,12 @@ public class GlobMatcherTests
                 "root/public/manifest.json",
                 "root/tests/e2e/auth.spec.ts",
                 "root/tests/e2e/home.spec.ts",
+            ],
+            [
+                "root",
+                "root/public",
+                "root/tests",
+                "root/tests/e2e",
             ]
         );
     }
