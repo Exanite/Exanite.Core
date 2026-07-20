@@ -100,15 +100,7 @@ public class GlobMatcher
                         break;
                     }
 
-                    var isMatch = segment switch
-                    {
-                        DoubleStarGlobSegment => true,
-                        LiteralGlobSegment literalSegment => literalSegment.IsMatch(file),
-                        PatternGlobSegment patternSegment => patternSegment.IsMatch(file),
-                        _ => throw ExceptionUtility.NotSupported(segment),
-                    };
-
-                    if (isMatch)
+                    if (IsSegmentMatch(segment, file))
                     {
                         if (pattern.IsInclude)
                         {
@@ -131,29 +123,26 @@ public class GlobMatcher
                     var firstSegment = pattern.Segments[activePattern.SegmentIndex];
                     var remainingSegmentCount = pattern.Segments.Count - activePattern.SegmentIndex;
 
-                    var maybeMatch = firstSegment switch
+                    // For includes, we have to open the folder if it is even potentially relevant
+                    // For excludes, we can skip the folder once it is known to be definitely not relevant
+                    if (pattern.IsInclude)
                     {
-                        DoubleStarGlobSegment => true,
-                        LiteralGlobSegment literalSegment => remainingSegmentCount >= 2 && literalSegment.IsMatch(childFolder),
-                        PatternGlobSegment patternSegment => remainingSegmentCount >= 2 && patternSegment.IsMatch(childFolder),
-                        _ => throw ExceptionUtility.NotSupported(firstSegment),
-                    };
-
-                    if (maybeMatch)
-                    {
-                        // For includes, we have to open the folder if it is even potentially relevant
-                        // For excludes, we can skip the folder once it is known to be definitely not relevant
-
                         // Include: ** -> Definitely relevant
                         // Include: match/.. -> Potentially relevant
-                        // These two conditions are covered by the switch above
-                        if (pattern.IsInclude)
+                        if (firstSegment is DoubleStarGlobSegment)
                         {
-                            // Folder is relevant if an include can maybe match
                             isRelevant = true;
                             break;
                         }
 
+                        if (remainingSegmentCount >= 2 && IsSegmentMatch(firstSegment, childFolder))
+                        {
+                            isRelevant = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
                         // Exclude: ** -> Definitely not relevant
                         // Exclude: **/* -> Definitely not relevant
                         // Exclude: match/** -> Definitely not relevant
@@ -173,7 +162,8 @@ public class GlobMatcher
                             }
 
                             if (pattern.Segments[activePattern.SegmentIndex] is DoubleStarGlobSegment
-                                && pattern.Segments[activePattern.SegmentIndex + 1] is PatternGlobSegment { Pattern: "*" })
+                                && pattern.Segments[activePattern.SegmentIndex + 1] is PatternGlobSegment { Pattern: "*" }
+                                && IsSegmentMatch(firstSegment, childFolder))
                             {
                                 break;
                             }
@@ -181,7 +171,8 @@ public class GlobMatcher
 
                         if (remainingSegmentCount == 3
                             && pattern.Segments[activePattern.SegmentIndex + 1] is DoubleStarGlobSegment
-                            && pattern.Segments[activePattern.SegmentIndex + 2] is PatternGlobSegment { Pattern: "*" })
+                            && pattern.Segments[activePattern.SegmentIndex + 2] is PatternGlobSegment { Pattern: "*" }
+                            && IsSegmentMatch(firstSegment, childFolder))
                         {
                             break;
                         }
@@ -231,6 +222,17 @@ public class GlobMatcher
                     // This is the default case, so implement this first
                 }
             }
+        }
+
+        private bool IsSegmentMatch(GlobSegment segment, string name)
+        {
+            return segment switch
+            {
+                DoubleStarGlobSegment => true,
+                LiteralGlobSegment literalSegment => literalSegment.IsMatch(name),
+                PatternGlobSegment patternSegment => patternSegment.IsMatch(name),
+                _ => throw ExceptionUtility.NotSupported(segment),
+            };
         }
 
         private void ReportResult(IGlobFolder folder, string file)
