@@ -14,7 +14,7 @@ public class GlobMatcherTests
         new Folder("public", [], ["favicon.ico", "index.html", "manifest.json"]),
         new Folder("src",
         [
-            new Folder("assets", [], ["logo.svg", "hero.png"]),
+            new Folder("assets", [], ["logo.svg", "hero.png", "product0.png", "product1.png", "product2.png"]),
             new Folder("components",
             [
                 new Folder("Button", [], ["Button.tsx", "Button.test.tsx", "Button.css"]),
@@ -61,6 +61,63 @@ public class GlobMatcherTests
         var expected = new HashSet<string>()
         {
             "src/components/Navbar/Navbar.test.tsx",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void SimpleWildcardSegment()
+    {
+        var matcher = new GlobMatcher(["*"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "package.json",
+            "tsconfig.json",
+            "vite.config.ts",
+            "README.md",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void AllOfSpecificFileExtension()
+    {
+        var matcher = new GlobMatcher(["**/*.spec.ts"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "tests/e2e/auth.spec.ts",
+            "tests/e2e/home.spec.ts",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void AllProductImages()
+    {
+        var matcher = new GlobMatcher(["**/product?.png"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "src/assets/product0.png",
+            "src/assets/product1.png",
+            "src/assets/product2.png",
         };
 
         Assert.Equal(expected, results);
