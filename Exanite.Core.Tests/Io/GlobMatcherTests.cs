@@ -499,7 +499,7 @@ public class GlobMatcherTests
         Assert.Equal(expected, results);
     }
 
-    private class Folder : IGlobFolder, IEnumerable
+    private class Folder : IGlobFolder, IEnumerable<string>
     {
         private readonly Dictionary<string, Folder> folders = [];
         private readonly string[] files;
@@ -521,18 +521,6 @@ public class GlobMatcherTests
             this.files = files ?? [];
         }
 
-        // Strictly for collection initializer syntax
-        public void Add(Folder folder)
-        {
-            folders.Add(folder.Name, folder);
-        }
-
-        // Strictly for collection initializer syntax
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return folders.Values.Cast<object>().Concat(files).GetEnumerator();
-        }
-
         public IGlobFolder GetFolder(string name)
         {
             return folders[name];
@@ -546,6 +534,32 @@ public class GlobMatcherTests
         public IEnumerable<string> GetFiles()
         {
             return files;
+        }
+
+        // For collection initializer syntax
+        public void Add(Folder folder)
+        {
+            folders.Add(folder.Name, folder);
+        }
+
+        // For collection initializer syntax
+        public IEnumerator<string> GetEnumerator()
+        {
+            foreach (var folder in folders.Keys)
+            {
+                yield return folder;
+            }
+
+            foreach (var file in files)
+            {
+                yield return file;
+            }
+        }
+
+        // For collection initializer syntax
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         public override string ToString()
