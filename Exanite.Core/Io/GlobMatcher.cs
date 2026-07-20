@@ -85,6 +85,8 @@ public class GlobMatcher
 
         public void Match(IGlobFolder folder, List<ActivePattern> activePatterns)
         {
+            // TODO: Handle free moves
+
             // Try to match files
             var files = folder.GetFiles().ToHashSet();
             foreach (var file in files)
@@ -185,42 +187,13 @@ public class GlobMatcher
                 }
 
                 var nextActivePatterns = new List<ActivePattern>();
-
-                // TODO
-                Console.WriteLine(childFolder);
-            }
-
-            if (nint.Size == 0) // TODO: WIP
-            {
-                var folders = folder.GetFolders().ToHashSet();
-
-                var relevantFolders = new List<string>();
-                var relevantFoldersSet = new HashSet<string>();
-
-                // This block contains optimizations and is not critical to the algorithm. Ignore it for now.
-                var allLiteral = true;
                 for (var i = activePatterns.Count - 1; i >= 0; i--)
                 {
                     var activePattern = activePatterns[i];
-                    var pattern = patterns[activePattern.PatternIndex];
-                    var segment = pattern.Segments[activePattern.SegmentIndex];
-
-                    if (segment is not LiteralGlobSegment)
-                    {
-                        allLiteral = false;
-                        break;
-                    }
+                    TryAdvancePattern(activePattern, childFolder, nextActivePatterns);
                 }
 
-                if (allLiteral)
-                {
-                    // Only attempt to expand into
-                }
-                else
-                {
-                    // If not all literal, then we potentially have to expand into all folders, unless an exclusion preempts it
-                    // This is the default case, so implement this first
-                }
+                Match(folder.GetFolder(childFolder), nextActivePatterns);
             }
         }
 
@@ -233,6 +206,35 @@ public class GlobMatcher
                 PatternGlobSegment patternSegment => patternSegment.IsMatch(name),
                 _ => throw ExceptionUtility.NotSupported(segment),
             };
+        }
+
+        private void TryAdvancePattern(ActivePattern activePattern, string folder, List<ActivePattern> next)
+        {
+            var pattern = patterns[activePattern.PatternIndex];
+            var segment = pattern.Segments[activePattern.SegmentIndex];
+            var remainingSegmentCount = pattern.Segments.Count - activePattern.SegmentIndex;
+
+            // TODO: Dedupe states
+            // Case: ** -> Output as is
+            // Case: **/.. -> Output ** and ..
+            // Case: match -> Output nothing
+            // Case: match/.. -> Output ..
+            if (segment is DoubleStarGlobSegment)
+            {
+                next.Add(activePattern);
+
+                if (remainingSegmentCount >= 2)
+                {
+                    next.Add(new ActivePattern(activePattern.PatternIndex, activePattern.SegmentIndex + 1));
+                }
+
+                return;
+            }
+
+            if (remainingSegmentCount >= 2 && IsSegmentMatch(segment, folder))
+            {
+                next.Add(new ActivePattern(activePattern.PatternIndex, activePattern.SegmentIndex + 1));
+            }
         }
 
         private void ReportResult(IGlobFolder folder, string file)
