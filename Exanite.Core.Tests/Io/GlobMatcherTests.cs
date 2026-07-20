@@ -14,7 +14,7 @@ public class GlobMatcherTests
         new Folder("root/public", ["favicon.ico", "index.html", "manifest.json"]),
         new Folder("root/src", ["App.tsx", "App.css", "main.tsx", "vite-env.d.ts"])
         {
-            new Folder("root/src/assets", ["logo.svg", "hero.png", "product0.png", "product1.png", "product2.png"]),
+            new Folder("root/src/assets", ["logo.svg", "hero.png", "product.json", "product0.png", "product1.png", "product2.png"]),
             new Folder("root/src/components")
             {
                 new Folder("root/src/components/Button", ["Button.tsx", "Button.test.tsx", "Button.css"]),
@@ -103,7 +103,25 @@ public class GlobMatcherTests
     }
 
     [Fact]
-    public void AllProductImages()
+    public void AllButtonTsxFiles()
+    {
+        var matcher = new GlobMatcher(["**/components/Button/*.tsx"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/src/components/Button/Button.tsx",
+            "root/src/components/Button/Button.test.tsx",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void AllNumberedProductImages()
     {
         var matcher = new GlobMatcher(["**/product?.png"]);
         var rawResults = matcher.Match(WebDev).ToList();
@@ -116,6 +134,58 @@ public class GlobMatcherTests
             "root/src/assets/product0.png",
             "root/src/assets/product1.png",
             "root/src/assets/product2.png",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void AllIncludeAllExclude()
+    {
+        var matcher = new GlobMatcher(["**/*", "!**/*"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>();
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void AllJsonNonSrc()
+    {
+        var matcher = new GlobMatcher(["**/*.json", "!src/**"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/package.json",
+            "root/tsconfig.json",
+            "root/public/manifest.json",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void AllJsonNonSrc_MoreSpecific()
+    {
+        var matcher = new GlobMatcher(["**/*.json", "!src/**/*.json"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/package.json",
+            "root/tsconfig.json",
+            "root/public/manifest.json",
         };
 
         Assert.Equal(expected, results);
