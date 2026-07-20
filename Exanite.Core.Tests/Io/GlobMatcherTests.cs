@@ -629,6 +629,7 @@ public class GlobMatcherTests
                 "root/public/manifest.json",
             ],
             [
+                // This notably can be optimized, but I can't be bothered to right now
                 "root",
                 "root/public",
                 "root/src",
