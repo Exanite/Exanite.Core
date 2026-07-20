@@ -59,36 +59,169 @@ public class GlobMatcher
 
     public IEnumerable<string> Match(IGlobFolder folder)
     {
-        var results = new List<string>();
+        var context = new MatchContext(patterns);
         var activePatterns = new List<ActivePattern>();
         for (var i = 0; i < patterns.Length; i++)
         {
             activePatterns.Add(new ActivePattern(i, 0));
         }
 
-        Match(results, folder, activePatterns);
+        context.Match(folder, activePatterns);
 
-        return results;
+        return context.Results;
     }
 
-    private void Match(List<string> results, IGlobFolder folder, List<ActivePattern> activePatterns)
+    private class MatchContext
     {
-        var folders = folder.GetFolders().ToHashSet();
+        private readonly GlobPattern[] patterns;
+        private readonly List<string> results = new();
 
-        var relevantFolders = new List<string>();
-        var relevantFoldersSet = new HashSet<string>();
+        public IEnumerable<string> Results => results;
 
-        var allLiteral = true;
-        foreach (var activePattern in activePatterns)
+        public MatchContext(GlobPattern[] patterns)
         {
-            var pattern = patterns[activePattern.PatternIndex];
-            var segment = pattern.Segments[activePattern.SegmentIndex];
+            this.patterns = patterns;
+        }
 
-            if (segment is not LiteralGlobSegment)
+        public void Match(IGlobFolder folder, List<ActivePattern> activePatterns)
+        {
+            // Try match files
+            // TODO: Consider flipping order of iteration
+            var files = folder.GetFiles().ToHashSet();
+            foreach (var file in files)
             {
-                allLiteral = false;
-                break;
+                for (var i = activePatterns.Count - 1; i >= 0; i--)
+                {
+                    var activePattern = activePatterns[i];
+                    var pattern = patterns[activePattern.PatternIndex];
+                    var segment = pattern.Segments[activePattern.SegmentIndex];
+
+                    switch (segment)
+                    {
+                        case DoubleStarGlobSegment:
+                        {
+                            ReportResult(folder, file);
+                            break;
+                        }
+                        case LiteralGlobSegment literalSegment:
+                        {
+                            if (literalSegment.IsMatch(file))
+                            {
+                                ReportResult(folder, file);
+                            }
+
+                            break;
+                        }
+                        case PatternGlobSegment patternSegment:
+                        {
+                            if (patternSegment.IsMatch(file))
+                            {
+                                ReportResult(folder, file);
+                            }
+
+                            break;
+                        }
+                        default: throw ExceptionUtility.NotSupported(segment);
+                    }
+                }
             }
+
+            // Try expand into folders
+            foreach (var childFolder in folder.GetFolders())
+            {
+                var isRelevant = false;
+                for (var i = activePatterns.Count - 1; i >= 0; i--)
+                {
+                    var activePattern = activePatterns[i];
+                    var pattern = patterns[activePattern.PatternIndex];
+                    var firstSegment = pattern.Segments[activePattern.SegmentIndex];
+                    var remainingSegmentCount = pattern.Segments.Count - activePattern.SegmentIndex;
+
+                    var maybeMatch = false;
+                    switch (firstSegment)
+                    {
+                        case DoubleStarGlobSegment:
+                        {
+                            maybeMatch = true;
+                            break;
+                        }
+                        case LiteralGlobSegment literalSegment:
+                        {
+                            maybeMatch = remainingSegmentCount >= 2 && literalSegment.IsMatch(childFolder);
+                            break;
+                        }
+                        case PatternGlobSegment patternSegment:
+                        {
+                            maybeMatch = remainingSegmentCount >= 2 && patternSegment.IsMatch(childFolder);
+                            break;
+                        }
+                        default: throw ExceptionUtility.NotSupported(firstSegment);
+                    }
+
+                    if (maybeMatch)
+                    {
+                        if (!pattern.IsExclude)
+                        {
+                            // Folder is relevant if an include can maybe match
+                            isRelevant = true;
+                            break;
+                        }
+
+                        if (remainingSegmentCount == 1 && pattern.Segments[activePattern.SegmentIndex + 1] is DoubleStarGlobSegment)
+                        {
+                            // Folder is not relevant if an exclude can maybe match AND the next segment is the only segment AND the next segment is a double star segment
+                            isRelevant = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (!isRelevant)
+                {
+                    continue;
+                }
+
+                // TODO
+                Console.WriteLine(childFolder);
+            }
+
+            if (nint.Size == 0) // Disable
+            {
+                var folders = folder.GetFolders().ToHashSet();
+
+                var relevantFolders = new List<string>();
+                var relevantFoldersSet = new HashSet<string>();
+
+                // This block contains optimizations and is not critical to the algorithm. Ignore it for now.
+                var allLiteral = true;
+                for (var i = activePatterns.Count - 1; i >= 0; i--)
+                {
+                    var activePattern = activePatterns[i];
+                    var pattern = patterns[activePattern.PatternIndex];
+                    var segment = pattern.Segments[activePattern.SegmentIndex];
+
+                    if (segment is not LiteralGlobSegment)
+                    {
+                        allLiteral = false;
+                        break;
+                    }
+                }
+
+                if (allLiteral)
+                {
+                    // Only attempt to expand into
+                }
+                else
+                {
+                    // If not all literal, then we potentially have to expand into all folders, unless an exclusion preempts it
+                    // This is the default case, so implement this first
+                }
+            }
+        }
+
+        private void ReportResult(IGlobFolder folder, string file)
+        {
+            results.Add($"{folder.Path}/{file}");
         }
     }
 
