@@ -33,470 +33,407 @@ public class GlobMatcherTests
     [Fact]
     public void DirectReference()
     {
-        var matcher = new GlobMatcher(["package.json"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/package.json",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "package.json",
+            ],
+            [
+                "root/package.json",
+            ]
+        );
     }
 
     [Fact]
     public void DirectReferenceIncludeThenExclude()
     {
-        var matcher = new GlobMatcher(["package.json", "!package.json"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>();
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "package.json",
+                "!package.json",
+            ],
+            []
+        );
     }
 
     [Fact]
     public void DeepDirectReference()
     {
-        var matcher = new GlobMatcher(["src/components/Navbar/Navbar.test.tsx"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/src/components/Navbar/Navbar.test.tsx",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "src/components/Navbar/Navbar.test.tsx",
+            ],
+            [
+                "root/src/components/Navbar/Navbar.test.tsx",
+            ]
+        );
     }
 
     [Fact]
     public void SimpleWildcard()
     {
-        var matcher = new GlobMatcher(["*"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/package.json",
-            "root/tsconfig.json",
-            "root/vite.config.ts",
-            "root/README.md",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "*",
+            ],
+            [
+                "root/package.json",
+                "root/tsconfig.json",
+                "root/vite.config.ts",
+                "root/README.md",
+            ]
+        );
     }
 
     [Fact]
     public void RootLevelFileWildcard()
     {
-        var matcher = new GlobMatcher(["*.json"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/package.json",
-            "root/tsconfig.json",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "*.json",
+            ],
+            [
+                "root/package.json",
+                "root/tsconfig.json",
+            ]
+        );
     }
 
     [Fact]
     public void DeepWildcard()
     {
-        var matcher = new GlobMatcher(["**/*"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/package.json",
-            "root/tsconfig.json",
-            "root/vite.config.ts",
-            "root/README.md",
-            "root/public/favicon.ico",
-            "root/public/index.html",
-            "root/public/manifest.json",
-            "root/src/App.tsx",
-            "root/src/App.css",
-            "root/src/main.tsx",
-            "root/src/vite-env.d.ts",
-            "root/src/assets/logo.svg",
-            "root/src/assets/hero.png",
-            "root/src/assets/product.json",
-            "root/src/assets/product!.png",
-            "root/src/assets/product?.png",
-            "root/src/assets/product0.png",
-            "root/src/assets/product1.png",
-            "root/src/assets/product2.png",
-            "root/src/components/Button/Button.tsx",
-            "root/src/components/Button/Button.test.tsx",
-            "root/src/components/Button/Button.css",
-            "root/src/components/Navbar/Navbar.tsx",
-            "root/src/components/Navbar/Navbar.test.tsx",
-            "root/src/components/Navbar/Navbar.css",
-            "root/src/hooks/useAuth.ts",
-            "root/src/hooks/useFetch.ts",
-            "root/src/services/api.ts",
-            "root/src/services/logger.ts",
-            "root/src/utils/helpers.ts",
-            "root/src/utils/math.ts",
-            "root/tests/e2e/auth.spec.ts",
-            "root/tests/e2e/home.spec.ts",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "**/*",
+            ],
+            [
+                "root/package.json",
+                "root/tsconfig.json",
+                "root/vite.config.ts",
+                "root/README.md",
+                "root/public/favicon.ico",
+                "root/public/index.html",
+                "root/public/manifest.json",
+                "root/src/App.tsx",
+                "root/src/App.css",
+                "root/src/main.tsx",
+                "root/src/vite-env.d.ts",
+                "root/src/assets/logo.svg",
+                "root/src/assets/hero.png",
+                "root/src/assets/product.json",
+                "root/src/assets/product!.png",
+                "root/src/assets/product?.png",
+                "root/src/assets/product0.png",
+                "root/src/assets/product1.png",
+                "root/src/assets/product2.png",
+                "root/src/components/Button/Button.tsx",
+                "root/src/components/Button/Button.test.tsx",
+                "root/src/components/Button/Button.css",
+                "root/src/components/Navbar/Navbar.tsx",
+                "root/src/components/Navbar/Navbar.test.tsx",
+                "root/src/components/Navbar/Navbar.css",
+                "root/src/hooks/useAuth.ts",
+                "root/src/hooks/useFetch.ts",
+                "root/src/services/api.ts",
+                "root/src/services/logger.ts",
+                "root/src/utils/helpers.ts",
+                "root/src/utils/math.ts",
+                "root/tests/e2e/auth.spec.ts",
+                "root/tests/e2e/home.spec.ts",
+            ]
+        );
     }
 
     [Fact]
     public void DeepWildcardOnly()
     {
-        var matcher = new GlobMatcher(["**"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/package.json",
-            "root/tsconfig.json",
-            "root/vite.config.ts",
-            "root/README.md",
-            "root/public/favicon.ico",
-            "root/public/index.html",
-            "root/public/manifest.json",
-            "root/src/App.tsx",
-            "root/src/App.css",
-            "root/src/main.tsx",
-            "root/src/vite-env.d.ts",
-            "root/src/assets/logo.svg",
-            "root/src/assets/hero.png",
-            "root/src/assets/product.json",
-            "root/src/assets/product!.png",
-            "root/src/assets/product?.png",
-            "root/src/assets/product0.png",
-            "root/src/assets/product1.png",
-            "root/src/assets/product2.png",
-            "root/src/components/Button/Button.tsx",
-            "root/src/components/Button/Button.test.tsx",
-            "root/src/components/Button/Button.css",
-            "root/src/components/Navbar/Navbar.tsx",
-            "root/src/components/Navbar/Navbar.test.tsx",
-            "root/src/components/Navbar/Navbar.css",
-            "root/src/hooks/useAuth.ts",
-            "root/src/hooks/useFetch.ts",
-            "root/src/services/api.ts",
-            "root/src/services/logger.ts",
-            "root/src/utils/helpers.ts",
-            "root/src/utils/math.ts",
-            "root/tests/e2e/auth.spec.ts",
-            "root/tests/e2e/home.spec.ts",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "**",
+            ],
+            [
+                "root/package.json",
+                "root/tsconfig.json",
+                "root/vite.config.ts",
+                "root/README.md",
+                "root/public/favicon.ico",
+                "root/public/index.html",
+                "root/public/manifest.json",
+                "root/src/App.tsx",
+                "root/src/App.css",
+                "root/src/main.tsx",
+                "root/src/vite-env.d.ts",
+                "root/src/assets/logo.svg",
+                "root/src/assets/hero.png",
+                "root/src/assets/product.json",
+                "root/src/assets/product!.png",
+                "root/src/assets/product?.png",
+                "root/src/assets/product0.png",
+                "root/src/assets/product1.png",
+                "root/src/assets/product2.png",
+                "root/src/components/Button/Button.tsx",
+                "root/src/components/Button/Button.test.tsx",
+                "root/src/components/Button/Button.css",
+                "root/src/components/Navbar/Navbar.tsx",
+                "root/src/components/Navbar/Navbar.test.tsx",
+                "root/src/components/Navbar/Navbar.css",
+                "root/src/hooks/useAuth.ts",
+                "root/src/hooks/useFetch.ts",
+                "root/src/services/api.ts",
+                "root/src/services/logger.ts",
+                "root/src/utils/helpers.ts",
+                "root/src/utils/math.ts",
+                "root/tests/e2e/auth.spec.ts",
+                "root/tests/e2e/home.spec.ts",
+            ]
+        );
     }
 
     [Fact]
     public void DeepWildcardInMiddle()
     {
-        var matcher = new GlobMatcher(["src/**/Button.tsx"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/src/components/Button/Button.tsx",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "src/**/Button.tsx",
+            ],
+            [
+                "root/src/components/Button/Button.tsx",
+            ]
+        );
     }
 
     [Fact]
     public void DeepWildcardMatchesZeroLevels()
     {
-        var matcher = new GlobMatcher(["src/components/Button/**/Button.tsx"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/src/components/Button/Button.tsx",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "src/components/Button/**/Button.tsx",
+            ],
+            [
+                "root/src/components/Button/Button.tsx",
+            ]
+        );
     }
 
     [Fact]
     public void AllOfSpecificFileExtension()
     {
-        var matcher = new GlobMatcher(["**/*.spec.ts"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/tests/e2e/auth.spec.ts",
-            "root/tests/e2e/home.spec.ts",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "**/*.spec.ts",
+            ],
+            [
+                "root/tests/e2e/auth.spec.ts",
+                "root/tests/e2e/home.spec.ts",
+            ]
+        );
     }
 
     [Fact]
     public void AllButtonTsxFiles()
     {
-        var matcher = new GlobMatcher(["**/components/Button/*.tsx"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/src/components/Button/Button.tsx",
-            "root/src/components/Button/Button.test.tsx",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "**/components/Button/*.tsx",
+            ],
+            [
+                "root/src/components/Button/Button.tsx",
+                "root/src/components/Button/Button.test.tsx",
+            ]
+        );
     }
 
     [Fact]
     public void AllNonTestTypescriptFiles()
     {
-        var matcher = new GlobMatcher(["**/*.ts", "**/*.tsx", "!**/*.test.tsx", "!**/*.spec.ts"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/src/App.tsx",
-            "root/src/main.tsx",
-            "root/src/components/Button/Button.tsx",
-            "root/src/components/Navbar/Navbar.tsx",
-            "root/src/hooks/useAuth.ts",
-            "root/src/hooks/useFetch.ts",
-            "root/src/services/api.ts",
-            "root/src/services/logger.ts",
-            "root/src/utils/helpers.ts",
-            "root/src/utils/math.ts",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "**/*.ts",
+                "**/*.tsx",
+                "!**/*.test.tsx",
+                "!**/*.spec.ts",
+            ],
+            [
+                "root/src/App.tsx",
+                "root/src/main.tsx",
+                "root/src/components/Button/Button.tsx",
+                "root/src/components/Navbar/Navbar.tsx",
+                "root/src/hooks/useAuth.ts",
+                "root/src/hooks/useFetch.ts",
+                "root/src/services/api.ts",
+                "root/src/services/logger.ts",
+                "root/src/utils/helpers.ts",
+                "root/src/utils/math.ts",
+            ]
+        );
     }
 
     [Fact]
     public void CaseSensitivity()
     {
-        var matcher = new GlobMatcher(["**/button.tsx"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>();
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "**/button.tsx",
+            ],
+            []
+        );
     }
 
     [Fact]
     public void AllNumberedProductImages()
     {
-        var matcher = new GlobMatcher(["**/product?.png"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/src/assets/product!.png",
-            "root/src/assets/product?.png",
-            "root/src/assets/product0.png",
-            "root/src/assets/product1.png",
-            "root/src/assets/product2.png",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "**/product?.png",
+            ],
+            [
+                "root/src/assets/product!.png",
+                "root/src/assets/product?.png",
+                "root/src/assets/product0.png",
+                "root/src/assets/product1.png",
+                "root/src/assets/product2.png",
+            ]
+        );
     }
 
     [Fact]
     public void AllDoubleNumberedProductImages()
     {
-        var matcher = new GlobMatcher(["**/product??.png"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>();
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "**/product??.png",
+            ],
+            []
+        );
     }
 
     [Fact]
     public void EscapedWildcard()
     {
-        var matcher = new GlobMatcher([@"**/*\?.png"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/src/assets/product?.png",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                @"**/*\?.png",
+            ],
+            [
+                "root/src/assets/product?.png",
+            ]
+        );
     }
 
     [Fact]
     public void EscapedExclamation()
     {
-        var matcher = new GlobMatcher([@"src/assets/product\!.png"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/src/assets/product!.png",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                @"src/assets/product\!.png",
+            ],
+            [
+                "root/src/assets/product!.png",
+            ]
+        );
     }
 
     [Fact]
     public void AllIncludeAllExclude()
     {
-        var matcher = new GlobMatcher(["**/*", "!**/*"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>();
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "**/*",
+                "!**/*",
+            ],
+            []
+        );
     }
 
     [Fact]
     public void AllIncludeAllExclude_ThenIncludeOne()
     {
-        var matcher = new GlobMatcher(["**/*", "!**/*", "package.json"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/package.json",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "**/*",
+                "!**/*",
+                "package.json",
+            ],
+            [
+                "root/package.json",
+            ]
+        );
     }
 
     [Fact]
     public void LastPatternPriorityOverride()
     {
-        var matcher = new GlobMatcher(["src/**/*", "!src/components/**/*", "src/components/Button/*"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/src/App.tsx",
-            "root/src/App.css",
-            "root/src/main.tsx",
-            "root/src/vite-env.d.ts",
-            "root/src/assets/logo.svg",
-            "root/src/assets/hero.png",
-            "root/src/assets/product.json",
-            "root/src/assets/product!.png",
-            "root/src/assets/product?.png",
-            "root/src/assets/product0.png",
-            "root/src/assets/product1.png",
-            "root/src/assets/product2.png",
-            "root/src/components/Button/Button.tsx",
-            "root/src/components/Button/Button.test.tsx",
-            "root/src/components/Button/Button.css",
-            "root/src/hooks/useAuth.ts",
-            "root/src/hooks/useFetch.ts",
-            "root/src/services/api.ts",
-            "root/src/services/logger.ts",
-            "root/src/utils/helpers.ts",
-            "root/src/utils/math.ts",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "src/**/*",
+                "!src/components/**/*",
+                "src/components/Button/*",
+            ],
+            [
+                "root/src/App.tsx",
+                "root/src/App.css",
+                "root/src/main.tsx",
+                "root/src/vite-env.d.ts",
+                "root/src/assets/logo.svg",
+                "root/src/assets/hero.png",
+                "root/src/assets/product.json",
+                "root/src/assets/product!.png",
+                "root/src/assets/product?.png",
+                "root/src/assets/product0.png",
+                "root/src/assets/product1.png",
+                "root/src/assets/product2.png",
+                "root/src/components/Button/Button.tsx",
+                "root/src/components/Button/Button.test.tsx",
+                "root/src/components/Button/Button.css",
+                "root/src/hooks/useAuth.ts",
+                "root/src/hooks/useFetch.ts",
+                "root/src/services/api.ts",
+                "root/src/services/logger.ts",
+                "root/src/utils/helpers.ts",
+                "root/src/utils/math.ts",
+            ]
+        );
     }
 
     [Fact]
     public void AllJsonNonSrc()
     {
-        var matcher = new GlobMatcher(["**/*.json", "!src/**"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
-
-        Assert.Equal(results.Count, rawResults.Count);
-
-        var expected = new HashSet<string>()
-        {
-            "root/package.json",
-            "root/tsconfig.json",
-            "root/public/manifest.json",
-        };
-
-        Assert.Equal(expected, results);
+        RunGlobTest(
+            [
+                "**/*.json",
+                "!src/**",
+            ],
+            [
+                "root/package.json",
+                "root/tsconfig.json",
+                "root/public/manifest.json",
+            ]
+        );
     }
 
     [Fact]
     public void AllJsonNonSrc_MoreSpecific()
     {
-        var matcher = new GlobMatcher(["**/*.json", "!src/**/*.json"]);
-        var rawResults = matcher.Match(WebDev).ToList();
-        var results = new HashSet<string>(rawResults);
+        RunGlobTest(
+            [
+                "**/*.json",
+                "!src/**/*.json",
+            ],
+            [
+                "root/package.json",
+                "root/tsconfig.json",
+                "root/public/manifest.json",
+            ]
+        );
+    }
 
-        Assert.Equal(results.Count, rawResults.Count);
+    private void RunGlobTest(string[] patterns, string[] expected)
+    {
+        var matcher = new GlobMatcher(patterns);
+        var results = matcher.Match(WebDev).ToArray();
 
-        var expected = new HashSet<string>()
-        {
-            "root/package.json",
-            "root/tsconfig.json",
-            "root/public/manifest.json",
-        };
-
-        Assert.Equal(expected, results);
+        var sortedExpected = expected.OrderBy(x => x).ToArray();
+        var sortedActual = results.OrderBy(x => x).ToArray();
+        Assert.Equal(sortedExpected, sortedActual);
     }
 
     private class Folder : IGlobFolder, IEnumerable<string>
