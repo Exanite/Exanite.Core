@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Exanite.Core.Io.Globbing;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Io;
 
@@ -71,7 +73,23 @@ public class GlobMatcher
 
     private void Match(List<string> results, IGlobFolder folder, List<ActivePattern> activePatterns)
     {
-        throw new System.NotImplementedException();
+        var folders = folder.GetFolders().ToHashSet();
+
+        var relevantFolders = new List<string>();
+        var relevantFoldersSet = new HashSet<string>();
+
+        var allLiteral = true;
+        foreach (var activePattern in activePatterns)
+        {
+            var pattern = patterns[activePattern.PatternIndex];
+            var segment = pattern.Segments[activePattern.SegmentIndex];
+
+            if (segment is not LiteralGlobSegment)
+            {
+                allLiteral = false;
+                break;
+            }
+        }
     }
 
     private record struct ActivePattern(int PatternIndex, int SegmentIndex);
