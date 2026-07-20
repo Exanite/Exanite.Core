@@ -14,7 +14,7 @@ public class GlobMatcherTests
         new Folder("root/public", ["favicon.ico", "index.html", "manifest.json"]),
         new Folder("root/src", ["App.tsx", "App.css", "main.tsx", "vite-env.d.ts"])
         {
-            new Folder("root/src/assets", ["logo.svg", "hero.png", "product.json", "product0.png", "product1.png", "product2.png"]),
+            new Folder("root/src/assets", ["logo.svg", "hero.png", "product.json", "product!.png", "product?.png", "product0.png", "product1.png", "product2.png"]),
             new Folder("root/src/components")
             {
                 new Folder("root/src/components/Button", ["Button.tsx", "Button.test.tsx", "Button.css"]),
@@ -65,7 +65,7 @@ public class GlobMatcherTests
     }
 
     [Fact]
-    public void SimpleWildcardSegment()
+    public void SimpleWildcard()
     {
         var matcher = new GlobMatcher(["*"]);
         var rawResults = matcher.Match(WebDev).ToList();
@@ -79,6 +79,156 @@ public class GlobMatcherTests
             "root/tsconfig.json",
             "root/vite.config.ts",
             "root/README.md",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void RootLevelFileWildcard()
+    {
+        var matcher = new GlobMatcher(["*.json"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/package.json",
+            "root/tsconfig.json",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void DeepWildcard()
+    {
+        var matcher = new GlobMatcher(["**/*"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/package.json",
+            "root/tsconfig.json",
+            "root/vite.config.ts",
+            "root/README.md",
+            "root/public/favicon.ico",
+            "root/public/index.html",
+            "root/public/manifest.json",
+            "root/src/App.tsx",
+            "root/src/App.css",
+            "root/src/main.tsx",
+            "root/src/vite-env.d.ts",
+            "root/src/assets/logo.svg",
+            "root/src/assets/hero.png",
+            "root/src/assets/product.json",
+            "root/src/assets/product!.png",
+            "root/src/assets/product?.png",
+            "root/src/assets/product0.png",
+            "root/src/assets/product1.png",
+            "root/src/assets/product2.png",
+            "root/src/components/Button/Button.tsx",
+            "root/src/components/Button/Button.test.tsx",
+            "root/src/components/Button/Button.css",
+            "root/src/components/Navbar/Navbar.tsx",
+            "root/src/components/Navbar/Navbar.test.tsx",
+            "root/src/components/Navbar/Navbar.css",
+            "root/src/hooks/useAuth.ts",
+            "root/src/hooks/useFetch.ts",
+            "root/src/services/api.ts",
+            "root/src/services/logger.ts",
+            "root/src/utils/helpers.ts",
+            "root/src/utils/math.ts",
+            "root/tests/e2e/auth.spec.ts",
+            "root/tests/e2e/home.spec.ts",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void DeepWildcardOnly()
+    {
+        var matcher = new GlobMatcher(["**"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/package.json",
+            "root/tsconfig.json",
+            "root/vite.config.ts",
+            "root/README.md",
+            "root/public/favicon.ico",
+            "root/public/index.html",
+            "root/public/manifest.json",
+            "root/src/App.tsx",
+            "root/src/App.css",
+            "root/src/main.tsx",
+            "root/src/vite-env.d.ts",
+            "root/src/assets/logo.svg",
+            "root/src/assets/hero.png",
+            "root/src/assets/product.json",
+            "root/src/assets/product!.png",
+            "root/src/assets/product?.png",
+            "root/src/assets/product0.png",
+            "root/src/assets/product1.png",
+            "root/src/assets/product2.png",
+            "root/src/components/Button/Button.tsx",
+            "root/src/components/Button/Button.test.tsx",
+            "root/src/components/Button/Button.css",
+            "root/src/components/Navbar/Navbar.tsx",
+            "root/src/components/Navbar/Navbar.test.tsx",
+            "root/src/components/Navbar/Navbar.css",
+            "root/src/hooks/useAuth.ts",
+            "root/src/hooks/useFetch.ts",
+            "root/src/services/api.ts",
+            "root/src/services/logger.ts",
+            "root/src/utils/helpers.ts",
+            "root/src/utils/math.ts",
+            "root/tests/e2e/auth.spec.ts",
+            "root/tests/e2e/home.spec.ts",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void DeepWildcardInMiddle()
+    {
+        var matcher = new GlobMatcher(["src/**/Button.tsx"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/src/components/Button/Button.tsx",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void DeepWildcardMatchesZeroLevels()
+    {
+        var matcher = new GlobMatcher(["src/components/Button/**/Button.tsx"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/src/components/Button/Button.tsx",
         };
 
         Assert.Equal(expected, results);
@@ -121,6 +271,20 @@ public class GlobMatcherTests
     }
 
     [Fact]
+    public void CaseSensitivity()
+    {
+        var matcher = new GlobMatcher(["**/button.tsx"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>();
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
     public void AllNumberedProductImages()
     {
         var matcher = new GlobMatcher(["**/product?.png"]);
@@ -131,9 +295,59 @@ public class GlobMatcherTests
 
         var expected = new HashSet<string>()
         {
+            "root/src/assets/product!.png",
+            "root/src/assets/product?.png",
             "root/src/assets/product0.png",
             "root/src/assets/product1.png",
             "root/src/assets/product2.png",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void AllDoubleNumberedProductImages()
+    {
+        var matcher = new GlobMatcher(["**/product??.png"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>();
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void EscapedWildcard()
+    {
+        var matcher = new GlobMatcher(["**/*\\?.png"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/src/assets/product?.png",
+        };
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void EscapedExclamation()
+    {
+        var matcher = new GlobMatcher(["src/assets/product\\!.png"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/src/assets/product!.png",
         };
 
         Assert.Equal(expected, results);
@@ -149,6 +363,43 @@ public class GlobMatcherTests
         Assert.Equal(results.Count, rawResults.Count);
 
         var expected = new HashSet<string>();
+
+        Assert.Equal(expected, results);
+    }
+
+    [Fact]
+    public void LastPatternPriorityOverride()
+    {
+        var matcher = new GlobMatcher(["src/**/*", "!src/components/**/*", "src/components/Button/*"]);
+        var rawResults = matcher.Match(WebDev).ToList();
+        var results = new HashSet<string>(rawResults);
+
+        Assert.Equal(results.Count, rawResults.Count);
+
+        var expected = new HashSet<string>()
+        {
+            "root/src/App.tsx",
+            "root/src/App.css",
+            "root/src/main.tsx",
+            "root/src/vite-env.d.ts",
+            "root/src/assets/logo.svg",
+            "root/src/assets/hero.png",
+            "root/src/assets/product.json",
+            "root/src/assets/product!.png",
+            "root/src/assets/product?.png",
+            "root/src/assets/product0.png",
+            "root/src/assets/product1.png",
+            "root/src/assets/product2.png",
+            "root/src/components/Button/Button.tsx",
+            "root/src/components/Button/Button.test.tsx",
+            "root/src/components/Button/Button.css",
+            "root/src/hooks/useAuth.ts",
+            "root/src/hooks/useFetch.ts",
+            "root/src/services/api.ts",
+            "root/src/services/logger.ts",
+            "root/src/utils/helpers.ts",
+            "root/src/utils/math.ts",
+        };
 
         Assert.Equal(expected, results);
     }
