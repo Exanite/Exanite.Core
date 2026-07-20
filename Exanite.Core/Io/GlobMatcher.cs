@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Exanite.Core.Io.Globbing;
+using Exanite.Core.Pooling;
 using Exanite.Core.Utilities;
 
 namespace Exanite.Core.Io;
@@ -61,7 +62,7 @@ public class GlobMatcher
     public IEnumerable<string> Match(IGlobFolder folder)
     {
         var context = new MatchContext(patterns);
-        var activePatterns = new List<ActivePattern>();
+        using var _ = ListPool<ActivePattern>.Acquire(out var activePatterns);
         for (var i = 0; i < patterns.Length; i++)
         {
             activePatterns.Add(new ActivePattern(i, 0));
@@ -84,7 +85,6 @@ public class GlobMatcher
             this.patterns = patterns;
         }
 
-        // TODO: Optimize
         public void Match(IGlobFolder folder, List<ActivePattern> activePatterns)
         {
             // Handle free moves
@@ -217,7 +217,7 @@ public class GlobMatcher
                     continue;
                 }
 
-                var nextActivePatterns = new List<ActivePattern>();
+                using var _ = ListPool<ActivePattern>.Acquire(out var nextActivePatterns);
                 for (var i = activePatterns.Count - 1; i >= 0; i--)
                 {
                     var activePattern = activePatterns[i];
