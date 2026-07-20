@@ -37,6 +37,7 @@ public sealed class PatternGlobSegment : GlobSegment
             if (Pattern[i] == '\\')
             {
                 isEscape = true;
+                continue;
             }
 
             var type = pattern[i] switch

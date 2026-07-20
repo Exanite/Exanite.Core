@@ -23,6 +23,7 @@ public class GlobSegmentTests
     // Escaped misc
     [InlineData(@"\n\o\t\e?", "note0", true)]
     [InlineData(@"\n\o\t\e?", "note1", true)]
+    [InlineData(@"*\?.png", "product?.png", true)]
     public void Pattern_IsMatch(string pattern, string input, bool expected)
     {
         var globPattern = new GlobPattern(pattern);
