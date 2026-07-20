@@ -362,7 +362,7 @@ public class GlobMatcherTests
     [Fact]
     public void EscapedWildcard()
     {
-        var matcher = new GlobMatcher(["**/*\\?.png"]);
+        var matcher = new GlobMatcher([@"**/*\?.png"]);
         var rawResults = matcher.Match(WebDev).ToList();
         var results = new HashSet<string>(rawResults);
 
@@ -379,7 +379,7 @@ public class GlobMatcherTests
     [Fact]
     public void EscapedExclamation()
     {
-        var matcher = new GlobMatcher(["src/assets/product\\!.png"]);
+        var matcher = new GlobMatcher([@"src/assets/product\!.png"]);
         var rawResults = matcher.Match(WebDev).ToList();
         var results = new HashSet<string>(rawResults);
 
