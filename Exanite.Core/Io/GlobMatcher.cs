@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Exanite.Core.Io.Globbing;
 using Exanite.Core.Utilities;
@@ -99,20 +101,15 @@ public class GlobMatcher
             }
 
             // Dedupe active patterns
-            var rawActivePatterns = activePatterns;
-            activePatterns = new List<ActivePattern>();
-            var alreadyAddedActivePatterns = new HashSet<ActivePattern>();
-            for (var i = rawActivePatterns.Count - 1; i >= 0; i--)
+            for (var i = activePatterns.Count - 1; i >= 1; i--)
             {
-                var activePattern = rawActivePatterns[i];
-                if (!alreadyAddedActivePatterns.Add(activePattern))
+                if (activePatterns[i] == activePatterns[i - 1])
                 {
-                    continue;
+                    activePatterns.RemoveAt(i);
                 }
-
-                activePatterns.Add(activePattern);
             }
-            activePatterns.Reverse();
+
+            ValidateOrder(activePatterns);
 
             // Try to match files
             foreach (var file in folder.GetFiles())
@@ -232,6 +229,27 @@ public class GlobMatcher
             }
         }
 
+        [Conditional("DEBUG")]
+        private void ValidateOrder(List<ActivePattern> patterns)
+        {
+            for (var i = 0; i < patterns.Count - 1; i++)
+            {
+                var a = patterns[i];
+                var b = patterns[i + 1];
+                if (a.PatternIndex < b.PatternIndex)
+                {
+                    continue;
+                }
+
+                if (a.SegmentIndex < b.SegmentIndex)
+                {
+                    continue;
+                }
+
+                throw new InvalidOperationException("Internal: Active patterns list must remain sorted and deduplicated");
+            }
+        }
+
         private bool IsSegmentMatch(GlobSegment segment, string name)
         {
             return segment switch
@@ -255,12 +273,12 @@ public class GlobMatcher
             // Case: match/.. -> Output ..
             if (segment is DoubleStarGlobSegment)
             {
-                next.Add(activePattern);
-
                 if (remainingSegmentCount >= 2)
                 {
                     next.Add(new ActivePattern(activePattern.PatternIndex, activePattern.SegmentIndex + 1));
                 }
+
+                next.Add(activePattern);
 
                 return;
             }
