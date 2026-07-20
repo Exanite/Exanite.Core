@@ -9,7 +9,7 @@ namespace Exanite.Core.Tests.Io;
 
 public class GlobMatcherTests
 {
-    private readonly TestFolder folder = new("root", ["package.json", "tsconfig.json", "vite.config.ts", "README.md"])
+    private readonly TestFolder folder = new TestFolder("root", ["package.json", "tsconfig.json", "vite.config.ts", "README.md"])
     {
         new TestFolder("root/public", ["favicon.ico", "index.html", "manifest.json"]),
         new TestFolder("root/src", ["App.tsx", "App.css", "main.tsx", "vite-env.d.ts"])
@@ -28,7 +28,7 @@ public class GlobMatcherTests
         {
             new TestFolder("root/tests/e2e", ["auth.spec.ts", "home.spec.ts"]),
         },
-    };
+    }.Initialize();
 
     [Fact]
     public void DirectReference()
@@ -480,6 +480,8 @@ public class GlobMatcherTests
         public string Name { get; }
         public string Path { get; }
 
+        public HashSet<string>? AccessedFolders { get; private set; }
+
         public TestFolder(string path, string[]? files = null)
         {
             Name = path;
@@ -501,12 +503,30 @@ public class GlobMatcherTests
 
         public IEnumerable<string> GetFolders()
         {
+            AccessedFolders?.Add(Path);
             return folders.Keys;
         }
 
         public IEnumerable<string> GetFiles()
         {
+            AccessedFolders?.Add(Path);
             return files;
+        }
+
+        /// <summary>
+        /// Call once on root.
+        /// </summary>
+        public TestFolder Initialize()
+        {
+            AccessedFolders ??= [];
+
+            foreach (var folder in folders.Values)
+            {
+                folder.AccessedFolders = AccessedFolders;
+                folder.Initialize();
+            }
+
+            return this;
         }
 
         // For collection initializer syntax
