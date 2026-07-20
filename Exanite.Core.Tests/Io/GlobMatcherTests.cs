@@ -462,14 +462,18 @@ public class GlobMatcherTests
         );
     }
 
-    private void RunGlobTest(string[] patterns, string[] expected)
+    private void RunGlobTest(string[] patterns, string[] expectedMatches, string[] expectedAccesses)
     {
         var matcher = new GlobMatcher(patterns);
         var results = matcher.Match(folder).ToArray();
 
-        var sortedExpected = expected.OrderBy(x => x).ToArray();
-        var sortedActual = results.OrderBy(x => x).ToArray();
-        Assert.Equal(sortedExpected, sortedActual);
+        var sortedExpectedFiles = expectedMatches.OrderBy(x => x).ToArray();
+        var sortedActualFiles = results.OrderBy(x => x).ToArray();
+        Assert.Equal(sortedExpectedFiles, sortedActualFiles);
+
+        var sortedExpectedAccesses = expectedAccesses.OrderBy(x => x).ToArray();
+        var sortedActualAccesses = folder.AccessedFolders.OrderBy(x => x).ToArray();
+        Assert.Equal(sortedExpectedAccesses, sortedActualAccesses);
     }
 
     private class TestFolder : IGlobFolder, IEnumerable<string>
@@ -480,7 +484,7 @@ public class GlobMatcherTests
         public string Name { get; }
         public string Path { get; }
 
-        public HashSet<string>? AccessedFolders { get; private set; }
+        public HashSet<string> AccessedFolders { get; private set; } = null!;
 
         public TestFolder(string path, string[]? files = null)
         {
@@ -503,13 +507,13 @@ public class GlobMatcherTests
 
         public IEnumerable<string> GetFolders()
         {
-            AccessedFolders?.Add(Path);
+            AccessedFolders.Add(Path);
             return folders.Keys;
         }
 
         public IEnumerable<string> GetFiles()
         {
-            AccessedFolders?.Add(Path);
+            AccessedFolders.Add(Path);
             return files;
         }
 
@@ -518,6 +522,7 @@ public class GlobMatcherTests
         /// </summary>
         public TestFolder Initialize()
         {
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
             AccessedFolders ??= [];
 
             foreach (var folder in folders.Values)
