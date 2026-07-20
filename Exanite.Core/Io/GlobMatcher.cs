@@ -227,6 +227,7 @@ public class GlobMatcher
                     var activePattern = activePatterns[i];
                     TryAdvancePattern(activePattern, childFolder, nextActivePatterns);
                 }
+                nextActivePatterns.Reverse();
 
                 Match(folder.GetFolder(childFolder), nextActivePatterns);
             }

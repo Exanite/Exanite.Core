@@ -263,6 +263,8 @@ public class GlobMatcherTests
                 "root/src/services/logger.ts",
                 "root/src/utils/helpers.ts",
                 "root/src/utils/math.ts",
+                "root/src/vite-env.d.ts",
+                "root/vite.config.ts",
             ]
         );
     }
