@@ -1,6 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Exanite.Core.Io;
 using Exanite.Core.Io.Globbing;
 using Xunit;
@@ -9,28 +9,26 @@ namespace Exanite.Core.Tests.Io;
 
 public class GlobMatcherTests
 {
-    private static readonly Folder WebDev = new Folder("root",
-    [
-        new Folder("public", [], ["favicon.ico", "index.html", "manifest.json"]),
-        new Folder("src",
-        [
-            new Folder("assets", [], ["logo.svg", "hero.png", "product0.png", "product1.png", "product2.png"]),
-            new Folder("components",
-            [
-                new Folder("Button", [], ["Button.tsx", "Button.test.tsx", "Button.css"]),
-                new Folder("Navbar", [], ["Navbar.tsx", "Navbar.test.tsx", "Navbar.css"]),
-            ], []),
-            new Folder("hooks", [], ["useAuth.ts", "useFetch.ts"]),
-            new Folder("services", [], ["api.ts", "logger.ts"]),
-            new Folder("utils", [], ["helpers.ts", "math.ts"]),
-        ],
-        ["App.tsx", "App.css", "main.tsx", "vite-env.d.ts"]),
-        new Folder("tests",
-        [
-            new Folder("e2e", [], ["auth.spec.ts", "home.spec.ts"]),
-        ], []),
-    ],
-    ["package.json", "tsconfig.json", "vite.config.ts", "README.md"]).PropagatePaths();
+    private static readonly Folder WebDev = new("root", ["package.json", "tsconfig.json", "vite.config.ts", "README.md"])
+    {
+        new Folder("root/public", ["favicon.ico", "index.html", "manifest.json"]),
+        new Folder("root/src", ["App.tsx", "App.css", "main.tsx", "vite-env.d.ts"])
+        {
+            new Folder("root/src/assets", ["logo.svg", "hero.png", "product0.png", "product1.png", "product2.png"]),
+            new Folder("root/src/components")
+            {
+                new Folder("root/src/components/Button", ["Button.tsx", "Button.test.tsx", "Button.css"]),
+                new Folder("root/src/components/Navbar", ["Navbar.tsx", "Navbar.test.tsx", "Navbar.css"]),
+            },
+            new Folder("root/src/hooks", ["useAuth.ts", "useFetch.ts"]),
+            new Folder("root/src/services", ["api.ts", "logger.ts"]),
+            new Folder("root/src/utils", ["helpers.ts", "math.ts"]),
+        },
+        new Folder("root/tests")
+        {
+            new Folder("root/tests/e2e", ["auth.spec.ts", "home.spec.ts"]),
+        },
+    };
 
     [Fact]
     public void DirectReference()
@@ -43,7 +41,7 @@ public class GlobMatcherTests
 
         var expected = new HashSet<string>()
         {
-            "package.json",
+            "root/package.json",
         };
 
         Assert.Equal(expected, results);
@@ -60,7 +58,7 @@ public class GlobMatcherTests
 
         var expected = new HashSet<string>()
         {
-            "src/components/Navbar/Navbar.test.tsx",
+            "root/src/components/Navbar/Navbar.test.tsx",
         };
 
         Assert.Equal(expected, results);
@@ -77,10 +75,10 @@ public class GlobMatcherTests
 
         var expected = new HashSet<string>()
         {
-            "package.json",
-            "tsconfig.json",
-            "vite.config.ts",
-            "README.md",
+            "root/package.json",
+            "root/tsconfig.json",
+            "root/vite.config.ts",
+            "root/README.md",
         };
 
         Assert.Equal(expected, results);
@@ -97,8 +95,8 @@ public class GlobMatcherTests
 
         var expected = new HashSet<string>()
         {
-            "tests/e2e/auth.spec.ts",
-            "tests/e2e/home.spec.ts",
+            "root/tests/e2e/auth.spec.ts",
+            "root/tests/e2e/home.spec.ts",
         };
 
         Assert.Equal(expected, results);
@@ -115,29 +113,46 @@ public class GlobMatcherTests
 
         var expected = new HashSet<string>()
         {
-            "src/assets/product0.png",
-            "src/assets/product1.png",
-            "src/assets/product2.png",
+            "root/src/assets/product0.png",
+            "root/src/assets/product1.png",
+            "root/src/assets/product2.png",
         };
 
         Assert.Equal(expected, results);
     }
 
-    private class Folder : IGlobFolder
+    private class Folder : IGlobFolder, IEnumerable
     {
-        public string Name { get; }
-        public string Path { get; private set; }
-
-        private readonly Dictionary<string, Folder> folders;
+        private readonly Dictionary<string, Folder> folders = [];
         private readonly string[] files;
 
-        public Folder(string name, Folder[] folders, string[] files)
-        {
-            Name = name;
-            Path = name;
+        public string Name { get; }
+        public string Path { get; }
 
-            this.folders = folders.ToDictionary(x => x.Name, x => x);
-            this.files = files;
+        public Folder(string path, string[]? files = null)
+        {
+            Name = path;
+            Path = path;
+
+            var index = Name.LastIndexOf('/');
+            if (index >= 0)
+            {
+                Name = Name[(index + 1)..];
+            }
+
+            this.files = files ?? [];
+        }
+
+        // Strictly for collection initializer syntax
+        public void Add(Folder folder)
+        {
+            folders.Add(folder.Name, folder);
+        }
+
+        // Strictly for collection initializer syntax
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return folders.Values.Cast<object>().Concat(files).GetEnumerator();
         }
 
         public IGlobFolder GetFolder(string name)
@@ -153,35 +168,6 @@ public class GlobMatcherTests
         public IEnumerable<string> GetFiles()
         {
             return files;
-        }
-
-        public Folder PropagatePaths()
-        {
-            foreach (var folder in folders.Values)
-            {
-                folder.Path = $"{Path}/{folder.Path}";
-                folder.PropagatePaths();
-            }
-
-            return this;
-        }
-
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            BuildTree(builder, this);
-
-            return builder.ToString();
-        }
-
-        private void BuildTree(StringBuilder builder, Folder current, int depth = 0)
-        {
-            builder.AppendLine($"{new string(' ', depth * 2)}{current.Path}");
-            foreach (var folderName in current.GetFolders())
-            {
-                var folder = (Folder)current.GetFolder(folderName);
-                BuildTree(builder, folder, depth + 1);
-            }
         }
     }
 }
