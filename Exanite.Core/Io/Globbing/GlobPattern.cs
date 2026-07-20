@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Exanite.Core.Pooling;
@@ -99,6 +100,15 @@ public class GlobPattern
 
         // Handle final segment
         OutputSegment(builder, segmentRawLength, isInPattern);
+
+        // Optimize
+        for (var i = segments.Count - 1; i > 0; i--)
+        {
+            if (segments[i] is DoubleStarGlobSegment && segments[i - 1] is DoubleStarGlobSegment)
+            {
+                segments.RemoveAt(i);
+            }
+        }
 
         GuardUtility.IsFalse(segments.Count == 0, "Pattern must not have zero segments");
     }

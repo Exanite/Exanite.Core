@@ -108,6 +108,23 @@ public class GlobPatternTests
         }
     }
 
+    [Fact]
+    public void MergeConsecutiveDoubleStars()
+    {
+        var pattern = "**/**/*/*/**/**/**";
+        var globPattern = new GlobPattern(pattern);
+
+        Assert.False(globPattern.IsExclude);
+        Assert.Equal(4, globPattern.Segments.Count);
+
+        Assert.IsType<DoubleStarGlobSegment>(globPattern.Segments[0]);
+        Assert.IsType<PatternGlobSegment>(globPattern.Segments[1]);
+        Assert.IsType<PatternGlobSegment>(globPattern.Segments[2]);
+        Assert.IsType<DoubleStarGlobSegment>(globPattern.Segments[3]);
+
+        Assert.Equal(pattern, globPattern.ToString());
+    }
+
     [Theory]
     // Escaped chars. We let the OS deal with whether these are valid or not.
     [InlineData(@"\!")]
