@@ -9,24 +9,24 @@ namespace Exanite.Core.Tests.Io;
 
 public class GlobMatcherTests
 {
-    private static readonly Folder WebDev = new("root", ["package.json", "tsconfig.json", "vite.config.ts", "README.md"])
+    private readonly TestFolder folder = new("root", ["package.json", "tsconfig.json", "vite.config.ts", "README.md"])
     {
-        new Folder("root/public", ["favicon.ico", "index.html", "manifest.json"]),
-        new Folder("root/src", ["App.tsx", "App.css", "main.tsx", "vite-env.d.ts"])
+        new TestFolder("root/public", ["favicon.ico", "index.html", "manifest.json"]),
+        new TestFolder("root/src", ["App.tsx", "App.css", "main.tsx", "vite-env.d.ts"])
         {
-            new Folder("root/src/assets", ["logo.svg", "hero.png", "product.json", "product!.png", "product?.png", "product0.png", "product1.png", "product2.png"]),
-            new Folder("root/src/components")
+            new TestFolder("root/src/assets", ["logo.svg", "hero.png", "product.json", "product!.png", "product?.png", "product0.png", "product1.png", "product2.png"]),
+            new TestFolder("root/src/components")
             {
-                new Folder("root/src/components/Button", ["Button.tsx", "Button.test.tsx", "Button.css"]),
-                new Folder("root/src/components/Navbar", ["Navbar.tsx", "Navbar.test.tsx", "Navbar.css"]),
+                new TestFolder("root/src/components/Button", ["Button.tsx", "Button.test.tsx", "Button.css"]),
+                new TestFolder("root/src/components/Navbar", ["Navbar.tsx", "Navbar.test.tsx", "Navbar.css"]),
             },
-            new Folder("root/src/hooks", ["useAuth.ts", "useFetch.ts"]),
-            new Folder("root/src/services", ["api.ts", "logger.ts"]),
-            new Folder("root/src/utils", ["helpers.ts", "math.ts"]),
+            new TestFolder("root/src/hooks", ["useAuth.ts", "useFetch.ts"]),
+            new TestFolder("root/src/services", ["api.ts", "logger.ts"]),
+            new TestFolder("root/src/utils", ["helpers.ts", "math.ts"]),
         },
-        new Folder("root/tests")
+        new TestFolder("root/tests")
         {
-            new Folder("root/tests/e2e", ["auth.spec.ts", "home.spec.ts"]),
+            new TestFolder("root/tests/e2e", ["auth.spec.ts", "home.spec.ts"]),
         },
     };
 
@@ -465,22 +465,22 @@ public class GlobMatcherTests
     private void RunGlobTest(string[] patterns, string[] expected)
     {
         var matcher = new GlobMatcher(patterns);
-        var results = matcher.Match(WebDev).ToArray();
+        var results = matcher.Match(folder).ToArray();
 
         var sortedExpected = expected.OrderBy(x => x).ToArray();
         var sortedActual = results.OrderBy(x => x).ToArray();
         Assert.Equal(sortedExpected, sortedActual);
     }
 
-    private class Folder : IGlobFolder, IEnumerable<string>
+    private class TestFolder : IGlobFolder, IEnumerable<string>
     {
-        private readonly Dictionary<string, Folder> folders = [];
+        private readonly Dictionary<string, TestFolder> folders = [];
         private readonly string[] files;
 
         public string Name { get; }
         public string Path { get; }
 
-        public Folder(string path, string[]? files = null)
+        public TestFolder(string path, string[]? files = null)
         {
             Name = path;
             Path = path;
@@ -510,9 +510,9 @@ public class GlobMatcherTests
         }
 
         // For collection initializer syntax
-        public void Add(Folder folder)
+        public void Add(TestFolder testFolder)
         {
-            folders.Add(folder.Name, folder);
+            folders.Add(testFolder.Name, testFolder);
         }
 
         // For collection initializer syntax
