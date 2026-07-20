@@ -85,7 +85,7 @@ public class GlobMatcher
         // TODO: Optimize
         public void Match(IGlobFolder folder, List<ActivePattern> activePatterns)
         {
-            // TODO: Handle free moves
+            // Handle free moves
             for (var i = activePatterns.Count - 1; i >= 0; i--)
             {
                 var activePattern = activePatterns[i];
@@ -98,17 +98,19 @@ public class GlobMatcher
                 }
             }
 
-            // TODO: Dedupe states
+            // Dedupe active patterns
             var rawActivePatterns = activePatterns;
             activePatterns = new List<ActivePattern>();
             var alreadyAddedActivePatterns = new HashSet<ActivePattern>();
             for (var i = rawActivePatterns.Count - 1; i >= 0; i--)
             {
                 var activePattern = rawActivePatterns[i];
-                if (alreadyAddedActivePatterns.Add(activePattern))
+                if (!alreadyAddedActivePatterns.Add(activePattern))
                 {
-                    activePatterns.Add(activePattern);
+                    continue;
                 }
+
+                activePatterns.Add(activePattern);
             }
             activePatterns.Reverse();
 
@@ -156,12 +158,15 @@ public class GlobMatcher
                     {
                         // Include: ** -> Definitely relevant
                         // Include: match/.. -> Potentially relevant
+
+                        // **
                         if (firstSegment is DoubleStarGlobSegment)
                         {
                             isRelevant = true;
                             break;
                         }
 
+                        // match/..
                         if (remainingSegmentCount >= 2 && IsSegmentMatch(firstSegment, childFolder))
                         {
                             isRelevant = true;
@@ -176,6 +181,8 @@ public class GlobMatcher
                         // Exclude: match/**/* -> Definitely not relevant
                         // Exclude: match/**/*/* -> Indeterminate
                         // Exclude: match/*/** -> Indeterminate
+
+                        // **
                         if (remainingSegmentCount == 1 && pattern.Segments[activePattern.SegmentIndex] is DoubleStarGlobSegment)
                         {
                             break;
@@ -183,19 +190,22 @@ public class GlobMatcher
 
                         if (remainingSegmentCount == 2)
                         {
+                            // **/*
                             if (pattern.Segments[activePattern.SegmentIndex] is DoubleStarGlobSegment
                                 && pattern.Segments[activePattern.SegmentIndex + 1] is PatternGlobSegment { Pattern: "*" })
                             {
                                 break;
                             }
 
-                            if (pattern.Segments[activePattern.SegmentIndex] is DoubleStarGlobSegment
+                            // match/**
+                            if (pattern.Segments[activePattern.SegmentIndex + 1] is DoubleStarGlobSegment
                                 && IsSegmentMatch(firstSegment, childFolder))
                             {
                                 break;
                             }
                         }
 
+                        // match/**/*
                         if (remainingSegmentCount == 3
                             && pattern.Segments[activePattern.SegmentIndex + 1] is DoubleStarGlobSegment
                             && pattern.Segments[activePattern.SegmentIndex + 2] is PatternGlobSegment { Pattern: "*" }
