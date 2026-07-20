@@ -124,7 +124,7 @@ public class GlobMatcher
                     var remainingSegmentCount = pattern.Segments.Count - activePattern.SegmentIndex;
                     if (remainingSegmentCount != 1)
                     {
-                        break;
+                        continue;
                     }
 
                     if (IsSegmentMatch(segment, file))
