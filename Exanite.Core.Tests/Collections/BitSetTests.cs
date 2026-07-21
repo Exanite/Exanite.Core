@@ -21,6 +21,28 @@ public class BitSetTests
         Assert.Equal(3, bitset.Count);
     }
 
+    [Theory]
+    [InlineData(1)]
+    [InlineData(14)]
+    [InlineData(25)]
+    [InlineData(31)]
+    [InlineData(87)]
+    [InlineData(127)]
+    [InlineData(128)]
+    [InlineData(823)]
+    public void Max(int max)
+    {
+        var bitset = new BitSet();
+        var current = max;
+        while (current != 0)
+        {
+            bitset[current] = true;
+            current /= 2;
+        }
+
+        Assert.Equal(max, bitset.Max);
+    }
+
     [Fact]
     public void IsEmpty_ReturnsIfAllBitsAreFalse()
     {
@@ -64,6 +86,41 @@ public class BitSetTests
         var chunkCount = bitset.Chunks.Length;
         bitset.Clear();
         Assert.Equal(chunkCount, bitset.Chunks.Length);
+    }
+
+    [Fact]
+    public void TrimExcess_Empty()
+    {
+        var bitset = new BitSet();
+        bitset[10000] = true;
+        bitset[10000] = false;
+        bitset.TrimExcess();
+
+        Assert.Equal(1, bitset.Chunks.Length);
+    }
+
+    [Fact]
+    public void TrimExcess_250()
+    {
+        var bitset = new BitSet();
+        bitset[10000] = true;
+        bitset[10000] = false;
+        bitset[250] = true;
+        bitset.TrimExcess();
+
+        Assert.Equal(4, bitset.Chunks.Length);
+    }
+
+    [Fact]
+    public void TrimExcess_260()
+    {
+        var bitset = new BitSet();
+        bitset[10000] = true;
+        bitset[10000] = false;
+        bitset[260] = true;
+        bitset.TrimExcess();
+
+        Assert.Equal(8, bitset.Chunks.Length);
     }
 
     [Fact]

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -21,6 +23,7 @@ namespace Exanite.Core.Collections;
 /// This is because this data structure is designed for storing flags, which do not make sense to bitshift.
 /// </remarks>
 [CollectionBuilder(typeof(BitSet), nameof(Create))]
+[DebuggerTypeProxy(typeof(BitSetDebugView))]
 public class BitSet : IReadOnlyBitSet
 {
     /// <summary>
@@ -41,7 +44,10 @@ public class BitSet : IReadOnlyBitSet
     /// </summary>
     public const int Mask = (1 << Shift) - 1;
 
-    internal const int DefaultChunkCount = 1;
+    /// <summary>
+    /// The minimum number of chunks stored by a bitset.
+    /// </summary>
+    public const int MinChunkCount = 1;
 
     private ulong[] chunks;
 
@@ -72,6 +78,27 @@ public class BitSet : IReadOnlyBitSet
             }
 
             return count;
+        }
+    }
+
+    /// <summary>
+    /// Gets the index of the highest set bit. Returns -1 if the bitset is empty.
+    /// </summary>
+    public int Max
+    {
+        get
+        {
+            var span = Chunks;
+            for (var i = span.Length - 1; i >= 0; i--)
+            {
+                var chunk = span[i];
+                if (chunk != 0)
+                {
+                    return (i << Shift) + (63 - BitOperations.LeadingZeroCount(chunk));
+                }
+            }
+
+            return -1;
         }
     }
 
@@ -150,7 +177,7 @@ public class BitSet : IReadOnlyBitSet
     /// </summary>
     public BitSet()
     {
-        chunks = new ulong[DefaultChunkCount];
+        chunks = new ulong[MinChunkCount];
     }
 
     /// <summary>
@@ -738,6 +765,32 @@ public class BitSet : IReadOnlyBitSet
         chunks = newChunks;
     }
 
+    /// <summary>
+    /// Sets the capacity to the number of chunks needed to represent all currently set bits, rounded up to the nearest power to two.
+    /// </summary>
+    public void TrimExcess()
+    {
+        var maxBitIndex = Max;
+        if (maxBitIndex < 0)
+        {
+            if (chunks.Length > MinChunkCount)
+            {
+                chunks = new ulong[MinChunkCount];
+            }
+
+            return;
+        }
+
+        var neededChunks = (maxBitIndex >> Shift) + 1;
+        var newChunkCount = neededChunks == 1 ? 1 : M.GetNextPowerOfTwo(neededChunks);
+        if (chunks.Length > newChunkCount)
+        {
+            var newChunks = new ulong[newChunkCount];
+            Array.Copy(chunks, newChunks, newChunkCount);
+            chunks = newChunks;
+        }
+    }
+
     public BitSetEnumerator GetEnumerator()
     {
         return new BitSetEnumerator(this);
@@ -751,5 +804,18 @@ public class BitSet : IReadOnlyBitSet
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+    private class BitSetDebugView
+    {
+        private readonly BitSet bitSet;
+
+        public BitSetDebugView(BitSet bitSet)
+        {
+            this.bitSet = bitSet;
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
+        public int[] Items => bitSet.ToArray();
     }
 }

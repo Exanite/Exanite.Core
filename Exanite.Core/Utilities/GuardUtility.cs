@@ -10,7 +10,7 @@ namespace Exanite.Core.Utilities;
 public static class GuardUtility
 {
     [DoesNotReturn]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static void Throw(string errorMessage)
     {
         throw new GuardException(errorMessage);

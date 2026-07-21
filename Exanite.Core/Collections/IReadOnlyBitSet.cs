@@ -11,6 +11,9 @@ public interface IReadOnlyBitSet : IEnumerable<int>
     /// <inheritdoc cref="BitSet.Count"/>
     public int Count { get; }
 
+    /// <inheritdoc cref="BitSet.Max"/>
+    public int Max { get; }
+
     /// <inheritdoc cref="BitSet.IsEmpty"/>
     public bool IsEmpty { get; }
 

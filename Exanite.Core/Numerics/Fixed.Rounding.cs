@@ -125,7 +125,7 @@ public partial struct Fixed
                 return new Fixed(integral) + One;
             }
 
-            default: throw ExceptionUtility.NotSupported(mode);
+            default: return ExceptionUtility.NotSupported<Fixed>(mode);
         }
     }
 }
