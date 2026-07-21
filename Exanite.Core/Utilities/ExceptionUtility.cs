@@ -6,11 +6,16 @@ namespace Exanite.Core.Utilities;
 
 public static class ExceptionUtility
 {
+    public static NotSupportedException NotSupportedException<T>(T value)
+    {
+        return new NotSupportedException($"{value} is not a supported {typeof(T)}.");
+    }
+
     [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void NotSupported<T>(T value)
     {
-        throw new NotSupportedException($"{value} is not a supported {typeof(T)}.");
+        throw NotSupportedException($"{value} is not a supported {typeof(T)}.");
     }
 
     /// <remarks>
@@ -20,6 +25,6 @@ public static class ExceptionUtility
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static T NotSupported<T>(object value)
     {
-        throw new NotSupportedException($"{value} is not a supported {typeof(T)}.");
+        throw NotSupportedException($"{value} is not a supported {typeof(T)}.");
     }
 }
