@@ -71,7 +71,8 @@ public class Lifetime : IDisposable
                 }
                 default:
                 {
-                    throw ExceptionUtility.NotSupported(registrationType);
+                    ExceptionUtility.NotSupported(registrationType);
+                    break;
                 }
             }
         }

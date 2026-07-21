@@ -262,7 +262,7 @@ public class GlobMatcher
                 DoubleStarGlobSegment => true,
                 LiteralGlobSegment literalSegment => literalSegment.IsMatch(name),
                 PatternGlobSegment patternSegment => patternSegment.IsMatch(name),
-                _ => throw ExceptionUtility.NotSupported(segment),
+                _ => ExceptionUtility.NotSupported<bool>(segment),
             };
         }
 
