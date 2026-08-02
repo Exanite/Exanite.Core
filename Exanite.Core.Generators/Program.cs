@@ -13,12 +13,8 @@ public class Program
 
         new FixedConstantsGenerator().Run();
 
-        new VectorIntGenerator().Run();
-        new VectorFixedGenerator().Run();
-
-        new RectFloatGenerator().Run();
-        new RectIntGenerator().Run();
-        new RectFixedGenerator().Run();
+        new VectorGenerator().Run();
+        new RectGenerator().Run();
 
         new MathUtilitiesMatricesGenerator().Run();
         new MathUtilitiesVectorsGenerator().Run();
