@@ -85,7 +85,7 @@ public class VectorGenerator
             outputPath.WriteAllText(builder.ToString());
         }
 
-                for (var componentCount = 2; componentCount <= GeneratorConstants.VectorComponents.Length; componentCount++)
+        for (var componentCount = 2; componentCount <= GeneratorConstants.VectorComponents.Length; componentCount++)
         {
             var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
 

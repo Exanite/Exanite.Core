@@ -9,14 +9,14 @@ public class RectGenerator
 {
     public void Run()
     {
-        foreach (var scalarType in GeneratorConstants.ScalarTypes)
+        foreach (var currentType in GeneratorConstants.ScalarTypes)
         {
             for (var componentCount = 2; componentCount <= 3; componentCount++)
             {
                 var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
 
-                var rectType = $"Rect{componentCount}{scalarType.Suffix}";
-                var vectorType = $"Vector{componentCount}{scalarType.Suffix}";
+                var rectType = currentType.RectName(componentCount);
+                var vectorType = currentType.VectorName(componentCount);
 
                 var builder = new IndentedStringBuilder();
                 builder.AppendGeneratedCodeHeader();
@@ -34,10 +34,7 @@ public class RectGenerator
                     // Cast to other
                     foreach (var otherType in GeneratorConstants.ScalarTypes)
                     {
-                        var otherRectType = $"Rect{componentCount}{otherType.Suffix}";
-                        var otherVectorType = $"Vector{componentCount}{otherType.Suffix}";
-
-                        var castType = (scalarType.Type, otherType.Type) switch
+                        var castType = (currentType.Type, otherType.Type) switch
                         {
                             (ScalarType.Float, ScalarType.Fixed) => "explicit",
                             (ScalarType.Fixed, ScalarType.Float) => "explicit",
@@ -53,7 +50,7 @@ public class RectGenerator
 
                         if (castType != null)
                         {
-                            AppendRectCastOperation(builder, castType, rectType, otherRectType, otherVectorType);
+                            AppendRectCastOperation(builder, castType, rectType, otherType.RectName(componentCount), otherType.VectorName(componentCount));
                         }
                     }
 

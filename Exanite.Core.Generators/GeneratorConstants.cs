@@ -12,19 +12,19 @@ public static class GeneratorConstants
         new()
         {
             Type = ScalarType.Float,
-            TypeName = "float",
+            ScalarName = "float",
             Suffix = "",
         },
         new()
         {
             Type = ScalarType.Fixed,
-            TypeName = "fixed",
+            ScalarName = "fixed",
             Suffix = "Fixed",
         },
         new()
         {
             Type = ScalarType.Int,
-            TypeName = "int",
+            ScalarName = "int",
             Suffix = "Int",
         },
     ];
