@@ -141,6 +141,11 @@ public partial record struct Color
         return Convert(this, type);
     }
 
+    public readonly Color AsOverride(ColorType type)
+    {
+        return new Color(Value, type);
+    }
+
     private static Color Convert(Color color, ColorType targetType)
     {
         if (color.Type == targetType)
@@ -269,11 +274,6 @@ public partial record struct Color
         }
 
         return new Color(value, targetType);
-    }
-
-    public readonly Color WithTypeOverride(ColorType type)
-    {
-        return new Color(Value, type);
     }
 
     // Comparisons
