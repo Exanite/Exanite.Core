@@ -37,7 +37,7 @@ public class RectGenerator
                         var castType = Scalars.CastType(currentType, otherType);
                         if (castType != null)
                         {
-                            AppendRectCastOperation(builder, castType, rectType, otherType.RectName(componentCount), otherType.VectorName(componentCount));
+                            AppendCastOperation(builder, castType, rectType, otherType.RectName(componentCount), otherType.VectorName(componentCount));
                         }
                     }
 
@@ -66,7 +66,7 @@ public class RectGenerator
         builder.AppendLine($"public {vectorType} Size;");
     }
 
-    private static void AppendRectCastOperation(IndentedStringBuilder builder, string castType, string srcRectType, string dstRectType, string dstVectorType)
+    private static void AppendCastOperation(IndentedStringBuilder builder, string castType, string srcRectType, string dstRectType, string dstVectorType)
     {
         builder.AppendSeparation();
         using (builder.EnterScope($"public static {castType} operator {dstRectType}({srcRectType} value)"))

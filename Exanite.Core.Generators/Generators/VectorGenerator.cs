@@ -57,20 +57,20 @@ public class VectorGenerator
 
                         builder.AppendSeparation();
                         builder.AppendLine("// Conversion: Safe - No precision loss possible");
-                        AppendVectorCastOperation(builder, "implicit", vectorIntType, vectorType, currentType.ScalarName, components, true);
+                        AppendCastOperation(builder, "implicit", vectorIntType, vectorType, currentType.ScalarName, components, true);
 
                         builder.AppendSeparation();
                         builder.AppendLine("// Conversion: Unsafe - Non-deterministic");
                         builder.AppendLine("// Consider using Fixed.FromParts or Fixed.FromFraction instead");
-                        AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorType, currentType.ScalarName, components, true);
+                        AppendCastOperation(builder, "explicit", vectorFloatType, vectorType, currentType.ScalarName, components, true);
 
                         builder.AppendSeparation();
                         builder.AppendLine("// Conversion: Loss of fraction");
-                        AppendVectorCastOperation(builder, "explicit", vectorType, vectorIntType, intType, components, true);
+                        AppendCastOperation(builder, "explicit", vectorType, vectorIntType, intType, components, true);
 
                         builder.AppendSeparation();
                         builder.AppendLine("// Conversion: Loss of precision / determinism");
-                        AppendVectorCastOperation(builder, "explicit", vectorType, vectorFloatType, floatType, components, true);
+                        AppendCastOperation(builder, "explicit", vectorType, vectorFloatType, floatType, components, true);
                     }
 
                     if (currentType.Type == ScalarType.Int)
@@ -78,8 +78,8 @@ public class VectorGenerator
                         var vectorFloatType = $"Vector{componentCount}";
                         var floatType = "float";
 
-                        AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorType, currentType.ScalarName, components);
-                        AppendVectorCastOperation(builder, "implicit", vectorType, vectorFloatType, floatType, components);
+                        AppendCastOperation(builder, "explicit", vectorFloatType, vectorType, currentType.ScalarName, components);
+                        AppendCastOperation(builder, "implicit", vectorType, vectorFloatType, floatType, components);
                     }
 
                     AppendScalarOperation(builder, components, vectorType, currentType.ScalarName, vectorType, "*");
@@ -210,7 +210,7 @@ public class VectorGenerator
         }
     }
 
-    private static void AppendVectorCastOperation(IndentedStringBuilder builder, string castType, string srcVectorType, string dstVectorType, string dstScalarType, string[] components, bool manualSeparation = false)
+    private static void AppendCastOperation(IndentedStringBuilder builder, string castType, string srcVectorType, string dstVectorType, string dstScalarType, string[] components, bool manualSeparation = false)
     {
         // VectorFixedGenerator adds some comments to these operations, so it handles the separation manually
         if (!manualSeparation)
