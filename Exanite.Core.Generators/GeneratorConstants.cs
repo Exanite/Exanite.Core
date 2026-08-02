@@ -36,5 +36,22 @@ public static class GeneratorConstants
             Fixed,
             Int,
         ];
+
+        public static string? CastType(ScalarTypeInfo from, ScalarTypeInfo to)
+        {
+            return (from.Type, to.Type) switch
+            {
+                (ScalarType.Float, ScalarType.Fixed) => "explicit",
+                (ScalarType.Fixed, ScalarType.Float) => "explicit",
+
+                (ScalarType.Int, ScalarType.Fixed) => "implicit",
+                (ScalarType.Fixed, ScalarType.Int) => "explicit",
+
+                (ScalarType.Float, ScalarType.Int) => "explicit",
+                (ScalarType.Int, ScalarType.Float) => "implicit",
+
+                _ => null,
+            };
+        }
     }
 }

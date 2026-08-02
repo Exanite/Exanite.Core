@@ -13,7 +13,7 @@ public partial record struct Rect2Int
     public Vector2Int Offset;
     public Vector2Int Size;
 
-    public static explicit operator Rect2(Rect2Int value)
+    public static implicit operator Rect2(Rect2Int value)
     {
         return Rect2.FromOffsetSize((Vector2)value.Offset, (Vector2)value.Size);
     }

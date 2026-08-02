@@ -1,6 +1,5 @@
 using System.Linq;
 using Exanite.CodeGen;
-using Exanite.Core.Generators.Models;
 using Exanite.Core.Io;
 using static Exanite.Core.Generators.GeneratorConstants;
 
@@ -35,20 +34,7 @@ public class RectGenerator
                     // Cast to other
                     foreach (var otherType in Scalars.Types)
                     {
-                        var castType = (currentType.Type, otherType.Type) switch
-                        {
-                            (ScalarType.Float, ScalarType.Fixed) => "explicit",
-                            (ScalarType.Fixed, ScalarType.Float) => "explicit",
-
-                            (ScalarType.Int, ScalarType.Fixed) => "implicit",
-                            (ScalarType.Fixed, ScalarType.Int) => "explicit",
-
-                            (ScalarType.Float, ScalarType.Int) => "explicit",
-                            (ScalarType.Int, ScalarType.Float) => "explicit",
-
-                            _ => null,
-                        };
-
+                        var castType = Scalars.CastType(currentType, otherType);
                         if (castType != null)
                         {
                             AppendRectCastOperation(builder, castType, rectType, otherType.RectName(componentCount), otherType.VectorName(componentCount));
