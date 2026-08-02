@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Linq;
 using Exanite.CodeGen;
 using Exanite.Core.Io;
 using static Exanite.Core.Generators.GeneratorConstants;
@@ -33,7 +32,6 @@ public class ColorStorageGenerator
         {
             for (var componentCount = 3; componentCount <= 4; componentCount++)
             {
-                var components = VectorComponents.Take(componentCount).ToArray();
                 var storageName = currentType.StorageName(componentCount);
                 var vectorName = Scalars.Float.VectorName(componentCount);
 
