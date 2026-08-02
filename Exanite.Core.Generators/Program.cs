@@ -16,7 +16,9 @@ public class Program
         new VectorIntGenerator().Run();
         new VectorFixedGenerator().Run();
 
-        new RectGenerator().Run();
+        new RectFloatGenerator().Run();
+        new RectIntGenerator().Run();
+        new RectFixedGenerator().Run();
 
         new MathUtilitiesMatricesGenerator().Run();
         new MathUtilitiesVectorsGenerator().Run();

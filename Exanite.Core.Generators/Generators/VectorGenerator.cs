@@ -3,14 +3,14 @@ using Exanite.CodeGen;
 
 namespace Exanite.Core.Generators.Generators;
 
-public class VectorGenerator
+public abstract class VectorGenerator
 {
-    protected void AppendComponentFields(IndentedStringBuilder builder, string backingType, string[] components)
+    protected void AppendComponentFields(IndentedStringBuilder builder, string scalarType, string[] components)
     {
         foreach (var component in components)
         {
             builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.{component}\"/>");
-            builder.AppendLine($"public {backingType} {component};");
+            builder.AppendLine($"public {scalarType} {component};");
             builder.AppendLine();
         }
     }
@@ -37,10 +37,10 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendIndexer(IndentedStringBuilder builder, string backingType, string[] components)
+    protected void AppendIndexer(IndentedStringBuilder builder, string scalarType, string[] components)
     {
         builder.AppendSeparation();
-        using (builder.EnterScope($"public {backingType} this[int index]"))
+        using (builder.EnterScope($"public {scalarType} this[int index]"))
         {
             using (builder.EnterScope("readonly get"))
             {
@@ -69,13 +69,13 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendConstructors(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
+    protected void AppendConstructors(IndentedStringBuilder builder, string selfVectorType, string scalarType, string[] components)
     {
         builder.AppendSeparation();
-        builder.AppendLine($"public {selfVectorType}({backingType} value) : this({string.Join(", ", components.Select(_ => "value"))}) {{}}");
+        builder.AppendLine($"public {selfVectorType}({scalarType} value) : this({string.Join(", ", components.Select(_ => "value"))}) {{}}");
 
         builder.AppendSeparation();
-        using (builder.EnterScope($"public {selfVectorType}({string.Join(", ", components.Select(c => $"{backingType} {c.ToLower()}"))})"))
+        using (builder.EnterScope($"public {selfVectorType}({string.Join(", ", components.Select(c => $"{scalarType} {c.ToLower()}"))})"))
         {
             foreach (var component in components)
             {
@@ -84,7 +84,7 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendVectorCastOperation(IndentedStringBuilder builder, string castType, string srcVectorType, string dstVectorType, string dstBackingType, string[] components, bool manualSeparation = false)
+    protected void AppendVectorCastOperation(IndentedStringBuilder builder, string castType, string srcVectorType, string dstVectorType, string dstScalarType, string[] components, bool manualSeparation = false)
     {
         // VectorFixedGenerator adds some comments to these operations, so it handles the separation manually
         if (!manualSeparation)
@@ -94,7 +94,7 @@ public class VectorGenerator
 
         using (builder.EnterScope($"public static {castType} operator {dstVectorType}({srcVectorType} value)"))
         {
-            builder.AppendLine($"return new {dstVectorType}({string.Join(", ", components.Select(c => $"({dstBackingType})value.{c}"))});");
+            builder.AppendLine($"return new {dstVectorType}({string.Join(", ", components.Select(c => $"({dstScalarType})value.{c}"))});");
         }
     }
 
@@ -125,13 +125,13 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendLengthOperation(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
+    protected void AppendLengthOperation(IndentedStringBuilder builder, string selfVectorType, string scalarType, string[] components)
     {
         builder.AppendSeparation();
         builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.Length\"/>");
-        using (builder.EnterScope($"public static {backingType} Length({selfVectorType} value)"))
+        using (builder.EnterScope($"public static {scalarType} Length({selfVectorType} value)"))
         {
-            builder.AppendLine($"return {backingType}.Hypot({string.Join(", ", components.Select(c => $"value.{c}"))});");
+            builder.AppendLine($"return {scalarType}.Hypot({string.Join(", ", components.Select(c => $"value.{c}"))});");
         }
     }
 
@@ -145,17 +145,17 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendDotOperation(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
+    protected void AppendDotOperation(IndentedStringBuilder builder, string selfVectorType, string scalarType, string[] components)
     {
         builder.AppendSeparation();
         builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.Dot\"/>");
-        using (builder.EnterScope($"public static {backingType} Dot({selfVectorType} left, {selfVectorType} right)"))
+        using (builder.EnterScope($"public static {scalarType} Dot({selfVectorType} left, {selfVectorType} right)"))
         {
             builder.AppendLine($"return {string.Join(" + ", components.Select(c => $"left.{c} * right.{c}"))};");
         }
     }
 
-    protected void AppendCrossOperation(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
+    protected void AppendCrossOperation(IndentedStringBuilder builder, string selfVectorType, string scalarType, string[] components)
     {
         builder.AppendSeparation();
         builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.Cross\"/>");
@@ -163,7 +163,7 @@ public class VectorGenerator
         {
             case 2:
             {
-                using (builder.EnterScope($"public static {backingType} Cross({selfVectorType} left, {selfVectorType} right)"))
+                using (builder.EnterScope($"public static {scalarType} Cross({selfVectorType} left, {selfVectorType} right)"))
                 {
                     builder.AppendLine($"return left.{components[0]} * right.{components[1]} - left.{components[1]} * right.{components[0]};");
                 }

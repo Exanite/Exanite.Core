@@ -4,7 +4,7 @@ using Exanite.Core.Io;
 
 namespace Exanite.Core.Generators.Generators;
 
-public class RectGenerator
+public class RectFloatGenerator : RectGenerator
 {
     public void Run()
     {
@@ -25,53 +25,130 @@ public class RectGenerator
             builder.AppendSeparation();
             using (builder.EnterScope($"public partial record struct {rectType}"))
             {
-                builder.AppendSeparation();
-                builder.AppendLine($"public static readonly {rectType} Zero = default;");
-                builder.AppendLine($"public static readonly {rectType} One = FromSize({vectorType}.One);");
+                AppendConstants(builder, rectType, vectorType);
+                AppendFields(builder, vectorType);
 
-                builder.AppendSeparation();
-                builder.AppendLine($"public {vectorType} Offset;");
-                builder.AppendLine($"public {vectorType} Size;");
-
-                builder.AppendSeparation();
-                using (builder.EnterScope($"public static {rectType} FromSize({vectorType} size)"))
-                {
-                    builder.AppendLine($"return new {rectType}()");
-                    using (builder.Indent("{"))
-                    {
-                        builder.AppendLine("Size = size,");
-                    }
-                    builder.AppendLine("};");
-                }
-
-                builder.AppendSeparation();
-                using (builder.EnterScope($"public static {rectType} FromOffsetSize({vectorType} offset, {vectorType} size)"))
-                {
-                    builder.AppendLine($"return new {rectType}()");
-                    using (builder.Indent("{"))
-                    {
-                        builder.AppendLine("Offset = offset,");
-                        builder.AppendLine("Size = size,");
-                    }
-                    builder.AppendLine("};");
-                }
-
-                builder.AppendSeparation();
-                using (builder.EnterScope($"public readonly {rectType} Scale({vectorType} scale)"))
-                {
-                    builder.AppendLine("return FromOffsetSize(scale * Offset, scale * Size);");
-                }
-
-                builder.AppendSeparation();
-                using (builder.EnterScope($"public readonly bool Contains({vectorType} position)"))
-                {
-                    var checks = components.Select(c => $"position.{c} >= Offset.{c} && position.{c} < Offset.{c} + Size.{c}");
-                    builder.AppendBlock($"return {string.Join("\n    && ", checks)};");
-                }
+                AppendCreateOperations(builder, rectType, vectorType);
+                AppendScaleOperation(builder, rectType, vectorType);
+                AppendContainsOperation(builder, vectorType, components);
             }
 
             var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{rectType}.g.cs";
             outputPath.WriteAllText(builder.ToString());
+        }
+    }
+}
+
+public class RectFixedGenerator : RectGenerator
+{
+    public void Run() {}
+}
+
+public class RectIntGenerator : RectGenerator
+{
+    public void Run()
+    {
+        for (var componentCount = 2; componentCount <= 3; componentCount++)
+        {
+            var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
+
+            var rectType = $"Rect{componentCount}Int";
+            var vectorType = $"Vector{componentCount}Int";
+
+            var builder = new IndentedStringBuilder();
+            builder.AppendGeneratedCodeHeader();
+
+            builder.AppendLine("using System.Numerics;");
+            builder.AppendLine();
+            builder.AppendLine("namespace Exanite.Core.Numerics;");
+
+            builder.AppendSeparation();
+            using (builder.EnterScope($"public partial record struct {rectType}"))
+            {
+                AppendConstants(builder, rectType, vectorType);
+                AppendFields(builder, vectorType);
+
+                AppendRectCastOperation(builder, "implicit", rectType, $"Rect{componentCount}", $"Vector{componentCount}");
+                AppendRectCastOperation(builder, "explicit", $"Rect{componentCount}", rectType, vectorType);
+
+                AppendCreateOperations(builder, rectType, vectorType);
+                AppendScaleOperation(builder, rectType, vectorType);
+                AppendContainsOperation(builder, vectorType, components);
+            }
+
+            var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{rectType}.g.cs";
+            outputPath.WriteAllText(builder.ToString());
+        }
+    }
+}
+
+public abstract class RectGenerator
+{
+    protected void AppendConstants(IndentedStringBuilder builder, string rectType, string vectorType)
+    {
+        builder.AppendSeparation();
+        builder.AppendLine($"public static readonly {rectType} Zero = default;");
+        builder.AppendLine($"public static readonly {rectType} One = FromSize({vectorType}.One);");
+    }
+
+    protected void AppendFields(IndentedStringBuilder builder, string vectorType)
+    {
+        builder.AppendSeparation();
+        builder.AppendLine($"public {vectorType} Offset;");
+        builder.AppendLine($"public {vectorType} Size;");
+    }
+
+    protected void AppendRectCastOperation(IndentedStringBuilder builder, string castType, string srcRectType, string dstRectType, string dstVectorType)
+    {
+        builder.AppendSeparation();
+        using (builder.EnterScope($"public static {castType} operator {dstRectType}({srcRectType} value)"))
+        {
+            builder.AppendLine($"return {dstRectType}.FromOffsetSize(({dstVectorType})value.Offset, ({dstVectorType})value.Size);");
+        }
+    }
+
+    protected void AppendCreateOperations(IndentedStringBuilder builder, string rectType, string vectorType)
+    {
+        builder.AppendSeparation();
+        using (builder.EnterScope($"public static {rectType} FromSize({vectorType} size)"))
+        {
+            builder.AppendLine($"return new {rectType}()");
+            using (builder.Indent("{"))
+            {
+                builder.AppendLine("Size = size,");
+            }
+            builder.AppendLine("};");
+        }
+
+        builder.AppendSeparation();
+        using (builder.EnterScope($"public static {rectType} FromOffsetSize({vectorType} offset, {vectorType} size)"))
+        {
+            builder.AppendLine($"return new {rectType}()");
+            using (builder.Indent("{"))
+            {
+                builder.AppendLine("Offset = offset,");
+                builder.AppendLine("Size = size,");
+            }
+            builder.AppendLine("};");
+        }
+    }
+
+    protected void AppendScaleOperation(IndentedStringBuilder builder, string rectType, string vectorType)
+    {
+        builder.AppendSeparation();
+        using (builder.EnterScope($"public readonly {rectType} Scale({vectorType} scale)"))
+        {
+            builder.AppendLine("return FromOffsetSize(scale * Offset, scale * Size);");
+        }
+    }
+
+    protected void AppendContainsOperation(IndentedStringBuilder builder, string vectorType, string[] components)
+    {
+        builder.AppendSeparation();
+        using (builder.EnterScope($"public readonly bool Contains({vectorType} position)"))
+        {
+            var checks = components.Select(c => $"position.{c} >= Offset.{c} && position.{c} < Offset.{c} + Size.{c}");
+            builder.AppendBlock($"return {string.Join("\n    && ", checks)};");
         }
     }
 }
