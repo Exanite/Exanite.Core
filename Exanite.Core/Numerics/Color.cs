@@ -67,64 +67,9 @@ public partial record struct Color
 
     // Srgb
 
-    public readonly Color Srgb => As(ColorType.Srgb);
-
-    public static Color FromSrgb(Vector3 value)
-    {
-        return new Color(value.Xyz1(), ColorType.Srgb);
-    }
-
-    public static Color FromSrgb(Vector4 value)
-    {
-        return new Color(value, ColorType.Srgb);
-    }
-
-    public static Color FromSrgb(float r, float g, float b, float a = 1)
-    {
-        return new Color(new Vector4(r, g, b, a), ColorType.Srgb);
-    }
-
     public static Color FromBytesSrgb(byte r, byte g, byte b, byte a = byte.MaxValue)
     {
         return new Color(new Vector4(r, g, b, a) / byte.MaxValue, ColorType.Srgb);
-    }
-
-    // Linear
-
-    public readonly Color Linear => As(ColorType.Linear);
-
-    public static Color FromLinear(Vector3 value)
-    {
-        return new Color(value.Xyz1(), ColorType.Linear);
-    }
-
-    public static Color FromLinear(Vector4 value)
-    {
-        return new Color(value, ColorType.Linear);
-    }
-
-    public static Color FromLinear(float r, float g, float b, float a = 1)
-    {
-        return new Color(new Vector4(r, g, b, a), ColorType.Linear);
-    }
-
-    // Hsl
-
-    public readonly Color Hsl => As(ColorType.Hsl);
-
-    public static Color FromHsl(Vector3 value)
-    {
-        return new Color(value.Xyz1(), ColorType.Hsl);
-    }
-
-    public static Color FromHsl(Vector4 value)
-    {
-        return new Color(value, ColorType.Hsl);
-    }
-
-    public static Color FromHsl(float h, float s, float l, float a = 1)
-    {
-        return new Color(new Vector4(h, s, l, a), ColorType.Hsl);
     }
 
     // System.Drawing.Color

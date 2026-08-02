@@ -15,6 +15,8 @@ public class Program
 
         new VectorGenerator().Run();
         new RectGenerator().Run();
+
+        new ColorGenerator().Run();
         new ColorStorageGenerator().Run();
 
         new MathUtilitiesMatricesGenerator().Run();

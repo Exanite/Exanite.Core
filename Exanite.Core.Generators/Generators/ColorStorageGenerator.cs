@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using Exanite.CodeGen;
 using Exanite.Core.Io;
 using static Exanite.Core.Generators.GeneratorConstants;
@@ -7,28 +6,9 @@ namespace Exanite.Core.Generators.Generators;
 
 public class ColorStorageGenerator
 {
-    private static readonly ImmutableArray<ColorType> ColorTypes =
-    [
-        new()
-        {
-            Name = "Srgb",
-            DisplayName = "sRGB",
-        },
-        new()
-        {
-            Name = "Linear",
-            DisplayName = "Linear",
-        },
-        new()
-        {
-            Name = "Hsl",
-            DisplayName = "HSL",
-        },
-    ];
-
     public void Run()
     {
-        foreach (var currentType in ColorTypes)
+        foreach (var currentType in Colors.Types)
         {
             for (var componentCount = 3; componentCount <= 4; componentCount++)
             {
@@ -107,18 +87,6 @@ public class ColorStorageGenerator
                 var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{storageName}.g.cs";
                 outputPath.WriteAllText(builder.ToString());
             }
-        }
-    }
-
-    private readonly record struct ColorType
-    {
-        public required string Name { get; init; }
-
-        public required string DisplayName { get; init; }
-
-        public string StorageName(int componentCount)
-        {
-            return $"{Name}Color{componentCount}";
         }
     }
 }

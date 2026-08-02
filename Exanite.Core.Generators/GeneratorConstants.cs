@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using Exanite.Core.Generators.Models;
+using Exanite.Core.Numerics;
 
 namespace Exanite.Core.Generators;
 
@@ -53,5 +54,33 @@ public static class GeneratorConstants
                 _ => null,
             };
         }
+    }
+
+    public class Colors
+    {
+        public static readonly ImmutableArray<ColorTypeInfo> Types =
+        [
+            new()
+            {
+                Type = ColorType.Linear,
+                Name = "Linear",
+                DisplayName = "Linear",
+                Components = ["R", "G", "B", "A"],
+            },
+            new()
+            {
+                Type = ColorType.Srgb,
+                Name = "Srgb",
+                DisplayName = "sRGB",
+                Components = ["R", "G", "B", "A"],
+            },
+            new()
+            {
+                Type = ColorType.Hsl,
+                Name = "Hsl",
+                DisplayName = "HSL",
+                Components = ["H", "S", "L", "A"],
+            },
+        ];
     }
 }
