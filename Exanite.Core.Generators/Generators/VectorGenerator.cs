@@ -2,6 +2,7 @@ using System.Linq;
 using Exanite.CodeGen;
 using Exanite.Core.Generators.Models;
 using Exanite.Core.Io;
+using static Exanite.Core.Generators.GeneratorConstants;
 
 namespace Exanite.Core.Generators.Generators;
 
@@ -9,16 +10,16 @@ public class VectorGenerator
 {
     public void Run()
     {
-        foreach (var currentType in GeneratorConstants.Scalars.Types)
+        foreach (var currentType in Scalars.Types)
         {
             if (currentType.Type == ScalarType.Float)
             {
                 continue;
             }
 
-            for (var componentCount = 2; componentCount <= GeneratorConstants.VectorComponents.Length; componentCount++)
+            for (var componentCount = 2; componentCount <= VectorComponents.Length; componentCount++)
             {
-                var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
+                var components = VectorComponents.Take(componentCount).ToArray();
 
                 var vectorType = currentType.VectorName(componentCount);
 
@@ -84,13 +85,13 @@ public class VectorGenerator
                     AppendScalarOperation(builder, components, vectorType, currentType.ScalarName, vectorType, "*");
                     if (currentType.Type == ScalarType.Int)
                     {
-                        AppendScalarOperation(builder, components, vectorType, "float", GeneratorConstants.Scalars.Float.VectorName(componentCount), "*");
+                        AppendScalarOperation(builder, components, vectorType, "float", Scalars.Float.VectorName(componentCount), "*");
                     }
 
                     AppendScalarOperation(builder, components, vectorType, currentType.ScalarName, vectorType, "/");
                     if (currentType.Type == ScalarType.Int)
                     {
-                        AppendScalarOperation(builder, components, vectorType, "float", GeneratorConstants.Scalars.Float.VectorName(componentCount), "/");
+                        AppendScalarOperation(builder, components, vectorType, "float", Scalars.Float.VectorName(componentCount), "/");
                     }
 
                     AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "+");

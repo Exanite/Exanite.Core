@@ -2,6 +2,7 @@ using System.Linq;
 using Exanite.CodeGen;
 using Exanite.Core.Generators.Models;
 using Exanite.Core.Io;
+using static Exanite.Core.Generators.GeneratorConstants;
 
 namespace Exanite.Core.Generators.Generators;
 
@@ -9,11 +10,11 @@ public class RectGenerator
 {
     public void Run()
     {
-        foreach (var currentType in GeneratorConstants.Scalars.Types)
+        foreach (var currentType in Scalars.Types)
         {
             for (var componentCount = 2; componentCount <= 3; componentCount++)
             {
-                var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
+                var components = VectorComponents.Take(componentCount).ToArray();
 
                 var rectType = currentType.RectName(componentCount);
                 var vectorType = currentType.VectorName(componentCount);
@@ -32,7 +33,7 @@ public class RectGenerator
                     AppendFields(builder, vectorType);
 
                     // Cast to other
-                    foreach (var otherType in GeneratorConstants.Scalars.Types)
+                    foreach (var otherType in Scalars.Types)
                     {
                         var castType = (currentType.Type, otherType.Type) switch
                         {
