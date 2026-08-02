@@ -1,5 +1,6 @@
 using System.Linq;
 using Exanite.CodeGen;
+using Exanite.Core.Generators.Models;
 using Exanite.Core.Io;
 
 namespace Exanite.Core.Generators.Generators;
@@ -8,149 +9,129 @@ public class VectorGenerator
 {
     public void Run()
     {
-        for (var componentCount = 2; componentCount <= GeneratorConstants.VectorComponents.Length; componentCount++)
+        foreach (var currentType in GeneratorConstants.ScalarTypes)
         {
-            var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
-
-            var fixedType = "Fixed";
-            var intType = "int";
-            var floatType = "float";
-
-            var vectorFixedType = $"Vector{componentCount}Fixed";
-            var vectorIntType = $"Vector{componentCount}Int";
-            var vectorFloatType = $"Vector{componentCount}";
-
-            var builder = new IndentedStringBuilder();
-            builder.AppendGeneratedCodeHeader();
-
-            builder.AppendLine("using System;");
-            builder.AppendLine("using System.Diagnostics.CodeAnalysis;");
-            builder.AppendLine("using System.Globalization;");
-            builder.AppendLine("using System.Numerics;");
-            builder.AppendLine("using System.Runtime.InteropServices;");
-            builder.AppendLine();
-            builder.AppendLine("namespace Exanite.Core.Numerics;");
-
-            builder.AppendSeparation();
-            using (builder.EnterScope($"public partial struct {vectorFixedType} : IEquatable<{vectorFixedType}>, IFormattable"))
+            if (currentType.Type == ScalarType.Float)
             {
-                AppendComponentFields(builder, fixedType, components);
-
-                AppendIdentityVectorConstants(builder, vectorFixedType, components);
-                AppendBasisVectorConstants(builder, vectorFixedType, components);
-
-                AppendIndexer(builder, fixedType, components);
-
-                AppendConstructors(builder, vectorFixedType, fixedType, components);
-
-                builder.AppendSeparation();
-                builder.AppendLine("// Conversion: Safe - No precision loss possible");
-                AppendVectorCastOperation(builder, "implicit", vectorIntType, vectorFixedType, fixedType, components, true);
-
-                builder.AppendSeparation();
-                builder.AppendLine("// Conversion: Unsafe - Non-deterministic");
-                builder.AppendLine("// Consider using Fixed.FromParts or Fixed.FromFraction instead");
-                AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorFixedType, fixedType, components, true);
-
-                builder.AppendSeparation();
-                builder.AppendLine("// Conversion: Loss of fraction");
-                AppendVectorCastOperation(builder, "explicit", vectorFixedType, vectorIntType, intType, components, true);
-
-                builder.AppendSeparation();
-                builder.AppendLine("// Conversion: Loss of precision / determinism");
-                AppendVectorCastOperation(builder, "explicit", vectorFixedType, vectorFloatType, floatType, components, true);
-
-                AppendScalarOperation(builder, components, vectorFixedType, fixedType, vectorFixedType, "*");
-                AppendScalarOperation(builder, components, vectorFixedType, fixedType, vectorFixedType, "/");
-
-                AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "+");
-                AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "-");
-                AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "*");
-                AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "/");
-                AppendVectorOperation(builder, components, vectorFixedType, vectorFixedType, vectorFixedType, "%");
-
-                AppendNegateOperation(builder, vectorFixedType);
-
-                AppendLengthOperation(builder, vectorFixedType, fixedType, components);
-                AppendNormalizeOperation(builder, vectorFixedType, components);
-
-                AppendDotOperation(builder, vectorFixedType, fixedType, components);
-                AppendCrossOperation(builder, vectorFixedType, fixedType, components);
-
-                AppendEqualityOperations(builder, vectorFixedType, components);
-                AppendFormattingOperations(builder, components);
+                continue;
             }
 
-            var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{vectorFixedType}.g.cs";
-            outputPath.WriteAllText(builder.ToString());
-        }
-
-        for (var componentCount = 2; componentCount <= GeneratorConstants.VectorComponents.Length; componentCount++)
-        {
-            var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
-
-            var intType = "int";
-            var floatType = "float";
-
-            var vectorIntType = $"Vector{componentCount}Int";
-            var vectorFloatType = $"Vector{componentCount}";
-
-            var builder = new IndentedStringBuilder();
-            builder.AppendGeneratedCodeHeader();
-
-            builder.AppendLine("using System;");
-            builder.AppendLine("using System.Diagnostics.CodeAnalysis;");
-            builder.AppendLine("using System.Globalization;");
-            builder.AppendLine("using System.Numerics;");
-            builder.AppendLine("using System.Runtime.InteropServices;");
-            builder.AppendLine();
-            builder.AppendLine("namespace Exanite.Core.Numerics;");
-
-            builder.AppendSeparation();
-            using (builder.EnterScope($"public partial struct {vectorIntType} : IEquatable<{vectorIntType}>, IFormattable"))
+            for (var componentCount = 2; componentCount <= GeneratorConstants.VectorComponents.Length; componentCount++)
             {
-                AppendComponentFields(builder, intType, components);
+                var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
 
-                AppendIdentityVectorConstants(builder, vectorIntType, components);
-                AppendBasisVectorConstants(builder, vectorIntType, components);
+                var vectorType = currentType.VectorName(componentCount);
 
-                AppendIndexer(builder, intType, components);
+                var builder = new IndentedStringBuilder();
+                builder.AppendGeneratedCodeHeader();
 
-                AppendConstructors(builder, vectorIntType, intType, components);
+                builder.AppendLine("using System;");
+                builder.AppendLine("using System.Diagnostics.CodeAnalysis;");
+                builder.AppendLine("using System.Globalization;");
+                builder.AppendLine("using System.Numerics;");
+                builder.AppendLine("using System.Runtime.InteropServices;");
+                builder.AppendLine();
+                builder.AppendLine("namespace Exanite.Core.Numerics;");
 
-                AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorIntType, intType, components);
-                AppendVectorCastOperation(builder, "implicit", vectorIntType, vectorFloatType, floatType, components);
+                builder.AppendSeparation();
+                using (builder.EnterScope($"public partial struct {vectorType} : IEquatable<{vectorType}>, IFormattable"))
+                {
+                    AppendComponentFields(builder, currentType.ScalarName, components);
 
-                AppendScalarOperation(builder, components, vectorIntType, intType, vectorIntType, "*");
-                AppendScalarOperation(builder, components, vectorIntType, floatType, vectorFloatType, "*");
+                    AppendIdentityVectorConstants(builder, vectorType, components);
+                    AppendBasisVectorConstants(builder, vectorType, components);
 
-                AppendScalarOperation(builder, components, vectorIntType, intType, vectorIntType, "/");
-                AppendScalarOperation(builder, components, vectorIntType, floatType, vectorFloatType, "/");
+                    AppendIndexer(builder, currentType.ScalarName, components);
 
-                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "+");
-                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "-");
-                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "*");
-                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "/");
-                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "%");
+                    AppendConstructors(builder, vectorType, currentType.ScalarName, components);
 
-                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "<<");
-                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, ">>");
-                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, ">>>");
-                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "&");
-                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "|");
-                AppendVectorOperation(builder, components, vectorIntType, vectorIntType, vectorIntType, "^");
+                    // TODO: Refactor
+                    if (currentType.Type == ScalarType.Fixed)
+                    {
+                        var vectorFixedType = $"Vector{componentCount}Fixed";
+                        var vectorIntType = $"Vector{componentCount}Int";
+                        var vectorFloatType = $"Vector{componentCount}";
 
-                AppendNegateOperation(builder, vectorIntType);
+                        var fixedType = "Fixed";
+                        var intType = "int";
+                        var floatType = "float";
 
-                AppendDotOperation(builder, vectorIntType, intType, components);
-                AppendCrossOperation(builder, vectorIntType, intType, components);
+                        builder.AppendSeparation();
+                        builder.AppendLine("// Conversion: Safe - No precision loss possible");
+                        AppendVectorCastOperation(builder, "implicit", vectorIntType, vectorFixedType, fixedType, components, true);
 
-                AppendEqualityOperations(builder, vectorIntType, components);
-                AppendFormattingOperations(builder, components);
+                        builder.AppendSeparation();
+                        builder.AppendLine("// Conversion: Unsafe - Non-deterministic");
+                        builder.AppendLine("// Consider using Fixed.FromParts or Fixed.FromFraction instead");
+                        AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorFixedType, fixedType, components, true);
+
+                        builder.AppendSeparation();
+                        builder.AppendLine("// Conversion: Loss of fraction");
+                        AppendVectorCastOperation(builder, "explicit", vectorFixedType, vectorIntType, intType, components, true);
+
+                        builder.AppendSeparation();
+                        builder.AppendLine("// Conversion: Loss of precision / determinism");
+                        AppendVectorCastOperation(builder, "explicit", vectorFixedType, vectorFloatType, floatType, components, true);
+                    }
+
+                    if (currentType.Type == ScalarType.Int)
+                    {
+                        var vectorIntType = $"Vector{componentCount}Int";
+                        var vectorFloatType = $"Vector{componentCount}";
+
+                        var intType = "int";
+                        var floatType = "float";
+
+                        AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorIntType, intType, components);
+                        AppendVectorCastOperation(builder, "implicit", vectorIntType, vectorFloatType, floatType, components);
+                    }
+
+                    AppendScalarOperation(builder, components, vectorType, currentType.ScalarName, vectorType, "*");
+                    if (currentType.Type == ScalarType.Int)
+                    {
+                        AppendScalarOperation(builder, components, vectorType, "float", GeneratorConstants.ScalarTypes.First(t => t.Type == ScalarType.Float).VectorName(componentCount), "*");
+                    }
+
+                    AppendScalarOperation(builder, components, vectorType, currentType.ScalarName, vectorType, "/");
+                    if (currentType.Type == ScalarType.Int)
+                    {
+                        AppendScalarOperation(builder, components, vectorType, "float", GeneratorConstants.ScalarTypes.First(t => t.Type == ScalarType.Float).VectorName(componentCount), "/");
+                    }
+
+                    AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "+");
+                    AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "-");
+                    AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "*");
+                    AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "/");
+                    AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "%");
+
+                    if (currentType.Type == ScalarType.Int)
+                    {
+                        AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "<<");
+                        AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, ">>");
+                        AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, ">>>");
+                        AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "&");
+                        AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "|");
+                        AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "^");
+                    }
+
+                    AppendNegateOperation(builder, vectorType);
+
+                    if (currentType.Type == ScalarType.Fixed)
+                    {
+                        AppendLengthOperation(builder, vectorType, currentType.ScalarName, components);
+                        AppendNormalizeOperation(builder, vectorType, components);
+                    }
+
+                    AppendDotOperation(builder, vectorType, currentType.ScalarName, components);
+                    AppendCrossOperation(builder, vectorType, currentType.ScalarName, components);
+
+                    AppendEqualityOperations(builder, vectorType, components);
+                    AppendFormattingOperations(builder, components);
+                }
+
+                var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{vectorType}.g.cs";
+                outputPath.WriteAllText(builder.ToString());
             }
-
-            var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{vectorIntType}.g.cs";
-            outputPath.WriteAllText(builder.ToString());
         }
     }
 
@@ -350,7 +331,6 @@ public class VectorGenerator
 
                 break;
             }
-            default: break;
         }
     }
 

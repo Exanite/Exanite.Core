@@ -18,7 +18,7 @@ public static class GeneratorConstants
         new()
         {
             Type = ScalarType.Fixed,
-            ScalarName = "fixed",
+            ScalarName = "Fixed",
             Suffix = "Fixed",
         },
         new()
