@@ -32,11 +32,6 @@ public record struct Rect3
         return FromOffsetSize(scale * Offset, scale * Size);
     }
 
-    public readonly Rect3Int ScaleToInt(Vector3Int scale)
-    {
-        return Rect3Int.FromOffsetSize((Vector3Int)(scale * Offset), (Vector3Int)(scale * Size));
-    }
-
     public readonly bool Contains(Vector3 position)
     {
         return position.X >= Offset.X

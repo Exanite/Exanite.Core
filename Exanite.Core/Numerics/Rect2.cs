@@ -32,11 +32,6 @@ public record struct Rect2
         return FromOffsetSize(scale * Offset, scale * Size);
     }
 
-    public readonly Rect2Int ScaleToInt(Vector2Int scale)
-    {
-        return Rect2Int.FromOffsetSize((Vector2Int)(scale * Offset), (Vector2Int)(scale * Size));
-    }
-
     public readonly bool Contains(Vector2 position)
     {
         return position.X >= Offset.X
