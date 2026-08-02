@@ -17,13 +17,13 @@ public static class GeneratorConstants
         },
         new()
         {
-            Type = ScalarType.Float,
+            Type = ScalarType.Fixed,
             TypeName = "fixed",
             Suffix = "Fixed",
         },
         new()
         {
-            Type = ScalarType.Float,
+            Type = ScalarType.Int,
             TypeName = "int",
             Suffix = "Int",
         },

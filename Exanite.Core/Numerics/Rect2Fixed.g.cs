@@ -18,9 +18,9 @@ public partial record struct Rect2Fixed
         return Rect2.FromOffsetSize((Vector2)value.Offset, (Vector2)value.Size);
     }
 
-    public static explicit operator Rect2Fixed(Rect2 value)
+    public static explicit operator Rect2Int(Rect2Fixed value)
     {
-        return Rect2Fixed.FromOffsetSize((Vector2Fixed)value.Offset, (Vector2Fixed)value.Size);
+        return Rect2Int.FromOffsetSize((Vector2Int)value.Offset, (Vector2Int)value.Size);
     }
 
     public static Rect2Fixed FromSize(Vector2Fixed size)

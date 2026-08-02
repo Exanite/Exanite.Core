@@ -1,5 +1,6 @@
 using System.Linq;
 using Exanite.CodeGen;
+using Exanite.Core.Generators.Models;
 using Exanite.Core.Io;
 
 namespace Exanite.Core.Generators.Generators;
@@ -8,97 +9,62 @@ public class RectGenerator
 {
     public void Run()
     {
-        for (var componentCount = 2; componentCount <= 3; componentCount++)
+        foreach (var scalarType in GeneratorConstants.ScalarTypes)
         {
-            var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
-
-            var rectType = $"Rect{componentCount}Int";
-            var vectorType = $"Vector{componentCount}Int";
-
-            var builder = new IndentedStringBuilder();
-            builder.AppendGeneratedCodeHeader();
-
-            builder.AppendLine("using System.Numerics;");
-            builder.AppendLine();
-            builder.AppendLine("namespace Exanite.Core.Numerics;");
-
-            builder.AppendSeparation();
-            using (builder.EnterScope($"public partial record struct {rectType}"))
+            for (var componentCount = 2; componentCount <= 3; componentCount++)
             {
-                AppendConstants(builder, rectType, vectorType);
-                AppendFields(builder, vectorType);
+                var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
 
-                AppendRectCastOperation(builder, "implicit", rectType, $"Rect{componentCount}", $"Vector{componentCount}");
-                AppendRectCastOperation(builder, "explicit", $"Rect{componentCount}", rectType, vectorType);
+                var rectType = $"Rect{componentCount}{scalarType.Suffix}";
+                var vectorType = $"Vector{componentCount}{scalarType.Suffix}";
 
-                AppendCreateOperations(builder, rectType, vectorType);
-                AppendScaleOperation(builder, rectType, vectorType);
-                AppendContainsOperation(builder, vectorType, components);
+                var builder = new IndentedStringBuilder();
+                builder.AppendGeneratedCodeHeader();
+
+                builder.AppendLine("using System.Numerics;");
+                builder.AppendLine();
+                builder.AppendLine("namespace Exanite.Core.Numerics;");
+
+                builder.AppendSeparation();
+                using (builder.EnterScope($"public partial record struct {rectType}"))
+                {
+                    AppendConstants(builder, rectType, vectorType);
+                    AppendFields(builder, vectorType);
+
+                    // Cast to other
+                    foreach (var otherType in GeneratorConstants.ScalarTypes)
+                    {
+                        var otherRectType = $"Rect{componentCount}{otherType.Suffix}";
+                        var otherVectorType = $"Vector{componentCount}{otherType.Suffix}";
+
+                        var castType = (scalarType.Type, otherType.Type) switch
+                        {
+                            (ScalarType.Float, ScalarType.Fixed) => "explicit",
+                            (ScalarType.Fixed, ScalarType.Float) => "explicit",
+
+                            (ScalarType.Int, ScalarType.Fixed) => "implicit",
+                            (ScalarType.Fixed, ScalarType.Int) => "explicit",
+
+                            (ScalarType.Float, ScalarType.Int) => "explicit",
+                            (ScalarType.Int, ScalarType.Float) => "explicit",
+
+                            _ => null,
+                        };
+
+                        if (castType != null)
+                        {
+                            AppendRectCastOperation(builder, castType, rectType, otherRectType, otherVectorType);
+                        }
+                    }
+
+                    AppendCreateOperations(builder, rectType, vectorType);
+                    AppendScaleOperation(builder, rectType, vectorType);
+                    AppendContainsOperation(builder, vectorType, components);
+                }
+
+                var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{rectType}.g.cs";
+                outputPath.WriteAllText(builder.ToString());
             }
-
-            var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{rectType}.g.cs";
-            outputPath.WriteAllText(builder.ToString());
-        }
-
-        for (var componentCount = 2; componentCount <= 3; componentCount++)
-        {
-            var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
-
-            var rectType = $"Rect{componentCount}";
-            var vectorType = $"Vector{componentCount}";
-
-            var builder = new IndentedStringBuilder();
-            builder.AppendGeneratedCodeHeader();
-
-            builder.AppendLine("using System.Numerics;");
-            builder.AppendLine();
-            builder.AppendLine("namespace Exanite.Core.Numerics;");
-
-            builder.AppendSeparation();
-            using (builder.EnterScope($"public partial record struct {rectType}"))
-            {
-                AppendConstants(builder, rectType, vectorType);
-                AppendFields(builder, vectorType);
-
-                AppendCreateOperations(builder, rectType, vectorType);
-                AppendScaleOperation(builder, rectType, vectorType);
-                AppendContainsOperation(builder, vectorType, components);
-            }
-
-            var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{rectType}.g.cs";
-            outputPath.WriteAllText(builder.ToString());
-        }
-
-        for (var componentCount = 2; componentCount <= 3; componentCount++)
-        {
-            var components = GeneratorConstants.VectorComponents.Take(componentCount).ToArray();
-
-            var rectType = $"Rect{componentCount}Fixed";
-            var vectorType = $"Vector{componentCount}Fixed";
-
-            var builder = new IndentedStringBuilder();
-            builder.AppendGeneratedCodeHeader();
-
-            builder.AppendLine("using System.Numerics;");
-            builder.AppendLine();
-            builder.AppendLine("namespace Exanite.Core.Numerics;");
-
-            builder.AppendSeparation();
-            using (builder.EnterScope($"public partial record struct {rectType}"))
-            {
-                AppendConstants(builder, rectType, vectorType);
-                AppendFields(builder, vectorType);
-
-                AppendRectCastOperation(builder, "explicit", rectType, $"Rect{componentCount}", $"Vector{componentCount}");
-                AppendRectCastOperation(builder, "explicit", $"Rect{componentCount}", rectType, vectorType);
-
-                AppendCreateOperations(builder, rectType, vectorType);
-                AppendScaleOperation(builder, rectType, vectorType);
-                AppendContainsOperation(builder, vectorType, components);
-            }
-
-            var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{rectType}.g.cs";
-            outputPath.WriteAllText(builder.ToString());
         }
     }
 
