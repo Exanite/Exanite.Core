@@ -20,49 +20,37 @@ namespace Exanite.Core.Numerics;
 /// </remarks>
 public partial record struct Color
 {
-    private Vector4 color;
-    private ColorType type;
-
-    public ColorType Type
-    {
-        readonly get => type;
-        set => type = value;
-    }
-
-    public Vector4 Value
-    {
-        readonly get => color;
-        set => color = value;
-    }
+    public Vector4 Value;
+    public ColorType Type;
 
     public float X
     {
-        readonly get => color.X;
-        set => color.X = value;
+        readonly get => Value.X;
+        set => Value.X = value;
     }
 
     public float Y
     {
-        readonly get => color.Y;
-        set => color.Y = value;
+        readonly get => Value.Y;
+        set => Value.Y = value;
     }
 
     public float Z
     {
-        readonly get => color.Z;
-        set => color.Z = value;
+        readonly get => Value.Z;
+        set => Value.Z = value;
     }
 
     public float W
     {
-        readonly get => color.W;
-        set => color.W = value;
+        readonly get => Value.W;
+        set => Value.W = value;
     }
 
     public Color(Vector4 color, ColorType type)
     {
-        this.color = color;
-        this.type = type;
+        Value = color;
+        Type = type;
     }
 
     // Srgb
