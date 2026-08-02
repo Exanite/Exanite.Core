@@ -9,7 +9,7 @@ public class RectGenerator
 {
     public void Run()
     {
-        foreach (var currentType in GeneratorConstants.ScalarTypes)
+        foreach (var currentType in GeneratorConstants.Scalars.Types)
         {
             for (var componentCount = 2; componentCount <= 3; componentCount++)
             {
@@ -32,7 +32,7 @@ public class RectGenerator
                     AppendFields(builder, vectorType);
 
                     // Cast to other
-                    foreach (var otherType in GeneratorConstants.ScalarTypes)
+                    foreach (var otherType in GeneratorConstants.Scalars.Types)
                     {
                         var castType = (currentType.Type, otherType.Type) switch
                         {

@@ -9,7 +9,7 @@ public class VectorGenerator
 {
     public void Run()
     {
-        foreach (var currentType in GeneratorConstants.ScalarTypes)
+        foreach (var currentType in GeneratorConstants.Scalars.Types)
         {
             if (currentType.Type == ScalarType.Float)
             {
@@ -89,13 +89,13 @@ public class VectorGenerator
                     AppendScalarOperation(builder, components, vectorType, currentType.ScalarName, vectorType, "*");
                     if (currentType.Type == ScalarType.Int)
                     {
-                        AppendScalarOperation(builder, components, vectorType, "float", GeneratorConstants.ScalarTypes.First(t => t.Type == ScalarType.Float).VectorName(componentCount), "*");
+                        AppendScalarOperation(builder, components, vectorType, "float", GeneratorConstants.Scalars.Float.VectorName(componentCount), "*");
                     }
 
                     AppendScalarOperation(builder, components, vectorType, currentType.ScalarName, vectorType, "/");
                     if (currentType.Type == ScalarType.Int)
                     {
-                        AppendScalarOperation(builder, components, vectorType, "float", GeneratorConstants.ScalarTypes.First(t => t.Type == ScalarType.Float).VectorName(componentCount), "/");
+                        AppendScalarOperation(builder, components, vectorType, "float", GeneratorConstants.Scalars.Float.VectorName(componentCount), "/");
                     }
 
                     AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "+");
