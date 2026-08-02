@@ -48,42 +48,37 @@ public class VectorGenerator
                     // TODO: Refactor
                     if (currentType.Type == ScalarType.Fixed)
                     {
-                        var vectorFixedType = $"Vector{componentCount}Fixed";
                         var vectorIntType = $"Vector{componentCount}Int";
                         var vectorFloatType = $"Vector{componentCount}";
 
-                        var fixedType = "Fixed";
                         var intType = "int";
                         var floatType = "float";
 
                         builder.AppendSeparation();
                         builder.AppendLine("// Conversion: Safe - No precision loss possible");
-                        AppendVectorCastOperation(builder, "implicit", vectorIntType, vectorFixedType, fixedType, components, true);
+                        AppendVectorCastOperation(builder, "implicit", vectorIntType, vectorType, currentType.ScalarName, components, true);
 
                         builder.AppendSeparation();
                         builder.AppendLine("// Conversion: Unsafe - Non-deterministic");
                         builder.AppendLine("// Consider using Fixed.FromParts or Fixed.FromFraction instead");
-                        AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorFixedType, fixedType, components, true);
+                        AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorType, currentType.ScalarName, components, true);
 
                         builder.AppendSeparation();
                         builder.AppendLine("// Conversion: Loss of fraction");
-                        AppendVectorCastOperation(builder, "explicit", vectorFixedType, vectorIntType, intType, components, true);
+                        AppendVectorCastOperation(builder, "explicit", vectorType, vectorIntType, intType, components, true);
 
                         builder.AppendSeparation();
                         builder.AppendLine("// Conversion: Loss of precision / determinism");
-                        AppendVectorCastOperation(builder, "explicit", vectorFixedType, vectorFloatType, floatType, components, true);
+                        AppendVectorCastOperation(builder, "explicit", vectorType, vectorFloatType, floatType, components, true);
                     }
 
                     if (currentType.Type == ScalarType.Int)
                     {
-                        var vectorIntType = $"Vector{componentCount}Int";
                         var vectorFloatType = $"Vector{componentCount}";
-
-                        var intType = "int";
                         var floatType = "float";
 
-                        AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorIntType, intType, components);
-                        AppendVectorCastOperation(builder, "implicit", vectorIntType, vectorFloatType, floatType, components);
+                        AppendVectorCastOperation(builder, "explicit", vectorFloatType, vectorType, currentType.ScalarName, components);
+                        AppendVectorCastOperation(builder, "implicit", vectorType, vectorFloatType, floatType, components);
                     }
 
                     AppendScalarOperation(builder, components, vectorType, currentType.ScalarName, vectorType, "*");
