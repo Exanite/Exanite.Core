@@ -265,7 +265,7 @@ public record struct Color
             }
             default:
             {
-                ExceptionUtility.NotSupported(color.Type);
+                ExceptionUtility.ThrowNotSupported(color.Type);
                 break;
             }
         }
@@ -331,7 +331,7 @@ public record struct Color
             }
             default:
             {
-                ExceptionUtility.NotSupported(targetType);
+                ExceptionUtility.ThrowNotSupported(targetType);
                 break;
             }
         }

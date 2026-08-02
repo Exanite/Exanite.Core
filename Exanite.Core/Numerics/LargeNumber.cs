@@ -166,7 +166,7 @@ public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
             }
             default:
             {
-                return ExceptionUtility.NotSupported<string>(displayFormat);
+                return ExceptionUtility.ThrowNotSupported<string>(displayFormat);
             }
         }
     }
