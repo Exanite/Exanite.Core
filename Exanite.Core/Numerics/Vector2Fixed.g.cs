@@ -60,29 +60,19 @@ public partial struct Vector2Fixed : IEquatable<Vector2Fixed>, IFormattable
         Y = y;
     }
 
-    // Conversion: Safe - No precision loss possible
-    public static implicit operator Vector2Fixed(Vector2Int value)
-    {
-        return new Vector2Fixed((Fixed)value.X, (Fixed)value.Y);
-    }
-
-    // Conversion: Unsafe - Non-deterministic
-    // Consider using Fixed.FromParts or Fixed.FromFraction instead
     public static explicit operator Vector2Fixed(Vector2 value)
     {
         return new Vector2Fixed((Fixed)value.X, (Fixed)value.Y);
     }
 
-    // Conversion: Loss of fraction
-    public static explicit operator Vector2Int(Vector2Fixed value)
-    {
-        return new Vector2Int((int)value.X, (int)value.Y);
-    }
-
-    // Conversion: Loss of precision / determinism
     public static explicit operator Vector2(Vector2Fixed value)
     {
         return new Vector2((float)value.X, (float)value.Y);
+    }
+
+    public static explicit operator Vector2Int(Vector2Fixed value)
+    {
+        return new Vector2Int((int)value.X, (int)value.Y);
     }
 
     public static Vector2Fixed operator *(Vector2Fixed value, Fixed scalar)

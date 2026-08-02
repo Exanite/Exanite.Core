@@ -46,40 +46,23 @@ public class VectorGenerator
 
                     AppendConstructors(builder, vectorType, currentType.ScalarName, components);
 
-                    // TODO: Refactor
-                    if (currentType.Type == ScalarType.Fixed)
+                    // Cast from float
                     {
-                        var vectorIntType = $"Vector{componentCount}Int";
-                        var vectorFloatType = $"Vector{componentCount}";
-
-                        var intType = "int";
-                        var floatType = "float";
-
-                        builder.AppendSeparation();
-                        builder.AppendLine("// Conversion: Safe - No precision loss possible");
-                        AppendCastOperation(builder, "implicit", vectorIntType, vectorType, currentType.ScalarName, components, true);
-
-                        builder.AppendSeparation();
-                        builder.AppendLine("// Conversion: Unsafe - Non-deterministic");
-                        builder.AppendLine("// Consider using Fixed.FromParts or Fixed.FromFraction instead");
-                        AppendCastOperation(builder, "explicit", vectorFloatType, vectorType, currentType.ScalarName, components, true);
-
-                        builder.AppendSeparation();
-                        builder.AppendLine("// Conversion: Loss of fraction");
-                        AppendCastOperation(builder, "explicit", vectorType, vectorIntType, intType, components, true);
-
-                        builder.AppendSeparation();
-                        builder.AppendLine("// Conversion: Loss of precision / determinism");
-                        AppendCastOperation(builder, "explicit", vectorType, vectorFloatType, floatType, components, true);
+                        var castType = Scalars.CastType(Scalars.Float, currentType);
+                        if (castType != null)
+                        {
+                            AppendCastOperation(builder, castType, Scalars.Float.VectorName(componentCount), vectorType, currentType.ScalarName, components);
+                        }
                     }
 
-                    if (currentType.Type == ScalarType.Int)
+                    // Cast to other
+                    foreach (var otherType in Scalars.Types)
                     {
-                        var vectorFloatType = $"Vector{componentCount}";
-                        var floatType = "float";
-
-                        AppendCastOperation(builder, "explicit", vectorFloatType, vectorType, currentType.ScalarName, components);
-                        AppendCastOperation(builder, "implicit", vectorType, vectorFloatType, floatType, components);
+                        var castType = Scalars.CastType(currentType, otherType);
+                        if (castType != null)
+                        {
+                            AppendCastOperation(builder, castType, vectorType, otherType.VectorName(componentCount), otherType.ScalarName, components);
+                        }
                     }
 
                     AppendScalarOperation(builder, components, vectorType, currentType.ScalarName, vectorType, "*");
@@ -210,14 +193,9 @@ public class VectorGenerator
         }
     }
 
-    private static void AppendCastOperation(IndentedStringBuilder builder, string castType, string srcVectorType, string dstVectorType, string dstScalarType, string[] components, bool manualSeparation = false)
+    private static void AppendCastOperation(IndentedStringBuilder builder, string castType, string srcVectorType, string dstVectorType, string dstScalarType, string[] components)
     {
-        // VectorFixedGenerator adds some comments to these operations, so it handles the separation manually
-        if (!manualSeparation)
-        {
-            builder.AppendSeparation();
-        }
-
+        builder.AppendSeparation();
         using (builder.EnterScope($"public static {castType} operator {dstVectorType}({srcVectorType} value)"))
         {
             builder.AppendLine($"return new {dstVectorType}({string.Join(", ", components.Select(c => $"({dstScalarType})value.{c}"))});");

@@ -70,6 +70,11 @@ public partial struct Vector2Int : IEquatable<Vector2Int>, IFormattable
         return new Vector2((float)value.X, (float)value.Y);
     }
 
+    public static implicit operator Vector2Fixed(Vector2Int value)
+    {
+        return new Vector2Fixed((Fixed)value.X, (Fixed)value.Y);
+    }
+
     public static Vector2Int operator *(Vector2Int value, int scalar)
     {
         return new Vector2Int(value.X * scalar, value.Y * scalar);
