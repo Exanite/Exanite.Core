@@ -14,9 +14,8 @@ public class RectGenerator
             for (var componentCount = 2; componentCount <= 3; componentCount++)
             {
                 var components = VectorComponents.Take(componentCount).ToArray();
-
-                var rectType = currentType.RectName(componentCount);
-                var vectorType = currentType.VectorName(componentCount);
+                var rectName = currentType.RectName(componentCount);
+                var vectorName = currentType.VectorName(componentCount);
 
                 var builder = new IndentedStringBuilder();
                 builder.AppendGeneratedCodeHeader();
@@ -26,27 +25,27 @@ public class RectGenerator
                 builder.AppendLine("namespace Exanite.Core.Numerics;");
 
                 builder.AppendSeparation();
-                using (builder.EnterScope($"public partial record struct {rectType}"))
+                using (builder.EnterScope($"public partial record struct {rectName}"))
                 {
-                    AppendConstants(builder, rectType, vectorType);
-                    AppendFields(builder, vectorType);
+                    AppendConstants(builder, rectName, vectorName);
+                    AppendFields(builder, vectorName);
 
-                    // Cast to other
+                    // Cast from other
                     foreach (var otherType in Scalars.Types)
                     {
-                        var castType = Scalars.CastType(currentType, otherType);
+                        var castType = Scalars.CastType(otherType, currentType);
                         if (castType != null)
                         {
-                            AppendCastOperation(builder, castType, rectType, otherType.RectName(componentCount), otherType.VectorName(componentCount));
+                            AppendCastOperation(builder, castType, otherType.RectName(componentCount), rectName, vectorName);
                         }
                     }
 
-                    AppendCreateOperations(builder, rectType, vectorType);
-                    AppendScaleOperation(builder, rectType, vectorType);
-                    AppendContainsOperation(builder, vectorType, components);
+                    AppendCreateOperations(builder, rectName, vectorName);
+                    AppendScaleOperation(builder, rectName, vectorName);
+                    AppendContainsOperation(builder, vectorName, components);
                 }
 
-                var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{rectType}.g.cs";
+                var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{rectName}.g.cs";
                 outputPath.WriteAllText(builder.ToString());
             }
         }
@@ -71,7 +70,7 @@ public class RectGenerator
         builder.AppendSeparation();
         using (builder.EnterScope($"public static {castType} operator {dstRectType}({srcRectType} value)"))
         {
-            builder.AppendLine($"return {dstRectType}.FromOffsetSize(({dstVectorType})value.Offset, ({dstVectorType})value.Size);");
+            builder.AppendLine($"return FromOffsetSize(({dstVectorType})value.Offset, ({dstVectorType})value.Size);");
         }
     }
 

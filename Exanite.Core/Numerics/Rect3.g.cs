@@ -13,14 +13,14 @@ public partial record struct Rect3
     public Vector3 Offset;
     public Vector3 Size;
 
-    public static explicit operator Rect3Fixed(Rect3 value)
+    public static explicit operator Rect3(Rect3Fixed value)
     {
-        return Rect3Fixed.FromOffsetSize((Vector3Fixed)value.Offset, (Vector3Fixed)value.Size);
+        return FromOffsetSize((Vector3)value.Offset, (Vector3)value.Size);
     }
 
-    public static explicit operator Rect3Int(Rect3 value)
+    public static implicit operator Rect3(Rect3Int value)
     {
-        return Rect3Int.FromOffsetSize((Vector3Int)value.Offset, (Vector3Int)value.Size);
+        return FromOffsetSize((Vector3)value.Offset, (Vector3)value.Size);
     }
 
     public static Rect3 FromSize(Vector3 size)

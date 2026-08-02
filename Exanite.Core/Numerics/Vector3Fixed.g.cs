@@ -69,19 +69,19 @@ public partial struct Vector3Fixed : IEquatable<Vector3Fixed>, IFormattable
         Z = z;
     }
 
-    public static explicit operator Vector3Fixed(Vector3 value)
-    {
-        return new Vector3Fixed((Fixed)value.X, (Fixed)value.Y, (Fixed)value.Z);
-    }
-
     public static explicit operator Vector3(Vector3Fixed value)
     {
         return new Vector3((float)value.X, (float)value.Y, (float)value.Z);
     }
 
-    public static explicit operator Vector3Int(Vector3Fixed value)
+    public static explicit operator Vector3Fixed(Vector3 value)
     {
-        return new Vector3Int((int)value.X, (int)value.Y, (int)value.Z);
+        return new Vector3Fixed((Fixed)value.X, (Fixed)value.Y, (Fixed)value.Z);
+    }
+
+    public static implicit operator Vector3Fixed(Vector3Int value)
+    {
+        return new Vector3Fixed((Fixed)value.X, (Fixed)value.Y, (Fixed)value.Z);
     }
 
     public static Vector3Fixed operator *(Vector3Fixed value, Fixed scalar)

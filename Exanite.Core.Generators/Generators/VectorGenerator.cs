@@ -20,8 +20,7 @@ public class VectorGenerator
             for (var componentCount = 2; componentCount <= VectorComponents.Length; componentCount++)
             {
                 var components = VectorComponents.Take(componentCount).ToArray();
-
-                var vectorType = currentType.VectorName(componentCount);
+                var vectorName = currentType.VectorName(componentCount);
 
                 var builder = new IndentedStringBuilder();
                 builder.AppendGeneratedCodeHeader();
@@ -35,80 +34,80 @@ public class VectorGenerator
                 builder.AppendLine("namespace Exanite.Core.Numerics;");
 
                 builder.AppendSeparation();
-                using (builder.EnterScope($"public partial struct {vectorType} : IEquatable<{vectorType}>, IFormattable"))
+                using (builder.EnterScope($"public partial struct {vectorName} : IEquatable<{vectorName}>, IFormattable"))
                 {
                     AppendComponentFields(builder, currentType.ScalarName, components);
 
-                    AppendIdentityVectorConstants(builder, vectorType, components);
-                    AppendBasisVectorConstants(builder, vectorType, components);
+                    AppendIdentityVectorConstants(builder, vectorName, components);
+                    AppendBasisVectorConstants(builder, vectorName, components);
 
                     AppendIndexer(builder, currentType.ScalarName, components);
 
-                    AppendConstructors(builder, vectorType, currentType.ScalarName, components);
+                    AppendConstructors(builder, vectorName, currentType.ScalarName, components);
 
-                    // Cast from float
+                    // Cast to float
                     {
-                        var castType = Scalars.CastType(Scalars.Float, currentType);
+                        var castType = Scalars.CastType(currentType, Scalars.Float);
                         if (castType != null)
                         {
-                            AppendCastOperation(builder, castType, Scalars.Float.VectorName(componentCount), vectorType, currentType.ScalarName, components);
+                            AppendCastOperation(builder, castType, vectorName, Scalars.Float.VectorName(componentCount), Scalars.Float.ScalarName, components);
                         }
                     }
 
-                    // Cast to other
+                    // Cast from other
                     foreach (var otherType in Scalars.Types)
                     {
-                        var castType = Scalars.CastType(currentType, otherType);
+                        var castType = Scalars.CastType(otherType, currentType);
                         if (castType != null)
                         {
-                            AppendCastOperation(builder, castType, vectorType, otherType.VectorName(componentCount), otherType.ScalarName, components);
+                            AppendCastOperation(builder, castType, otherType.VectorName(componentCount), vectorName, currentType.ScalarName, components);
                         }
                     }
 
-                    AppendScalarOperation(builder, components, vectorType, currentType.ScalarName, vectorType, "*");
+                    AppendScalarOperation(builder, components, vectorName, currentType.ScalarName, vectorName, "*");
                     if (currentType.Type == ScalarType.Int)
                     {
-                        AppendScalarOperation(builder, components, vectorType, "float", Scalars.Float.VectorName(componentCount), "*");
+                        AppendScalarOperation(builder, components, vectorName, "float", Scalars.Float.VectorName(componentCount), "*");
                     }
 
-                    AppendScalarOperation(builder, components, vectorType, currentType.ScalarName, vectorType, "/");
+                    AppendScalarOperation(builder, components, vectorName, currentType.ScalarName, vectorName, "/");
                     if (currentType.Type == ScalarType.Int)
                     {
-                        AppendScalarOperation(builder, components, vectorType, "float", Scalars.Float.VectorName(componentCount), "/");
+                        AppendScalarOperation(builder, components, vectorName, "float", Scalars.Float.VectorName(componentCount), "/");
                     }
 
-                    AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "+");
-                    AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "-");
-                    AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "*");
-                    AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "/");
-                    AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "%");
+                    AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "+");
+                    AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "-");
+                    AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "*");
+                    AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "/");
+                    AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "%");
 
                     if (currentType.Type == ScalarType.Int)
                     {
-                        AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "<<");
-                        AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, ">>");
-                        AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, ">>>");
-                        AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "&");
-                        AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "|");
-                        AppendVectorOperation(builder, components, vectorType, vectorType, vectorType, "^");
+                        AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "<<");
+                        AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, ">>");
+                        AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, ">>>");
+                        AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "&");
+                        AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "|");
+                        AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "^");
                     }
 
-                    AppendNegateOperation(builder, vectorType);
+                    AppendNegateOperation(builder, vectorName);
 
                     if (currentType.Type == ScalarType.Fixed)
                     {
-                        AppendLengthOperation(builder, vectorType, currentType.ScalarName, components);
-                        AppendNormalizeOperation(builder, vectorType, components);
+                        AppendLengthOperation(builder, vectorName, currentType.ScalarName, components);
+                        AppendNormalizeOperation(builder, vectorName, components);
                     }
 
-                    AppendDotOperation(builder, vectorType, currentType.ScalarName, components);
-                    AppendCrossOperation(builder, vectorType, currentType.ScalarName, components);
+                    AppendDotOperation(builder, vectorName, currentType.ScalarName, components);
+                    AppendCrossOperation(builder, vectorName, currentType.ScalarName, components);
 
-                    AppendEqualityOperations(builder, vectorType, components);
+                    AppendEqualityOperations(builder, vectorName, components);
                     AppendFormattingOperations(builder, components);
                 }
 
-                var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{vectorType}.g.cs";
+                var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{vectorName}.g.cs";
                 outputPath.WriteAllText(builder.ToString());
             }
         }

@@ -78,19 +78,19 @@ public partial struct Vector4Fixed : IEquatable<Vector4Fixed>, IFormattable
         W = w;
     }
 
-    public static explicit operator Vector4Fixed(Vector4 value)
-    {
-        return new Vector4Fixed((Fixed)value.X, (Fixed)value.Y, (Fixed)value.Z, (Fixed)value.W);
-    }
-
     public static explicit operator Vector4(Vector4Fixed value)
     {
         return new Vector4((float)value.X, (float)value.Y, (float)value.Z, (float)value.W);
     }
 
-    public static explicit operator Vector4Int(Vector4Fixed value)
+    public static explicit operator Vector4Fixed(Vector4 value)
     {
-        return new Vector4Int((int)value.X, (int)value.Y, (int)value.Z, (int)value.W);
+        return new Vector4Fixed((Fixed)value.X, (Fixed)value.Y, (Fixed)value.Z, (Fixed)value.W);
+    }
+
+    public static implicit operator Vector4Fixed(Vector4Int value)
+    {
+        return new Vector4Fixed((Fixed)value.X, (Fixed)value.Y, (Fixed)value.Z, (Fixed)value.W);
     }
 
     public static Vector4Fixed operator *(Vector4Fixed value, Fixed scalar)

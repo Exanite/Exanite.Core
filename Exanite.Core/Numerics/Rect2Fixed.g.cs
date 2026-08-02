@@ -13,14 +13,14 @@ public partial record struct Rect2Fixed
     public Vector2Fixed Offset;
     public Vector2Fixed Size;
 
-    public static explicit operator Rect2(Rect2Fixed value)
+    public static explicit operator Rect2Fixed(Rect2 value)
     {
-        return Rect2.FromOffsetSize((Vector2)value.Offset, (Vector2)value.Size);
+        return FromOffsetSize((Vector2Fixed)value.Offset, (Vector2Fixed)value.Size);
     }
 
-    public static explicit operator Rect2Int(Rect2Fixed value)
+    public static implicit operator Rect2Fixed(Rect2Int value)
     {
-        return Rect2Int.FromOffsetSize((Vector2Int)value.Offset, (Vector2Int)value.Size);
+        return FromOffsetSize((Vector2Fixed)value.Offset, (Vector2Fixed)value.Size);
     }
 
     public static Rect2Fixed FromSize(Vector2Fixed size)
