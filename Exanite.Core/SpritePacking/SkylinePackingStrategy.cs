@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Exanite.Core.Numerics;
 
 namespace Exanite.Core.SpritePacking;
@@ -14,6 +15,11 @@ namespace Exanite.Core.SpritePacking;
 /// </remarks>
 public class SkylinePackingStrategy : IRectPackingStrategy
 {
+    private const int WasteMapCapacity = 128;
+    private const int WasteMapEvictCount = 16;
+
+    private static readonly DescendingRectAreaComparer WasteMapRectComparer = new();
+
     private readonly Vector2Int totalSize;
 
     /// <summary>
@@ -24,9 +30,7 @@ public class SkylinePackingStrategy : IRectPackingStrategy
     /// <summary>
     /// Sorted by descending width, then by descending height.
     /// </summary>
-    private readonly List<Rect2Int> wasteMapBins = new();
-
-    private Vector2Int smallestSeen = new(int.MaxValue, int.MaxValue);
+    private readonly List<Rect2Int> wasteMapBins = new(WasteMapCapacity);
 
     public SkylinePackingStrategy(Vector2Int size)
     {
@@ -56,6 +60,23 @@ public class SkylinePackingStrategy : IRectPackingStrategy
     // {
     //
     // }
+
+    private void AddWasteMapBin(Rect2Int rect)
+    {
+        if (wasteMapBins.Count >= WasteMapCapacity)
+        {
+            // Prune
+            CollectionsMarshal.SetCount(wasteMapBins, WasteMapCapacity - WasteMapEvictCount);
+        }
+
+        var insertIndex = wasteMapBins.BinarySearch(rect, WasteMapRectComparer);
+        if (insertIndex < 0)
+        {
+            insertIndex = ~insertIndex;
+        }
+
+        wasteMapBins.Insert(insertIndex, rect);
+    }
 
     private bool TryFindSkylineBin(Vector2Int size, out CandidateSkylineBin candidateBin)
     {
@@ -131,17 +152,40 @@ public class SkylinePackingStrategy : IRectPackingStrategy
         // Remove overlapped bins
         for (var i = 0; i < binCount; i++)
         {
+            var removedBin = skylineBins[binIndex];
             skylineBins.RemoveAt(binIndex);
 
-            // TODO: Add to waste map
+            // We handle the last bin below since it is partially overlapped
+            if (i < binCount - 1)
+            {
+                var wasteHeight = firstBin.Position.Y - removedBin.Position.Y;
+                if (wasteHeight > 0)
+                {
+                    var wasteRect = Rect2Int.FromOffsetSize(removedBin.Position, new Vector2Int(removedBin.Width, wasteHeight));
+                    AddWasteMapBin(wasteRect);
+                }
+            }
         }
 
-        // Split last bin if there is remaining space
-        if (freeWidth > size.X)
+        // Handle last bin
         {
-            var rightCornerX = lastBin.Position.X + lastBin.Width;
             var remainingWidth = freeWidth - size.X;
-            skylineBins.Insert(binIndex, new SkylineBin(new Vector2Int(rightCornerX - remainingWidth, lastBin.Position.Y), remainingWidth));
+            var usedWidth = lastBin.Width - remainingWidth;
+
+            // Split last bin if there is remaining horizontal space
+            if (remainingWidth > 0)
+            {
+                var rightCornerX = lastBin.Position.X + lastBin.Width;
+                skylineBins.Insert(binIndex, new SkylineBin(new Vector2Int(rightCornerX - remainingWidth, lastBin.Position.Y), remainingWidth));
+            }
+
+            // Add waste rect if there is remaining vertical space
+            var wasteHeight = firstBin.Position.Y - lastBin.Position.Y;
+            if (wasteHeight > 0 && usedWidth > 0)
+            {
+                var wasteRect = Rect2Int.FromOffsetSize(lastBin.Position, new Vector2Int(usedWidth, wasteHeight));
+                AddWasteMapBin(wasteRect);
+            }
         }
 
         // Define output rect
@@ -185,4 +229,12 @@ public class SkylinePackingStrategy : IRectPackingStrategy
     private record struct SkylineBin(Vector2Int Position, int Width);
 
     private record struct CandidateSkylineBin(int BinIndex, int BinCount);
+
+    private class DescendingRectAreaComparer : IComparer<Rect2Int>
+    {
+        public int Compare(Rect2Int left, Rect2Int right)
+        {
+            return right.Size.X * right.Size.Y - left.Size.X * left.Size.Y;
+        }
+    }
 }
