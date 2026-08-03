@@ -55,12 +55,6 @@ public class SkylinePackingStrategy : IRectPackingStrategy
             return true;
         }
 
-        if (skylineBins.Count == 0)
-        {
-            rect = default;
-            return false;
-        }
-
         if (TryFindSkylineBin(size, out var skylineBin))
         {
             rect = AddToSkylineBin(size, skylineBin);
