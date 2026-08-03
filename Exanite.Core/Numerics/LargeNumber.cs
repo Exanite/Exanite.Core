@@ -10,7 +10,7 @@ namespace Exanite.Core.Numerics;
 /// Actual value = <see cref="Value"/> * (10 ^ (
 /// <see cref="Multiplier"/> * 3)).
 /// </summary>
-public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
+public record struct LargeNumber : IComparable<LargeNumber>
 {
     private double value;
     private long multiplier;
@@ -159,16 +159,6 @@ public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
         return new LargeNumber(a.Value - 1, a.Multiplier);
     }
 
-    public static bool operator ==(LargeNumber lhs, LargeNumber rhs)
-    {
-        return lhs.Equals(rhs);
-    }
-
-    public static bool operator !=(LargeNumber lhs, LargeNumber rhs)
-    {
-        return !lhs.Equals(rhs);
-    }
-
     public static bool operator >(LargeNumber lhs, LargeNumber rhs)
     {
         return lhs.CompareTo(rhs) > 0;
@@ -199,24 +189,9 @@ public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
         return Multiplier.CompareTo(other.Multiplier);
     }
 
-    public override bool Equals(object? obj)
+    public bool ApproximatelyEquals(LargeNumber other)
     {
-        if (obj is LargeNumber largeNumber)
-        {
-            return Equals(largeNumber);
-        }
-
-        return false;
-    }
-
-    public bool Equals(LargeNumber other)
-    {
-        return Math.Abs(Value - other.Value) < float.Epsilon && Multiplier == other.Multiplier;
-    }
-
-    public override int GetHashCode()
-    {
-        return (Value, Multiplier).GetHashCode();
+        return Multiplier == other.Multiplier && M.ApproximatelyEquals(Value, other.Value);
     }
 
     public override string ToString()
