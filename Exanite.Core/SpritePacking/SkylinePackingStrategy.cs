@@ -12,7 +12,7 @@ namespace Exanite.Core.SpritePacking;
 /// Bins are merged when y-coordinate matches.
 /// Waste map rects are never merged.
 /// </remarks>
-public class SkylinePackingStrategy : ISpritePackingStrategy
+public class SkylinePackingStrategy : IRectPackingStrategy
 {
     private readonly Vector2Int totalSize;
 
