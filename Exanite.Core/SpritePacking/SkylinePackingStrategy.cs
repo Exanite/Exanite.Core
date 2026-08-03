@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Exanite.Core.Numerics;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.SpritePacking;
 
@@ -34,18 +35,47 @@ public class SkylinePackingStrategy : IRectPackingStrategy
 
     public bool TryAdd(Vector2Int size, out Rect2Int rect)
     {
-        // Find bin
+        if (bins.Count == 0)
+        {
+            rect = default;
+            return false;
+        }
+
         for (var i = 0; i < bins.Count; i++)
         {
-            var bin = bins[i];
-            var remainingHeight = totalSize.Y - bin.Position.Y;
-            if (bin.Width >= size.X && remainingHeight > size.Y)
+            if (TryAddToBin(size, i, out rect))
             {
-
+                return true;
             }
         }
 
-        throw new System.NotImplementedException();
+        rect = default;
+        return false;
+    }
+
+    private bool TryAddToBin(Vector2Int size, int binIndex, out Rect2Int rect)
+    {
+        var firstBin = bins[0];
+        var freeWidth = 0;
+        for (var i = 0; i < bins.Count; i++)
+        {
+            var bin = bins[i];
+            if (bin.Position.Y >= firstBin.Position.Y)
+            {
+                // Bin is higher than starting bin -> Cannot fit
+                rect = default;
+                return false;
+            }
+
+            freeWidth += bin.Width;
+            if (freeWidth >= size.X)
+            {
+                // Found location -> Insert
+            }
+        }
+
+        rect = default;
+        return false;
     }
 
     private record struct Bin(Vector2Int Position, int Width);
