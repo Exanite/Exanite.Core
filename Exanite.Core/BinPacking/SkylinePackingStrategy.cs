@@ -19,7 +19,7 @@ namespace Exanite.Core.BinPacking;
 /// </remarks>
 public class SkylinePackingStrategy : IRectPackingStrategy
 {
-    private const int WasteMapCapacity = 128;
+    private const int WasteMapCapacity = 256;
     private const int WasteMapEvictCount = 16;
 
     private static readonly DescendingRectAreaComparer WasteMapRectComparer = new();
