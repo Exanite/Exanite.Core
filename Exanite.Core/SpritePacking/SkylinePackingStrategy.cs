@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Exanite.Core.Numerics;
-using Exanite.Core.Utilities;
 
 namespace Exanite.Core.SpritePacking;
 
@@ -20,30 +19,32 @@ public class SkylinePackingStrategy : IRectPackingStrategy
     /// <summary>
     /// Sorted by ascending x position.
     /// </summary>
-    private readonly List<Bin> bins = new();
+    private readonly List<SkylineBin> skylineBins = new();
 
     /// <summary>
     /// Sorted by descending width, then by descending height.
     /// </summary>
-    private readonly List<Rect2Int> wasteMap = new();
+    private readonly List<Rect2Int> wasteMapBins = new();
+
+    private Vector2Int smallestSeen = new(int.MaxValue, int.MaxValue);
 
     public SkylinePackingStrategy(Vector2Int size)
     {
         totalSize = size;
-        bins.Add(new Bin(Vector2Int.Zero, size.X));
+        skylineBins.Add(new SkylineBin(Vector2Int.Zero, size.X));
     }
 
     public bool TryAdd(Vector2Int size, out Rect2Int rect)
     {
-        if (bins.Count == 0)
+        if (skylineBins.Count == 0)
         {
             rect = default;
             return false;
         }
 
-        if (TryFindBin(size, out var candidateBin))
+        if (TryFindSkylineBin(size, out var candidateBin))
         {
-            rect = AddToBin(size, candidateBin.BinIndex, candidateBin.BinCount);
+            rect = AddToSkylineBin(size, candidateBin.BinIndex, candidateBin.BinCount);
             return true;
         }
 
@@ -51,24 +52,29 @@ public class SkylinePackingStrategy : IRectPackingStrategy
         return false;
     }
 
-    private bool TryFindBin(Vector2Int size, out CandidateBin candidateBin)
+    // private bool TryFindWasteMapBin(Vector2Int size)
+    // {
+    //
+    // }
+
+    private bool TryFindSkylineBin(Vector2Int size, out CandidateSkylineBin candidateBin)
     {
-        var result = default(CandidateBin?);
-        for (var binI = 0; binI < bins.Count; binI++)
+        var result = default(CandidateSkylineBin?);
+        for (var binI = 0; binI < skylineBins.Count; binI++)
         {
-            if (CanAddToBin(size, binI, out var binCount))
+            if (CanAddToSkylineBin(size, binI, out var binCount))
             {
                 if (!result.HasValue)
                 {
-                    result = new CandidateBin(binI, binCount);
+                    result = new CandidateSkylineBin(binI, binCount);
                     continue;
                 }
 
-                var currentBin = bins[binI];
-                var existingBin = bins[result.Value.BinIndex];
+                var currentBin = skylineBins[binI];
+                var existingBin = skylineBins[result.Value.BinIndex];
                 if (currentBin.Position.Y < existingBin.Position.Y)
                 {
-                    result = new CandidateBin(binI, binCount);
+                    result = new CandidateSkylineBin(binI, binCount);
                 }
             }
         }
@@ -77,9 +83,9 @@ public class SkylinePackingStrategy : IRectPackingStrategy
         return result != null;
     }
 
-    private bool CanAddToBin(Vector2Int size, int binIndex, out int binCount)
+    private bool CanAddToSkylineBin(Vector2Int size, int binIndex, out int binCount)
     {
-        var firstBin = bins[binIndex];
+        var firstBin = skylineBins[binIndex];
         var freeHeight = totalSize.Y - firstBin.Position.Y;
         if (freeHeight < size.Y)
         {
@@ -88,9 +94,9 @@ public class SkylinePackingStrategy : IRectPackingStrategy
         }
 
         var freeWidth = 0;
-        for (var binI = binIndex; binI < bins.Count; binI++)
+        for (var binI = binIndex; binI < skylineBins.Count; binI++)
         {
-            var bin = bins[binI];
+            var bin = skylineBins[binI];
             if (bin.Position.Y > firstBin.Position.Y)
             {
                 // Bin is higher than starting bin -> Cannot fit
@@ -110,22 +116,22 @@ public class SkylinePackingStrategy : IRectPackingStrategy
         return false;
     }
 
-    private Rect2Int AddToBin(Vector2Int size, int binIndex, int binCount)
+    private Rect2Int AddToSkylineBin(Vector2Int size, int binIndex, int binCount)
     {
-        var firstBin = bins[binIndex];
-        var lastBin = bins[binIndex + binCount - 1];
+        var firstBin = skylineBins[binIndex];
+        var lastBin = skylineBins[binIndex + binCount - 1];
         var freeHeight = totalSize.Y - firstBin.Position.Y;
         var freeWidth = 0;
         for (var binI = binIndex; binI < binIndex + binCount; binI++)
         {
-            var bin = bins[binI];
+            var bin = skylineBins[binI];
             freeWidth += bin.Width;
         }
 
         // Remove overlapped bins
-        for (var overlapI = binIndex; overlapI < binIndex + binCount; overlapI++)
+        for (var i = 0; i < binCount; i++)
         {
-            bins.RemoveAt(overlapI);
+            skylineBins.RemoveAt(binIndex);
 
             // TODO: Add to waste map
         }
@@ -135,7 +141,7 @@ public class SkylinePackingStrategy : IRectPackingStrategy
         {
             var rightCornerX = lastBin.Position.X + lastBin.Width;
             var remainingWidth = freeWidth - size.X;
-            bins.Insert(binIndex, new Bin(new Vector2Int(rightCornerX - remainingWidth, lastBin.Position.Y), remainingWidth));
+            skylineBins.Insert(binIndex, new SkylineBin(new Vector2Int(rightCornerX - remainingWidth, lastBin.Position.Y), remainingWidth));
         }
 
         // Define output rect
@@ -144,30 +150,30 @@ public class SkylinePackingStrategy : IRectPackingStrategy
         // Add new bin representing top of inserted rect if there is remaining space
         if (freeHeight > size.Y)
         {
-            var newBin = new Bin(firstBin.Position + new Vector2Int(0, size.Y), size.X);
-            bins.Insert(binIndex, newBin);
+            var newBin = new SkylineBin(firstBin.Position + new Vector2Int(0, size.Y), size.X);
+            skylineBins.Insert(binIndex, newBin);
 
             // Merge adjacent
             if (binIndex - 1 >= 0)
             {
-                var previousBin = bins[binIndex - 1];
+                var previousBin = skylineBins[binIndex - 1];
                 if (previousBin.Position.Y == newBin.Position.Y)
                 {
-                    newBin = new Bin(previousBin.Position, previousBin.Width + newBin.Width);
-                    bins[binIndex - 1] = newBin;
-                    bins.RemoveAt(binIndex);
+                    newBin = new SkylineBin(previousBin.Position, previousBin.Width + newBin.Width);
+                    skylineBins[binIndex - 1] = newBin;
+                    skylineBins.RemoveAt(binIndex);
                     binIndex--;
                 }
             }
 
-            if (binIndex + 1 < bins.Count)
+            if (binIndex + 1 < skylineBins.Count)
             {
-                var nextBin = bins[binIndex + 1];
+                var nextBin = skylineBins[binIndex + 1];
                 if (nextBin.Position.Y == newBin.Position.Y)
                 {
-                    newBin = new Bin(nextBin.Position, nextBin.Width + newBin.Width);
-                    bins[binIndex + 1] = newBin;
-                    bins.RemoveAt(binIndex);
+                    newBin = new SkylineBin(nextBin.Position, nextBin.Width + newBin.Width);
+                    skylineBins[binIndex + 1] = newBin;
+                    skylineBins.RemoveAt(binIndex);
                     binIndex--;
                 }
             }
@@ -176,7 +182,7 @@ public class SkylinePackingStrategy : IRectPackingStrategy
         return outputRect;
     }
 
-    private record struct Bin(Vector2Int Position, int Width);
+    private record struct SkylineBin(Vector2Int Position, int Width);
 
-    private record struct CandidateBin(int BinIndex, int BinCount);
+    private record struct CandidateSkylineBin(int BinIndex, int BinCount);
 }
