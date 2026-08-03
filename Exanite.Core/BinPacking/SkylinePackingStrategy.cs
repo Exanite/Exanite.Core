@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Exanite.Core.Numerics;
@@ -11,9 +10,11 @@ namespace Exanite.Core.BinPacking;
 /// </summary>
 /// <remarks>
 /// Currently designed for online usage (no presorting).
-/// Uses the skyline, bottom-left, waste map, bin-next-fit implementation.
-/// Bins are merged when y-coordinate matches.
-/// Waste map rects are never merged.
+/// Uses the skyline, bottom-left, waste map, bin-next-fit approach.
+/// Skyline are merged when y-coordinate matches.
+/// <para/>
+/// Waste map is implemented as a list of rects sorted by descending area, with the smallest occasionally pruned.
+/// Waste map rects are never merged and are split to maximize one rectangle's area over the other.
 /// </remarks>
 public class SkylinePackingStrategy : IRectPackingStrategy
 {
@@ -245,7 +246,33 @@ public class SkylinePackingStrategy : IRectPackingStrategy
     private Rect2Int AddToWasteMapBin(Vector2Int size, CandidateWasteMapBin candidateBin)
     {
         var binIndex = candidateBin.BinIndex;
-        throw new NotImplementedException();
+        var bin = wasteMapBins[binIndex];
+        wasteMapBins.RemoveAt(binIndex);
+
+        // Split in the direction that maximizes the area of one rectangle over the other
+        if (size != bin.Size)
+        {
+            // H means horizontal split
+            // V means vertical split
+            var rectAreaH = (bin.Size.Y - size.Y) * bin.Size.X;
+            var rectAreaV = (bin.Size.X - size.X) * bin.Size.Y;
+
+            // In case of tie, split vertically since sprites tend to be taller than they are wide
+            if (rectAreaV >= rectAreaH)
+            {
+                // Split vertically
+                AddWasteMapBin(Rect2Int.FromOffsetSize(bin.Offset + new Vector2Int(size.X, 0), new Vector2Int(bin.Size.X - size.X, bin.Size.Y)));
+                AddWasteMapBin(Rect2Int.FromOffsetSize(bin.Offset + new Vector2Int(0, size.Y), new Vector2Int(size.X, bin.Size.Y - size.Y)));
+            }
+            else
+            {
+                // Split horizontally
+                AddWasteMapBin(Rect2Int.FromOffsetSize(bin.Offset + new Vector2Int(size.X, 0), new Vector2Int(bin.Size.X - size.X, size.Y)));
+                AddWasteMapBin(Rect2Int.FromOffsetSize(bin.Offset + new Vector2Int(0, size.Y), new Vector2Int(bin.Size.X, bin.Size.Y - size.Y)));
+            }
+        }
+
+        return Rect2Int.FromOffsetSize(bin.Offset, size);
     }
 
     private void AddWasteMapBin(Rect2Int rect)
