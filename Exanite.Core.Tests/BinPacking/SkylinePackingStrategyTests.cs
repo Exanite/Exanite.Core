@@ -191,6 +191,36 @@ public class SkylinePackingStrategyTests
         Console.WriteLine($"Area utilization: {(float)usedArea / (packerSize.X * packerSize.Y)}");
     }
 
+    [Fact]
+    public void Stress_VaryingScales_NoEarlyExit()
+    {
+        var packerSize = new Vector2Int(1024, 1024);
+        var packer = new SkylinePackingStrategy(packerSize);
+        var random = new Random(456);
+        var bitmap = new BitSet();
+        var rects = new List<Rect2Int>();
+        var usedArea = 0;
+
+        for (var i = 0; i < 100000; i++)
+        {
+            var size = new Vector2Int(random.Next(8, 16 + 1), random.Next(8, 16 + 1)) * random.Next(1, 4 + 1);
+            if (!packer.TryAdd(size, out var rect))
+            {
+                continue;
+            }
+
+            Assert.Equal(size, rect.Size);
+            TrackRect(rect, i, packerSize, bitmap, rects);
+            usedArea += rect.Size.X * rect.Size.Y;
+        }
+
+        Assert.Equal(rects.Count, packer.AddedCount);
+        Console.WriteLine($"Total rects packed: {rects.Count}");
+        Console.WriteLine($"Packed using skyline: {packer.SkylineAddedCount}");
+        Console.WriteLine($"Packed using waste map: {packer.WasteMapAddedCount}");
+        Console.WriteLine($"Area utilization: {(float)usedArea / (packerSize.X * packerSize.Y)}");
+    }
+
     private void TrackRect(Rect2Int rect, int iteration, Vector2Int packerSize, BitSet bitmap, List<Rect2Int> rects)
     {
         // This is to ensure that rects are not double allocated
