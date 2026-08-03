@@ -1,8 +1,8 @@
+using Exanite.Core.BinPacking;
 using Exanite.Core.Numerics;
-using Exanite.Core.SpritePacking;
 using Xunit;
 
-namespace Exanite.Core.Tests.SpritePacking;
+namespace Exanite.Core.Tests.BinPacking;
 
 public class SkylinePackingStrategyTests
 {

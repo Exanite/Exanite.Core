@@ -1,6 +1,6 @@
 using Exanite.Core.Numerics;
 
-namespace Exanite.Core.SpritePacking;
+namespace Exanite.Core.BinPacking;
 
 public interface IRectPackingStrategy
 {
