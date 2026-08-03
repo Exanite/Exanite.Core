@@ -125,7 +125,7 @@ public partial struct Fixed128
                 return new Fixed128(integral) + One;
             }
 
-            default: return ExceptionUtility.NotSupported<Fixed128>(mode);
+            default: return ExceptionUtility.ThrowNotSupported<Fixed128>(mode);
         }
     }
 }

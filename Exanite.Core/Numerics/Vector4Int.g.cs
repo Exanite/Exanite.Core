@@ -78,14 +78,19 @@ public partial struct Vector4Int : IEquatable<Vector4Int>, IFormattable
         W = w;
     }
 
+    public static implicit operator Vector4(Vector4Int value)
+    {
+        return new Vector4((float)value.X, (float)value.Y, (float)value.Z, (float)value.W);
+    }
+
     public static explicit operator Vector4Int(Vector4 value)
     {
         return new Vector4Int((int)value.X, (int)value.Y, (int)value.Z, (int)value.W);
     }
 
-    public static implicit operator Vector4(Vector4Int value)
+    public static explicit operator Vector4Int(Vector4Fixed value)
     {
-        return new Vector4((float)value.X, (float)value.Y, (float)value.Z, (float)value.W);
+        return new Vector4Int((int)value.X, (int)value.Y, (int)value.Z, (int)value.W);
     }
 
     public static Vector4Int operator *(Vector4Int value, int scalar)

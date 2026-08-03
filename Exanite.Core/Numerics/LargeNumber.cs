@@ -5,20 +5,19 @@ using Exanite.Core.Utilities;
 namespace Exanite.Core.Numerics;
 
 /// <summary>
-/// Used to store very large numbers (up to 999.999999x(10^(2^63)))
+/// Used to store very large numbers (up to 999.999999x(10^(2^63))).
 /// <para/>
 /// Actual value = <see cref="Value"/> * (10 ^ (
-/// <see cref="Multiplier"/> * 3))
+/// <see cref="Multiplier"/> * 3)).
 /// </summary>
-[Serializable]
-public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
+public record struct LargeNumber : IComparable<LargeNumber>
 {
     private double value;
     private long multiplier;
 
     /// <summary>
     /// Value of this <see cref="LargeNumber"/> Formatted as xxx.yyyyyy
-    /// where x = significant digits and y = trailing digits
+    /// where x = significant digits and y = trailing digits.
     /// </summary>
     public double Value
     {
@@ -37,7 +36,7 @@ public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
     }
 
     /// <summary>
-    /// Multiplier of this <see cref="LargeNumber"/>
+    /// Multiplier of this <see cref="LargeNumber"/>.
     /// </summary>
     public long Multiplier
     {
@@ -52,7 +51,7 @@ public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
     }
 
     /// <summary>
-    /// Creates a new <see cref="LargeNumber"/>
+    /// Creates a new <see cref="LargeNumber"/>.
     /// </summary>
     public LargeNumber(double value = 0, long multiplier = 0)
     {
@@ -63,7 +62,7 @@ public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
     }
 
     /// <summary>
-    /// Shifts the value and multiplier of this <see cref="LargeNumber"/>
+    /// Shifts the value and multiplier of this <see cref="LargeNumber"/>.
     /// </summary>
     private void ShiftPlaces()
     {
@@ -82,92 +81,6 @@ public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
         if (value == 0)
         {
             multiplier = 0;
-        }
-    }
-
-    /// <summary>
-    /// Converts this LargeNumber into a string
-    /// </summary>
-    public override string ToString()
-    {
-        return ToString(NumDisplayFormat.Scientific);
-    }
-
-    /// <summary>
-    /// Converts this LargeNumber into a string
-    /// </summary>
-    public string ToString(NumDisplayFormat displayFormat, int placesToRound = 0)
-    {
-        placesToRound = Math.Clamp(placesToRound, 0, 15);
-
-        var rounded = Math.Round(Value, placesToRound);
-
-        if (Multiplier == 0)
-        {
-            return rounded.ToString(CultureInfo.CurrentCulture);
-        }
-
-        switch (displayFormat)
-        {
-            case NumDisplayFormat.Scientific:
-            {
-                var extraDigits = 0;
-
-                while (rounded >= 10) // Limit to one leading digit
-                {
-                    extraDigits++;
-                    rounded /= 10;
-                }
-
-                while (rounded <= -10) // Limit to one leading digit
-                {
-                    extraDigits--;
-                    rounded /= 10;
-                }
-
-                rounded = Math.Round(rounded, placesToRound); // Round the result again because the decimal place shifted in the while loop
-
-                if (Math.Abs(Multiplier) > long.MaxValue / 3)
-                {
-                    var isNegative = false;
-
-                    if (Multiplier < 0)
-                    {
-                        return "0";
-                    }
-
-                    if (Value < 0)
-                    {
-                        isNegative = true;
-                    }
-
-                    return $"{(isNegative ? "-" : string.Empty)}Infinity";
-                }
-
-                return $"{rounded.ToString($"N{placesToRound}")} E{Multiplier * 3 + extraDigits}";
-            }
-            case NumDisplayFormat.Short:
-            {
-                if (Multiplier > EnumUtility<NumScalesShort>.Max || Multiplier < EnumUtility<NumScalesShort>.Min)
-                {
-                    return ToString(NumDisplayFormat.Scientific);
-                }
-
-                return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesShort)Multiplier}";
-            }
-            case NumDisplayFormat.Long:
-            {
-                if (Math.Abs(Multiplier) > EnumUtility<NumScalesLong>.Max || Math.Abs(Multiplier) < EnumUtility<NumScalesLong>.Min)
-                {
-                    return ToString(NumDisplayFormat.Short);
-                }
-
-                return $"{rounded.ToString($"N{placesToRound}")} {(NumScalesLong)Math.Abs(Multiplier)}{(Multiplier < 0 ? "th" : string.Empty)}";
-            }
-            default:
-            {
-                return ExceptionUtility.NotSupported<string>(displayFormat);
-            }
         }
     }
 
@@ -246,16 +159,6 @@ public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
         return new LargeNumber(a.Value - 1, a.Multiplier);
     }
 
-    public static bool operator ==(LargeNumber lhs, LargeNumber rhs)
-    {
-        return lhs.Equals(rhs);
-    }
-
-    public static bool operator !=(LargeNumber lhs, LargeNumber rhs)
-    {
-        return !lhs.Equals(rhs);
-    }
-
     public static bool operator >(LargeNumber lhs, LargeNumber rhs)
     {
         return lhs.CompareTo(rhs) > 0;
@@ -276,26 +179,6 @@ public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
         return lhs.CompareTo(rhs) <= 0;
     }
 
-    public override bool Equals(object? obj)
-    {
-        if (obj is LargeNumber largeNumber)
-        {
-            return Equals(largeNumber);
-        }
-
-        return false;
-    }
-
-    public override int GetHashCode()
-    {
-        return (Value, Multiplier).GetHashCode();
-    }
-
-    public bool Equals(LargeNumber other)
-    {
-        return Math.Abs(Value - other.Value) < float.Epsilon && Multiplier == other.Multiplier;
-    }
-
     public int CompareTo(LargeNumber other)
     {
         if (Multiplier == other.Multiplier)
@@ -304,5 +187,90 @@ public struct LargeNumber : IEquatable<LargeNumber>, IComparable<LargeNumber>
         }
 
         return Multiplier.CompareTo(other.Multiplier);
+    }
+
+    public bool ApproximatelyEquals(LargeNumber other)
+    {
+        return Multiplier == other.Multiplier && M.ApproximatelyEquals(Value, other.Value);
+    }
+
+    public override string ToString()
+    {
+        return ToString(NumberDisplayFormat.Scientific);
+    }
+
+    public string ToString(NumberDisplayFormat displayFormat, int placesToRound = 0)
+    {
+        placesToRound = Math.Clamp(placesToRound, 0, 15);
+
+        var rounded = Math.Round(Value, placesToRound);
+
+        if (Multiplier == 0)
+        {
+            return rounded.ToString(CultureInfo.CurrentCulture);
+        }
+
+        switch (displayFormat)
+        {
+            case NumberDisplayFormat.Scientific:
+            {
+                var extraDigits = 0;
+
+                while (rounded >= 10) // Limit to one leading digit
+                {
+                    extraDigits++;
+                    rounded /= 10;
+                }
+
+                while (rounded <= -10) // Limit to one leading digit
+                {
+                    extraDigits--;
+                    rounded /= 10;
+                }
+
+                rounded = Math.Round(rounded, placesToRound); // Round the result again because the decimal place shifted in the while loop
+
+                if (Math.Abs(Multiplier) > long.MaxValue / 3)
+                {
+                    var isNegative = false;
+
+                    if (Multiplier < 0)
+                    {
+                        return "0";
+                    }
+
+                    if (Value < 0)
+                    {
+                        isNegative = true;
+                    }
+
+                    return $"{(isNegative ? "-" : string.Empty)}Infinity";
+                }
+
+                return $"{rounded.ToString($"N{placesToRound}")} E{Multiplier * 3 + extraDigits}";
+            }
+            case NumberDisplayFormat.Short:
+            {
+                if (Multiplier > EnumUtility<ShortNumberScales>.Max || Multiplier < EnumUtility<ShortNumberScales>.Min)
+                {
+                    return ToString(NumberDisplayFormat.Scientific);
+                }
+
+                return $"{rounded.ToString($"N{placesToRound}")} {(ShortNumberScales)Multiplier}";
+            }
+            case NumberDisplayFormat.Long:
+            {
+                if (Math.Abs(Multiplier) > EnumUtility<LongNumberScales>.Max || Math.Abs(Multiplier) < EnumUtility<LongNumberScales>.Min)
+                {
+                    return ToString(NumberDisplayFormat.Short);
+                }
+
+                return $"{rounded.ToString($"N{placesToRound}")} {(LongNumberScales)Math.Abs(Multiplier)}{(Multiplier < 0 ? "th" : string.Empty)}";
+            }
+            default:
+            {
+                return ExceptionUtility.ThrowNotSupported<string>(displayFormat);
+            }
+        }
     }
 }

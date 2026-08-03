@@ -1,12 +1,9 @@
-﻿using System;
-
-namespace Exanite.Core.Numerics;
+﻿namespace Exanite.Core.Numerics;
 
 /// <summary>
-/// Whole number names
+/// Whole number names.
 /// </summary>
-[Serializable]
-public enum NumScalesLong
+public enum LongNumberScales
 {
     // Scales found at https://en.wikipedia.org/wiki/Names_of_large_numbers
 

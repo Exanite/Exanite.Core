@@ -60,14 +60,19 @@ public partial struct Vector2Int : IEquatable<Vector2Int>, IFormattable
         Y = y;
     }
 
+    public static implicit operator Vector2(Vector2Int value)
+    {
+        return new Vector2((float)value.X, (float)value.Y);
+    }
+
     public static explicit operator Vector2Int(Vector2 value)
     {
         return new Vector2Int((int)value.X, (int)value.Y);
     }
 
-    public static implicit operator Vector2(Vector2Int value)
+    public static explicit operator Vector2Int(Vector2Fixed value)
     {
-        return new Vector2((float)value.X, (float)value.Y);
+        return new Vector2Int((int)value.X, (int)value.Y);
     }
 
     public static Vector2Int operator *(Vector2Int value, int scalar)

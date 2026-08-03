@@ -1,11 +1,8 @@
-﻿using System;
-
-namespace Exanite.Core.Numerics;
+﻿namespace Exanite.Core.Numerics;
 
 /// <summary>
 /// Defines how the components of a Vector3 should be swizzled.
 /// </summary>
-[Serializable]
 public enum Vector3Swizzle
 {
     /// <summary>

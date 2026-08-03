@@ -1,12 +1,9 @@
-﻿using System;
-
-namespace Exanite.Core.Numerics;
+﻿namespace Exanite.Core.Numerics;
 
 /// <summary>
 /// Abbreviations of number names
 /// </summary>
-[Serializable]
-public enum NumScalesShort
+public enum ShortNumberScales
 {
     // Scales found at https://en.wikipedia.org/wiki/Names_of_large_numbers
 

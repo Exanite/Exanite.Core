@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Exanite.CodeGen;
 using Exanite.Core.Io;
+using static Exanite.Core.Generators.GeneratorConstants;
 
 namespace Exanite.Core.Generators.Generators;
 
@@ -10,7 +11,7 @@ public class MathUtilitiesVectorAddDropGenerator
 {
     public void Run()
     {
-        var components = GeneratorConstants.VectorComponents;
+        var components = VectorComponents;
         var vectorTypeSuffixes = new List<string>()
         {
             "",

@@ -1,12 +1,9 @@
-﻿using System;
-
-namespace Exanite.Core.Numerics;
+﻿namespace Exanite.Core.Numerics;
 
 /// <summary>
-/// How the class <see cref="LargeNumber"/> display the number.
+/// The format in which to display a <see cref="LargeNumber"/>.
 /// </summary>
-[Serializable]
-public enum NumDisplayFormat
+public enum NumberDisplayFormat
 {
     /// <summary>
     /// Displays the number in scientific notation (123.456 E+6).

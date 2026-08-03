@@ -1,21 +1,129 @@
 using System.Linq;
 using Exanite.CodeGen;
+using Exanite.Core.Generators.Models;
+using Exanite.Core.Io;
+using static Exanite.Core.Generators.GeneratorConstants;
 
 namespace Exanite.Core.Generators.Generators;
 
 public class VectorGenerator
 {
-    protected void AppendComponentFields(IndentedStringBuilder builder, string backingType, string[] components)
+    public void Run()
+    {
+        foreach (var currentType in Scalars.Types)
+        {
+            if (currentType.Type == ScalarType.Float)
+            {
+                continue;
+            }
+
+            for (var componentCount = 2; componentCount <= VectorComponents.Length; componentCount++)
+            {
+                var components = VectorComponents.Take(componentCount).ToArray();
+                var vectorName = currentType.VectorName(componentCount);
+
+                var builder = new IndentedStringBuilder();
+                builder.AppendGeneratedCodeHeader();
+
+                builder.AppendLine("using System;");
+                builder.AppendLine("using System.Diagnostics.CodeAnalysis;");
+                builder.AppendLine("using System.Globalization;");
+                builder.AppendLine("using System.Numerics;");
+                builder.AppendLine("using System.Runtime.InteropServices;");
+                builder.AppendLine();
+                builder.AppendLine("namespace Exanite.Core.Numerics;");
+
+                builder.AppendSeparation();
+                using (builder.EnterScope($"public partial struct {vectorName} : IEquatable<{vectorName}>, IFormattable"))
+                {
+                    AppendComponentFields(builder, currentType.ScalarName, components);
+
+                    AppendIdentityVectorConstants(builder, vectorName, components);
+                    AppendBasisVectorConstants(builder, vectorName, components);
+
+                    AppendIndexer(builder, currentType.ScalarName, components);
+
+                    AppendConstructors(builder, vectorName, currentType.ScalarName, components);
+
+                    // Cast to float
+                    {
+                        var castType = Scalars.CastType(currentType, Scalars.Float);
+                        if (castType != null)
+                        {
+                            AppendCastOperation(builder, castType, vectorName, Scalars.Float.VectorName(componentCount), Scalars.Float.ScalarName, components);
+                        }
+                    }
+
+                    // Cast from other
+                    foreach (var otherType in Scalars.Types)
+                    {
+                        var castType = Scalars.CastType(otherType, currentType);
+                        if (castType != null)
+                        {
+                            AppendCastOperation(builder, castType, otherType.VectorName(componentCount), vectorName, currentType.ScalarName, components);
+                        }
+                    }
+
+                    AppendScalarOperation(builder, components, vectorName, currentType.ScalarName, vectorName, "*");
+                    if (currentType.Type == ScalarType.Int)
+                    {
+                        AppendScalarOperation(builder, components, vectorName, "float", Scalars.Float.VectorName(componentCount), "*");
+                    }
+
+                    AppendScalarOperation(builder, components, vectorName, currentType.ScalarName, vectorName, "/");
+                    if (currentType.Type == ScalarType.Int)
+                    {
+                        AppendScalarOperation(builder, components, vectorName, "float", Scalars.Float.VectorName(componentCount), "/");
+                    }
+
+                    AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "+");
+                    AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "-");
+                    AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "*");
+                    AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "/");
+                    AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "%");
+
+                    if (currentType.Type == ScalarType.Int)
+                    {
+                        AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "<<");
+                        AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, ">>");
+                        AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, ">>>");
+                        AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "&");
+                        AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "|");
+                        AppendVectorOperation(builder, components, vectorName, vectorName, vectorName, "^");
+                    }
+
+                    AppendNegateOperation(builder, vectorName);
+
+                    if (currentType.Type == ScalarType.Fixed)
+                    {
+                        AppendLengthOperation(builder, vectorName, currentType.ScalarName, components);
+                        AppendNormalizeOperation(builder, vectorName, components);
+                    }
+
+                    AppendDotOperation(builder, vectorName, currentType.ScalarName, components);
+                    AppendCrossOperation(builder, vectorName, currentType.ScalarName, components);
+
+                    AppendEqualityOperations(builder, vectorName, components);
+                    AppendFormattingOperations(builder, components);
+                }
+
+                var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{vectorName}.g.cs";
+                outputPath.WriteAllText(builder.ToString());
+            }
+        }
+    }
+
+    private static void AppendComponentFields(IndentedStringBuilder builder, string scalarType, string[] components)
     {
         foreach (var component in components)
         {
             builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.{component}\"/>");
-            builder.AppendLine($"public {backingType} {component};");
+            builder.AppendLine($"public {scalarType} {component};");
             builder.AppendLine();
         }
     }
 
-    protected void AppendIdentityVectorConstants(IndentedStringBuilder builder, string selfVectorType, string[] components)
+    private static void AppendIdentityVectorConstants(IndentedStringBuilder builder, string selfVectorType, string[] components)
     {
         builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.Zero\"/>");
         builder.AppendLine($"public static {selfVectorType} Zero => default;");
@@ -24,7 +132,7 @@ public class VectorGenerator
         builder.AppendLine($"public static {selfVectorType} One => new(1);");
     }
 
-    protected void AppendBasisVectorConstants(IndentedStringBuilder builder, string selfVectorType, string[] components)
+    private static void AppendBasisVectorConstants(IndentedStringBuilder builder, string selfVectorType, string[] components)
     {
         for (var i = 0; i < components.Length; i++)
         {
@@ -37,10 +145,10 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendIndexer(IndentedStringBuilder builder, string backingType, string[] components)
+    private static void AppendIndexer(IndentedStringBuilder builder, string scalarType, string[] components)
     {
         builder.AppendSeparation();
-        using (builder.EnterScope($"public {backingType} this[int index]"))
+        using (builder.EnterScope($"public {scalarType} this[int index]"))
         {
             using (builder.EnterScope("readonly get"))
             {
@@ -69,13 +177,13 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendConstructors(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
+    private static void AppendConstructors(IndentedStringBuilder builder, string selfVectorType, string scalarType, string[] components)
     {
         builder.AppendSeparation();
-        builder.AppendLine($"public {selfVectorType}({backingType} value) : this({string.Join(", ", components.Select(_ => "value"))}) {{}}");
+        builder.AppendLine($"public {selfVectorType}({scalarType} value) : this({string.Join(", ", components.Select(_ => "value"))}) {{}}");
 
         builder.AppendSeparation();
-        using (builder.EnterScope($"public {selfVectorType}({string.Join(", ", components.Select(c => $"{backingType} {c.ToLower()}"))})"))
+        using (builder.EnterScope($"public {selfVectorType}({string.Join(", ", components.Select(c => $"{scalarType} {c.ToLower()}"))})"))
         {
             foreach (var component in components)
             {
@@ -84,21 +192,16 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendVectorCastOperation(IndentedStringBuilder builder, string castType, string srcVectorType, string dstVectorType, string dstBackingType, string[] components, bool manualSeparation = false)
+    private static void AppendCastOperation(IndentedStringBuilder builder, string castType, string srcVectorType, string dstVectorType, string dstScalarType, string[] components)
     {
-        // VectorFixedGenerator adds some comments to these operations, so it handles the separation manually
-        if (!manualSeparation)
-        {
-            builder.AppendSeparation();
-        }
-
+        builder.AppendSeparation();
         using (builder.EnterScope($"public static {castType} operator {dstVectorType}({srcVectorType} value)"))
         {
-            builder.AppendLine($"return new {dstVectorType}({string.Join(", ", components.Select(c => $"({dstBackingType})value.{c}"))});");
+            builder.AppendLine($"return new {dstVectorType}({string.Join(", ", components.Select(c => $"({dstScalarType})value.{c}"))});");
         }
     }
 
-    protected void AppendScalarOperation(IndentedStringBuilder builder, string[] components, string leftInputType, string rightInputType, string returnType, string operation)
+    private static void AppendScalarOperation(IndentedStringBuilder builder, string[] components, string leftInputType, string rightInputType, string returnType, string operation)
     {
         builder.AppendSeparation();
         using (builder.EnterScope($"public static {returnType} operator {operation}({leftInputType} value, {rightInputType} scalar)"))
@@ -107,7 +210,7 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendVectorOperation(IndentedStringBuilder builder, string[] components, string leftInputType, string rightInputType, string returnType, string operation)
+    private static void AppendVectorOperation(IndentedStringBuilder builder, string[] components, string leftInputType, string rightInputType, string returnType, string operation)
     {
         builder.AppendSeparation();
         using (builder.EnterScope($"public static {returnType} operator {operation}({leftInputType} left, {rightInputType} right)"))
@@ -116,7 +219,7 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendNegateOperation(IndentedStringBuilder builder, string selfVectorType)
+    private static void AppendNegateOperation(IndentedStringBuilder builder, string selfVectorType)
     {
         builder.AppendSeparation();
         using (builder.EnterScope($"public static {selfVectorType} operator -({selfVectorType} value)"))
@@ -125,17 +228,17 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendLengthOperation(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
+    private static void AppendLengthOperation(IndentedStringBuilder builder, string selfVectorType, string scalarType, string[] components)
     {
         builder.AppendSeparation();
         builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.Length\"/>");
-        using (builder.EnterScope($"public static {backingType} Length({selfVectorType} value)"))
+        using (builder.EnterScope($"public static {scalarType} Length({selfVectorType} value)"))
         {
-            builder.AppendLine($"return {backingType}.Hypot({string.Join(", ", components.Select(c => $"value.{c}"))});");
+            builder.AppendLine($"return {scalarType}.Hypot({string.Join(", ", components.Select(c => $"value.{c}"))});");
         }
     }
 
-    protected void AppendNormalizeOperation(IndentedStringBuilder builder, string selfVectorType, string[] components)
+    private static void AppendNormalizeOperation(IndentedStringBuilder builder, string selfVectorType, string[] components)
     {
         builder.AppendSeparation();
         builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.Normalize\"/>");
@@ -145,17 +248,17 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendDotOperation(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
+    private static void AppendDotOperation(IndentedStringBuilder builder, string selfVectorType, string scalarType, string[] components)
     {
         builder.AppendSeparation();
         builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.Dot\"/>");
-        using (builder.EnterScope($"public static {backingType} Dot({selfVectorType} left, {selfVectorType} right)"))
+        using (builder.EnterScope($"public static {scalarType} Dot({selfVectorType} left, {selfVectorType} right)"))
         {
             builder.AppendLine($"return {string.Join(" + ", components.Select(c => $"left.{c} * right.{c}"))};");
         }
     }
 
-    protected void AppendCrossOperation(IndentedStringBuilder builder, string selfVectorType, string backingType, string[] components)
+    private static void AppendCrossOperation(IndentedStringBuilder builder, string selfVectorType, string scalarType, string[] components)
     {
         builder.AppendSeparation();
         builder.AppendLine($"/// <inheritdoc cref=\"Vector{components.Length}.Cross\"/>");
@@ -163,7 +266,7 @@ public class VectorGenerator
         {
             case 2:
             {
-                using (builder.EnterScope($"public static {backingType} Cross({selfVectorType} left, {selfVectorType} right)"))
+                using (builder.EnterScope($"public static {scalarType} Cross({selfVectorType} left, {selfVectorType} right)"))
                 {
                     builder.AppendLine($"return left.{components[0]} * right.{components[1]} - left.{components[1]} * right.{components[0]};");
                 }
@@ -201,14 +304,13 @@ public class VectorGenerator
 
                 break;
             }
-            default: break;
         }
     }
 
     /// <remarks>
     /// Currently designed only for self equality.
     /// </remarks>
-    protected void AppendEqualityOperations(IndentedStringBuilder builder, string selfVectorType, string[] components)
+    private static void AppendEqualityOperations(IndentedStringBuilder builder, string selfVectorType, string[] components)
     {
         builder.AppendSeparation();
         using (builder.EnterScope($"public static bool operator ==({selfVectorType} left, {selfVectorType} right)"))
@@ -241,7 +343,7 @@ public class VectorGenerator
         }
     }
 
-    protected void AppendFormattingOperations(IndentedStringBuilder builder, string[] components)
+    private static void AppendFormattingOperations(IndentedStringBuilder builder, string[] components)
     {
         builder.AppendSeparation();
         using (builder.EnterScope("public override string ToString()"))

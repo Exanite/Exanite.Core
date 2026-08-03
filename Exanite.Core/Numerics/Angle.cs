@@ -79,7 +79,7 @@ public record struct Angle
             }
             default:
             {
-                ExceptionUtility.NotSupported(Type);
+                ExceptionUtility.ThrowNotSupported(Type);
                 break;
             }
         }
@@ -98,7 +98,7 @@ public record struct Angle
             }
             default:
             {
-                ExceptionUtility.NotSupported(Type);
+                ExceptionUtility.ThrowNotSupported(Type);
                 break;
             }
         }
