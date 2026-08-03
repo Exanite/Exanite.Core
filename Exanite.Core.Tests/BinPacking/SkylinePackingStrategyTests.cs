@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Exanite.Core.BinPacking;
 using Exanite.Core.Collections;
 using Exanite.Core.Numerics;
-using Exanite.Core.Utilities;
 using Xunit;
 
 namespace Exanite.Core.Tests.BinPacking;

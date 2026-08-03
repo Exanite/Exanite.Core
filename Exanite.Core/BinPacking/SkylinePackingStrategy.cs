@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Exanite.Core.Numerics;
 using Exanite.Core.Utilities;
@@ -130,7 +131,6 @@ public class SkylinePackingStrategy : IRectPackingStrategy
 
         var firstBin = skylineBins[binIndex];
         var lastBin = skylineBins[binIndex + binCount - 1];
-        var freeHeight = totalSize.Y - firstBin.Position.Y;
         var freeWidth = 0;
         for (var binI = binIndex; binI < binIndex + binCount; binI++)
         {
@@ -180,8 +180,7 @@ public class SkylinePackingStrategy : IRectPackingStrategy
         // Define output rect
         var outputRect = Rect2Int.FromOffsetSize(firstBin.Position, size);
 
-        // Add new bin representing top of inserted rect if there is remaining space
-        if (freeHeight > size.Y)
+        // Add new bin representing top of inserted rect
         {
             var newBin = new SkylineBin(firstBin.Position + new Vector2Int(0, size.Y), size.X);
             skylineBins.Insert(binIndex, newBin);
@@ -211,7 +210,22 @@ public class SkylinePackingStrategy : IRectPackingStrategy
             }
         }
 
+        ValidateSkylines();
+
         return outputRect;
+    }
+
+    [Conditional("DEBUG")]
+    private void ValidateSkylines()
+    {
+        for (var i = 0; i < skylineBins.Count - 1; i++)
+        {
+            var current = skylineBins[i];
+            var next = skylineBins[i + 1];
+
+            GuardUtility.IsTrue(next.Position.X == current.Position.X + current.Width, "Incorrect x values");
+            GuardUtility.IsTrue(next.Position.Y != current.Position.Y, "Should be merged");
+        }
     }
 
     private bool TryFindWasteMapBin(Vector2Int size, out CandidateWasteMapBin candidateBin)
