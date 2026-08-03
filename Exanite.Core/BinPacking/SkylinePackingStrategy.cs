@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Exanite.Core.Numerics;
+using Exanite.Core.Utilities;
 
 namespace Exanite.Core.BinPacking;
 
@@ -214,11 +216,36 @@ public class SkylinePackingStrategy : IRectPackingStrategy
 
     private bool TryFindWasteMapBin(Vector2Int size, out CandidateWasteMapBin candidateBin)
     {
+        if (wasteMapBins.Count == 0)
+        {
+            candidateBin = default;
+            return false;
+        }
+
+        var index = wasteMapBins.BinarySearch(Rect2Int.FromSize(size), WasteMapRectComparer);
+        if (index < 0)
+        {
+            index = ~index;
+        }
+
+        for (var i = M.Min(index, wasteMapBins.Count - 1); i >= 0; i--)
+        {
+            var bin = wasteMapBins[i];
+            if (bin.Size.X >= size.X && bin.Size.Y >= size.Y)
+            {
+                candidateBin = new CandidateWasteMapBin(i);
+                return true;
+            }
+        }
+
+        candidateBin = default;
+        return false;
     }
 
     private Rect2Int AddToWasteMapBin(Vector2Int size, CandidateWasteMapBin candidateBin)
     {
         var binIndex = candidateBin.BinIndex;
+        throw new NotImplementedException();
     }
 
     private void AddWasteMapBin(Rect2Int rect)
@@ -229,13 +256,13 @@ public class SkylinePackingStrategy : IRectPackingStrategy
             CollectionsMarshal.SetCount(wasteMapBins, WasteMapCapacity - WasteMapEvictCount);
         }
 
-        var insertIndex = wasteMapBins.BinarySearch(rect, WasteMapRectComparer);
-        if (insertIndex < 0)
+        var index = wasteMapBins.BinarySearch(rect, WasteMapRectComparer);
+        if (index < 0)
         {
-            insertIndex = ~insertIndex;
+            index = ~index;
         }
 
-        wasteMapBins.Insert(insertIndex, rect);
+        wasteMapBins.Insert(index, rect);
     }
 
     private record struct SkylineBin(Vector2Int Position, int Width);
