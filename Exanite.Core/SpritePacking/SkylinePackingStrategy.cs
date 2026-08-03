@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Exanite.Core.Numerics;
-using Exanite.Core.Utilities;
 
 namespace Exanite.Core.SpritePacking;
 
@@ -53,14 +52,22 @@ public class SkylinePackingStrategy : IRectPackingStrategy
         return false;
     }
 
+    // TODO: This is incorrect. This looks for the left-most, but not bottom-most, then left-most. Easy enough to fix though.
     private bool TryAddToBin(Vector2Int size, int binIndex, out Rect2Int rect)
     {
-        var firstBin = bins[0];
-        var freeWidth = 0;
-        for (var i = 0; i < bins.Count; i++)
+        var firstBin = bins[binIndex];
+        var remainingHeight = totalSize.Y - firstBin.Position.Y;
+        if (remainingHeight < size.Y)
         {
-            var bin = bins[i];
-            if (bin.Position.Y >= firstBin.Position.Y)
+            rect = default;
+            return false;
+        }
+
+        var freeWidth = 0;
+        for (var binI = binIndex; binI < bins.Count; binI++)
+        {
+            var bin = bins[binI];
+            if (bin.Position.Y > firstBin.Position.Y)
             {
                 // Bin is higher than starting bin -> Cannot fit
                 rect = default;
@@ -70,7 +77,60 @@ public class SkylinePackingStrategy : IRectPackingStrategy
             freeWidth += bin.Width;
             if (freeWidth >= size.X)
             {
-                // Found location -> Insert
+                // We have enough space -> Insert
+
+                // Remove overlapped bins
+                for (var overlapI = binIndex; overlapI <= binI; overlapI++)
+                {
+                    bins.RemoveAt(overlapI);
+
+                    // TODO: Add to waste map
+                }
+
+                // Split last bin if it has remaining space
+                if (freeWidth > size.X)
+                {
+                    var rightCornerX = bin.Position.X + bin.Width;
+                    var remainingWidth = freeWidth - size.X;
+                    bins.Insert(binIndex, new Bin(new Vector2Int(rightCornerX - remainingWidth, bin.Position.Y), remainingWidth));
+                }
+
+                // Define output rect
+                rect = Rect2Int.FromOffsetSize(firstBin.Position, size);
+
+                if (remainingHeight - size.Y > 0)
+                {
+                    // Add new bin representing top of inserted rect
+                    var newBin = new Bin(firstBin.Position + new Vector2Int(0, size.Y), size.X);
+                    bins.Insert(binIndex, newBin);
+
+                    // Merge adjacent
+                    if (binIndex - 1 >= 0)
+                    {
+                        var previousBin = bins[binIndex - 1];
+                        if (previousBin.Position.Y == newBin.Position.Y)
+                        {
+                            newBin = new Bin(previousBin.Position, previousBin.Width + newBin.Width);
+                            bins[binIndex - 1] = newBin;
+                            bins.RemoveAt(binIndex);
+                            binIndex--;
+                        }
+                    }
+
+                    if (binIndex + 1 < bins.Count)
+                    {
+                        var nextBin = bins[binIndex + 1];
+                        if (nextBin.Position.Y == newBin.Position.Y)
+                        {
+                            newBin = new Bin(nextBin.Position, nextBin.Width + newBin.Width);
+                            bins[binIndex + 1] = newBin;
+                            bins.RemoveAt(binIndex);
+                            binIndex--;
+                        }
+                    }
+                }
+
+                return true;
             }
         }
 
