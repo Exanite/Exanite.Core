@@ -21,7 +21,7 @@ public class SkylinePackingStrategyTests
 
         void Add(Vector2Int size, Vector2Int expectedPosition)
         {
-            Assert.True(packer.TryAdd(new Vector2Int(16, 16), out var rect));
+            Assert.True(packer.TryAdd(size, out var rect));
             Assert.Equal(Rect2Int.FromOffsetSize(expectedPosition, size), rect);
         }
     }
