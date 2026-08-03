@@ -50,4 +50,10 @@ public partial record struct Rect2
         return position.X >= Offset.X && position.X < Offset.X + Size.X
             && position.Y >= Offset.Y && position.Y < Offset.Y + Size.Y;
     }
+
+    public readonly bool Intersects(Rect2 other)
+    {
+        return Offset.X < other.Offset.X + other.Size.X && Offset.X + Size.X > other.Offset.X
+            && Offset.Y < other.Offset.Y + other.Size.Y && Offset.Y + Size.Y > other.Offset.Y;
+    }
 }

@@ -43,6 +43,7 @@ public class RectGenerator
                     AppendCreateOperations(builder, rectName, vectorName);
                     AppendScaleOperation(builder, rectName, vectorName);
                     AppendContainsOperation(builder, vectorName, components);
+                    AppendIntersectsOperation(builder, rectName, components);
                 }
 
                 var outputPath = AbsolutePath.WorkingDirectory / "Exanite.Core" / "Numerics" / $"{rectName}.g.cs";
@@ -115,6 +116,16 @@ public class RectGenerator
         using (builder.EnterScope($"public readonly bool Contains({vectorType} position)"))
         {
             var checks = components.Select(c => $"position.{c} >= Offset.{c} && position.{c} < Offset.{c} + Size.{c}");
+            builder.AppendBlock($"return {string.Join("\n    && ", checks)};");
+        }
+    }
+
+    private static void AppendIntersectsOperation(IndentedStringBuilder builder, string rectType, string[] components)
+    {
+        builder.AppendSeparation();
+        using (builder.EnterScope($"public readonly bool Intersects({rectType} other)"))
+        {
+            var checks = components.Select(c => $"Offset.{c} < other.Offset.{c} + other.Size.{c} && Offset.{c} + Size.{c} > other.Offset.{c}");
             builder.AppendBlock($"return {string.Join("\n    && ", checks)};");
         }
     }

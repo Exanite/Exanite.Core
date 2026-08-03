@@ -51,4 +51,11 @@ public partial record struct Rect3
             && position.Y >= Offset.Y && position.Y < Offset.Y + Size.Y
             && position.Z >= Offset.Z && position.Z < Offset.Z + Size.Z;
     }
+
+    public readonly bool Intersects(Rect3 other)
+    {
+        return Offset.X < other.Offset.X + other.Size.X && Offset.X + Size.X > other.Offset.X
+            && Offset.Y < other.Offset.Y + other.Size.Y && Offset.Y + Size.Y > other.Offset.Y
+            && Offset.Z < other.Offset.Z + other.Size.Z && Offset.Z + Size.Z > other.Offset.Z;
+    }
 }
