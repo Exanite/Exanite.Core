@@ -42,59 +42,170 @@ public class SkylinePackingStrategyTests
     }
 
     [Fact]
-    public void Stress()
+    public void Stress1()
     {
-        var packerSize = new Vector2Int(512, 512);
+        var packerSize = new Vector2Int(1024, 1024);
         var packer = new SkylinePackingStrategy(packerSize);
         var random = new Random(123);
         var bitmap = new BitSet();
         var rects = new List<Rect2Int>();
 
-        for (var i = 0; i < 10000; i++)
+        for (var i = 0; i < 100000; i++)
         {
-            var size = new Vector2Int(random.Next(1, 16), random.Next(1, 16));
+            var size = new Vector2Int(random.Next(1, 16 + 1), random.Next(1, 16 + 1));
             if (!packer.TryAdd(size, out var rect))
             {
                 break;
             }
 
             Assert.Equal(size, rect.Size);
-            TrackRect(rect, i);
+            TrackRect(rect, i, packerSize, bitmap, rects);
         }
 
-        return;
+        Assert.Equal(rects.Count, packer.AddedCount);
+        Console.WriteLine($"Total rects packed: {rects.Count}");
+        Console.WriteLine($"Total rects packed packed using skyline: {packer.SkylineAddedCount}");
+        Console.WriteLine($"Total rects packed using waste map: {packer.WasteMapAddedCount}");
+    }
 
-        void TrackRect(Rect2Int rect, int iteration)
+    [Fact]
+    public void Stress2()
+    {
+        var packerSize = new Vector2Int(1024, 1024);
+        var packer = new SkylinePackingStrategy(packerSize);
+        var random = new Random(456);
+        var bitmap = new BitSet();
+        var rects = new List<Rect2Int>();
+
+        for (var i = 0; i < 100000; i++)
         {
-            // This is to ensure that rects are not double allocated
-            for (var xI = 0; xI < rect.Size.X; xI++)
+            var size = new Vector2Int(random.Next(2, 16 + 1), random.Next(2, 16 + 1));
+            if (!packer.TryAdd(size, out var rect))
             {
-                for (var yI = 0; yI < rect.Size.Y; yI++)
-                {
-                    var x = rect.Offset.X + xI;
-                    var y = rect.Offset.Y + yI;
-                    var index = y * packerSize.X + x;
-
-                    if (bitmap[index])
-                    {
-                        foreach (var existing in rects)
-                        {
-                            if (existing.Intersects(rect))
-                            {
-                                Assert.Fail($"Current rect intersects existing rect. Current: {rect}. Existing: {rect}. Iteration: {iteration}");
-                            }
-                        }
-
-                        // This should not be hit. If so, it's a bug in the test itself
-                        Assert.False(bitmap[index]);
-                    }
-
-                    bitmap[index] = true;
-                }
+                break;
             }
 
-            rects.Add(rect);
+            Assert.Equal(size, rect.Size);
+            TrackRect(rect, i, packerSize, bitmap, rects);
         }
+
+        Assert.Equal(rects.Count, packer.AddedCount);
+        Console.WriteLine($"Total rects packed: {rects.Count}");
+        Console.WriteLine($"Total rects packed packed using skyline: {packer.SkylineAddedCount}");
+        Console.WriteLine($"Total rects packed using waste map: {packer.WasteMapAddedCount}");
+    }
+
+    [Fact]
+    public void Stress3()
+    {
+        var packerSize = new Vector2Int(1024, 1024);
+        var packer = new SkylinePackingStrategy(packerSize);
+        var random = new Random(456);
+        var bitmap = new BitSet();
+        var rects = new List<Rect2Int>();
+
+        for (var i = 0; i < 100000; i++)
+        {
+            var size = new Vector2Int(random.Next(2, 8 + 1), random.Next(2, 8 + 1));
+            if (!packer.TryAdd(size, out var rect))
+            {
+                break;
+            }
+
+            Assert.Equal(size, rect.Size);
+            TrackRect(rect, i, packerSize, bitmap, rects);
+        }
+
+        Assert.Equal(rects.Count, packer.AddedCount);
+        Console.WriteLine($"Total rects packed: {rects.Count}");
+        Console.WriteLine($"Total rects packed packed using skyline: {packer.SkylineAddedCount}");
+        Console.WriteLine($"Total rects packed using waste map: {packer.WasteMapAddedCount}");
+    }
+
+    [Fact]
+    public void Stress4()
+    {
+        var packerSize = new Vector2Int(1024, 1024);
+        var packer = new SkylinePackingStrategy(packerSize);
+        var random = new Random(456);
+        var bitmap = new BitSet();
+        var rects = new List<Rect2Int>();
+
+        for (var i = 0; i < 100000; i++)
+        {
+            var size = new Vector2Int(random.Next(8, 16 + 1), random.Next(8, 16 + 1));
+            if (!packer.TryAdd(size, out var rect))
+            {
+                break;
+            }
+
+            Assert.Equal(size, rect.Size);
+            TrackRect(rect, i, packerSize, bitmap, rects);
+        }
+
+        Assert.Equal(rects.Count, packer.AddedCount);
+        Console.WriteLine($"Total rects packed: {rects.Count}");
+        Console.WriteLine($"Total rects packed packed using skyline: {packer.SkylineAddedCount}");
+        Console.WriteLine($"Total rects packed packed using waste map: {packer.WasteMapAddedCount}");
+    }
+
+    [Fact]
+    public void Stress_VaryingScales()
+    {
+        var packerSize = new Vector2Int(1024, 1024);
+        var packer = new SkylinePackingStrategy(packerSize);
+        var random = new Random(456);
+        var bitmap = new BitSet();
+        var rects = new List<Rect2Int>();
+
+        for (var i = 0; i < 100000; i++)
+        {
+            var size = new Vector2Int(random.Next(8, 16 + 1), random.Next(8, 16 + 1)) * random.Next(1, 4 + 1);
+            if (!packer.TryAdd(size, out var rect))
+            {
+                break;
+            }
+
+            Assert.Equal(size, rect.Size);
+            TrackRect(rect, i, packerSize, bitmap, rects);
+        }
+
+        Assert.Equal(rects.Count, packer.AddedCount);
+        Console.WriteLine($"Total rects packed: {rects.Count}");
+        Console.WriteLine($"Total rects packed packed using skyline: {packer.SkylineAddedCount}");
+        Console.WriteLine($"Total rects packed using waste map: {packer.WasteMapAddedCount}");
+    }
+
+    private void TrackRect(Rect2Int rect, int iteration, Vector2Int packerSize, BitSet bitmap, List<Rect2Int> rects)
+    {
+        // This is to ensure that rects are not double allocated
+        for (var xI = 0; xI < rect.Size.X; xI++)
+        {
+            for (var yI = 0; yI < rect.Size.Y; yI++)
+            {
+                var x = rect.Offset.X + xI;
+                var y = rect.Offset.Y + yI;
+                var index = y * packerSize.X + x;
+
+                if (bitmap[index])
+                {
+                    foreach (var existing in rects)
+                    {
+                        if (existing.Intersects(rect))
+                        {
+                            Assert.Fail($"Current rect intersects existing rect. Current: {rect}. Existing: {rect}. Iteration: {iteration}");
+                        }
+                    }
+
+                    // This should not be hit. If so, it's a bug in the test itself
+                    Assert.False(bitmap[index]);
+                }
+
+                bitmap[index] = true;
+            }
+        }
+
+        rects.Add(rect);
     }
 
     private void AddAndAssert(SkylinePackingStrategy packer, Vector2Int size, Vector2Int expectedPosition)

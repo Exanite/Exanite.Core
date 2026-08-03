@@ -36,6 +36,10 @@ public class SkylinePackingStrategy : IRectPackingStrategy
     /// </summary>
     private readonly List<Rect2Int> wasteMapBins = new(WasteMapCapacity);
 
+    public int SkylineAddedCount { get; private set; }
+    public int WasteMapAddedCount { get; private set; }
+    public int AddedCount => SkylineAddedCount + WasteMapAddedCount;
+
     public SkylinePackingStrategy(Vector2Int size)
     {
         totalSize = size;
@@ -47,6 +51,7 @@ public class SkylinePackingStrategy : IRectPackingStrategy
         if (TryFindWasteMapBin(size, out var wasteMapBin))
         {
             rect = AddToWasteMapBin(size, wasteMapBin);
+            WasteMapAddedCount++;
             return true;
         }
 
@@ -59,6 +64,7 @@ public class SkylinePackingStrategy : IRectPackingStrategy
         if (TryFindSkylineBin(size, out var skylineBin))
         {
             rect = AddToSkylineBin(size, skylineBin);
+            SkylineAddedCount++;
             return true;
         }
 
