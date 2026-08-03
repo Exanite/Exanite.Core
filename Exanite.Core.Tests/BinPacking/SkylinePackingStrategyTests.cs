@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
 using Exanite.Core.BinPacking;
+using Exanite.Core.Collections;
 using Exanite.Core.Numerics;
+using Exanite.Core.Utilities;
 using Xunit;
 
 namespace Exanite.Core.Tests.BinPacking;
@@ -36,6 +40,62 @@ public class SkylinePackingStrategyTests
 
         // Small, should be inserted into waste map space
         AddAndAssert(packer, new Vector2Int(1, 1), new Vector2Int(1, 0));
+    }
+
+    [Fact]
+    public void Stress()
+    {
+        var packerSize = new Vector2Int(512, 512);
+        var packer = new SkylinePackingStrategy(packerSize);
+        var random = new Random(123);
+        var bitmap = new BitSet();
+        var rects = new List<Rect2Int>();
+
+        for (var i = 0; i < 10000; i++)
+        {
+            var size = new Vector2Int(random.Next(1, 16), random.Next(1, 16));
+            if (!packer.TryAdd(size, out var rect))
+            {
+                break;
+            }
+
+            Assert.Equal(size, rect.Size);
+            TrackRect(rect, i);
+        }
+
+        return;
+
+        void TrackRect(Rect2Int rect, int iteration)
+        {
+            // This is to ensure that rects are not double allocated
+            for (var xI = 0; xI < rect.Size.X; xI++)
+            {
+                for (var yI = 0; yI < rect.Size.Y; yI++)
+                {
+                    var x = rect.Offset.X + xI;
+                    var y = rect.Offset.Y + yI;
+                    var index = y * packerSize.X + x;
+
+                    if (bitmap[index])
+                    {
+                        foreach (var existing in rects)
+                        {
+                            if (existing.Intersects(rect))
+                            {
+                                Assert.Fail($"Current rect intersects existing rect. Current: {rect}. Existing: {rect}. Iteration: {iteration}");
+                            }
+                        }
+
+                        // This should not be hit. If so, it's a bug in the test itself
+                        Assert.False(bitmap[index]);
+                    }
+
+                    bitmap[index] = true;
+                }
+            }
+
+            rects.Add(rect);
+        }
     }
 
     private void AddAndAssert(SkylinePackingStrategy packer, Vector2Int size, Vector2Int expectedPosition)
