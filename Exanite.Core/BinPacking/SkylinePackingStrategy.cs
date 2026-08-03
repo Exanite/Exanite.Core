@@ -204,10 +204,9 @@ public class SkylinePackingStrategy : IRectPackingStrategy
                 var nextBin = skylineBins[binIndex + 1];
                 if (nextBin.Position.Y == newBin.Position.Y)
                 {
-                    newBin = new SkylineBin(nextBin.Position, nextBin.Width + newBin.Width);
-                    skylineBins[binIndex + 1] = newBin;
-                    skylineBins.RemoveAt(binIndex);
-                    binIndex--;
+                    newBin = new SkylineBin(newBin.Position, nextBin.Width + newBin.Width);
+                    skylineBins[binIndex] = newBin;
+                    skylineBins.RemoveAt(binIndex + 1);
                 }
             }
         }
