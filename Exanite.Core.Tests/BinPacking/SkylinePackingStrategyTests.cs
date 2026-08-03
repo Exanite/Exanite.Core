@@ -49,6 +49,7 @@ public class SkylinePackingStrategyTests
         var random = new Random(123);
         var bitmap = new BitSet();
         var rects = new List<Rect2Int>();
+        var usedArea = 0;
 
         for (var i = 0; i < 100000; i++)
         {
@@ -60,12 +61,14 @@ public class SkylinePackingStrategyTests
 
             Assert.Equal(size, rect.Size);
             TrackRect(rect, i, packerSize, bitmap, rects);
+            usedArea += rect.Size.X * rect.Size.Y;
         }
 
         Assert.Equal(rects.Count, packer.AddedCount);
         Console.WriteLine($"Total rects packed: {rects.Count}");
-        Console.WriteLine($"Total rects packed packed using skyline: {packer.SkylineAddedCount}");
-        Console.WriteLine($"Total rects packed using waste map: {packer.WasteMapAddedCount}");
+        Console.WriteLine($"Packed using skyline: {packer.SkylineAddedCount}");
+        Console.WriteLine($"Packed using waste map: {packer.WasteMapAddedCount}");
+        Console.WriteLine($"Area utilization: {(float)usedArea / (packerSize.X * packerSize.Y)}");
     }
 
     [Fact]
@@ -76,6 +79,7 @@ public class SkylinePackingStrategyTests
         var random = new Random(456);
         var bitmap = new BitSet();
         var rects = new List<Rect2Int>();
+        var usedArea = 0;
 
         for (var i = 0; i < 100000; i++)
         {
@@ -87,12 +91,14 @@ public class SkylinePackingStrategyTests
 
             Assert.Equal(size, rect.Size);
             TrackRect(rect, i, packerSize, bitmap, rects);
+            usedArea += rect.Size.X * rect.Size.Y;
         }
 
         Assert.Equal(rects.Count, packer.AddedCount);
         Console.WriteLine($"Total rects packed: {rects.Count}");
-        Console.WriteLine($"Total rects packed packed using skyline: {packer.SkylineAddedCount}");
-        Console.WriteLine($"Total rects packed using waste map: {packer.WasteMapAddedCount}");
+        Console.WriteLine($"Packed using skyline: {packer.SkylineAddedCount}");
+        Console.WriteLine($"Packed using waste map: {packer.WasteMapAddedCount}");
+        Console.WriteLine($"Area utilization: {(float)usedArea / (packerSize.X * packerSize.Y)}");
     }
 
     [Fact]
@@ -103,6 +109,7 @@ public class SkylinePackingStrategyTests
         var random = new Random(456);
         var bitmap = new BitSet();
         var rects = new List<Rect2Int>();
+        var usedArea = 0;
 
         for (var i = 0; i < 100000; i++)
         {
@@ -114,12 +121,14 @@ public class SkylinePackingStrategyTests
 
             Assert.Equal(size, rect.Size);
             TrackRect(rect, i, packerSize, bitmap, rects);
+            usedArea += rect.Size.X * rect.Size.Y;
         }
 
         Assert.Equal(rects.Count, packer.AddedCount);
         Console.WriteLine($"Total rects packed: {rects.Count}");
-        Console.WriteLine($"Total rects packed packed using skyline: {packer.SkylineAddedCount}");
-        Console.WriteLine($"Total rects packed using waste map: {packer.WasteMapAddedCount}");
+        Console.WriteLine($"Packed using skyline: {packer.SkylineAddedCount}");
+        Console.WriteLine($"Packed using waste map: {packer.WasteMapAddedCount}");
+        Console.WriteLine($"Area utilization: {(float)usedArea / (packerSize.X * packerSize.Y)}");
     }
 
     [Fact]
@@ -130,6 +139,7 @@ public class SkylinePackingStrategyTests
         var random = new Random(456);
         var bitmap = new BitSet();
         var rects = new List<Rect2Int>();
+        var usedArea = 0;
 
         for (var i = 0; i < 100000; i++)
         {
@@ -141,12 +151,14 @@ public class SkylinePackingStrategyTests
 
             Assert.Equal(size, rect.Size);
             TrackRect(rect, i, packerSize, bitmap, rects);
+            usedArea += rect.Size.X * rect.Size.Y;
         }
 
         Assert.Equal(rects.Count, packer.AddedCount);
         Console.WriteLine($"Total rects packed: {rects.Count}");
-        Console.WriteLine($"Total rects packed packed using skyline: {packer.SkylineAddedCount}");
-        Console.WriteLine($"Total rects packed packed using waste map: {packer.WasteMapAddedCount}");
+        Console.WriteLine($"Packed using skyline: {packer.SkylineAddedCount}");
+        Console.WriteLine($"Packed using waste map: {packer.WasteMapAddedCount}");
+        Console.WriteLine($"Area utilization: {(float)usedArea / (packerSize.X * packerSize.Y)}");
     }
 
     [Fact]
@@ -157,6 +169,7 @@ public class SkylinePackingStrategyTests
         var random = new Random(456);
         var bitmap = new BitSet();
         var rects = new List<Rect2Int>();
+        var usedArea = 0;
 
         for (var i = 0; i < 100000; i++)
         {
@@ -168,12 +181,14 @@ public class SkylinePackingStrategyTests
 
             Assert.Equal(size, rect.Size);
             TrackRect(rect, i, packerSize, bitmap, rects);
+            usedArea += rect.Size.X * rect.Size.Y;
         }
 
         Assert.Equal(rects.Count, packer.AddedCount);
         Console.WriteLine($"Total rects packed: {rects.Count}");
-        Console.WriteLine($"Total rects packed packed using skyline: {packer.SkylineAddedCount}");
-        Console.WriteLine($"Total rects packed using waste map: {packer.WasteMapAddedCount}");
+        Console.WriteLine($"Packed using skyline: {packer.SkylineAddedCount}");
+        Console.WriteLine($"Packed using waste map: {packer.WasteMapAddedCount}");
+        Console.WriteLine($"Area utilization: {(float)usedArea / (packerSize.X * packerSize.Y)}");
     }
 
     private void TrackRect(Rect2Int rect, int iteration, Vector2Int packerSize, BitSet bitmap, List<Rect2Int> rects)
